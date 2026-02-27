@@ -36,7 +36,7 @@
 		value datamodel;
 		size here/width;
 		maxlength python:test(here.size_max, here.size_max, None);
-		name string:${widget_id}:utf8:ustring;
+		name string:${widget_id}:utf8:string;
 		id widget_id" />
 </div>
 

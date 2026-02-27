@@ -4,7 +4,7 @@
 ">
 <metal:block use-macro="here/widget_macro/macros/widget">
     <metal:block fill-slot="input">
-        <select tal:attributes="name string:${prop_id}:utf8:ustring; id prop_id">
+        <select tal:attributes="name string:${prop_id}:utf8:string; id prop_id">
             <option value=""></option>
             <option tal:repeat="geo_type_item geo_type_list"
                 tal:content="geo_type_item/title" i18n:translate=""

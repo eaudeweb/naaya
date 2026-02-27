@@ -13,7 +13,7 @@
 <form method="POST" tal:attributes="action string:${here/absolute_url}/saveProperties">
     <div class="field">
         <label for="title">Title</label>
-        <input id="title" type="text" name="title:utf8:ustring"
+        <input id="title" type="text" name="title:utf8:string"
             size="50" tal:attributes="value here/title" />
     </div>
     <input type="submit" value="Save changes"/>

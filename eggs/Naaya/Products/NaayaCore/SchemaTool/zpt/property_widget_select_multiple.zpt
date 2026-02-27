@@ -114,7 +114,7 @@
     </metal:block>
     <metal:block fill-slot="input">
         <select tal:condition="python:selection_list is not None"
-                tal:attributes="name string:${prop_id}:utf8:ustring:list;
+                tal:attributes="name string:${prop_id}:utf8:string:list;
                                 id prop_id"
                 multiple="multiple" size="5">
             <option tal:repeat="selection_item selection_list"
@@ -133,7 +133,7 @@
             <tal:block tal:repeat="item value">
             <li tal:content="item" />
             <input type="hidden"
-                   tal:attributes="name string:${prop_id}:utf8:ustring:list;
+                   tal:attributes="name string:${prop_id}:utf8:string:list;
                                    value item" />
             </tal:block>
         </ul>

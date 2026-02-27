@@ -29,11 +29,11 @@
 	tal:attributes="action string:${here/absolute_url}/saveProperties">
 <div class="field">
 	<label for="title" i18n:translate="">Subject</label>
-	<input type="text" name="title:utf8:ustring" id="title" size="50" tal:attributes="value here/title" />
+	<input type="text" name="title:utf8:string" id="title" size="50" tal:attributes="value here/title" />
 </div>
 <div class="field">
 	<label for="category" i18n:translate="">Category</label>
-	<select name="category:utf8:ustring" id="category">
+	<select name="category:utf8:string" id="category">
 		<option value="" i18n:translate="">--Select category--</option>
 		<option tal:repeat="item here/get_forum_categories"
 			tal:attributes="value item; selected python:here.category==item"
@@ -54,7 +54,7 @@
 <div class="field">
 	<label for="description" i18n:translate="">Text</label>
 	<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('description', image_support=True)" />
-	<textarea id="description" name="description:utf8:ustring" rows="20" cols="72" class="mceEditor" tal:content="here/description" />
+	<textarea id="description" name="description:utf8:string" rows="20" cols="72" class="mceEditor" tal:content="here/description" />
 </div>
 <div class="field-inline">
 	<strong tal:content="python:here.utShowFullDateTime(here.postdate)" />, <strong tal:content="here/author" />

@@ -81,7 +81,7 @@
                 </div>
                 <div class="field" >
                     <label for="explanatory_text" class="for-block" i18n:translate="">Reason for this request</label>
-                    <textarea name="explanatory_text:utf8:ustring" id="explanatory_text"></textarea>
+                    <textarea name="explanatory_text:utf8:string" id="explanatory_text"></textarea>
                 </div>
                 <!--div class="field-inline" tal:condition="python:can_view and not can_add">
                     <label for="location" i18n:translate="">Location</label>

@@ -28,18 +28,18 @@ class NyYoutubeFunctionalTestCase(NaayaFunctionalTestCase):
         self.assertTrue('<h1>Embed YouTube video</h1>' in self.browser.get_html())
         form = self.browser.get_form('frmAdd')
         expected_controls = set([
-            'lang', 'title:utf8:ustring', 'description:utf8:ustring', 'coverage:utf8:ustring',
-            'keywords:utf8:ustring', 'releasedate', 'discussion:boolean',
+            'lang', 'title:utf8:string', 'description:utf8:string', 'coverage:utf8:string',
+            'keywords:utf8:string', 'releasedate', 'discussion:boolean',
         ])
         found_controls = set(c.name for c in form.controls)
         self.assertTrue(expected_controls.issubset(found_controls),
             'Missing form controls: %s' % repr(expected_controls - found_controls))
 
         self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
-        form['title:utf8:ustring'] = 'test_youtube'
-        form['description:utf8:ustring'] = 'test_youtube_description'
-        form['keywords:utf8:ustring'] = 'keyw1, keyw2'
-        form['youtube_id:utf8:ustring'] = 'uelHwf8o7_U'
+        form['title:utf8:string'] = 'test_youtube'
+        form['description:utf8:string'] = 'test_youtube_description'
+        form['keywords:utf8:string'] = 'keyw1, keyw2'
+        form['youtube_id:utf8:string'] = 'uelHwf8o7_U'
 
         self.browser.submit()
         html = self.browser.get_html()
@@ -69,11 +69,11 @@ class NyYoutubeFunctionalTestCase(NaayaFunctionalTestCase):
 
         form = self.browser.get_form('frmAdd')
         self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
-        form['title:utf8:ustring'] = 'test_youtube'
-        form['description:utf8:ustring'] = 'test_youtube_description'
-        form['keywords:utf8:ustring'] = 'keyw1, keyw2'
+        form['title:utf8:string'] = 'test_youtube'
+        form['description:utf8:string'] = 'test_youtube_description'
+        form['keywords:utf8:string'] = 'keyw1, keyw2'
         # enter an invalid Youtube ID
-        form['youtube_id:utf8:ustring'] = 'aaaaaaaaaaa'
+        form['youtube_id:utf8:string'] = 'aaaaaaaaaaa'
         self.browser.submit()
 
         html = self.browser.get_html()
@@ -86,18 +86,18 @@ class NyYoutubeFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/myfolder/myyoutube/edit_html')
         form = self.browser.get_form('frmEdit')
 
-        self.assertEqual(form['title:utf8:ustring'], 'My Youtube Video')
+        self.assertEqual(form['title:utf8:string'], 'My Youtube Video')
 
-        form['title:utf8:ustring'] = 'new_youtube_title'
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        form['title:utf8:string'] = 'new_youtube_title'
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
 
         self.assertEqual(self.portal.myfolder.myyoutube.title, 'new_youtube_title')
 
         self.browser.go('http://localhost/portal/myfolder/myyoutube/edit_html?lang=fr')
         form = self.browser.get_form('frmEdit')
-        form['title:utf8:ustring'] = 'french_title'
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        form['title:utf8:string'] = 'french_title'
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
 
         self.assertEqual(self.portal.myfolder.myyoutube.title, 'new_youtube_title')
@@ -110,8 +110,8 @@ class NyYoutubeFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/myfolder/myyoutube/edit_html')
 
         form = self.browser.get_form('frmEdit')
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
-        form['title:utf8:ustring'] = ''
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
+        form['title:utf8:string'] = ''
         self.browser.submit()
 
         html = self.browser.get_html()
@@ -125,9 +125,9 @@ class NyYoutubeFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.go('http://localhost/portal/myfolder/myyoutube/manage_edit_html')
         form = self.browser.get_form('frmEdit')
-        self.assertEqual(form['title:utf8:ustring'], 'My Youtube Video')
-        form['title:utf8:ustring'] = 'new_youtube_title'
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        self.assertEqual(form['title:utf8:string'], 'My Youtube Video')
+        form['title:utf8:string'] = 'new_youtube_title'
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
 
         self.assertEqual(self.portal.myfolder.myyoutube.title, 'new_youtube_title')

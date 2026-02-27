@@ -55,7 +55,7 @@
 </tr>
 <tr>
 	<td class="form-label">Internet access (URL)</td>
-	<td><input type="text" name="url:utf8:ustring" id="url" size="50" tal:attributes="value python:request.get('url', 'http://')" /></td>
+	<td><input type="text" name="url:utf8:string" id="url" size="50" tal:attributes="value python:request.get('url', 'http://')" /></td>
 </tr>
 </tal:block>
 

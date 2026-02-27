@@ -188,11 +188,11 @@
             </div>
             <div class="field">
                 <label for="item_source" i18n:translate="">Source</label>
-                <input type="text" id="item_source" name="item_source:utf8:ustring" size="35" tal:attributes="value selected_item/source" />
+                <input type="text" id="item_source" name="item_source:utf8:string" size="35" tal:attributes="value selected_item/source" />
             </div>
             <div class="field">
                 <label for="item_contributor" i18n:translate="">Contributor</label>
-                <input type="text" id="item_contributor" name="item_contributor:utf8:ustring" size="35" tal:attributes="value selected_item/contributor" />
+                <input type="text" id="item_contributor" name="item_contributor:utf8:string" size="35" tal:attributes="value selected_item/contributor" />
             </div>
             <div class="field">
                 <label for="item_approved" i18n:translate="">Approved</label>
@@ -205,7 +205,7 @@
                   <tal:block condition="python:language == 'English'"
                       define="translation python:selected_item.get_translation_by_language(language)">
                         <textarea cols="55"
-                          name="item_translation:utf8:ustring:list" tal:content="translation" ></textarea>
+                          name="item_translation:utf8:string:list" tal:content="translation" ></textarea>
                         <input name="item_lang_code:list" type="hidden" tal:attributes="value language" />
                   </tal:block>
                 </tal:block>
@@ -230,7 +230,7 @@
                         </td>
                         <td tal:content="python:test(translation, translation, '-')"/>
                         <td>
-                            <textarea name="item_translation:utf8:ustring:list" tal:content="translation" ></textarea>
+                            <textarea name="item_translation:utf8:string:list" tal:content="translation" ></textarea>
                             <input name="item_lang_code:list" type="hidden" tal:attributes="value language" />
                         </td>
                     </tr>
@@ -245,7 +245,7 @@
                   <tal:block condition="python:language == 'English'"
                       define="def_lang python:selected_item.definition_lang(language);
                               translation python:selected_item.get_translation_by_language(def_lang)">
-                        <textarea cols="55" name="item_translation:utf8:ustring:list" tal:content="translation" ></textarea>
+                        <textarea cols="55" name="item_translation:utf8:string:list" tal:content="translation" ></textarea>
                         <input name="item_lang_code:list" type="hidden" tal:attributes="value def_lang" />
                   </tal:block>
                 </tal:block>
@@ -271,7 +271,7 @@
                         </td>
                         <td tal:content="python:test(translation, translation, '-')"/>
                         <td>
-                            <textarea name="item_translation:utf8:ustring:list" tal:content="translation" ></textarea>
+                            <textarea name="item_translation:utf8:string:list" tal:content="translation" ></textarea>
                             <input name="item_lang_code:list" type="hidden" tal:attributes="value def_lang" />
                         </td>
                     </tr>

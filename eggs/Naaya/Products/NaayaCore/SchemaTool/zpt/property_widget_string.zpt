@@ -4,7 +4,7 @@
             value value;
             size here/width;
             maxlength python:test(here.size_max, here.size_max, None);
-            name string:${prop_id}:utf8:ustring;
+            name string:${prop_id}:utf8:string;
             id prop_id" />
     </metal:block>
 </metal:block>

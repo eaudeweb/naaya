@@ -16,7 +16,7 @@
 <div class="field">
     <input type="hidden" name="back_url" tal:attributes="value back_url" />
     <label for="message" i18n:translate="">Comment</label>
-    <textarea id="message" name="message:utf8:ustring"
+    <textarea id="message" name="message:utf8:string"
               cols="70" rows="5"
               tal:content="here/message"
               ></textarea>

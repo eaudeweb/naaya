@@ -98,8 +98,8 @@ function get_map_filter_values() {
     // don't include bounds since this is used to set URL hash
     var filter = [];
     var skip = {
-        'address:ustring:utf8': naaya_map_i18n["Type location address"],
-        'geo_query:ustring:utf8': naaya_map_i18n["Type keywords to filter locations"]
+        'address:string:utf8': naaya_map_i18n["Type location address"],
+        'geo_query:string:utf8': naaya_map_i18n["Type keywords to filter locations"]
     };
     $.each($("form#frmFilterMap").serializeArray(), function(i, pair) {
         if(skip[pair.name] == pair.value) return; // placeholder, ignore it
@@ -163,7 +163,7 @@ function _refresh_map_points(bounds, callback, loader) {
             }
         });
         setRecordCounter(num_records);
-        var geo_query = filter_dict['geo_query:ustring:utf8'];
+        var geo_query = filter_dict['geo_query:string:utf8'];
         if(! geo_query) geo_query = "";
         update_locations_values(bounds, geo_query);
     }

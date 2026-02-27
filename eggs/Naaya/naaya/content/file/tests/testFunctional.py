@@ -25,19 +25,19 @@ class NyFileFunctionalTestCase(NaayaFunctionalTestCase):
         self.assertTrue('<h1>Submit File</h1>' in self.browser.get_html())
         form = self.browser.get_form('frmAdd')
         expected_controls = set([
-            'lang', 'title:utf8:ustring', 'description:utf8:ustring', 'coverage:utf8:ustring',
-            'keywords:utf8:ustring', 'releasedate', 'discussion:boolean',
-            'source', 'url', 'file', 'downloadfilename:utf8:ustring',
+            'lang', 'title:utf8:string', 'description:utf8:string', 'coverage:utf8:string',
+            'keywords:utf8:string', 'releasedate', 'discussion:boolean',
+            'source', 'url', 'file', 'downloadfilename:utf8:string',
         ])
         found_controls = set(c.name for c in form.controls)
         self.assertTrue(expected_controls.issubset(found_controls),
             'Missing form controls: %s' % repr(expected_controls - found_controls))
 
         self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
-        form['title:utf8:ustring'] = 'test_create_file'
-        form['description:utf8:ustring'] = 'test_file_description'
-        form['coverage:utf8:ustring'] = 'test_file_coverage'
-        form['keywords:utf8:ustring'] = 'keyw1, keyw2'
+        form['title:utf8:string'] = 'test_create_file'
+        form['description:utf8:string'] = 'test_file_description'
+        form['coverage:utf8:string'] = 'test_file_coverage'
+        form['keywords:utf8:string'] = 'keyw1, keyw2'
 
         TEST_FILE_DATA = 'some data for my data file'
         form.find_control('file').add_file(StringIO(TEST_FILE_DATA),
@@ -84,14 +84,14 @@ class NyFileFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/myfolder/myfile/edit_html')
         form = self.browser.get_form('frmEdit')
 
-        self.assertEqual(form['title:utf8:ustring'], 'My file')
+        self.assertEqual(form['title:utf8:string'], 'My file')
 
-        form['title:utf8:ustring'] = 'new_file_title'
+        form['title:utf8:string'] = 'new_file_title'
         TEST_FILE_DATA_2 = 'some new data for my file'
         form.find_control('file').add_file(StringIO(TEST_FILE_DATA_2),
             filename='the_new_file.txt', content_type='text/plain')
 
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
         html = self.browser.get_html()
         self.assertTrue('<h1>Edit File</h1>' in html)
@@ -108,12 +108,12 @@ class NyFileFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.go('http://localhost/portal/myfolder/myfile/edit_html?lang=fr')
         form = self.browser.get_form('frmEdit')
-        form['title:utf8:ustring'] = 'french_title'
+        form['title:utf8:string'] = 'french_title'
         form['source'] = 'file'
         TEST_FILE_DATA_3 = 'some new data for my file'
         form.find_control('file').add_file(StringIO(TEST_FILE_DATA_3),
             filename='the_new_file.txt', content_type='text/plain')
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
 
         self.browser.go('http://localhost/portal/myfolder/myfile/download')
@@ -133,8 +133,8 @@ class NyFileFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/myfolder/myfile/edit_html')
 
         form = self.browser.get_form('frmEdit')
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
-        form['title:utf8:ustring'] = ''
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
+        form['title:utf8:string'] = ''
         self.browser.submit()
 
         html = self.browser.get_html()
@@ -148,9 +148,9 @@ class NyFileFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.go('http://localhost/portal/myfolder/myfile/manage_edit_html')
         form = self.browser.get_form('frmEdit')
-        self.assertEqual(form['title:utf8:ustring'], 'My file')
-        form['title:utf8:ustring'] = 'new_file_title'
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        self.assertEqual(form['title:utf8:string'], 'My file')
+        form['title:utf8:string'] = 'new_file_title'
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
 
         self.assertEqual(self.portal.myfolder.myfile.title, 'new_file_title')

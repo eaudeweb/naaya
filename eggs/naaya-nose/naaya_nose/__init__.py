@@ -92,13 +92,15 @@ def call_testrunner(tzope, buildout_root):
     from Products.Naaya.tests.NaayaTestCase import NaayaTestLayer
     NaayaTestLayer.initialize(tzope)
 
-    # Collect test paths from src/ symlinks directory.
+    # Collect test paths from src/ symlinks directory, but only for eggs
+    # that are on the current instance's sys.path.
     src_dir = path.join(buildout_root, 'src')
+    real_sys_paths = set(path.realpath(p) for p in sys.path)
     defaults = []
     if path.isdir(src_dir):
         for name in sorted(os.listdir(src_dir)):
             egg_dir = path.realpath(path.join(src_dir, name))
-            if path.isdir(egg_dir):
+            if path.isdir(egg_dir) and egg_dir in real_sys_paths:
                 defaults.extend(['--test-path', egg_dir])
 
     from zope.testrunner import run

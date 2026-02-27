@@ -25,5 +25,5 @@ def initialize(context):
     now = now.isoformat()
     logger.info('Added property edw-productsinfo-key on zope instance')
     app.manage_addProperty(id='edw-productsinfo-key', type='string',
-                           value=md5.new(now).hexdigest())
+                           value=hashlib.md5(now.encode()).hexdigest())
     transaction.commit()

@@ -12,8 +12,8 @@
 <form action="addNyNetSite" method="post">
 <table border="0" cellspacing="0" cellpadding="2" width="100%">
 	<tr><td width="25%" class="form-label">Id</td><td width="75%"><input type="text" name="id" size="30" value="" /></td></tr>
-	<tr><td class="form-label">Title</td><td><input type="text" name="title:utf8:ustring" size="50" value="" /></td></tr>
-	<tr><td class="form-label" valign="top">Description</td><td><textarea name="description:utf8:ustring" rows="7" cols="38"></textarea></td></tr>
+	<tr><td class="form-label">Title</td><td><input type="text" name="title:utf8:string" size="50" value="" /></td></tr>
+	<tr><td class="form-label" valign="top">Description</td><td><textarea name="description:utf8:string" rows="7" cols="38"></textarea></td></tr>
 	<tr><td class="form-label">URL</td><td><input type="text" name="url" size="50" value="" /></td></tr>
 	<tr><td></td><td><input type="submit" value="Add" /></td></tr>
 </table>

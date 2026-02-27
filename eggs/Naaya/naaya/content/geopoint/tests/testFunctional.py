@@ -32,27 +32,27 @@ class NyGeoPointFunctionalTestCase(NaayaFunctionalTestCase):
         self.assertTrue('<h1>Submit GeoPoint</h1>' in self.browser.get_html())
         form = self.browser.get_form('frmAdd')
         expected_controls = set([
-            'lang', 'title:utf8:ustring', 'description:utf8:ustring', 'coverage:utf8:ustring',
-            'keywords:utf8:ustring', 'releasedate', 'discussion:boolean',
-            'geo_location.lat:utf8:ustring', 'geo_location.lon:utf8:ustring',
-            'geo_location.address:utf8:ustring',
-            'geo_type:utf8:ustring', 'url:utf8:ustring', 'pointer:utf8:ustring',
+            'lang', 'title:utf8:string', 'description:utf8:string', 'coverage:utf8:string',
+            'keywords:utf8:string', 'releasedate', 'discussion:boolean',
+            'geo_location.lat:utf8:string', 'geo_location.lon:utf8:string',
+            'geo_location.address:utf8:string',
+            'geo_type:utf8:string', 'url:utf8:string', 'pointer:utf8:string',
         ])
         found_controls = set(c.name for c in form.controls)
         self.assertTrue(expected_controls.issubset(found_controls),
             'Missing form controls: %s' % repr(expected_controls - found_controls))
 
         self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
-        form['title:utf8:ustring'] = 'test_geopoint'
-        form['description:utf8:ustring'] = 'test_geopoint_description'
-        form['coverage:utf8:ustring'] = 'test_geopoint_coverage'
-        form['keywords:utf8:ustring'] = 'keyw1, keyw2'
-        form['geo_location.lat:utf8:ustring'] = '12.587142'
-        form['geo_location.lon:utf8:ustring'] = '55.681004'
-        form['geo_location.address:utf8:ustring'] = 'Kongens Nytorv 6, 1050 Copenhagen K, Denmark'
-        #form['geo_type:utf8:ustring'] = ''
-        form['url:utf8:ustring'] = 'http://www.eea.europa.eu'
-        form['pointer:utf8:ustring'] = 'portal/info/contact'
+        form['title:utf8:string'] = 'test_geopoint'
+        form['description:utf8:string'] = 'test_geopoint_description'
+        form['coverage:utf8:string'] = 'test_geopoint_coverage'
+        form['keywords:utf8:string'] = 'keyw1, keyw2'
+        form['geo_location.lat:utf8:string'] = '12.587142'
+        form['geo_location.lon:utf8:string'] = '55.681004'
+        form['geo_location.address:utf8:string'] = 'Kongens Nytorv 6, 1050 Copenhagen K, Denmark'
+        #form['geo_type:utf8:string'] = ''
+        form['url:utf8:string'] = 'http://www.eea.europa.eu'
+        form['pointer:utf8:string'] = 'portal/info/contact'
 
         self.browser.submit()
         html = self.browser.get_html()
@@ -94,18 +94,18 @@ class NyGeoPointFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/myfolder/mygeopoint/edit_html')
         form = self.browser.get_form('frmEdit')
 
-        self.assertEqual(form['title:utf8:ustring'], 'My geopoint')
+        self.assertEqual(form['title:utf8:string'], 'My geopoint')
 
-        form['title:utf8:ustring'] = 'new_geopoint_title'
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        form['title:utf8:string'] = 'new_geopoint_title'
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
 
         self.assertEqual(self.portal.myfolder.mygeopoint.title, 'new_geopoint_title')
 
         self.browser.go('http://localhost/portal/myfolder/mygeopoint/edit_html?lang=fr')
         form = self.browser.get_form('frmEdit')
-        form['title:utf8:ustring'] = 'french_title'
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        form['title:utf8:string'] = 'french_title'
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
 
         self.assertEqual(self.portal.myfolder.mygeopoint.title, 'new_geopoint_title')
@@ -118,8 +118,8 @@ class NyGeoPointFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/myfolder/mygeopoint/edit_html')
 
         form = self.browser.get_form('frmEdit')
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
-        form['title:utf8:ustring'] = ''
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
+        form['title:utf8:string'] = ''
         self.browser.submit()
 
         html = self.browser.get_html()
@@ -171,8 +171,8 @@ class NyGeoPointVersioningFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/info/ver_geopoint/startVersion')
 
         form = self.browser.get_form('frmEdit')
-        form['title:utf8:ustring'] = 'ver_geopoint_newtitle'
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        form['title:utf8:string'] = 'ver_geopoint_newtitle'
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
 
         ver_geopoint = self.portal.info.ver_geopoint
@@ -187,11 +187,11 @@ class NyGeoPointVersioningFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/info/ver_geopoint/startVersion')
 
         form = self.browser.get_form('frmEdit')
-        form['title:utf8:ustring'] = 'ver_geopoint_version'
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        form['title:utf8:string'] = 'ver_geopoint_version'
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
 
         form = self.browser.get_form('frmEdit')
-        self.assertEqual(form['title:utf8:ustring'], 'ver_geopoint_version')
+        self.assertEqual(form['title:utf8:string'], 'ver_geopoint_version')
 
         self.browser_do_logout()

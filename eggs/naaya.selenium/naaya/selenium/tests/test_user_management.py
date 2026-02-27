@@ -11,13 +11,13 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
 
     def test_add_user(self):
         self.selenium.open("/portal/admin_adduser_html", True)
-        self.selenium.type("firstname:utf8:ustring", 'Gheorghe')
-        self.selenium.type("lastname:utf8:ustring", 'Popescu')
-        self.selenium.type("email:utf8:ustring",
+        self.selenium.type("firstname:utf8:string", 'Gheorghe')
+        self.selenium.type("lastname:utf8:string", 'Popescu')
+        self.selenium.type("email:utf8:string",
                            'Gheorghe_Popescu@example.com')
-        self.selenium.type("name:utf8:ustring", 'ghita')
-        self.selenium.type("password:utf8:ustring", 'parola')
-        self.selenium.type("confirm:utf8:ustring", 'parola')
+        self.selenium.type("name:utf8:string", 'ghita')
+        self.selenium.type("password:utf8:string", 'parola')
+        self.selenium.type("confirm:utf8:string", 'parola')
         self.selenium.click('//input[@type="submit"]')
         self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
         assert self.selenium.is_text_present('Gheorghe Popescu')
@@ -29,35 +29,35 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
         self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
         assert self.selenium.is_text_present('The first name must be specified')
 
-        self.selenium.type("firstname:utf8:ustring", 'Gheorghe')
-        self.selenium.type("lastname:utf8:ustring", 'Popescu')
-        self.selenium.type("email:utf8:ustring",
+        self.selenium.type("firstname:utf8:string", 'Gheorghe')
+        self.selenium.type("lastname:utf8:string", 'Popescu')
+        self.selenium.type("email:utf8:string",
                            'broken')
-        self.selenium.type("name:utf8:ustring", 'ghita')
-        self.selenium.type("password:utf8:ustring", 'parola')
-        self.selenium.type("confirm:utf8:ustring", 'parola')
+        self.selenium.type("name:utf8:string", 'ghita')
+        self.selenium.type("password:utf8:string", 'parola')
+        self.selenium.type("confirm:utf8:string", 'parola')
         self.selenium.click('//input[@type="submit"]')
         self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
         assert self.selenium.is_text_present('Invalid email address.')
 
-        self.selenium.type("firstname:utf8:ustring", 'Gheorghe')
-        self.selenium.type("lastname:utf8:ustring", 'Popescu')
-        self.selenium.type("email:utf8:ustring",
+        self.selenium.type("firstname:utf8:string", 'Gheorghe')
+        self.selenium.type("lastname:utf8:string", 'Popescu')
+        self.selenium.type("email:utf8:string",
                            'mail@mail.com')
-        self.selenium.type("name:utf8:ustring", 'ghita')
-        self.selenium.type("password:utf8:ustring", 'parola')
-        self.selenium.type("confirm:utf8:ustring", 'parola')
+        self.selenium.type("name:utf8:string", 'ghita')
+        self.selenium.type("password:utf8:string", 'parola')
+        self.selenium.type("confirm:utf8:string", 'parola')
         self.selenium.click('//input[@type="submit"]')
         self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
         assert self.selenium.is_text_present('Username ghita already in use')
 
-        self.selenium.type("firstname:utf8:ustring", 'Gheorghe')
-        self.selenium.type("lastname:utf8:ustring", 'Popescu')
-        self.selenium.type("email:utf8:ustring",
+        self.selenium.type("firstname:utf8:string", 'Gheorghe')
+        self.selenium.type("lastname:utf8:string", 'Popescu')
+        self.selenium.type("email:utf8:string",
                            'mail@mail.com')
-        self.selenium.type("name:utf8:ustring", 'ghita1')
-        self.selenium.type("password:utf8:ustring", 'parola')
-        self.selenium.type("confirm:utf8:ustring", 'parola1')
+        self.selenium.type("name:utf8:string", 'ghita1')
+        self.selenium.type("password:utf8:string", 'parola')
+        self.selenium.type("confirm:utf8:string", 'parola1')
         self.selenium.click('//input[@type="submit"]')
         self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
         assert self.selenium.is_text_present(
@@ -68,42 +68,42 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
         #Change the firstname of the contributor user and save
         self.selenium.open("/portal/admin_edituser_html?name=contributor",
                            True)
-        self.selenium.type('//input[@name="lastname:utf8:ustring"]', 'Lastname')
+        self.selenium.type('//input[@name="lastname:utf8:string"]', 'Lastname')
         self.selenium.click('//input[@type="submit"]')
         self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
         self.selenium.open("/portal/admin_edituser_html?name=contributor",
                            True)
         assert self.selenium.get_value(
-            '//input[@name="lastname:utf8:ustring"]') == u'Lastname'
+            '//input[@name="lastname:utf8:string"]') == u'Lastname'
 
         #Empty form
-        self.selenium.type("firstname:utf8:ustring", '')
-        self.selenium.type("lastname:utf8:ustring", '')
-        self.selenium.type("email:utf8:ustring", '')
-        self.selenium.type("password:utf8:ustring", '')
-        self.selenium.type("confirm:utf8:ustring", '')
+        self.selenium.type("firstname:utf8:string", '')
+        self.selenium.type("lastname:utf8:string", '')
+        self.selenium.type("email:utf8:string", '')
+        self.selenium.type("password:utf8:string", '')
+        self.selenium.type("confirm:utf8:string", '')
         self.selenium.click('//input[@type="submit"]')
         self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
         assert self.selenium.is_text_present('The first name must be specified')
 
         #Check e-mail validation
-        email = self.selenium.get_value('//input[@name="email:utf8:ustring"]')
-        self.selenium.type('//input[@name="email:utf8:ustring"]', 'broken_email')
+        email = self.selenium.get_value('//input[@name="email:utf8:string"]')
+        self.selenium.type('//input[@name="email:utf8:string"]', 'broken_email')
         self.selenium.click('//input[@type="submit"]')
         self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
         assert self.selenium.get_value(
-            '//input[@name="email:utf8:ustring"]') == email
+            '//input[@name="email:utf8:string"]') == email
         assert self.selenium.is_text_present('Invalid email address.')
 
-        self.selenium.type('//input[@name="email:utf8:ustring"]',
+        self.selenium.type('//input[@name="email:utf8:string"]',
                            'reviewer@example.com')
         self.selenium.click('//input[@type="submit"]')
         self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
         assert self.selenium.is_text_present(
         'A user with the specified email already exists, username reviewer')
 
-        self.selenium.type("password:utf8:ustring", 'parola')
-        self.selenium.type("confirm:utf8:ustring", 'parola1')
+        self.selenium.type("password:utf8:string", 'parola')
+        self.selenium.type("confirm:utf8:string", 'parola1')
         self.selenium.click('//input[@type="submit"]')
         self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
         assert self.selenium.is_text_present(

@@ -17,7 +17,7 @@
 		<form name="frmBasicProperties" action="manageBasicProperties" method="post">
 			<tr>
 				<th align="left" width="25%">Title</th>
-				<td><input type="text" name="title:utf8:ustring" tal:attributes="value here/title" size="50" /></td>
+				<td><input type="text" name="title:utf8:string" tal:attributes="value here/title" size="50" /></td>
 			</tr>
 			<tr>
 				<th align="left"><strong>Approved</strong></th>
@@ -39,7 +39,7 @@
 						<span style="display:none" class="lang_name"
 						      tal:content="python:here.get_language_by_code(lang_code)"/>
 						<textarea rows="4" cols="80"
-						          tal:attributes="name string:description-${lang_code}:utf8:ustring;
+						          tal:attributes="name string:description-${lang_code}:utf8:string;
 						                          style python:test(lang_code == current_lang,
 						                                            None, 'display:none')"
 						          tal:content="python:here.get_description(lang_code)"

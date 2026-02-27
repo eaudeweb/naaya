@@ -83,7 +83,7 @@
             </select>
 
             <label for="search_term" i18n:translate="">containing</label>
-            <input type="text" id="search_term" name="search_term:utf8:ustring"
+            <input type="text" id="search_term" name="search_term:utf8:string"
                    tal:attributes="value search_term"/>
 
             <input type="submit" name="search_user" value="Search" />
@@ -134,7 +134,7 @@
             </tal:block>
 
             <label for="search_role" i18n:translate="">Search users with role</label>
-            <input type="text" id="search_role" name="search_role:utf8:ustring"
+            <input type="text" id="search_role" name="search_role:utf8:string"
                    tal:attributes="value search_role"/>
             <input type="button" name="pickroles" value="Pick Group"
                    tal:attributes="onclick string:javascript:pickRole('${here/absolute_url}/pickrole_html')"/>
@@ -194,35 +194,35 @@
               <label for="first_name" i18n:translate="">First name</label>
               <p class="form-errors" tal:define="err formerrors/first_name|nothing"
                   tal:condition="err" tal:content="err" />
-              <input type="text" name="first_name:utf8:ustring" id="first_name"
+              <input type="text" name="first_name:utf8:string" id="first_name"
                    size="50" tal:attributes="value formdata/first_name|nothing" />
           </div>
           <div class="field">
               <label for="last_name" i18n:translate="">Last name</label>
               <p class="form-errors" tal:define="err formerrors/last_name|nothing"
                   tal:condition="err" tal:content="err" />
-              <input type="text" name="last_name:utf8:ustring" id="last_name"
+              <input type="text" name="last_name:utf8:string" id="last_name"
                    size="50" tal:attributes="value formdata/last_name|nothing" />
           </div>
           <div class="field">
               <label for="email" i18n:translate="">E-mail address</label>
               <p class="form-errors" tal:define="err formerrors/email|nothing"
                   tal:condition="err" tal:content="err" />
-              <input type="text" name="email:utf8:ustring" id="email"
+              <input type="text" name="email:utf8:string" id="email"
                    size="50" tal:attributes="value formdata/email|nothing" />
           </div>
           <div class="field">
               <label for="organization" i18n:translate="">Organization</label>
               <p class="form-errors" tal:define="err formerrors/organization|nothing"
                   tal:condition="err" tal:content="err" />
-              <input type="text" name="organization:utf8:ustring" id="organization"
+              <input type="text" name="organization:utf8:string" id="organization"
                    size="50" tal:attributes="value formdata/organization|nothing" />
           </div>
           <div class="field">
               <label for="phone" i18n:translate="">Phone number</label>
               <p class="form-errors" tal:define="err formerrors/phone|nothing"
                   tal:condition="err" tal:content="err" />
-              <input type="text" name="phone:utf8:ustring" id="phone"
+              <input type="text" name="phone:utf8:string" id="phone"
                    size="50" tal:attributes="value formdata/phone|nothing" />
           </div>
 

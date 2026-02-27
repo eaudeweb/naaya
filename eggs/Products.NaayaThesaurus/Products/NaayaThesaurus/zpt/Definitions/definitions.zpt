@@ -21,7 +21,7 @@
 		</tr>
 		<tr>
 			<th class="form-label" align="left">Translation</th>
-			<td><input type="text" name="definition:utf8:ustring" size="50" tal:attributes="value python:record_data[3]" /></td>
+			<td><input type="text" name="definition:utf8:string" size="50" tal:attributes="value python:record_data[3]" /></td>
 		</tr>
 		<tr>
 			<th class="form-label" align="left">By language</th>

@@ -13,15 +13,15 @@
 	</tr>
 	<tr>
 		<td class="form-label">Title</td>
-		<td><input type="text" name="title:utf8:ustring" id="title" size="50" value="" /></td>
+		<td><input type="text" name="title:utf8:string" id="title" size="50" value="" /></td>
 	</tr>
 	<tr>
 		<td class="form-label" valign="top">Description</td>
-		<td><textarea name="description:utf8:ustring" id="description" rows="10" cols="50"></textarea></td>
+		<td><textarea name="description:utf8:string" id="description" rows="10" cols="50"></textarea></td>
 	</tr>
 	<tr>
 		<td class="form-label" valign="top">Categories</td>
-		<td><textarea name="categories:utf8:ustring" id="categories" rows="10" cols="50"></textarea></td>
+		<td><textarea name="categories:utf8:string" id="categories" rows="10" cols="50"></textarea></td>
 	</tr>
 	<tr>
 		<td class="form-label" valign="top">Max allowed uploaded files size</td>

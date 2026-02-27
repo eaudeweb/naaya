@@ -20,12 +20,12 @@
 
 <!-- <div class="field">
 	<label class="widget-title" for="picture_0_text"><span i18n:translate="" tal:omit-tag="">Picture 1 text</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'picture_0_text')" class="mandatory_field"> *</span></label>
-	<input type="text" id="picture_0_text" name="picture_0_text:utf8:ustring" size="50" tal:attributes="value here/picture_0_text" />
+	<input type="text" id="picture_0_text" name="picture_0_text:utf8:string" size="50" tal:attributes="value here/picture_0_text" />
 </div>
 
 <div class="field">
 	<label class="widget-title" for="picture_0_url"><span i18n:translate="" tal:omit-tag="">Picture 1 URL</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'picture_0_url')" class="mandatory_field"> *</span></label>
-	<input type="text" id="picture_0_url" name="picture_0_url:utf8:ustring" size="50" tal:attributes="value here/picture_0_url" />
+	<input type="text" id="picture_0_url" name="picture_0_url:utf8:string" size="50" tal:attributes="value here/picture_0_url" />
 </div> -->
 
 <div class="field">
@@ -43,12 +43,12 @@
 
 <!-- <div class="field">
 	<label class="widget-title" for="picture_1_text"><span i18n:translate="" tal:omit-tag="">Picture 2 text</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'picture_1_text')" class="mandatory_field"> *</span></label>
-	<input type="text" id="picture_1_text" name="picture_1_text:utf8:ustring" size="50" tal:attributes="value here/picture_1_text" />
+	<input type="text" id="picture_1_text" name="picture_1_text:utf8:string" size="50" tal:attributes="value here/picture_1_text" />
 </div>
 
 <div class="field">
 	<label class="widget-title" for="picture_1_url"><span i18n:translate="" tal:omit-tag="">Picture 2 URL</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'picture_1_url')" class="mandatory_field"> *</span></label>
-	<input type="text" id="picture_1_url" name="picture_1_url:utf8:ustring" size="50" tal:attributes="value here/picture_1_url" />
+	<input type="text" id="picture_1_url" name="picture_1_url:utf8:string" size="50" tal:attributes="value here/picture_1_url" />
 </div> -->
 
 <div class="field">

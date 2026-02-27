@@ -148,7 +148,7 @@ class TestNySiteListing(NaayaFunctionalTestCase):
 class SearchPageFunctionalTest(NaayaFunctionalTestCase):
     def test_pagination(self):
         self.browser.go('http://localhost/portal/search_html?'
-                        'query:utf8:ustring=accessibility&Naaya_Document=on')
+                        'query:utf8:string=accessibility&Naaya_Document=on')
         html = self.browser.get_html()
         # Search uses client-side DataTables pagination (not server-side).
         # Just verify the search page loads successfully.

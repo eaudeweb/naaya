@@ -96,7 +96,7 @@ function createKey(key)
 		<label for="query_users">
 			<span tal:omit-tag="" i18n:translate="">Search users</span>
 		</label>
-		<input type="text" size="35" name="query:utf8:ustring" id="query_users" tal:attributes="value query" />
+		<input type="text" size="35" name="query:utf8:string" id="query_users" tal:attributes="value query" />
 		<input type="submit" value="Search" i18n:attributes="value" />
 	</form>
 </p>

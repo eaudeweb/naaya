@@ -11,7 +11,7 @@
     <div class="field-inline">
         <label for="form-initial_address"
                i18n:translate="">Center address</label>
-        <input type="text" size="70" name="initial_address:utf8:ustring"
+        <input type="text" size="70" name="initial_address:utf8:string"
                id="form-initial_address"
                tal:attributes="value here/initial_address" />
     </div>
@@ -19,7 +19,7 @@
     <div class="field-inline">
         <label for="form-initial_zoom"
                i18n:translate="">Zoom (1-17, blank means automatic)</label>
-        <input type="text" size="3" name="initial_zoom:utf8:ustring"
+        <input type="text" size="3" name="initial_zoom:utf8:string"
                id="form-initial_zoom"
                tal:attributes="value here/initial_zoom|string:" />
     </div>

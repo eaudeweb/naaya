@@ -11,7 +11,7 @@
 
     <textarea rows="10" cols="80"
               id="form-debug_strings"
-              name="debug_strings:utf8:ustring"
+              name="debug_strings:utf8:string"
               tal:content="python:'\n'.join(here.message_debug_list)"
               ></textarea><br/>
 

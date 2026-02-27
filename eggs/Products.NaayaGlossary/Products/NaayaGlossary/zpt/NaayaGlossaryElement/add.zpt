@@ -16,7 +16,7 @@
 			</tr>
 			<tr>
 				<td align="left" valign="top"><label for="cb-name"><strong>Title</strong></label></td>
-				<td align="left" valign="top"><input type="text" id="cb-name" name="title:utf8:ustring" size="35" value=""></td>
+				<td align="left" valign="top"><input type="text" id="cb-name" name="title:utf8:string" size="35" value=""></td>
 			</tr>
 			<tr>
 				<td align="left" valign="top"><label for="cb-subjects"><strong>Themes</strong></label></td>
@@ -31,11 +31,11 @@
 			</tr>
 			<tr>
 				<td align="left" valign="top"><label for="cb-source"><strong>Source</strong></label></td>
-				<td align="left" valign="top"><input type="text" id="cb-source" name="source:utf8:ustring" size="35" value=""></td>
+				<td align="left" valign="top"><input type="text" id="cb-source" name="source:utf8:string" size="35" value=""></td>
 			</tr>
 			<tr>
 				<td align="left" valign="top"><label for="cb-contributor"><strong>Contributor</strong></label></td>
-				<td align="left" valign="top"><input type="text" id="cb-contributor" name="contributor:utf8:ustring" size="35" value=""></td>
+				<td align="left" valign="top"><input type="text" id="cb-contributor" name="contributor:utf8:string" size="35" value=""></td>
 			</tr>
 			</table><br />
 

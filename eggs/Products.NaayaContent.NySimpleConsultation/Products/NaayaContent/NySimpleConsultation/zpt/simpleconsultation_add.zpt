@@ -24,13 +24,13 @@
 
 		<div class="field">
 			<label for="title"><span i18n:translate="" tal:omit-tag="">Title</span><span class="mandatory_field"> *</span></label>
-			<input type="text" name="title:utf8:ustring" id="title" size="50" tal:attributes="value python:here.getSession('title', '')" />
+			<input type="text" name="title:utf8:string" id="title" size="50" tal:attributes="value python:here.getSession('title', '')" />
 		</div>
 
 		<div class="field">
 			<label for="description"><span i18n:translate="" tal:omit-tag="">Description</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'description')" class="mandatory_field"> *</span></label>
 			<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('description', image_support=True)" />
-			<textarea id="description" name="description:utf8:ustring" rows="20" cols="72" class="mceEditor" tal:content="python:here.getSession('description', '')" />
+			<textarea id="description" name="description:utf8:string" rows="20" cols="72" class="mceEditor" tal:content="python:here.getSession('description', '')" />
 		</div>
 
 		<div class="field">

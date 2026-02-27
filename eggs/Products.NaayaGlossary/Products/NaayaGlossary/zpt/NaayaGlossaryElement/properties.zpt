@@ -16,7 +16,7 @@
 			<form name="frmProperties" action="manageBasicProperties" method="post">
 				<tr>
 					<td><strong>Title</strong></td>
-					<td><input type="text" name="title:utf8:ustring" size="40" tal:attributes="value here/title" /></td>
+					<td><input type="text" name="title:utf8:string" size="40" tal:attributes="value here/title" /></td>
 				</tr>
 				<tr>
 					<td valign="top"><strong>Themes</strong></td>
@@ -32,11 +32,11 @@
 				</tr>
 				<tr>
 					<td><strong>Source</strong></td>
-					<td><input type="text" name="source:utf8:ustring" size="40" tal:attributes="value here/source" /></td>
+					<td><input type="text" name="source:utf8:string" size="40" tal:attributes="value here/source" /></td>
 				</tr>
 				<tr>
 					<td><strong>Contributor</strong></td>
-					<td><input type="text" name="contributor:utf8:ustring" size="40" tal:attributes="value here/contributor" /></td>
+					<td><input type="text" name="contributor:utf8:string" size="40" tal:attributes="value here/contributor" /></td>
 				</tr>
 				<tr>
 					<td><strong>Approved</strong></td>

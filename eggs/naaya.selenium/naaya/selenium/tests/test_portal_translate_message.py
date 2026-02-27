@@ -64,7 +64,7 @@ class NaayaPortal_translate_messageTest(SeleniumTestCase):
         self.load_translate_page()
         selen = self.selenium
         translation = "translation du mot"
-        selen.type("translation:utf8:ustring", translation)
+        selen.type("translation:utf8:string", translation)
         selen.click("//input[@value='Save changes']")
         selen.wait_for_page_to_load(self._selenium_page_timeout)
 
@@ -79,7 +79,7 @@ class NaayaPortal_translate_messageTest(SeleniumTestCase):
         self.load_translate_page()
         selen = self.selenium
         translation = " "
-        selen.type("translation:utf8:ustring", translation)
+        selen.type("translation:utf8:string", translation)
         selen.click("//input[@value='Save changes']")
         selen.wait_for_page_to_load(self._selenium_page_timeout)
 
@@ -95,7 +95,7 @@ class NaayaPortal_translate_messageTest(SeleniumTestCase):
         self.load_translate_page()
         selen = self.selenium
         translation = ""
-        selen.type("translation:utf8:ustring", translation)
+        selen.type("translation:utf8:string", translation)
         selen.click("//input[@value='Save changes']")
         selen.wait_for_page_to_load(self._selenium_page_timeout)
 
@@ -111,7 +111,7 @@ class NaayaPortal_translate_messageTest(SeleniumTestCase):
         self.load_translate_page()
         selen = self.selenium
         translation = u"стуўфх"
-        selen.type("translation:utf8:ustring", translation)
+        selen.type("translation:utf8:string", translation)
         selen.click("//input[@value='Save changes']")
         selen.wait_for_page_to_load(self._selenium_page_timeout)
 
@@ -124,7 +124,7 @@ class NaayaPortal_translate_messageTest(SeleniumTestCase):
         self.load_translate_page()
         selen = self.selenium
         translation = "!@#$%^&*()"
-        selen.type("translation:utf8:ustring", translation)
+        selen.type("translation:utf8:string", translation)
         selen.click("//input[@value='Save changes']")
         selen.wait_for_page_to_load(self._selenium_page_timeout)
 
@@ -139,7 +139,7 @@ class NaayaPortal_translate_messageTest(SeleniumTestCase):
         self.load_translate_page()
         selen = self.selenium
         translation = "<b>"
-        selen.type("translation:utf8:ustring", translation)
+        selen.type("translation:utf8:string", translation)
         selen.click("//input[@value='Save changes']")
         selen.wait_for_page_to_load(self._selenium_page_timeout)
 

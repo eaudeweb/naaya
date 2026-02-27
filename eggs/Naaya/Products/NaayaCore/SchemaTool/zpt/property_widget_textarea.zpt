@@ -9,7 +9,7 @@ curr_lang python:request.get('lang', None) or here.gl_get_selected_language();
         <textarea tal:attributes="
             rows here/rows;
             cols here/columns;
-            name string:${prop_id}:utf8:ustring;
+            name string:${prop_id}:utf8:string;
             id prop_id"
             tal:content="value"></textarea>
     </metal:block>

@@ -14,12 +14,12 @@
       class="form-add-comment">
 <div class="field">
 	<label for="title" i18n:translate="">Subject</label>
-	<input type="text" name="title:utf8:ustring" id="title" size="50" />
+	<input type="text" name="title:utf8:string" id="title" size="50" />
 </div>
 <div class="field">
 	<label for="body" i18n:translate="">Comment</label>
 	<span tal:replace="structure python:editor.render('body', image_support=True)" />
-	<textarea id="body" name="body:utf8:ustring" rows="20" cols="72" class="mceEditor"></textarea>
+	<textarea id="body" name="body:utf8:string" rows="20" cols="72" class="mceEditor"></textarea>
 </div>
 <div class="field" tal:condition="python: not here.checkPermissionSkipCaptcha() and here.recaptcha_is_present()" tal:content="structure python: here.show_recaptcha(here)" />
 <div class="field">

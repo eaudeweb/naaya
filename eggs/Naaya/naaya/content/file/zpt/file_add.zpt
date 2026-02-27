@@ -23,7 +23,7 @@
 	<label for="url" class="invisible" i18n:translate="">(remote address)</label>
 </div>
 <div class="field">
-		<input type="hidden" name="downloadfilename:utf8:ustring" id="downloadfilename" size="40" tal:attributes="value python:here.getSession('downloadfilename', '')" />
+		<input type="hidden" name="downloadfilename:utf8:string" id="downloadfilename" size="40" tal:attributes="value python:here.getSession('downloadfilename', '')" />
 </div>
 </tal:block>
 

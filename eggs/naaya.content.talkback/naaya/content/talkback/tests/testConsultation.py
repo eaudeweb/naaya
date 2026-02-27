@@ -58,8 +58,8 @@ class ConsultationBasicTestCase(NaayaFunctionalTestCase):
 
         self.browser.go('http://localhost/portal/myfolder/talkbackconsultation_add_html')
         form = self.browser.get_form('frmAdd')
-        form['title:utf8:ustring'] = "New consultation"
-        self.browser.clicked(form, form.find_control('title:utf8:ustring'))
+        form['title:utf8:string'] = "New consultation"
+        self.browser.clicked(form, form.find_control('title:utf8:string'))
         self.browser.submit()
 
         self.assertEqual(self.portal.myfolder.objectIds(), ['new-consultation'])
@@ -73,9 +73,9 @@ class ConsultationBasicTestCase(NaayaFunctionalTestCase):
 
         self.browser.go('http://localhost/portal/myfolder/test-consultation/section_add_html')
         form = self.browser.get_form('frmAdd')
-        form['title:utf8:ustring'] = "Section one"
-        form['body:utf8:ustring'] = "<p>First paragraph</p><p>Second paragraph</p>"
-        self.browser.clicked(form, form.find_control('title:utf8:ustring'))
+        form['title:utf8:string'] = "Section one"
+        form['body:utf8:string'] = "<p>First paragraph</p><p>Second paragraph</p>"
+        self.browser.clicked(form, form.find_control('title:utf8:string'))
         self.browser.submit()
 
         self.assertEqual(len(self.portal.myfolder['test-consultation'].objectIds()), 1)
@@ -98,8 +98,8 @@ class ConsultationBasicTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/myfolder/test-consultation/sec1/000')
         self.assertTrue('Add a comment' in self.browser.get_html())
         form = self.browser.get_form('frmAdd')
-        form['message:utf8:ustring'] = 'I has something to say'
-        self.browser.clicked(form, form.find_control('message:utf8:ustring'))
+        form['message:utf8:string'] = 'I has something to say'
+        self.browser.clicked(form, form.find_control('message:utf8:string'))
         self.browser.submit()
 
         paragraph = self.portal.myfolder['test-consultation']['sec1']['000']
@@ -128,8 +128,8 @@ class ConsultationBasicTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/myfolder/test-consultation/sec2/000')
         self.assertTrue('Add a comment' in self.browser.get_html())
         form = self.browser.get_form('frmAdd')
-        form['message:utf8:ustring'] = 'I has something to say 2'
-        self.browser.clicked(form, form.find_control('message:utf8:ustring'))
+        form['message:utf8:string'] = 'I has something to say 2'
+        self.browser.clicked(form, form.find_control('message:utf8:string'))
         self.browser.submit()
 
         paragraph = consultation['sec2']['000']
@@ -196,9 +196,9 @@ class CommentSubmissionTestCase(NaayaFunctionalTestCase):
         self.browser.go(self.section_url + '/000')
         self.assertTrue('Add a comment' in self.browser.get_html())
         form = self.browser.get_form('frmAdd')
-        form['contributor_name:utf8:ustring'] = 'gigi'
-        form['message:utf8:ustring'] = 'I has something to say'
-        self.browser.clicked(form, form.find_control('message:utf8:ustring'))
+        form['contributor_name:utf8:string'] = 'gigi'
+        form['message:utf8:string'] = 'I has something to say'
+        self.browser.clicked(form, form.find_control('message:utf8:string'))
         self.browser.submit()
 
         self.assertEqual(len(self.section['000'].objectIds()), 1)
@@ -214,9 +214,9 @@ class CommentSubmissionTestCase(NaayaFunctionalTestCase):
         self.assertTrue('Add a comment' in self.browser.get_html())
         form = self.browser.get_form('frmAdd')
         form_controls = set(c.name for c in form.controls)
-        self.assertTrue('contributor_name:utf8:ustring' not in form_controls)
-        form['message:utf8:ustring'] = 'Logged in comment'
-        self.browser.clicked(form, form.find_control('message:utf8:ustring'))
+        self.assertTrue('contributor_name:utf8:string' not in form_controls)
+        form['message:utf8:string'] = 'Logged in comment'
+        self.browser.clicked(form, form.find_control('message:utf8:string'))
         self.browser.submit()
 
         self.assertEqual(len(self.section['000'].objectIds()), 1)
@@ -242,10 +242,10 @@ class CommentSubmissionTestCase(NaayaFunctionalTestCase):
         form = self.browser.get_form('frmAdd')
         form_controls = set(c.name for c in form.controls)
         self.assertTrue('file' in form_controls)
-        form['message:utf8:ustring'] = 'Comment with attachment'
+        form['message:utf8:string'] = 'Comment with attachment'
         form.find_control('file').add_file(StringIO('some data'),
             filename='attached.txt', content_type='text/plain; charset=utf-8')
-        self.browser.clicked(form, form.find_control('message:utf8:ustring'))
+        self.browser.clicked(form, form.find_control('message:utf8:string'))
         self.browser.submit()
 
         self.assertEqual(len(self.section['000'].objectIds()), 1)
@@ -273,10 +273,10 @@ class CommentSubmissionTestCase(NaayaFunctionalTestCase):
 
         self.browser.go('%s/000/%s/edit_html' % (self.section_url, comment_id))
         form = self.browser.get_form('frmEdit')
-        self.assertEqual(form['message:utf8:ustring'].strip(),
+        self.assertEqual(form['message:utf8:string'].strip(),
                          'original comment')
-        form['message:utf8:ustring'] = 'modified comment'
-        self.browser.clicked(form, form.find_control('message:utf8:ustring'))
+        form['message:utf8:string'] = 'modified comment'
+        self.browser.clicked(form, form.find_control('message:utf8:string'))
         self.browser.submit()
 
         self.assertEqual(self.section['000'][comment_id].message, 'modified comment')
@@ -293,8 +293,8 @@ class CommentSubmissionTestCase(NaayaFunctionalTestCase):
         self.browser.go('%s/000/%s/edit_html' % (self.section_url, comment_id))
         form = self.browser.get_form('frmEdit')
 
-        form['message:utf8:ustring'] = 'modified comment'
-        self.browser.clicked(form, form.find_control('message:utf8:ustring'))
+        form['message:utf8:string'] = 'modified comment'
+        self.browser.clicked(form, form.find_control('message:utf8:string'))
         self.browser.submit()
 
         self.assertEqual(self.section['000'][comment_id].message, 'modified comment')
@@ -325,8 +325,8 @@ class CommentSubmissionTestCase(NaayaFunctionalTestCase):
         for test_input, test_output in tests:
             self.browser.go(self.section_url + '/000')
             form = self.browser.get_form('frmAdd')
-            form['message:utf8:ustring'] = test_input
-            self.browser.clicked(form, form.find_control('message:utf8:ustring'))
+            form['message:utf8:string'] = test_input
+            self.browser.clicked(form, form.find_control('message:utf8:string'))
             self.browser.submit()
 
             comment = self.section['000'].objectValues()[0]
@@ -346,12 +346,12 @@ class CommentSubmissionTestCase(NaayaFunctionalTestCase):
         self.browser.go('%s/000?reply_to=%s' % (self.section_url, comment1_id))
         form = self.browser.get_form('frmAdd')
         self.assertEqual(form['reply_to'], comment1_id)
-        self.assertEqual(form['message:utf8:ustring'],
+        self.assertEqual(form['message:utf8:string'],
                          '<p></p><blockquote>original comment</blockquote><p></p>')
-        form['message:utf8:ustring'] = ('<p>\n&nbsp;\n</p>\n'
+        form['message:utf8:string'] = ('<p>\n&nbsp;\n</p>\n'
                                         '<blockquote>original comment</blockquote>\n'
                                         '<p>\n&nbsp;\n</p>')
-        self.browser.clicked(form, form.find_control('message:utf8:ustring'))
+        self.browser.clicked(form, form.find_control('message:utf8:string'))
         self.browser.submit()
 
         comment2_id = ( set(self.section['000'].objectIds()) -
@@ -366,7 +366,7 @@ class CommentSubmissionTestCase(NaayaFunctionalTestCase):
         self.section['000'].manage_delObjects([comment1_id])
         transaction.commit()
         form = self.browser.get_form('frmAdd')
-        self.browser.clicked(form, form.find_control('message:utf8:ustring'))
+        self.browser.clicked(form, form.find_control('message:utf8:string'))
         self.browser.submit()
 
         self.assertEqual(len(self.section['000'].objectIds()), 1,

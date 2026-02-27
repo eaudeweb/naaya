@@ -21,21 +21,21 @@
 
     <input type="hidden"
            tal:attributes="value opt_value_start_date;
-                           name string:${start_date_id}:utf8:ustring;" />
+                           name string:${start_date_id}:utf8:string;" />
 
 
     <input type="hidden"
            tal:attributes="value opt_value_start_time;
-                           name string:${start_time_id}:utf8:ustring;" />
+                           name string:${start_time_id}:utf8:string;" />
 
     <input type="hidden"
 
            tal:attributes="value opt_value_end_date;
-                           name string:${end_date_id}:utf8:ustring;" />
+                           name string:${end_date_id}:utf8:string;" />
 
 
     <input type="hidden"
            tal:attributes="value opt_value_end_time;
-                           name string:${end_time_id}:utf8:ustring;" />
+                           name string:${end_time_id}:utf8:string;" />
 
 </tal:block>

@@ -64,20 +64,20 @@ class NyPhotoFolderFunctionalTestCase(NaayaFunctionalTestCase):
         self.failUnless('<h1>Submit album</h1>' in self.browser.get_html())
         form = self.browser.get_form('frmAdd')
         expected_controls = set([
-            'lang', 'title:utf8:ustring', 'description:utf8:ustring', 'coverage:utf8:ustring',
-            'keywords:utf8:ustring', 'releasedate', 'discussion:boolean',
-            'author:utf8:ustring', 'source:utf8:ustring', 'file', 
+            'lang', 'title:utf8:string', 'description:utf8:string', 'coverage:utf8:string',
+            'keywords:utf8:string', 'releasedate', 'discussion:boolean',
+            'author:utf8:string', 'source:utf8:string', 'file', 
         ])
         found_controls = set(c.name for c in form.controls)
         self.failUnless(expected_controls.issubset(found_controls),
             'Missing form controls: %s' % repr(expected_controls - found_controls))
 
-        form['title:utf8:ustring'] = 'test_create_album'
-        form['description:utf8:ustring'] = 'test_album_description'
-        form['coverage:utf8:ustring'] = 'test_album_coverage'
-        form['keywords:utf8:ustring'] = 'keyw1, keyw2'
-        form['author:utf8:ustring'] = 'test_album_author'
-        form['source:utf8:ustring'] = 'test_album_source'
+        form['title:utf8:string'] = 'test_create_album'
+        form['description:utf8:string'] = 'test_album_description'
+        form['coverage:utf8:string'] = 'test_album_coverage'
+        form['keywords:utf8:string'] = 'keyw1, keyw2'
+        form['author:utf8:string'] = 'test_album_author'
+        form['source:utf8:string'] = 'test_album_source'
 
         picture = load_file('data/pink.png')
         form.find_control('file').add_file(picture, filename="albumphoto.png", content_type='image/png')
@@ -110,7 +110,7 @@ class NyPhotoFolderFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/myfolder/mygallery/photofolder_add_html')
         form = self.browser.get_form('frmAdd')
 
-        form['title:utf8:ustring'] = 'test_create_album_zip'
+        form['title:utf8:string'] = 'test_create_album_zip'
 
         pictures_zip = load_file('data/test.zip')
         form.find_control('file').add_file(pictures_zip, filename="photos.zip", content_type='application/octet-stream')
@@ -174,11 +174,11 @@ class NyPhotoFolderFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/myfolder/mygallery/myalbum/edit_html')
         form = self.browser.get_form('frmEdit')
 
-        self.failUnlessEqual(form['title:utf8:ustring'], 'My photo album')
+        self.failUnlessEqual(form['title:utf8:string'], 'My photo album')
 
-        form['title:utf8:ustring'] = 'new_album_title'
+        form['title:utf8:string'] = 'new_album_title'
 
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
         html = self.browser.get_html()
         self.failUnless('<h1>Edit album</h1>' in html)
@@ -187,8 +187,8 @@ class NyPhotoFolderFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.go('http://localhost/portal/myfolder/mygallery/myalbum/edit_html?lang=fr')
         form = self.browser.get_form('frmEdit')
-        form['title:utf8:ustring'] = 'french_title'
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        form['title:utf8:string'] = 'french_title'
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
 
         self.failUnlessEqual(self.portal.myfolder.mygallery.myalbum.title, 'new_album_title')
@@ -201,8 +201,8 @@ class NyPhotoFolderFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/myfolder/mygallery/myalbum/edit_html')
 
         form = self.browser.get_form('frmEdit')
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
-        form['title:utf8:ustring'] = ''
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
+        form['title:utf8:string'] = ''
         self.browser.submit()
 
         html = self.browser.get_html()
@@ -217,9 +217,9 @@ class NyPhotoFolderFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.go('http://localhost/portal/myfolder/mygallery/myalbum/manage_edit_html')
         form = self.browser.get_form('frmEdit')
-        self.failUnlessEqual(form['title:utf8:ustring'], 'My photo album')
-        form['title:utf8:ustring'] = 'new_album_title'
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        self.failUnlessEqual(form['title:utf8:string'], 'My photo album')
+        form['title:utf8:string'] = 'new_album_title'
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
 
         self.failUnlessEqual(self.portal.myfolder.mygallery.title, 'new_album_title')

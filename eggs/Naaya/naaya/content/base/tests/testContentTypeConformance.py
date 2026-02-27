@@ -46,8 +46,8 @@ def _fill_specific_form_fields(form, type_name):
         if type_name == 'url_item':
             form['redirect:boolean'] = []
         elif type_name == 'geopoint_item':
-            form['geo_location.lon:utf8:ustring'] = '12.587142'
-            form['geo_location.lat:utf8:ustring'] = '55.681004'
+            form['geo_location.lon:utf8:string'] = '12.587142'
+            form['geo_location.lat:utf8:string'] = '55.681004'
         elif type_name == 'mediafile_item':
             form.find_control('file').add_file(StringIO('the_MP4_data'),
                 filename='testvid.mp4', content_type='video/mp4')
@@ -121,11 +121,11 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase):
             # add an object
             self.browser.go('http://localhost/portal/xz_folder/%s' % content_type['add_form'])
             form = self.browser.get_form('frmAdd')
-            self.assertTrue('xzzx:utf8:ustring' in (c.name for c in form.controls),
+            self.assertTrue('xzzx:utf8:string' in (c.name for c in form.controls),
                 'missing "xzzx" control for %s when adding' % type_name)
-            self.browser.clicked(form, form.find_control('title:utf8:ustring'))
-            form['title:utf8:ustring'] = 'some title %d' % n
-            form['xzzx:utf8:ustring'] = 'the XzZx one true value'
+            self.browser.clicked(form, form.find_control('title:utf8:string'))
+            form['title:utf8:string'] = 'some title %d' % n
+            form['xzzx:utf8:string'] = 'the XzZx one true value'
             _fill_specific_form_fields(form, type_name)
             self.browser.submit()
 
@@ -137,15 +137,15 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase):
             # edit the object
             self.browser.go('http://localhost/portal/xz_folder/some-title-%d/edit_html' % n)
             form = self.browser.get_form('frmEdit')
-            self.assertTrue('xzzx:utf8:ustring' in (c.name for c in form.controls),
+            self.assertTrue('xzzx:utf8:string' in (c.name for c in form.controls),
                 'missing "xzzx" control for %s when editing' % type_name)
-            self.browser.clicked(form, form.find_control('xzzx:utf8:ustring'))
+            self.browser.clicked(form, form.find_control('xzzx:utf8:string'))
             self.browser.submit()
             form = self.browser.get_form('frmEdit')
-            self.assertEqual(form['xzzx:utf8:ustring'], 'the XzZx one true value',
+            self.assertEqual(form['xzzx:utf8:string'], 'the XzZx one true value',
                 'bad "xzzx" value in edit form for %s' % type_name)
-            form['xzzx:utf8:ustring'] = 'the XzZx other true value'
-            self.browser.clicked(form, form.find_control('xzzx:utf8:ustring'))
+            form['xzzx:utf8:string'] = 'the XzZx other true value'
+            self.browser.clicked(form, form.find_control('xzzx:utf8:string'))
             self.browser.submit()
 
             # make sure the value was changed
@@ -172,8 +172,8 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase):
             self.browser.go('http://localhost/portal/xz_folder/%s' % content_type['add_form'])
             # dont' add title, so the form generates an error
             form = self.browser.get_form('frmAdd')
-            form['keywords:utf8:ustring'] = 'no save me'
-            self.browser.clicked(form, form.find_control('title:utf8:ustring'))
+            form['keywords:utf8:string'] = 'no save me'
+            self.browser.clicked(form, form.find_control('title:utf8:string'))
             self.browser.submit()
 
             html = self.browser.get_html()
@@ -181,7 +181,7 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase):
             self.assertTrue('Value required for "Title"' in html
                 or 'The Title field must have a value.' in html)
             form = self.browser.get_form('frmAdd')
-            self.assertEqual(form['keywords:utf8:ustring'], 'no save me',
+            self.assertEqual(form['keywords:utf8:string'], 'no save me',
                 'The "add" form did not remember our data (%s)' % type_name)
 
             self.assertFalse('test-form-title' in self.portal.xz_folder.objectIds(),
@@ -189,10 +189,10 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase):
 
             # create the real object so we can try editing it
             form = self.browser.get_form('frmAdd')
-            form['title:utf8:ustring'] = 'test form title'
-            form['keywords:utf8:ustring'] = ''
+            form['title:utf8:string'] = 'test form title'
+            form['keywords:utf8:string'] = ''
             _fill_specific_form_fields(form, type_name)
-            self.browser.clicked(form, form.find_control('title:utf8:ustring'))
+            self.browser.clicked(form, form.find_control('title:utf8:string'))
             self.browser.submit()
 
             # make sure the object was created
@@ -202,10 +202,10 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase):
             # try to edit the object, expect form errors
             self.browser.go('http://localhost/portal/xz_folder/test-form-title/edit_html')
             form = self.browser.get_form('frmEdit')
-            self.assertEqual(form['title:utf8:ustring'], 'test form title')
-            form['title:utf8:ustring'] = ''
-            form['keywords:utf8:ustring'] = 'no save me'
-            self.browser.clicked(form, form.find_control('title:utf8:ustring'))
+            self.assertEqual(form['title:utf8:string'], 'test form title')
+            form['title:utf8:string'] = ''
+            form['keywords:utf8:string'] = 'no save me'
+            self.browser.clicked(form, form.find_control('title:utf8:string'))
             self.browser.submit()
 
             # see if the form contains errors, and the data we just entered.
@@ -213,7 +213,7 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase):
             self.assertTrue('Value required for "Title"' in html
                 or 'The Title field must have a value.' in html)
             form = self.browser.get_form('frmEdit')
-            #self.assertEqual(form['keywords:utf8:ustring'], 'no save me',
+            #self.assertEqual(form['keywords:utf8:string'], 'no save me',
             #    'The "edit" form did not remember our data (%s)' % type_name)
 
             self.assertEqual(self.portal.xz_folder['test-form-title'].keywords, '',
@@ -234,9 +234,9 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase):
             # "create object" form
             self.browser.go('http://localhost/portal/xz_folder/%s' % content_type['add_form'])
             form = self.browser.get_form('frmAdd')
-            form['title:utf8:ustring'] = 'ze title'
+            form['title:utf8:string'] = 'ze title'
             _fill_specific_form_fields(form, type_name)
-            self.browser.clicked(form, form.find_control('title:utf8:ustring'))
+            self.browser.clicked(form, form.find_control('title:utf8:string'))
             self.browser.submit()
 
             # make sure the object was created
@@ -246,11 +246,11 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase):
             # try to edit the object in another language
             self.browser.go('http://localhost/portal/xz_folder/ze-title/edit_html?lang=fr')
             form = self.browser.get_form('frmEdit')
-            self.assertEqual(form['title:utf8:ustring'], '',
+            self.assertEqual(form['title:utf8:string'], '',
                 'Unexpected value in form: "%s" (should be "") (%s)'
-                    % (form['title:utf8:ustring'], type_name))
-            form['title:utf8:ustring'] = 'le title'
-            self.browser.clicked(form, form.find_control('title:utf8:ustring'))
+                    % (form['title:utf8:string'], type_name))
+            form['title:utf8:string'] = 'le title'
+            self.browser.clicked(form, form.find_control('title:utf8:string'))
             self.browser.submit()
             self.assertFalse('The form contains errors' in self.browser.get_html())
 
@@ -288,9 +288,9 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase):
             form = self.browser.get_form('frmAdd')
             self.assertTrue(form is not None, "%s form cannot be rendered" %
                                         content_type['add_form'])
-            form['title:utf8:ustring'] = rnd_title
+            form['title:utf8:string'] = rnd_title
             _fill_specific_form_fields(form, type_name)
-            self.browser.clicked(form, form.find_control('title:utf8:ustring'))
+            self.browser.clicked(form, form.find_control('title:utf8:string'))
             self.browser.submit()
 
             self.browser.go('http://localhost/portal/search_html?query=' + rnd_title)
@@ -354,9 +354,9 @@ class ContentTypesEventsTestCase(NaayaFunctionalTestCase):
             self.browser.go(self.portal.info.absolute_url() + '/%s' %
                             content_type['add_form'])
             form = self.browser.get_form('frmAdd')
-            form['title:utf8:ustring'] = rnd_title
+            form['title:utf8:string'] = rnd_title
             _fill_specific_form_fields(form, type_name)
-            self.browser.clicked(form, form.find_control('title:utf8:ustring'))
+            self.browser.clicked(form, form.find_control('title:utf8:string'))
             self.browser.submit()
             transaction.commit()
 
@@ -389,18 +389,18 @@ class ContentTypesEventsTestCase(NaayaFunctionalTestCase):
             self.browser.go(self.portal.info.absolute_url() + '/%s' %
                             content_type['add_form'])
             form = self.browser.get_form('frmAdd')
-            form['title:utf8:ustring'] = rnd_title
+            form['title:utf8:string'] = rnd_title
             _fill_specific_form_fields(form, type_name)
-            self.browser.clicked(form, form.find_control('title:utf8:ustring'))
+            self.browser.clicked(form, form.find_control('title:utf8:string'))
             self.browser.submit()
 
             #Go to objects edit page
             self.browser.go(self.portal.info[rnd_title].absolute_url() +
                             '/edit_html')
             form = self.browser.get_form('frmEdit')
-            form['title:utf8:ustring'] = "Modified object"
+            form['title:utf8:string'] = "Modified object"
             _fill_specific_form_fields(form, type_name)
-            self.browser.clicked(form, form.find_control('title:utf8:ustring'))
+            self.browser.clicked(form, form.find_control('title:utf8:string'))
             self.browser.submit()
 
 
@@ -505,9 +505,9 @@ class ContentTypesEventsTestCase(NaayaFunctionalTestCase):
             self.browser.go(self.portal.info.absolute_url() + '/%s' %
                             content_type['add_form'])
             form = self.browser.get_form('frmAdd')
-            form['title:utf8:ustring'] = rnd_title
+            form['title:utf8:string'] = rnd_title
             _fill_specific_form_fields(form, type_name)
-            self.browser.clicked(form, form.find_control('title:utf8:ustring'))
+            self.browser.clicked(form, form.find_control('title:utf8:string'))
             self.browser.submit()
             transaction.commit()
 

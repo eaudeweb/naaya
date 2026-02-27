@@ -213,12 +213,12 @@ class SchemaFunctionalTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase):
         form = self.browser.get_form('frmEdit')
 
         # check if the initial data in the form is ok
-        self.assertEqual(form['title:utf8:ustring'], 'Contact us')
-        self.assertTrue('This page should contain' in form['body:utf8:ustring'])
+        self.assertEqual(form['title:utf8:string'], 'Contact us')
+        self.assertTrue('This page should contain' in form['body:utf8:string'])
 
         # do some editing
-        form['title:utf8:ustring'] = 'new title'
-        form['body:utf8:ustring'] = 'new body'
+        form['title:utf8:string'] = 'new title'
+        form['body:utf8:string'] = 'new body'
         form['discussion:boolean'] = False
         form['releasedate'] = '13/02/2009'
         # generate a 'click' event so the browser knows what form we want to submit
@@ -257,16 +257,16 @@ class SchemaFunctionalTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase):
         form = self.browser.get_form('frmAdd')
 
         #check widget values
-        field = self.browser.get_form_field(form, 'theme:utf8:ustring:list')
+        field = self.browser.get_form_field(form, 'theme:utf8:string:list')
         self.assertEqual(field.items[0].name, 'node1')
         self.assertEqual(len(field.items), 2)   #we have 2 nodes in theme reftree
 
         #add event metadata but omit to fill in values for our widget
-        form['title:utf8:ustring'] = 'test_event'
-        form['description:utf8:ustring'] = 'test_event_description'
-        form['coverage:utf8:ustring'] = 'test_event_coverage'
-        form['keywords:utf8:ustring'] = 'keyw1, keyw2'
-        form['details:utf8:ustring'] = 'test_event_details'
+        form['title:utf8:string'] = 'test_event'
+        form['description:utf8:string'] = 'test_event_description'
+        form['coverage:utf8:string'] = 'test_event_coverage'
+        form['keywords:utf8:string'] = 'keyw1, keyw2'
+        form['details:utf8:string'] = 'test_event_details'
         form['start_date'] = '10/10/2000'
         # generate a 'click' event so the browser knows what form we want to submit
         self.browser.clicked(form, self.browser.get_form_field(form, 'title'))

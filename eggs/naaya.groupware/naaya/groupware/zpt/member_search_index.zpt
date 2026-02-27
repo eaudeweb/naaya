@@ -15,7 +15,7 @@
     <form id="search_form" action="" method="get">
         <label for="search_string" i18n:translate="">
             Name contains</label>
-        <input type="text" name="search_string:utf8:ustring" id="search_string"
+        <input type="text" name="search_string:utf8:string" id="search_string"
             tal:attributes="value search_string"/>
         <input type='hidden' id='skip_validation' name='skip_validation' value='' />
         <input type='hidden' id='only_admins' name='only_admins' 

@@ -13,12 +13,12 @@
 <table border="0" cellspacing="2" cellpadding="2" width="100%">
 	<tr>
 		<td class="form-label">Subject</td>
-		<td><input type="text" name="title:utf8:ustring" id="title" size="50" tal:attributes="value here/title" /></td>
+		<td><input type="text" name="title:utf8:string" id="title" size="50" tal:attributes="value here/title" /></td>
 	</tr>
 	<tr>
 		<td class="form-label" valign="top">Category</td>
 		<td>
-			<select name="category:utf8:ustring" id="category">
+			<select name="category:utf8:string" id="category">
 				<option tal:repeat="item here/get_forum_categories"
 					tal:attributes="value item; selected python:here.category==item"
 					tal:content="item" />
@@ -36,7 +36,7 @@
 	</tr>
 	<tr>
 		<td class="form-label" valign="top">Text</td>
-		<td><textarea name="description:utf8:ustring" id="description" rows="10" cols="50" tal:content="here/description"></textarea></td>
+		<td><textarea name="description:utf8:string" id="description" rows="10" cols="50" tal:content="here/description"></textarea></td>
 	</tr>
 	<tr>
 		<td class="form-label">Author</td>

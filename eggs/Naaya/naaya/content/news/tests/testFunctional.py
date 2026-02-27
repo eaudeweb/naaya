@@ -24,19 +24,19 @@ class NyNewsFunctionalTestCase(NaayaFunctionalTestCase):
         self.assertTrue('<h1>Submit News</h1>' in self.browser.get_html())
         form = self.browser.get_form('frmAdd')
         expected_controls = set([
-            'lang', 'title:utf8:ustring', 'description:utf8:ustring', 'coverage:utf8:ustring',
-            'keywords:utf8:ustring', 'releasedate', 'discussion:boolean',
+            'lang', 'title:utf8:string', 'description:utf8:string', 'coverage:utf8:string',
+            'keywords:utf8:string', 'releasedate', 'discussion:boolean',
         ])
         found_controls = set(c.name for c in form.controls)
         self.assertTrue(expected_controls.issubset(found_controls),
             'Missing form controls: %s' % repr(expected_controls - found_controls))
 
         self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
-        form['title:utf8:ustring'] = 'test_news'
-        form['description:utf8:ustring'] = 'test_news_description'
-        form['coverage:utf8:ustring'] = 'test_news_coverage'
-        form['keywords:utf8:ustring'] = 'keyw1, keyw2'
-        form['details:utf8:ustring'] = 'test_news_details'
+        form['title:utf8:string'] = 'test_news'
+        form['description:utf8:string'] = 'test_news_description'
+        form['coverage:utf8:string'] = 'test_news_coverage'
+        form['keywords:utf8:string'] = 'keyw1, keyw2'
+        form['details:utf8:string'] = 'test_news_details'
 
         self.browser.submit()
         html = self.browser.get_html()
@@ -73,18 +73,18 @@ class NyNewsFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/myfolder/mynews/edit_html')
         form = self.browser.get_form('frmEdit')
 
-        self.assertEqual(form['title:utf8:ustring'], 'My news')
+        self.assertEqual(form['title:utf8:string'], 'My news')
 
-        form['title:utf8:ustring'] = 'new_news_title'
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        form['title:utf8:string'] = 'new_news_title'
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
 
         self.assertEqual(self.portal.myfolder.mynews.title, 'new_news_title')
 
         self.browser.go('http://localhost/portal/myfolder/mynews/edit_html?lang=fr')
         form = self.browser.get_form('frmEdit')
-        form['title:utf8:ustring'] = 'french_title'
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        form['title:utf8:string'] = 'french_title'
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
 
         self.assertEqual(self.portal.myfolder.mynews.title, 'new_news_title')
@@ -97,8 +97,8 @@ class NyNewsFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/myfolder/mynews/edit_html')
 
         form = self.browser.get_form('frmEdit')
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
-        form['title:utf8:ustring'] = ''
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
+        form['title:utf8:string'] = ''
         self.browser.submit()
 
         html = self.browser.get_html()
@@ -112,9 +112,9 @@ class NyNewsFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.go('http://localhost/portal/myfolder/mynews/manage_edit_html')
         form = self.browser.get_form('frmEdit')
-        self.assertEqual(form['title:utf8:ustring'], 'My news')
-        form['title:utf8:ustring'] = 'new_news_title'
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        self.assertEqual(form['title:utf8:string'], 'My news')
+        form['title:utf8:string'] = 'new_news_title'
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
 
         self.assertEqual(self.portal.myfolder.mynews.title, 'new_news_title')
@@ -161,8 +161,8 @@ class NyNewsVersioningFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/info/ver_news/startVersion')
 
         form = self.browser.get_form('frmEdit')
-        form['title:utf8:ustring'] = 'ver_news_newtitle'
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        form['title:utf8:string'] = 'ver_news_newtitle'
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
 
         ver_news = self.portal.info.ver_news
@@ -177,11 +177,11 @@ class NyNewsVersioningFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/info/ver_news/startVersion')
 
         form = self.browser.get_form('frmEdit')
-        form['title:utf8:ustring'] = 'ver_news_version'
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        form['title:utf8:string'] = 'ver_news_version'
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
 
         form = self.browser.get_form('frmEdit')
-        self.assertEqual(form['title:utf8:ustring'], 'ver_news_version')
+        self.assertEqual(form['title:utf8:string'], 'ver_news_version')
 
         self.browser_do_logout()

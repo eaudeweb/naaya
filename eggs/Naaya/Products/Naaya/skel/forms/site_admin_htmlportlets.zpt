@@ -31,12 +31,12 @@
   <form method="post" tal:attributes="action string:${site_url}/admin_edithtmlportlet">
     <div class="field">
       <label for="title" i18n:translate="">Title</label>
-      <input type="text" name="title:utf8:ustring" size="50" tal:attributes="value python:ob.getLocalProperty('title', curr_lang)" />
+      <input type="text" name="title:utf8:string" size="50" tal:attributes="value python:ob.getLocalProperty('title', curr_lang)" />
     </div>
     <div class="field" tal:define="editor here/getEditorTool">
       <label for="body" i18n:translate="">Body</label>
       <span tal:replace="structure python:editor.render('body', curr_lang, image_support=True)" />
-      <textarea id="body" name="body:utf8:ustring" rows="20" cols="72" class="mceEditor" 
+      <textarea id="body" name="body:utf8:string" rows="20" cols="72" class="mceEditor" 
               tal:content="python:ob.getLocalProperty('body', curr_lang)" />
     </div>
     <p>

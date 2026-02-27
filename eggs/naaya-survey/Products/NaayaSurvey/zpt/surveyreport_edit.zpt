@@ -37,12 +37,12 @@
 		<span i18n:translate="">Title</span>
 		<span class="mandatory_field"> *</span>
 	</label>
-	<input type="text" name="title:utf8:ustring" id="title" size="50" tal:attributes="value title" />
+	<input type="text" name="title:utf8:string" id="title" size="50" tal:attributes="value title" />
 </div>
 <div class="field" tal:define="editor here/getEditorTool">
 	<label for="description" i18n:translate="">Description</label>
 	<span tal:replace="structure python:editor.render('description', image_support=True)" />
-	<textarea id="description" name="description:utf8:ustring" rows="20" cols="72" class="mceEditor" tal:content="description" />
+	<textarea id="description" name="description:utf8:string" rows="20" cols="72" class="mceEditor" tal:content="description" />
 </div>
 <div class="field">
 	<input type="hidden" name="lang" id="lang" tal:attributes="value lang" />

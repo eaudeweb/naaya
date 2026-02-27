@@ -58,18 +58,18 @@ class NyPhotoFunctionalTestCase(NaayaFunctionalTestCase):
         self.failUnless('<h1>Photo submission</h1>' in self.browser.get_html())
         form = self.browser.get_form('frmAdd')
         expected_controls = set([
-            'lang', 'title:utf8:ustring', 'description:utf8:ustring', 'author:utf8:ustring',
-            'source:utf8:ustring', 'releasedate', 'discussion:boolean', 'file',
+            'lang', 'title:utf8:string', 'description:utf8:string', 'author:utf8:string',
+            'source:utf8:string', 'releasedate', 'discussion:boolean', 'file',
         ])
         found_controls = set(c.name for c in form.controls)
         self.failUnless(expected_controls.issubset(found_controls),
             'Missing form controls: %s' % repr(expected_controls - found_controls))
 
         self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
-        form['title:utf8:ustring'] = 'test_create_photo'
-        form['description:utf8:ustring'] = 'test_photo_description'
-        form['author:utf8:ustring'] = 'test_author'
-        form['source:utf8:ustring'] = 'test_source'
+        form['title:utf8:string'] = 'test_create_photo'
+        form['description:utf8:string'] = 'test_photo_description'
+        form['author:utf8:string'] = 'test_author'
+        form['source:utf8:string'] = 'test_source'
         form.find_control('file').add_file(load_file('data/test.gif'))
 
         self.browser.submit()
@@ -126,11 +126,11 @@ class NyPhotoFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/myfolder/g/f/myphoto/edit_html')
         form = self.browser.get_form('frmEdit')
 
-        self.failUnlessEqual(form['title:utf8:ustring'], 'My photo')
+        self.failUnlessEqual(form['title:utf8:string'], 'My photo')
 
-        form['title:utf8:ustring'] = 'new_photo_title'
+        form['title:utf8:string'] = 'new_photo_title'
 
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
         html = self.browser.get_html()
         self.failUnless('<h1>Edit photo</h1>' in html)
@@ -140,8 +140,8 @@ class NyPhotoFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.go('http://localhost/portal/myfolder/g/f/myphoto/edit_html?lang=fr')
         form = self.browser.get_form('frmEdit')
-        form['title:utf8:ustring'] = 'french_title'
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        form['title:utf8:string'] = 'french_title'
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
 
         self.failUnlessEqual(self.portal.myfolder.g.f.myphoto.title, 'new_photo_title')
@@ -154,8 +154,8 @@ class NyPhotoFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/myfolder/g/f/myphoto/edit_html')
 
         form = self.browser.get_form('frmEdit')
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
-        form['title:utf8:ustring'] = ''
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
+        form['title:utf8:string'] = ''
         self.browser.submit()
 
         html = self.browser.get_html()
@@ -170,9 +170,9 @@ class NyPhotoFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.go('http://localhost/portal/myfolder/g/f/myphoto/manage_edit_html')
         form = self.browser.get_form('frmEdit')
-        self.failUnlessEqual(form['title:utf8:ustring'], 'My photo')
-        form['title:utf8:ustring'] = 'new_photo_title'
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        self.failUnlessEqual(form['title:utf8:string'], 'My photo')
+        form['title:utf8:string'] = 'new_photo_title'
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
 
         self.failUnlessEqual(self.portal.myfolder.g.f.myphoto.title, 'new_photo_title')

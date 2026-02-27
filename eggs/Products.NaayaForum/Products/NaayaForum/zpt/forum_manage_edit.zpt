@@ -13,15 +13,15 @@
 <table border="0" cellspacing="2" cellpadding="2" width="100%">
 	<tr>
 		<td class="form-label">Title</td>
-		<td><input type="text" name="title:utf8:ustring" id="title" size="50" tal:attributes="value here/title" /></td>
+		<td><input type="text" name="title:utf8:string" id="title" size="50" tal:attributes="value here/title" /></td>
 	</tr>
 	<tr>
 		<td class="form-label" valign="top">Description</td>
-		<td><textarea name="description:utf8:ustring" id="description" rows="10" cols="50" tal:content="here/description"></textarea></td>
+		<td><textarea name="description:utf8:string" id="description" rows="10" cols="50" tal:content="here/description"></textarea></td>
 	</tr>
 	<tr>
 		<td class="form-label" valign="top">Categories</td>
-		<td><textarea name="categories:utf8:ustring" id="categories" rows="10" cols="50" tal:content="python:here.utConvertListToLines(here.categories)"></textarea></td>
+		<td><textarea name="categories:utf8:string" id="categories" rows="10" cols="50" tal:content="python:here.utConvertListToLines(here.categories)"></textarea></td>
 	</tr>
 	<tr>
 		<td class="form-label" valign="top">Max allowed uploaded files size</td>
@@ -33,7 +33,7 @@
 	<tr>
 		<td class="form-label" valign="top">Listing of topics</td>
 		<td>
-			<select name="topics_listing:utf8:ustring">
+			<select name="topics_listing:utf8:string">
 				<option value="Plain table"
 				tal:attributes="selected python:test(here.topics_listing=='Plain table', 'selected', None)">Plain table</option>
 				<option value="Group by category"
@@ -44,7 +44,7 @@
 	<tr>
 		<td class="form-label" valign="top">Ordering topics by</td>
 		<td>
-			<select name="topics_ordering:utf8:ustring"
+			<select name="topics_ordering:utf8:string"
 				tal:define="sort_options here/get_sort_options">
 				<option tal:repeat="sort_option sort_options" i18n:translate=""
 					tal:attributes="value python:sort_option[0];

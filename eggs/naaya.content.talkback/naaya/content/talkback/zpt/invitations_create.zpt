@@ -57,7 +57,7 @@
         <label for="name" i18n:translate="">Name of person to invite</label>
         <p class="form-errors" tal:define="err errors/name|nothing"
           tal:condition="err" tal:content="err" />
-        <input type="text" name="name:utf8:ustring" id="name" size="50"
+        <input type="text" name="name:utf8:string" id="name" size="50"
           tal:attributes="value data/name" />
     </div>
     <div class="field">
@@ -72,7 +72,7 @@
         <p class="form-errors" tal:define="err errors/organization|nothing"
           tal:condition="err" tal:content="err" />
         <em i18n:translate="">Optional</em><br />
-        <input type="text" name="organization:utf8:ustring" id="organization" size="50"
+        <input type="text" name="organization:utf8:string" id="organization" size="50"
           tal:attributes="value data/organization" />
     </div>
     <div class="field">
@@ -80,7 +80,7 @@
         <p class="form-errors" tal:define="err errors/notes|nothing"
           tal:condition="err" tal:content="err" />
         <em i18n:translate="">Optional, visible only to site administrator</em><br />
-        <input type="text" name="notes:utf8:ustring" id="notes" size="50"
+        <input type="text" name="notes:utf8:string" id="notes" size="50"
           tal:attributes="value data/notes" />
     </div>
     <div class="field">
@@ -88,7 +88,7 @@
         <p class="form-errors" tal:define="err errors/message|nothing"
           tal:condition="err" tal:content="err" />
         <em i18n:translate="">Will be included with invitation e-mail</em><br />
-        <textarea name="message:utf8:ustring" id="message" rows="5" cols="50"
+        <textarea name="message:utf8:string" id="message" rows="5" cols="50"
           tal:content="data/message"></textarea>
     </div>
     <div tal:condition="options/previews" style="color:red">

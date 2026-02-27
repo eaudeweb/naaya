@@ -9,7 +9,7 @@
 		    end_date here/interval/end_date;">
 <tr>
 	<td class="form-label">Meeting location</td>
-	<td><input type="text" name="geo_location.address:utf8:ustring" size="50" tal:attributes="value here/geo_address" /></td>
+	<td><input type="text" name="geo_location.address:utf8:string" size="50" tal:attributes="value here/geo_address" /></td>
 </tr>
 <tr>
 	<td class="form-label">All day event</td>
@@ -34,15 +34,15 @@
 </tr>
 <tr>
 	<td class="form-label">Agenda Pointer</td>
-	<td><input type="text" name="agenda_pointer:utf8:ustring" size="50" tal:attributes="value here/agenda_pointer" /></td>
+	<td><input type="text" name="agenda_pointer:utf8:string" size="50" tal:attributes="value here/agenda_pointer" /></td>
 </tr>
 <tr>
 	<td class="form-label">Minutes Pointer</td>
-	<td><input type="text" name="minutes_pointer:utf8:ustring" size="50" tal:attributes="value here/minutes_pointer" /></td>
+	<td><input type="text" name="minutes_pointer:utf8:string" size="50" tal:attributes="value here/minutes_pointer" /></td>
 </tr>
 <tr>
 	<td class="form-label">Survey Pointer</td>
-	<td><input type="text" name="survey_pointer:utf8:ustring" size="50" tal:attributes="value here/survey_pointer" /></td>
+	<td><input type="text" name="survey_pointer:utf8:string" size="50" tal:attributes="value here/survey_pointer" /></td>
 </tr>
 <tr>
 	<td class="form-label">Survey Required</td>
@@ -50,11 +50,11 @@
 </tr>
 <tr>
 	<td class="form-label">Contact person</td>
-	<td><input type="text" name="contact_person:utf8:ustring" size="50" tal:attributes="value here/contact_person" /></td>
+	<td><input type="text" name="contact_person:utf8:string" size="50" tal:attributes="value here/contact_person" /></td>
 </tr>
 <tr>
 	<td class="form-label">Contact email address</td>
-	<td><input type="text" name="contact_email:utf8:ustring" size="50" tal:attributes="value here/contact_email" /></td>
+	<td><input type="text" name="contact_email:utf8:string" size="50" tal:attributes="value here/contact_email" /></td>
 </tr>
 </tal:block>
 

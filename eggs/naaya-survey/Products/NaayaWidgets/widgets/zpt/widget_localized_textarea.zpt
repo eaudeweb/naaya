@@ -59,7 +59,7 @@
             <textarea tal:attributes="
                     rows here/rows;
                     cols here/columns;
-                    name string:${id}:utf8:ustring;
+                    name string:${id}:utf8:string;
                     id id"
                 tal:content="python: value.get(lang_code, '')" />
             <br />

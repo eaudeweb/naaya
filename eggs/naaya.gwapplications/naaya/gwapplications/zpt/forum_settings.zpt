@@ -13,13 +13,13 @@
                     <tr>
                         <td><label>Home title in breadcrumbs</label></td>
                         <td>
-                            <input type="text" size="40" name="title:utf8:ustring" tal:attributes="value meta_info/title" />
+                            <input type="text" size="40" name="title:utf8:string" tal:attributes="value meta_info/title" />
                         </td>
                     </tr>
                     <tr>
                         <td><label>Forum title in IG headers</label></td>
                         <td>
-                            <input type="text" size="40" name="root_site_title:utf8:ustring" tal:attributes="value meta_info/root_site_title" />
+                            <input type="text" size="40" name="root_site_title:utf8:string" tal:attributes="value meta_info/root_site_title" />
                         </td>
                     </tr>
                     <tr>
@@ -29,7 +29,7 @@
                     </tr>
                     <tr>
                         <td colspan="2">
-                            <textarea id="welcome_text" name="welcome_text:utf8:ustring" tal:content="meta_info/welcome_text|string:"
+                            <textarea id="welcome_text" name="welcome_text:utf8:string" tal:content="meta_info/welcome_text|string:"
                             style="width: 600px; height: 120px;"></textarea>
                         </td>
                     </tr>

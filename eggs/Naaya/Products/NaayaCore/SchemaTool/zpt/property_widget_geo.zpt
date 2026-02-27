@@ -69,7 +69,7 @@ portal_map here/getGeoMapTool;
                class="widget-title" i18n:translate="">Latitude</label>
         <input type="text" size="20" maxlength="20"
                tal:attributes="value opt_value_lat|nothing;
-                               name string:${lat_id}:utf8:ustring;
+                               name string:${lat_id}:utf8:string;
                                id string:${lat_id}" />
     </div>
 
@@ -78,7 +78,7 @@ portal_map here/getGeoMapTool;
                class="widget-title" i18n:translate="">Longitude</label>
         <input type="text" size="20" maxlength="20"
                tal:attributes="value opt_value_lon|nothing;
-                               name string:${lon_id}:utf8:ustring;
+                               name string:${lon_id}:utf8:string;
                                id string:${lon_id}" />
     </div>
 
@@ -102,7 +102,7 @@ portal_map here/getGeoMapTool;
            i18n:translate="">Address</label>
     <input type="text" size="50"
            tal:attributes="value opt_value_address|nothing;
-                           name string:${address_id}:utf8:ustring;
+                           name string:${address_id}:utf8:string;
                            id string:${address_id}" />
 
     <input type="button" name="address_button" value="Center map"

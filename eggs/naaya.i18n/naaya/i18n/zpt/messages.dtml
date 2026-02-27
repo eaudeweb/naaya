@@ -31,7 +31,7 @@
             </dtml-in>
             <input type="hidden" name="language" value="<dtml-var language>">
             <br>
-            <textarea name="translation:utf8:ustring" cols="65" rows="10"
+            <textarea name="translation:utf8:string" cols="65" rows="10"
               wrap="off"><dtml-var translation html_quote></textarea>
           </fieldset>
           <br>

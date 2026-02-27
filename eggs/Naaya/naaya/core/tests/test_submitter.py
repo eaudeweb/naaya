@@ -64,10 +64,10 @@ class SubmitterInfoTest(NaayaFunctionalTestCase):
 
         self.browser.go('http://localhost/portal/myfolder/url_add_html')
         form = self.browser.get_form('frmAdd')
-        form['title:utf8:ustring'] = 'testurl'
+        form['title:utf8:string'] = 'testurl'
         form['submitter-name'] = "Gigel Xulescu"
         form['submitter-email'] = "gigel@example.com"
-        self.browser.clicked(form, form.find_control('title:utf8:ustring'))
+        self.browser.clicked(form, form.find_control('title:utf8:string'))
         self.browser.submit()
 
         self.assertTrue('testurl' in self.portal['myfolder'].objectIds())
@@ -81,8 +81,8 @@ class SubmitterInfoTest(NaayaFunctionalTestCase):
 
         self.browser.go('http://localhost/portal/myfolder/url_add_html')
         form = self.browser.get_form('frmAdd')
-        form['title:utf8:ustring'] = 'testurl'
-        self.browser.clicked(form, form.find_control('title:utf8:ustring'))
+        form['title:utf8:string'] = 'testurl'
+        self.browser.clicked(form, form.find_control('title:utf8:string'))
         self.browser.submit()
 
         self.assertFalse('testurl' in self.portal['myfolder'].objectIds())

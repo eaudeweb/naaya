@@ -88,7 +88,7 @@
             </select>
 
             <label for="search_term" i18n:translate="">containing</label>
-            <input type="text" id="search_term" name="search_term:utf8:ustring"
+            <input type="text" id="search_term" name="search_term:utf8:string"
                 tal:attributes="value search_term"/>
 
             <input type="submit" name="search_user" value="Search" />
@@ -150,7 +150,7 @@
             do_search python:'search_user_with_role' in request">
         <form method="get" action="." name="formSearchRoles">
             <label for="search_role" i18n:translate="">Search users with role</label>
-            <input type="text" id="search_role" name="search_role:utf8:ustring"
+            <input type="text" id="search_role" name="search_role:utf8:string"
                 tal:attributes="value search_role"/>
             <input type="button" name="pickroles" value="Pick Group"
                 tal:attributes="onclick string:javascript:pickRole('${here/absolute_url}/pickrole_html')"/>

@@ -63,8 +63,8 @@ class SurveyTestCase(NaayaFunctionalTestCase):
         self.browser.go(self.survey_url)
         form = self.browser.get_form('frmAdd')
         form['anonymous_answer:int'] = ['0']
-        form['w_question:utf8:ustring'] = 'String answer...'
-        self.browser.clicked(form, form.find_control('w_question:utf8:ustring'))
+        form['w_question:utf8:string'] = 'String answer...'
+        self.browser.clicked(form, form.find_control('w_question:utf8:string'))
         self.browser.submit()
 
         self.browser.go(self.survey_url+'/view_answers_html')
@@ -80,8 +80,8 @@ class SurveyTestCase(NaayaFunctionalTestCase):
         self.browser.go(self.survey_url)
         form = self.browser.get_form('frmAdd')
         form['anonymous_answer:int'] = ['0']
-        form['w_question:utf8:ustring'] = 'String answer...'
-        self.browser.clicked(form, form.find_control('w_question:utf8:ustring'))
+        form['w_question:utf8:string'] = 'String answer...'
+        self.browser.clicked(form, form.find_control('w_question:utf8:string'))
         self.browser.submit()
 
         self.browser.go(self.survey_url+'/questionnaire_view_report_html?report_id=full-report')
@@ -118,8 +118,8 @@ class SurveyTestCase(NaayaFunctionalTestCase):
 
         self.browser.go(self.survey_url)
         form = self.browser.get_form('frmAdd')
-        form['w_question:utf8:ustring'] = 'String answer...'
-        self.browser.clicked(form, form.find_control('w_question:utf8:ustring'))
+        form['w_question:utf8:string'] = 'String answer...'
+        self.browser.clicked(form, form.find_control('w_question:utf8:string'))
         self.browser.submit()
 
         self.browser.go(self.survey_url+'/view_answers_html')
@@ -156,8 +156,8 @@ class SurveyTestCase(NaayaFunctionalTestCase):
 
         self.browser.go(self.survey_url)
         form = self.browser.get_form('frmAdd')
-        form['w_question:utf8:ustring'] = 'String answer...'
-        self.browser.clicked(form, form.find_control('w_question:utf8:ustring'))
+        form['w_question:utf8:string'] = 'String answer...'
+        self.browser.clicked(form, form.find_control('w_question:utf8:string'))
         self.browser.submit()
 
         self.browser.go(self.survey_url+'/questionnaire_view_report_html?report_id=full-report')

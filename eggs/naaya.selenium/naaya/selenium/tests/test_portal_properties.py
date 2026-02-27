@@ -34,11 +34,11 @@ class NaayaPortalPropertiesTest(SeleniumTestCase):
         selen = self.selenium
         selen.open("/portal/admin_metadata_html", True)
 
-        selen.type("site_title:utf8:ustring", metadata_feature['site_title'])
-        selen.type("site_subtitle:utf8:ustring", metadata_feature['site_subtitle'])
-        selen.type("publisher:utf8:ustring", metadata_feature['publisher'])
-        selen.type("contributor:utf8:ustring", metadata_feature['contributor'])
-        selen.type("rights:utf8:ustring", metadata_feature['rights'])
+        selen.type("site_title:utf8:string", metadata_feature['site_title'])
+        selen.type("site_subtitle:utf8:string", metadata_feature['site_subtitle'])
+        selen.type("publisher:utf8:string", metadata_feature['publisher'])
+        selen.type("contributor:utf8:string", metadata_feature['contributor'])
+        selen.type("rights:utf8:string", metadata_feature['rights'])
         selen.click("//input[@value='Save changes']")
         selen.wait_for_page_to_load(self._selenium_page_timeout)
 

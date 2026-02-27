@@ -34,18 +34,18 @@ class NyMediaFileFunctionalTestCase(NaayaFunctionalTestCase):
         self.assertTrue('<h1>Submit Media File</h1>' in self.browser.get_html())
         form = self.browser.get_form('frmAdd')
         expected_controls = set([
-            'lang', 'title:utf8:ustring', 'description:utf8:ustring', 'coverage:utf8:ustring',
-            'keywords:utf8:ustring', 'releasedate', 'discussion:boolean', 'file',
+            'lang', 'title:utf8:string', 'description:utf8:string', 'coverage:utf8:string',
+            'keywords:utf8:string', 'releasedate', 'discussion:boolean', 'file',
         ])
         found_controls = set(c.name for c in form.controls)
         self.assertTrue(expected_controls.issubset(found_controls),
             'Missing form controls: %s' % repr(expected_controls - found_controls))
 
         self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
-        form['title:utf8:ustring'] = 'test_create_mediafile'
-        form['description:utf8:ustring'] = 'test_mediafile_description'
-        form['coverage:utf8:ustring'] = 'test_mediafile_coverage'
-        form['keywords:utf8:ustring'] = 'keyw1, keyw2'
+        form['title:utf8:string'] = 'test_create_mediafile'
+        form['description:utf8:string'] = 'test_mediafile_description'
+        form['coverage:utf8:string'] = 'test_mediafile_coverage'
+        form['keywords:utf8:string'] = 'keyw1, keyw2'
 
         form.find_control('file').add_file(StringIO('the_MP4_data'),
             filename='testvid.mp4', content_type='video/mp4')
@@ -100,13 +100,13 @@ class NyMediaFileFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/myfolder/mymediafile/edit_html')
         form = self.browser.get_form('frmEdit')
 
-        self.assertEqual(form['title:utf8:ustring'], 'My media file')
+        self.assertEqual(form['title:utf8:string'], 'My media file')
 
-        form['title:utf8:ustring'] = 'new_mediafile_title'
+        form['title:utf8:string'] = 'new_mediafile_title'
         form.find_control('file').add_file(StringIO('the_MP4_data_B'),
             filename='testvid_B.mp4', content_type='video/mp4')
 
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
         html = self.browser.get_html()
         self.assertTrue('<h1>Edit Media File</h1>' in html)
@@ -125,10 +125,10 @@ class NyMediaFileFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.go('http://localhost/portal/myfolder/mymediafile/edit_html?lang=fr')
         form = self.browser.get_form('frmEdit')
-        form['title:utf8:ustring'] = 'french_title'
+        form['title:utf8:string'] = 'french_title'
         form.find_control('file').add_file(StringIO('the_MP4_data_C'),
             filename='testvid_C.mp4', content_type='video/mp4')
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
         self.assertTrue('Saved changes' in self.browser.get_html())
 
@@ -151,8 +151,8 @@ class NyMediaFileFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/myfolder/mymediafile/edit_html')
 
         form = self.browser.get_form('frmEdit')
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
-        form['title:utf8:ustring'] = ''
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
+        form['title:utf8:string'] = ''
         self.browser.submit()
 
         html = self.browser.get_html()
@@ -167,9 +167,9 @@ class NyMediaFileFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/myfolder/mymediafile/manage_edit_html')
 
         form = self.browser.get_form('frmEdit')
-        # TODO: title control should be 'title:utf8:ustring'
-        self.assertEqual(form['title:utf8:ustring'], 'My media file')
-        form['title:utf8:ustring'] = 'new_mediafile_title'
+        # TODO: title control should be 'title:utf8:string'
+        self.assertEqual(form['title:utf8:string'], 'My media file')
+        form['title:utf8:string'] = 'new_mediafile_title'
         self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
         self.browser.submit()
 

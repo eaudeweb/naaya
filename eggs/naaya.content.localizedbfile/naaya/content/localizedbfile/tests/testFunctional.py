@@ -37,8 +37,8 @@ class NyLocalizedBFileFunctional(NaayaFunctionalTestCase, BrowserFileTestingMixi
             self.failUnless('<h1>Submit Localized File</h1>' in self.browser.get_html())
             form = self.browser.get_form('frmAdd')
             expected_controls = set([
-                'lang', 'title:utf8:ustring', 'description:utf8:ustring', 'coverage:utf8:ustring',
-                'keywords:utf8:ustring', 'releasedate', 'discussion:boolean',
+                'lang', 'title:utf8:string', 'description:utf8:string', 'coverage:utf8:string',
+                'keywords:utf8:string', 'releasedate', 'discussion:boolean',
                 'uploaded_file',
             ])
             found_controls = set(c.name for c in form.controls)
@@ -46,10 +46,10 @@ class NyLocalizedBFileFunctional(NaayaFunctionalTestCase, BrowserFileTestingMixi
                 'Missing form controls: %s' % repr(expected_controls - found_controls))
 
             self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
-            form['title:utf8:ustring'] = 'Test Localized File-%(language)s'%{'language':lang}
-            form['description:utf8:ustring'] = 'test_localizedbfile_description'
-            form['coverage:utf8:ustring'] = 'test_localizedbfile_coverage'
-            form['keywords:utf8:ustring'] = 'keyw1, keyw2'
+            form['title:utf8:string'] = 'Test Localized File-%(language)s'%{'language':lang}
+            form['description:utf8:string'] = 'test_localizedbfile_description'
+            form['coverage:utf8:string'] = 'test_localizedbfile_coverage'
+            form['keywords:utf8:string'] = 'keyw1, keyw2'
 
             TEST_FILE_DATA = 'some data for my file'
             form.find_control('uploaded_file').add_file(StringIO(TEST_FILE_DATA),
@@ -115,15 +115,15 @@ class NyLocalizedBFileFunctional(NaayaFunctionalTestCase, BrowserFileTestingMixi
             form = self.browser.get_form('frmEdit')
 
             if(lang == 'en'):
-                self.failUnlessEqual(form['title:utf8:ustring'], 'My localized file')
+                self.failUnlessEqual(form['title:utf8:string'], 'My localized file')
 
-            form['title:utf8:ustring'] = 'New Title - %(language)s' %{'language':lang}
+            form['title:utf8:string'] = 'New Title - %(language)s' %{'language':lang}
             TEST_FILE_DATA_2 = 'some new data for my file'
             form.find_control('uploaded_file').add_file(StringIO(TEST_FILE_DATA_2),
                 filename='the_new_localizedbfile-%(language)s.txt' %{'language':lang},
                 content_type='text/plain; charset=latin-1')
 
-            self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+            self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
             self.browser.submit()
             html = self.browser.get_html()
             self.failUnless('<h1>Edit Localized File</h1>' in html)
@@ -170,13 +170,13 @@ class NyLocalizedBFileFunctional(NaayaFunctionalTestCase, BrowserFileTestingMixi
         self.browser.go('http://localhost/portal/myfolder/mylocalizedbfile/edit_html')
         form = self.browser.get_form('frmEdit')
         form['versions_to_remove:list'] = ['2']
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
         
         self.browser.go('http://localhost/portal/myfolder/mylocalizedbfile/edit_html')
         form = self.browser.get_form('frmEdit')
         form['versions_to_remove:list'] = ['3']
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
 
         mylocalizedbfile = self.portal.myfolder['mylocalizedbfile']
@@ -203,8 +203,8 @@ class NyLocalizedBFileFunctional(NaayaFunctionalTestCase, BrowserFileTestingMixi
         self.browser.go('http://localhost/portal/myfolder/mylocalizedbfile/edit_html')
 
         form = self.browser.get_form('frmEdit')
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
-        form['title:utf8:ustring'] = ''
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
+        form['title:utf8:string'] = ''
         self.browser.submit()
 
         html = self.browser.get_html()

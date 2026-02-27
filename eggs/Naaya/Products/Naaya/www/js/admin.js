@@ -120,5 +120,5 @@ function add_suggestion(){
 	var lang = jthis.attr("name");
 	var suggestion = jthis.attr("name");
 	jQuery("form[name='translate_" + lang
-	       + "'] textarea[name='translation:utf8:ustring']").val(jthis.text());
+	       + "'] textarea[name='translation:utf8:string']").val(jthis.text());
 }

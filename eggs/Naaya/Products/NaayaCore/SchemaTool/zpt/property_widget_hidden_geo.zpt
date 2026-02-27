@@ -6,11 +6,11 @@
            condition="field_value">
     <input type="hidden"
            tal:attributes="value field_value/lat|nothing;
-                           name string:${lat_id}:utf8:ustring" />
+                           name string:${lat_id}:utf8:string" />
     <input type="hidden"
            tal:attributes="value field_value/lon|nothing;
-                           name string:${lon_id}:utf8:ustring" />
+                           name string:${lon_id}:utf8:string" />
     <input type="hidden"
            tal:attributes="value field_value/address|nothing;
-                           name string:${address_id}:utf8:ustring" />
+                           name string:${address_id}:utf8:string" />
 </tal:block>

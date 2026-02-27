@@ -15,7 +15,7 @@
 <form method="post" tal:attributes="action string:${site_url}/admin_addnetworkportal">
   <div class="field">
     <label for="title" i18n:translate="">Title</label>
-    <input type="text" name="title:utf8:ustring" id="title" size="50" value="" />
+    <input type="text" name="title:utf8:string" id="title" size="50" value="" />
   </div>
   <div class="field">
     <label for="title" i18n:translate="">Portal URL</label>

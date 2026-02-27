@@ -23,7 +23,7 @@
 
     <label>
       URL of remote glossary:<br/>
-      <input name="remote_url:utf8:ustring" size="100"
+      <input name="remote_url:utf8:string" size="100"
              tal:attributes="value here/sync_remote_url"/>
     </label><br/>
 

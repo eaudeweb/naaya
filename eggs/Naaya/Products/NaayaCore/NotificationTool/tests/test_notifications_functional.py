@@ -30,8 +30,8 @@ class NotificationsTest(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/folder_add_html')
         form = self.browser.get_form('frmAdd')
         self.browser.clicked(form,
-            self.browser.get_form_field(form, 'title:utf8:ustring'))
-        form['title:utf8:ustring'] = 'notifol'
+            self.browser.get_form_field(form, 'title:utf8:string'))
+        form['title:utf8:string'] = 'notifol'
         self.browser.submit()
 
         addNyDocument(self.portal.notifol, id='notidoc',
@@ -80,9 +80,9 @@ class NotificationsTest(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/notifol/notidoc/edit_html')
         form = self.browser.get_form('frmEdit')
 
-        form['description:utf8:ustring'] = 'i have been changed'
+        form['description:utf8:string'] = 'i have been changed'
         self.browser.clicked(form,
-            self.browser.get_form_field(form, 'title:utf8:ustring'))
+            self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
 
         self.browser_do_logout()
@@ -115,9 +115,9 @@ class NotificationsTest(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/notifol/notidoc/edit_html')
         form = self.browser.get_form('frmEdit')
 
-        form['description:utf8:ustring'] = 'i have been changed'
+        form['description:utf8:string'] = 'i have been changed'
         self.browser.clicked(form,
-            self.browser.get_form_field(form, 'title:utf8:ustring'))
+            self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
 
         self.browser_do_logout()
@@ -189,9 +189,9 @@ class NotificationsTest(NaayaFunctionalTestCase):
             self.browser.go('http://localhost/portal/notifol/notidoc/edit_html')
             form = self.browser.get_form('frmEdit')
 
-            form['description:utf8:ustring'] = value
+            form['description:utf8:string'] = value
             self.browser.clicked(form,
-                self.browser.get_form_field(form, 'title:utf8:ustring'))
+                self.browser.get_form_field(form, 'title:utf8:string'))
             self.browser.submit()
 
             self.browser_do_logout()
@@ -250,9 +250,9 @@ class NotificationsTest(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/notifol/notidoc/edit_html')
         form = self.browser.get_form('frmEdit')
 
-        form['description:utf8:ustring'] = u'test_skip'
+        form['description:utf8:string'] = u'test_skip'
         self.browser.clicked(form,
-            self.browser.get_form_field(form, 'title:utf8:ustring'))
+            self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
 
         #No notifications should be sent

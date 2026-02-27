@@ -26,13 +26,13 @@ class dynamic_property(utils):
         """ """
         l_html = []
         if self.type == 'string' or self.type == 'date' or self.type == 'integer' or self.type == 'float':
-            l_html.append('<input type="text" name="%s:utf8:ustring" id="%s" value="%s" size="50" />' % (self.utHtmlEncode(self.id), self.utHtmlEncode(self.id), self.utHtmlEncode(default)))
+            l_html.append('<input type="text" name="%s:utf8:string" id="%s" value="%s" size="50" />' % (self.utHtmlEncode(self.id), self.utHtmlEncode(self.id), self.utHtmlEncode(default)))
         elif self.type == 'boolean':
-            l_html.append('<input type="checkbox" name="%s:utf8:ustring" id="%s"' % (self.utHtmlEncode(self.id), self.utHtmlEncode(self.id)))
+            l_html.append('<input type="checkbox" name="%s:utf8:string" id="%s"' % (self.utHtmlEncode(self.id), self.utHtmlEncode(self.id)))
             if default != '' and default is not None: l_html.append(' checked')
             l_html.append(' />')
         elif self.type == 'text':
-            l_html.append('<textarea name="%s:utf8:ustring" id="%s" rows="5" cols="50">' % (self.utHtmlEncode(self.id), self.utHtmlEncode(self.id)))
+            l_html.append('<textarea name="%s:utf8:string" id="%s" rows="5" cols="50">' % (self.utHtmlEncode(self.id), self.utHtmlEncode(self.id)))
             l_html.append(self.utHtmlEncode(default))
             l_html.append('</textarea>')
         elif self.type == 'selection':
@@ -43,7 +43,7 @@ class dynamic_property(utils):
                     values = self.utConvertListToLines([x.title for x in ref_list])
                 except:
                     values = self.values.values()[0]
-            l_html.append('<select name="%s:utf8:ustring" id="%s">' % (self.utHtmlEncode(self.id), self.utHtmlEncode(self.id)))
+            l_html.append('<select name="%s:utf8:string" id="%s">' % (self.utHtmlEncode(self.id), self.utHtmlEncode(self.id)))
             l_html.append('<option value=""></option>')
             for l_value in values.split('\r\n'):
                 if l_value != '':

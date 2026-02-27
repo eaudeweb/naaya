@@ -164,15 +164,15 @@ class TestNyFolderListing(NaayaFunctionalTestCase):
 
         form = self.browser.get_form('frmAdd')
         #check the form
-        expected_controls = set(['title:utf8:ustring',
-            'description:utf8:ustring'])
+        expected_controls = set(['title:utf8:string',
+            'description:utf8:string'])
         found_controls = set(c.name for c in form.controls)
         self.assertTrue(expected_controls.issubset(found_controls),
                 'Missing form controls: %s' %
                     repr(expected_controls - found_controls))
 
         self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
-        form['title:utf8:ustring'] = folder_name
+        form['title:utf8:string'] = folder_name
         self.browser.submit()
         # check html
         html = self.browser.get_html()

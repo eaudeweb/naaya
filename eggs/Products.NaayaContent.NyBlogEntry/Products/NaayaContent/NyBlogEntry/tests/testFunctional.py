@@ -27,17 +27,17 @@ class NyBlogEntryFunctionalTestCase(NaayaFunctionalTestCase):
         self.failUnless('<h1>Submit Blog Entry</h1>' in self.browser.get_html())
         form = self.browser.get_form('frmAdd')
         expected_controls = set([
-            'lang', 'title:utf8:ustring', 'keywords:utf8:ustring',
-            'releasedate', 'content:utf8:ustring',
+            'lang', 'title:utf8:string', 'keywords:utf8:string',
+            'releasedate', 'content:utf8:string',
         ])
         found_controls = set(c.name for c in form.controls)
         self.failUnless(expected_controls.issubset(found_controls),
             'Missing form controls: %s' % repr(expected_controls - found_controls))
 
         self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
-        form['title:utf8:ustring'] = 'test_entry'
-        form['content:utf8:ustring'] = 'test_entry_content'
-        form['keywords:utf8:ustring'] = 'keyw1, keyw2'
+        form['title:utf8:string'] = 'test_entry'
+        form['content:utf8:string'] = 'test_entry_content'
+        form['keywords:utf8:string'] = 'keyw1, keyw2'
 
         self.browser.submit()
         html = self.browser.get_html()
@@ -72,18 +72,18 @@ class NyBlogEntryFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/myfolder/myentry/edit_html')
         form = self.browser.get_form('frmEdit')
 
-        self.failUnlessEqual(form['title:utf8:ustring'], 'My entry')
+        self.failUnlessEqual(form['title:utf8:string'], 'My entry')
 
-        form['title:utf8:ustring'] = 'new_entry_title'
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        form['title:utf8:string'] = 'new_entry_title'
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
 
         self.failUnlessEqual(self.portal.myfolder.myentry.title, 'new_entry_title')
 
         self.browser.go('http://localhost/portal/myfolder/myentry/edit_html?lang=fr')
         form = self.browser.get_form('frmEdit')
-        form['title:utf8:ustring'] = 'french_entry_title'
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        form['title:utf8:string'] = 'french_entry_title'
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
 
         self.failUnlessEqual(self.portal.myfolder.myentry.title, 'new_entry_title')
@@ -97,9 +97,9 @@ class NyBlogEntryFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.go('http://localhost/portal/myfolder/myentry/manage_edit_html')
         form = self.browser.get_form('frmEdit')
-        self.failUnlessEqual(form['title:utf8:ustring'], 'My entry')
-        form['title:utf8:ustring'] = 'new_entry_title'
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        self.failUnlessEqual(form['title:utf8:string'], 'My entry')
+        form['title:utf8:string'] = 'new_entry_title'
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
 
         self.failUnlessEqual(self.portal.myfolder.myentry.title, 'new_entry_title')

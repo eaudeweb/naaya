@@ -21,7 +21,7 @@
 			</td>
 			<td>
 			<form action="manageNameTranslations" method="post" style="margin:0; padding:0">
-				<input	type="text" name="translation:utf8:ustring" size="36"
+				<input	type="text" name="translation:utf8:string" size="36"
 						tal:attributes="value translation" />
 				<input	name="lang_code" type="hidden"
 						tal:attributes="value language" />

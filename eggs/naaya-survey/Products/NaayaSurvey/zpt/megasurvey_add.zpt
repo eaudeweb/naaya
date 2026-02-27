@@ -28,7 +28,7 @@ function fPick(glossary_url)
 function fSet(ctrl, value)
 {
 	var frm = document.frmAdd;
-	var items = frm[ctrl + ':utf8:ustring'];
+	var items = frm[ctrl + ':utf8:string'];
 	if (value != '')
 	{
 		if (items.value == '')
@@ -51,12 +51,12 @@ function fSet(ctrl, value)
 	</div>
 	<div class="field">
 		<label for="title" i18n:translate="">Title</label>
-		<input type="text" name="title:utf8:ustring" id="title" size="50" tal:attributes="value python:here.getSession('title', '')" />
+		<input type="text" name="title:utf8:string" id="title" size="50" tal:attributes="value python:here.getSession('title', '')" />
 	</div>
 	<div class="field">
 		<label for="description" i18n:translate="">Description</label>
 		<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('description')" />
-		<textarea id="description" name="description:utf8:ustring" rows="20" cols="72" class="mceEditor" tal:content="python:here.getSession('description', '')" />
+		<textarea id="description" name="description:utf8:string" rows="20" cols="72" class="mceEditor" tal:content="python:here.getSession('description', '')" />
 	</div>
 	<div class="field" tal:define="coverage_glossary here/get_coverage_glossary">
 		<label for="coverage" i18n:translate="">Geographical coverage</label>
@@ -66,7 +66,7 @@ function fSet(ctrl, value)
 		<tal:block tal:condition="python:coverage_glossary is not None">
 			<p ><strong i18n:translate="">Tip</strong>:<tal:block i18n:translate=""> you can type free text in the field below or pick words from the list. In order to specify more values, separate them by commas.</tal:block></p>
 		</tal:block>
-		<input type="text" name="coverage:utf8:ustring" id="coverage" size="50" tal:define="default_geographical_coverage python: getattr(here, 'default_geographical_coverage', '')"
+		<input type="text" name="coverage:utf8:string" id="coverage" size="50" tal:define="default_geographical_coverage python: getattr(here, 'default_geographical_coverage', '')"
 			tal:attributes="value python:test(default_geographical_coverage, default_geographical_coverage, here.getSession('coverage', ''))" />
 		<tal:block tal:condition="python:coverage_glossary is not None">
 			<label for="pick-coverage" class="invisible" i18n:translate="">Pick coverage</label><input type="button" value="Pick" id="pick-coverage" tal:attributes="onclick string:javascript:fPick('${coverage_glossary/absolute_url}/GlossMap_html?ctrl=coverage');" />
@@ -77,7 +77,7 @@ function fSet(ctrl, value)
 		<tal:block tal:condition="python:keywords_glossary is not None">
 			<p ><strong i18n:translate="">Tip</strong>:<tal:block i18n:translate=""> you can type free text in the field below or pick words from the list</tal:block></p>
 		</tal:block>
-		<input type="text" name="keywords:utf8:ustring" id="keywords" size="50" tal:attributes="value python:here.getSession('keywords', '')" />
+		<input type="text" name="keywords:utf8:string" id="keywords" size="50" tal:attributes="value python:here.getSession('keywords', '')" />
 		<tal:block tal:condition="python:keywords_glossary is not None">
 			<label for="pick-keywords" class="invisible" i18n:translate="">Pick keywords</label><input type="button" value="Pick" id="pick-keywords" tal:attributes="onclick string:javascript:fPick('${keywords_glossary/absolute_url}/GlossMap_html?ctrl=keywords');" />
 		</tal:block>

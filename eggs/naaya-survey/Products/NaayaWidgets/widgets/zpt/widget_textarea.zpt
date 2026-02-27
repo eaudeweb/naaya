@@ -39,7 +39,7 @@
 	<textarea tal:attributes="
 		rows here/rows;
 		cols here/columns;
-		name string:${widget_id}:utf8:ustring;
+		name string:${widget_id}:utf8:string;
 		id widget_id"
 		tal:content="datamodel"></textarea>
 </div>

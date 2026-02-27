@@ -35,7 +35,7 @@
 	</div>
 	<div class="field">
 		<label for="question_body" i18n:translate="">Question text</label>
-		<textarea cols="70" rows="5" name="question_body:utf8:ustring" id="question_body"></textarea>
+		<textarea cols="70" rows="5" name="question_body:utf8:string" id="question_body"></textarea>
 	</div>
 	<div class="field-inline">
 	<label for="sortorder">Sort order</label>

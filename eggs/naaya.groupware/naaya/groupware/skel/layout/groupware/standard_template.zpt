@@ -63,7 +63,7 @@
                         <div id="topnav">
                             <form method="get" tal:attributes="action string:${site_url}/search_html">
                                 <div id="search">
-                                    <input id="query" type="text" placeholder="site search" name="query:utf8:ustring" accesskey="4" />
+                                    <input id="query" type="text" placeholder="site search" name="query:utf8:string" accesskey="4" />
                                     <input id="freesrchbtn" type="image" alt="Go" tal:attributes="src string:${site_url}/misc_/Groupware/button_go.gif" />
                                 </div>
                             </form>

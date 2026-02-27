@@ -67,7 +67,7 @@
                 <input type="radio" name="bulk_action" value="remove" id="bulk_remove_action" /> <label for="bulk_remove_action" i18n:translate="" style="display: inline-block;">Remove keywords</label>
                 <br />
 
-                <input type="text" size="50" name="bulk_keywords:utf8:ustring" id="bulk_keywords" />
+                <input type="text" size="50" name="bulk_keywords:utf8:string" id="bulk_keywords" />
 
                 <tal:block tal:condition="python:glossary is not None">
                     <input type="button" value="Pick"
@@ -156,7 +156,7 @@
                                     value item/keywords;
                                     size widget/width;
                                     maxlength python:test(widget.size_max, widget.size_max, None);
-                                    name string:keywords:utf8:ustring:list;
+                                    name string:keywords:utf8:string:list;
                                     id string:${item/id}-${index}" />
 
                             <tal:block tal:condition="python:widget is not None">

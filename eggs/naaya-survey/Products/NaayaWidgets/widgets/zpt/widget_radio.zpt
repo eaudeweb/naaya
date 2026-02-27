@@ -52,7 +52,7 @@
 	<tal:block tal:condition="here/add_extra_choice" tal:define="input_id here/getExtraChoiceInputId">
 		<div> 
 			<label tal:attributes="for input_id" i18n:translate="">Your choice</label>
-			<input tal:attributes="id input_id; name string:${input_id}:ustring:utf8; value python:datamodel and datamodel[1] or ''" type="text" />
+			<input tal:attributes="id input_id; name string:${input_id}:string:utf8; value python:datamodel and datamodel[1] or ''" type="text" />
 		</div>
 	</tal:block>
 </div>

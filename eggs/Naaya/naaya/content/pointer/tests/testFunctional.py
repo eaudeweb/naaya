@@ -25,19 +25,19 @@ class NyPointerFunctionalTestCase(NaayaFunctionalTestCase):
         self.assertTrue('<h1>Submit Pointer</h1>' in self.browser.get_html())
         form = self.browser.get_form('frmAdd')
         expected_controls = set([
-            'lang', 'title:utf8:ustring', 'description:utf8:ustring', 'coverage:utf8:ustring',
-            'keywords:utf8:ustring', 'releasedate', 'pointer:utf8:ustring',
+            'lang', 'title:utf8:string', 'description:utf8:string', 'coverage:utf8:string',
+            'keywords:utf8:string', 'releasedate', 'pointer:utf8:string',
         ])
         found_controls = set(c.name for c in form.controls)
         self.assertTrue(expected_controls.issubset(found_controls),
             'Missing form controls: %s' % repr(expected_controls - found_controls))
 
         self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
-        form['title:utf8:ustring'] = 'test_pointer'
-        form['description:utf8:ustring'] = 'test_pointer_description'
-        form['coverage:utf8:ustring'] = 'test_pointer_coverage'
-        form['keywords:utf8:ustring'] = 'keyw1, keyw2'
-        form['pointer:utf8:ustring'] = 'portal'
+        form['title:utf8:string'] = 'test_pointer'
+        form['description:utf8:string'] = 'test_pointer_description'
+        form['coverage:utf8:string'] = 'test_pointer_coverage'
+        form['keywords:utf8:string'] = 'keyw1, keyw2'
+        form['pointer:utf8:string'] = 'portal'
         form['redirect:boolean'] = []
 
         self.browser.submit()
@@ -54,11 +54,11 @@ class NyPointerFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/myfolder/pointer_add_html')
         form = self.browser.get_form('frmAdd')
         self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
-        form['title:utf8:ustring'] = 'slash_pointer'
-        form['description:utf8:ustring'] = 'slash_pointer'
-        form['coverage:utf8:ustring'] = 'slash_pointer'
-        form['keywords:utf8:ustring'] = 'keyw1, keyw2'
-        form['pointer:utf8:ustring'] = '/info'
+        form['title:utf8:string'] = 'slash_pointer'
+        form['description:utf8:string'] = 'slash_pointer'
+        form['coverage:utf8:string'] = 'slash_pointer'
+        form['keywords:utf8:string'] = 'keyw1, keyw2'
+        form['pointer:utf8:string'] = '/info'
         form['redirect:boolean'] = ['on']
 
         self.browser.submit()
@@ -86,11 +86,11 @@ class NyPointerFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/myfolder/mypointer/edit_html')
         form = self.browser.get_form('frmEdit')
 
-        self.assertEqual(form['title:utf8:ustring'], 'My pointer')
+        self.assertEqual(form['title:utf8:string'], 'My pointer')
 
-        form['title:utf8:ustring'] = 'new_pointer_title'
-        form['pointer:utf8:ustring'] = 'portal'
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        form['title:utf8:string'] = 'new_pointer_title'
+        form['pointer:utf8:string'] = 'portal'
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
 
         self.assertEqual(self.portal.myfolder.mypointer.title, 'new_pointer_title')
@@ -100,8 +100,8 @@ class NyPointerFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/myfolder/mypointer/edit_html')
         form = self.browser.get_form('frmEdit')
         form['redirect:boolean'] = ['on']
-        form['pointer:utf8:ustring'] = '/portal/info' #Will result: portal/info
-        self.browser.clicked(form, form.find_control('title:utf8:ustring'))
+        form['pointer:utf8:string'] = '/portal/info' #Will result: portal/info
+        self.browser.clicked(form, form.find_control('title:utf8:string'))
         self.browser.submit()
 
         self.browser.go('http://localhost/portal/myfolder/mypointer')
@@ -115,8 +115,8 @@ class NyPointerFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/myfolder/mypointer/edit_html')
 
         form = self.browser.get_form('frmEdit')
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
-        form['title:utf8:ustring'] = ''
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
+        form['title:utf8:string'] = ''
         self.browser.submit()
 
         html = self.browser.get_html()
@@ -130,9 +130,9 @@ class NyPointerFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.go('http://localhost/portal/myfolder/mypointer/manage_edit_html')
         form = self.browser.get_form('frmEdit')
-        self.assertEqual(form['title:utf8:ustring'], 'My pointer')
-        form['title:utf8:ustring'] = 'new_pointer_title'
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        self.assertEqual(form['title:utf8:string'], 'My pointer')
+        form['title:utf8:string'] = 'new_pointer_title'
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
 
         self.assertEqual(self.portal.myfolder.mypointer.title, 'new_pointer_title')

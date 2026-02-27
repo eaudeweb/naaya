@@ -23,9 +23,9 @@ Change the settings for the notification services offered by this portal in the 
 <legend i18n:translate="">Settings</legend>
 <dl>
 	<dt i18n:translate="">Subject line for notifications</dt>
-	<dd><input type="text" name="subject_notifications:utf8:ustring" id="subject_notifications" size="30" tal:attributes="value ob_notifications/subject_notifications" /></dd>
+	<dd><input type="text" name="subject_notifications:utf8:string" id="subject_notifications" size="30" tal:attributes="value ob_notifications/subject_notifications" /></dd>
 	<dt i18n:translate="">Subject line for newsletter</dt>
-	<dd><input type="text" name="subject_newsletter:utf8:ustring" id="subject_newsletter" size="30" tal:attributes="value ob_notifications/subject_newsletter" /></dd>
+	<dd><input type="text" name="subject_newsletter:utf8:string" id="subject_newsletter" size="30" tal:attributes="value ob_notifications/subject_newsletter" /></dd>
 	<dt i18n:translate="">From field</dt>
 	<dd><input type="text" name="from_email" id="from_email" size="30" tal:attributes="value ob_notifications/from_email" /></dd>
 </dl>

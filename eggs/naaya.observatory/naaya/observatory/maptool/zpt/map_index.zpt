@@ -142,7 +142,7 @@
                 <p i18n:translate="">Find address</p>
             </div>
             <div>
-                <input type="text" id="address" name="address:ustring:utf8" readonly="readonly" tal:attributes="value request/address|string:" onkeypress="return handleKeyPress(this, event);" />
+                <input type="text" id="address" name="address:string:utf8" readonly="readonly" tal:attributes="value request/address|string:" onkeypress="return handleKeyPress(this, event);" />
                 <input type="button" name="address_button" id="address_button" value="Go" disabled="disabled" onclick="findAddress()" i18n:attributes="value"/>
             </div>
 
@@ -157,7 +157,7 @@
                 <p i18n:translate="">Country statistics</p>
             </div>
             <div>
-                <input type="text" id="country" name="country:ustring:utf8"/>
+                <input type="text" id="country" name="country:string:utf8"/>
                 <input type="button" name="country_button" id="country_button" value="Go" onclick="getCountryStatistics()"/>
             </div>
             <div id="country-statistics-parent">

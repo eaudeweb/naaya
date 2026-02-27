@@ -103,7 +103,7 @@
                     </div>
                     <form method="get" tal:attributes="action string:${site_url}/search_html" class="search-form">
                       <div class="search-wrapper">
-                        <input id="query" type="text" name="query:utf8:ustring" accesskey="4"  class="search-input" type="text" placeholder="Search"/><i class="fa fa-search"></i>
+                        <input id="query" type="text" name="query:utf8:string" accesskey="4"  class="search-input" type="text" placeholder="Search"/><i class="fa fa-search"></i>
                            <input type="submit" value="GO" class="search_btn" />
                       </div>
                     </form>

@@ -71,7 +71,7 @@
           <h2><strong>Search filters</strong></h2>
           <form method="get" name="frmSearch" action="search_html">
             <label for="query" i18n:translate="">Enter your search term(s):</label>
-            <input type="text" name="query:utf8:ustring" id="query"
+            <input type="text" name="query:utf8:string" id="query"
               tal:attributes="value python:request.get('query', '')"
               size="40" maxLength="100" />
             <p class="form-errors" tal:condition="error" tal:content="error" />

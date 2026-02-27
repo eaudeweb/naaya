@@ -14,7 +14,7 @@
 			<form name="frmProperties" action="manageBasicProperties" method="post">
 				<tr>
 					<td><strong>Title</strong></td>
-					<td><input type="text" name="title:utf8:ustring" size="40" tal:attributes="value here/title" /></td>
+					<td><input type="text" name="title:utf8:string" size="40" tal:attributes="value here/title" /></td>
 				</tr>
 				<tr>
 					<td>&nbsp;</td>

@@ -51,8 +51,8 @@ class TestManageMessagesInZmi(NaayaFunctionalTestCase):
         self.browser.go(found.attrib['href'])
         form = self.browser.get_form('translate_message')
         self.browser.clicked(form,
-                  self.browser.get_form_field(form, 'translation:utf8:ustring'))
-        form['translation:utf8:ustring'] = '${cnt} Katzen'
+                  self.browser.get_form_field(form, 'translation:utf8:string'))
+        form['translation:utf8:string'] = '${cnt} Katzen'
         self.browser.submit(fieldname='manage_editMessage:method')
         self.assertEqual('${cnt} Katzen',
          self.portal.getPortalI18n().get_message_catalog()\
@@ -71,7 +71,7 @@ class TestManageMessagesInZmi(NaayaFunctionalTestCase):
 
         form = self.browser.get_form('translate_message')
         self.browser.clicked(form,
-                  self.browser.get_form_field(form, 'translation:utf8:ustring'))
+                  self.browser.get_form_field(form, 'translation:utf8:string'))
         self.browser.submit(fieldname='manage_delMessage:method')
 
         self.browser.go('http://localhost/portal/portal_i18n/manage_messages?lang=de')

@@ -38,11 +38,11 @@
 			<div id="portalmap_top">
 				<div class="portalmap_portlet">
 					<div class="portalmap_location_filters">
-						<input type="text" class="text_input" id="address" name="address:ustring:utf8" readonly="readonly" tal:attributes="value request/address|string:" />
+						<input type="text" class="text_input" id="address" name="address:string:utf8" readonly="readonly" tal:attributes="value request/address|string:" />
 						<input type="button" name="address_button" id="address_button" value="Zoom in" disabled="disabled" onclick="findAddress()" i18n:attributes="value"/>
 					</div>
 					<div class="portalmap_location_filters">
-						<input type="text" class="text_input" id="geo_query" name="geo_query:ustring:utf8" tal:attributes="value request/geo_query|string:" />
+						<input type="text" class="text_input" id="geo_query" name="geo_query:string:utf8" tal:attributes="value request/geo_query|string:" />
 						<input type="button" name="geo_query_button" id="geo_query_button" disabled="disabled" value="Filter" onclick="startMapRefresh()" i18n:attributes="value"/>
 						<noscript>
 							<p><small i18n:translate="">eg: "water supply"</small></p>

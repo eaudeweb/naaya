@@ -89,11 +89,11 @@ class InvitationTestCase(NaayaFunctionalTestCase):
 
         self.browser.go('http://localhost/portal/myfolder/test-consultation/invitations/create')
         form = self.browser.get_form('invite')
-        form['name:utf8:ustring'] = data['name']
+        form['name:utf8:string'] = data['name']
         form['email'] = data['email']
-        form['organization:utf8:ustring'] = data['organization']
-        form['notes:utf8:ustring'] = data['notes']
-        form['message:utf8:ustring'] = data['message']
+        form['organization:utf8:string'] = data['organization']
+        form['notes:utf8:string'] = data['notes']
+        form['message:utf8:string'] = data['message']
         for control in form.controls:
             if control.name == 'do' and control.value == 'Send invitation':
                 self.browser.clicked(form, control)
@@ -143,7 +143,7 @@ class InvitationTestCase(NaayaFunctionalTestCase):
         form = self.browser.get_form('frmEdit')
         self.assertEqual(form['allow_reviewer_invites:boolean'], [])
         form['allow_reviewer_invites:boolean'] = ['on']
-        self.browser.clicked(form, form.find_control('title:utf8:ustring'))
+        self.browser.clicked(form, form.find_control('title:utf8:string'))
         self.browser.submit()
 
         self.assertEqual(get_inviter_roles(), ['Reviewer'])
@@ -241,9 +241,9 @@ class InviteeCommentTestCase(NaayaFunctionalTestCase):
         self.assertTrue('The Invitee' in html)
         form = self.browser.get_form('frmAdd')
         form_controls = set(c.name for c in form.controls)
-        self.assertTrue('contributor_name:utf8:ustring' not in form_controls)
-        form['message:utf8:ustring'] = 'The invitee speaks!'
-        self.browser.clicked(form, form.find_control('message:utf8:ustring'))
+        self.assertTrue('contributor_name:utf8:string' not in form_controls)
+        form['message:utf8:string'] = 'The invitee speaks!'
+        self.browser.clicked(form, form.find_control('message:utf8:string'))
         self.browser.submit()
 
         paragraph = self.consultation['test-section']['000']
@@ -297,8 +297,8 @@ class InviteeCommentTestCase(NaayaFunctionalTestCase):
         self.assertRedirectUnauthorizedPage(False)
 
         form = self.browser.get_form('frmEdit')
-        form['message:utf8:ustring'] = 'edited'
-        self.browser.clicked(form, form.find_control('message:utf8:ustring'))
+        form['message:utf8:string'] = 'edited'
+        self.browser.clicked(form, form.find_control('message:utf8:string'))
         self.browser.submit()
         self.assertRedirectUnauthorizedPage(False)
 

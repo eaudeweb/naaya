@@ -93,7 +93,7 @@
                                 </td>
                                 <td tal:content="python:translation or '-'"> </td>
                                 <td>
-                                    <input	type="text" name="translations:utf8:ustring:list" size="36" tal:attributes="value translation" />
+                                    <input	type="text" name="translations:utf8:string:list" size="36" tal:attributes="value translation" />
                                     <input	name="lang_codes:list" type="hidden" tal:attributes="value language" />
                                     <input	name="th_code" type="hidden" tal:attributes="value record/code" />
                                 </td>

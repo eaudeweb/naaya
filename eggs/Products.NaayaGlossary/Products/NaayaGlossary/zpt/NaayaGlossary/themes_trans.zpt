@@ -70,7 +70,7 @@ Themes translation management, here you can translate the themes names.
 						</td>
 						<td>
 						<form action="manageDefinitionTranslations" method="post" style="padding:0;; margin:0;;">
-							<input	type="text" name="translation:utf8:ustring" size="36"
+							<input	type="text" name="translation:utf8:string" size="36"
 									tal:attributes="value translation" />
 							<input	name="lang_code" type="hidden"
 									tal:attributes="value language" />

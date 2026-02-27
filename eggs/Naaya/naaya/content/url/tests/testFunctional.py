@@ -26,22 +26,22 @@ class NyURLFunctionalTestCase(NaayaFunctionalTestCase):
         self.assertTrue('<h1>Submit URL</h1>' in self.browser.get_html())
         form = self.browser.get_form('frmAdd')
         expected_controls = set([
-            'lang', 'title:utf8:ustring', 'description:utf8:ustring', 'coverage:utf8:ustring',
-            'keywords:utf8:ustring', 'releasedate', 'locator:utf8:ustring',
+            'lang', 'title:utf8:string', 'description:utf8:string', 'coverage:utf8:string',
+            'keywords:utf8:string', 'releasedate', 'locator:utf8:string',
         ])
         found_controls = set(c.name for c in form.controls)
         self.assertTrue(expected_controls.issubset(found_controls),
             'Missing form controls: %s' % repr(expected_controls - found_controls))
 
-        self.assertEqual(form['sortorder:utf8:ustring'], '100')
+        self.assertEqual(form['sortorder:utf8:string'], '100')
         self.assertEqual(form['releasedate'], DateTime().strftime('%d/%m/%Y'))
 
         self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
-        form['title:utf8:ustring'] = 'test_url'
-        form['description:utf8:ustring'] = 'test_url_description'
-        form['coverage:utf8:ustring'] = 'test_url_coverage'
-        form['keywords:utf8:ustring'] = 'keyw1, keyw2'
-        form['locator:utf8:ustring'] = 'http://www.eaudeweb.ro'
+        form['title:utf8:string'] = 'test_url'
+        form['description:utf8:string'] = 'test_url_description'
+        form['coverage:utf8:string'] = 'test_url_coverage'
+        form['keywords:utf8:string'] = 'keyw1, keyw2'
+        form['locator:utf8:string'] = 'http://www.eaudeweb.ro'
         form['redirect:boolean'] = []
 
         self.browser.submit()
@@ -79,19 +79,19 @@ class NyURLFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/myfolder/myurl/edit_html')
         form = self.browser.get_form('frmEdit')
 
-        self.assertEqual(form['title:utf8:ustring'], 'My url')
+        self.assertEqual(form['title:utf8:string'], 'My url')
 
-        form['title:utf8:ustring'] = 'new_url_title'
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        form['title:utf8:string'] = 'new_url_title'
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
 
         self.assertEqual(self.portal.myfolder.myurl.title, 'new_url_title')
 
         self.browser.go('http://localhost/portal/myfolder/myurl/edit_html?lang=fr')
         form = self.browser.get_form('frmEdit')
-        form['title:utf8:ustring'] = 'french_title'
-        form['locator:utf8:ustring'] = 'http://www.eaudeweb.ro/?lang=fr'
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        form['title:utf8:string'] = 'french_title'
+        form['locator:utf8:string'] = 'http://www.eaudeweb.ro/?lang=fr'
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
 
         self.assertEqual(self.portal.myfolder.myurl.title, 'new_url_title')
@@ -103,8 +103,8 @@ class NyURLFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/myfolder/myurl/edit_html')
         form = self.browser.get_form('frmEdit')
         form['redirect:boolean'] = ['on']
-        form['locator:utf8:ustring'] = 'http://localhost/portal/info'
-        self.browser.clicked(form, form.find_control('title:utf8:ustring'))
+        form['locator:utf8:string'] = 'http://localhost/portal/info'
+        self.browser.clicked(form, form.find_control('title:utf8:string'))
         self.browser.submit()
 
         self.browser.go('http://localhost/portal/myfolder/myurl')
@@ -118,8 +118,8 @@ class NyURLFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/myfolder/myurl/edit_html')
 
         form = self.browser.get_form('frmEdit')
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
-        form['title:utf8:ustring'] = ''
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
+        form['title:utf8:string'] = ''
         self.browser.submit()
 
         html = self.browser.get_html()
@@ -133,9 +133,9 @@ class NyURLFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.go('http://localhost/portal/myfolder/myurl/manage_edit_html')
         form = self.browser.get_form('frmEdit')
-        self.assertEqual(form['title:utf8:ustring'], 'My url')
-        form['title:utf8:ustring'] = 'new_url_title'
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        self.assertEqual(form['title:utf8:string'], 'My url')
+        form['title:utf8:string'] = 'new_url_title'
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
 
         self.assertEqual(self.portal.myfolder.myurl.title, 'new_url_title')

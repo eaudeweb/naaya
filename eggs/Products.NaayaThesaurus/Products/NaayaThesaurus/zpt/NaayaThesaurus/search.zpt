@@ -65,7 +65,7 @@
 <form	name="frmSearchThesaurus" method="post"
 		tal:attributes="action string:${here/getThesaurusPath}/search_html">
 	<strong i18n:translate="">Query string</strong>
-	<input type="text" name="query:utf8:ustring" size="40" maxlength="100" value="" />
+	<input type="text" name="query:utf8:string" size="40" maxlength="100" value="" />
 	<input type="submit" value="Search" class="styled_button" />
 	<input type="hidden" name="searched" value="1" />
 </form>

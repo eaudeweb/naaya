@@ -28,7 +28,7 @@
 <form name="frmBasicProperties" action="updateGlossaryProperties" method="post">
         <div class="field">
             <label for="title">Title</label>
-            <input type="text" name="title:utf8:ustring" id="title" tal:attributes="value here/title" size="50" />
+            <input type="text" name="title:utf8:string" id="title" tal:attributes="value here/title" size="50" />
         </div>
 
         <div class="field">
@@ -55,7 +55,7 @@
               <span style="display:none" class="lang_name"
                     tal:content="python:here.get_language_by_code(lang_code)"/>
               <textarea rows="4" cols="80"
-                        tal:attributes="name string:description-${lang_code}:utf8:ustring;
+                        tal:attributes="name string:description-${lang_code}:utf8:string;
                                         style python:test(lang_code == current_lang,
                                                           None, 'display:none')"
                         tal:content="python:here.get_description(lang_code)"

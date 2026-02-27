@@ -20,7 +20,7 @@
 		</tr>
 		<tr>
 			<th class="form-label" align="left">Source name</th>
-			<td><input type="text" name="source_name:utf8:ustring" size="50" tal:attributes="value python:record_data[2]" /></td>
+			<td><input type="text" name="source_name:utf8:string" size="50" tal:attributes="value python:record_data[2]" /></td>
 		</tr>
 		<tr>
 			<td></td>

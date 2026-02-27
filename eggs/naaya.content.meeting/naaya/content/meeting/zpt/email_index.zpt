@@ -117,7 +117,7 @@
               class="meeting-send-email-form">
             <div class="field">
                 <label class="widget-title" for="from_email" i18n:translate="">From:</label>
-                <input type="text" name="from_email:utf8:ustring" id="from_email" size="50"
+                <input type="text" name="from_email:utf8:string" id="from_email" size="50"
                     tal:attributes="value meeting/contact_email"/>
             </div>
             <div class="field">
@@ -156,7 +156,7 @@
                   </select>
 
                   <label for="search_term" i18n:translate="">containing</label>
-                  <input type="text" id="search_term" name="search_term:utf8:ustring"
+                  <input type="text" id="search_term" name="search_term:utf8:string"
                          tal:attributes="value search_term"/>
 
                   <span class="buttons"><a id="search_user" i18n:translate=""
@@ -195,7 +195,7 @@
             <div class="clearer" ></div>
             <div class="field">
                 <label class="widget-title" for="subject" i18n:translate="">Subject:</label>
-                <input type="text" name="subject:utf8:ustring" id="subject" size="50"/>
+                <input type="text" name="subject:utf8:string" id="subject" size="50"/>
             </div>
             <div class="field">
                 <label class="widget-title" for="body_text" i18n:translate="">Body:</label>
@@ -227,7 +227,7 @@
                       });"></script>
                   </metal:block>
                 </metal:block>
-                <textarea name="body_text:utf8:ustring" id="body_text" cols="50" rows="10"></textarea>
+                <textarea name="body_text:utf8:string" id="body_text" cols="50" rows="10"></textarea>
             </div>
             <input type="submit" name="send_email" value="Send email"/>
         </form>

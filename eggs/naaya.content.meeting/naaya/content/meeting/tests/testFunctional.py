@@ -44,25 +44,25 @@ class NyMeetingCreateTestCase(NaayaFunctionalTestCase):
         self.assertTrue('<h1>Submit Meeting</h1>' in self.browser.get_html())
 
         form = self.browser.get_form('frmAdd')
-        expected_controls = set(['title:utf8:ustring', 'geo_location.address:utf8:ustring',
+        expected_controls = set(['title:utf8:string', 'geo_location.address:utf8:string',
             'releasedate', 'interval.start_date', 'interval.end_date',
             'interval.start_time', 'interval.end_time',
-            'interval.all_day:boolean', 'agenda_pointer:utf8:ustring',
-            'minutes_pointer:utf8:ustring', 'survey_pointer:utf8:ustring',
-            'contact_person:utf8:ustring', 'contact_email:utf8:ustring'])
+            'interval.all_day:boolean', 'agenda_pointer:utf8:string',
+            'minutes_pointer:utf8:string', 'survey_pointer:utf8:string',
+            'contact_person:utf8:string', 'contact_email:utf8:string'])
         found_controls = set(c.name for c in form.controls)
         self.assertTrue(expected_controls <= found_controls,
             'Missing form controls: %s' % repr(expected_controls - found_controls))
 
         self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
-        form['title:utf8:ustring'] = 'MyMeeting'
-        form['geo_location.address:utf8:ustring'] = 'Kogens Nytorv 6, 1050 Copenhagen K, Denmark'
+        form['title:utf8:string'] = 'MyMeeting'
+        form['geo_location.address:utf8:string'] = 'Kogens Nytorv 6, 1050 Copenhagen K, Denmark'
         form['releasedate'] = '16/06/2010'
         form['interval.start_date'] = '20/06/2010'
         form['interval.end_date'] = '25/06/2010'
         form['interval.all_day:boolean'] = ['on']
-        form['contact_person:utf8:ustring'] = 'My Name'
-        form['contact_email:utf8:ustring'] = 'my.email@my.domain'
+        form['contact_person:utf8:string'] = 'My Name'
+        form['contact_email:utf8:string'] = 'my.email@my.domain'
         self.browser.submit()
         self.assertTrue(hasattr(self.portal.myfolder, 'mymeeting'))
 
@@ -98,25 +98,25 @@ class NyMeetingCreateTestCase(NaayaFunctionalTestCase):
         self.assertTrue('Add Naaya Meeting' in self.browser.get_html())
 
         form = self.browser.get_form('frmAdd')
-        expected_controls = set(['title:utf8:ustring', 'geo_location.address:utf8:ustring',
+        expected_controls = set(['title:utf8:string', 'geo_location.address:utf8:string',
             'releasedate', 'interval.start_date', 'interval.end_date',
             'interval.start_time', 'interval.end_time', 'interval.all_day:boolean',
-            'agenda_pointer:utf8:ustring', 'minutes_pointer:utf8:ustring', 'survey_pointer:utf8:ustring',
-            'contact_person:utf8:ustring', 'contact_email:utf8:ustring'])
+            'agenda_pointer:utf8:string', 'minutes_pointer:utf8:string', 'survey_pointer:utf8:string',
+            'contact_person:utf8:string', 'contact_email:utf8:string'])
         found_controls = set(c.name for c in form.controls)
         self.assertTrue(expected_controls <= found_controls,
             'Missing form controls: %s' % repr(expected_controls - found_controls))
 
         self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
-        form['title:utf8:ustring'] = 'MyMeeting2'
-        form['geo_location.address:utf8:ustring'] = 'Kogens Nytorv 6, 1050 Copenhagen K, Denmark'
+        form['title:utf8:string'] = 'MyMeeting2'
+        form['geo_location.address:utf8:string'] = 'Kogens Nytorv 6, 1050 Copenhagen K, Denmark'
         form['releasedate'] = '16/06/2010'
         form['interval.start_date'] = '20/06/2010'
         form['interval.end_date'] = '25/06/2010'
         form['interval.start_time'] = '10:30'
         form['interval.end_time'] = '20:00'
-        form['contact_person:utf8:ustring'] = 'My Name'
-        form['contact_email:utf8:ustring'] = 'my.email@my.domain'
+        form['contact_person:utf8:string'] = 'My Name'
+        form['contact_email:utf8:string'] = 'my.email@my.domain'
         self.browser.submit()
         self.assertTrue(hasattr(self.portal.myfolder, 'mymeeting2'))
 
@@ -175,25 +175,25 @@ class NyMeetingEditingTestCase(NaayaFunctionalTestCase):
         self.assertTrue('<h1>Edit Meeting</h1>' in self.browser.get_html())
 
         form = self.browser.get_form('frmEdit')
-        self.assertEqual(form['title:utf8:ustring'], 'MyMeeting')
-        self.assertEqual(form['geo_location.address:utf8:ustring'], 'Kogens Nytorv 6, 1050 Copenhagen K, Denmark')
+        self.assertEqual(form['title:utf8:string'], 'MyMeeting')
+        self.assertEqual(form['geo_location.address:utf8:string'], 'Kogens Nytorv 6, 1050 Copenhagen K, Denmark')
         self.assertEqual(form['releasedate'], '16/06/2010')
         self.assertEqual(form['interval.start_date'], '20/06/2010')
         self.assertEqual(form['interval.end_date'], '25/06/2010')
-        self.assertEqual(form['contact_person:utf8:ustring'], 'My Name')
-        self.assertEqual(form['contact_email:utf8:ustring'], 'my.email@my.domain')
+        self.assertEqual(form['contact_person:utf8:string'], 'My Name')
+        self.assertEqual(form['contact_email:utf8:string'], 'my.email@my.domain')
 
         self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
-        form['title:utf8:ustring'] = 'MyEditedMeeting'
-        form['geo_location.address:utf8:ustring'] = 'Kogens Nytorv 8, 1050 Copenhagen K, Denmark'
+        form['title:utf8:string'] = 'MyEditedMeeting'
+        form['geo_location.address:utf8:string'] = 'Kogens Nytorv 8, 1050 Copenhagen K, Denmark'
         form['releasedate'] = '17/06/2010'
         form['interval.start_date'] = '21/06/2010'
         form['interval.end_date'] = '26/06/2010'
         form['interval.all_day:boolean'] = []
         form['interval.start_time'] = '10:30'
         form['interval.end_time'] = '20:00'
-        form['contact_person:utf8:ustring'] = 'My Edited Name'
-        form['contact_email:utf8:ustring'] = 'my.edited.email@my.domain'
+        form['contact_person:utf8:string'] = 'My Edited Name'
+        form['contact_email:utf8:string'] = 'my.edited.email@my.domain'
         self.browser.submit()
         self.browser.go('http://localhost/portal/info/mymeeting')
         html = self.browser.get_html()
@@ -214,8 +214,8 @@ class NyMeetingEditingTestCase(NaayaFunctionalTestCase):
         self.browser_do_login('admin', '')
         self.browser.go('http://localhost/portal/info/mymeeting/edit_html')
         form = self.browser.get_form('frmEdit')
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
-        form['title:utf8:ustring'] = ''
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
+        form['title:utf8:string'] = ''
         self.browser.submit()
         html = self.browser.get_html()
         self.assertTrue('The form contains errors' in html)
@@ -231,26 +231,26 @@ class NyMeetingEditingTestCase(NaayaFunctionalTestCase):
         self.assertTrue('Naaya Meeting' in self.browser.get_html())
 
         form = self.browser.get_form('frmEdit')
-        self.assertEqual(form['title:utf8:ustring'], 'MyMeeting')
-        self.assertEqual(form['geo_location.address:utf8:ustring'], 'Kogens Nytorv 6, 1050 Copenhagen K, Denmark')
+        self.assertEqual(form['title:utf8:string'], 'MyMeeting')
+        self.assertEqual(form['geo_location.address:utf8:string'], 'Kogens Nytorv 6, 1050 Copenhagen K, Denmark')
         self.assertEqual(form['releasedate'], '16/06/2010')
         self.assertEqual(form['interval.start_date'], '20/06/2010')
         self.assertEqual(form['interval.end_date'], '25/06/2010')
         self.assertEqual(form['interval.start_time'], '10:30')
         self.assertEqual(form['interval.end_time'], '20:00')
-        self.assertEqual(form['contact_person:utf8:ustring'], 'My Name')
-        self.assertEqual(form['contact_email:utf8:ustring'], 'my.email@my.domain')
+        self.assertEqual(form['contact_person:utf8:string'], 'My Name')
+        self.assertEqual(form['contact_email:utf8:string'], 'my.email@my.domain')
 
         self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
-        form['title:utf8:ustring'] = 'MyEditedMeeting'
-        form['geo_location.address:utf8:ustring'] = 'Kogens Nytorv 8, 1050 Copenhagen K, Denmark'
+        form['title:utf8:string'] = 'MyEditedMeeting'
+        form['geo_location.address:utf8:string'] = 'Kogens Nytorv 8, 1050 Copenhagen K, Denmark'
         form['releasedate'] = '17/06/2010'
         form['interval.start_date'] = '21/06/2010'
         form['interval.end_date'] = '26/06/2010'
         form['interval.start_time'] = '11:00'
         form['interval.end_time'] = '21:00'
-        form['contact_person:utf8:ustring'] = 'My Edited Name'
-        form['contact_email:utf8:ustring'] = 'my.edited.email@my.domain'
+        form['contact_person:utf8:string'] = 'My Edited Name'
+        form['contact_email:utf8:string'] = 'my.edited.email@my.domain'
         self.browser.submit()
         self.browser.go('http://localhost/portal/info/mymeeting2')
         html = self.browser.get_html()
@@ -335,14 +335,14 @@ class NyMeetingFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.go('http://localhost/portal/info/mymeeting/participants')
         form = self.browser.get_form('formSearchUsers')
-        expected_controls = set(['search_param', 'search_term:utf8:ustring', 'search_user'])
+        expected_controls = set(['search_param', 'search_term:utf8:string', 'search_user'])
         found_controls = set(c.name for c in form.controls)
         self.assertTrue(expected_controls <= found_controls,
             'Missing form controls: %s' % repr(expected_controls - found_controls))
 
-        self.browser.clicked(form, self.browser.get_form_field(form, 'search_term:utf8:ustring'))
+        self.browser.clicked(form, self.browser.get_form_field(form, 'search_term:utf8:string'))
         form['search_param'] = ['uid']
-        form['search_term:utf8:ustring'] = 'contributor'
+        form['search_term:utf8:string'] = 'contributor'
         self.browser.submit()
 
         form = self.browser.get_form('formAddUsers')
@@ -392,14 +392,14 @@ class NyMeetingFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.go('http://localhost/portal/info/mymeeting/email_sender')
         form = self.browser.get_form('formSendEmail')
-        expected_controls = set(['from_email:utf8:ustring', 'to_uids:list', 'subject:utf8:ustring', 'body_text:utf8:ustring', 'send_email'])
+        expected_controls = set(['from_email:utf8:string', 'to_uids:list', 'subject:utf8:string', 'body_text:utf8:string', 'send_email'])
         found_controls = set(c.name for c in form.controls)
         self.assertTrue(expected_controls <= found_controls,
             'Missing form controls: %s' % repr(expected_controls - found_controls))
 
         self.browser.clicked(form, self.browser.get_form_field(form, 'send_email'))
-        form['subject:utf8:ustring'] = 'Test subject'
-        form['body_text:utf8:ustring'] = 'Test body'
+        form['subject:utf8:string'] = 'Test subject'
+        form['body_text:utf8:string'] = 'Test body'
         self.browser.submit()
         html = self.browser.get_html()
         self.assertEqual(self.browser.get_url(), 'http://localhost/portal/info/mymeeting/email_sender/send_email')
@@ -412,8 +412,8 @@ class NyMeetingFunctionalTestCase(NaayaFunctionalTestCase):
         form = self.browser.get_form('formSendEmail')
         self.browser.clicked(form, self.browser.get_form_field(form, 'send_email'))
         form['to_uids:list'] = ['test_participant1']
-        form['subject:utf8:ustring'] = 'Test subject'
-        form['body_text:utf8:ustring'] = 'Test body'
+        form['subject:utf8:string'] = 'Test subject'
+        form['body_text:utf8:string'] = 'Test body'
         self.browser.submit()
         html = self.browser.get_html()
         self.assertEqual(self.browser.get_url(), 'http://localhost/portal/info/mymeeting/email_sender/send_email')
@@ -542,9 +542,9 @@ class NyMeetingParticipantsTestCase(NaayaFunctionalTestCase):
         form = self.browser.get_form('formSearchUsers')
         self.assertTrue('test_participant1' not in self.browser.get_html())
 
-        self.browser.clicked(form, self.browser.get_form_field(form, 'search_term:utf8:ustring'))
+        self.browser.clicked(form, self.browser.get_form_field(form, 'search_term:utf8:string'))
         form['search_param'] = ['uid']
-        form['search_term:utf8:ustring'] = 'test_participant'
+        form['search_term:utf8:string'] = 'test_participant'
         self.browser.submit()
         form = self.browser.get_form('formAddUsers')
         expected_controls = set(['uids:list', 'add_users'])
@@ -599,9 +599,9 @@ class NyMeetingParticipantsTestCase(NaayaFunctionalTestCase):
         self.browser_do_login('admin', '')
         self.browser.go('http://localhost/portal/info/mymeeting/participants')
         form = self.browser.get_form('formSearchUsers')
-        self.browser.clicked(form, self.browser.get_form_field(form, 'search_term:utf8:ustring'))
+        self.browser.clicked(form, self.browser.get_form_field(form, 'search_term:utf8:string'))
         form['search_param'] = ['uid']
-        form['search_term:utf8:ustring'] = 'test_participant1'
+        form['search_term:utf8:string'] = 'test_participant1'
         self.browser.submit()
         form = self.browser.get_form('formAddUsers')
         self.browser.clicked(form, self.browser.get_form_field(form, 'uids:list'))
@@ -714,14 +714,14 @@ class NyMeetingSignupTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/signup')
 
         form = self.browser.get_form('formSignup')
-        expected_controls = set(['first_name:utf8:ustring', 'last_name:utf8:ustring', 'email:utf8:ustring', 'organization:utf8:ustring', 'phone:utf8:ustring', 'add_signup'])
+        expected_controls = set(['first_name:utf8:string', 'last_name:utf8:string', 'email:utf8:string', 'organization:utf8:string', 'phone:utf8:string', 'add_signup'])
         found_controls = set(c.name for c in form.controls)
         self.assertTrue(expected_controls <= found_controls,
             'Missing form controls: %s' % repr(expected_controls - found_controls))
 
         self.browser.clicked(form, self.browser.get_form_field(form, 'add_signup'))
-        form['first_name:utf8:ustring'] = 'test_first_name'
-        form['last_name:utf8:ustring'] = 'test_last_name'
+        form['first_name:utf8:string'] = 'test_first_name'
+        form['last_name:utf8:string'] = 'test_last_name'
         self.browser.submit()
 
         self.assertEqual(self.browser.get_url(), 'http://localhost/portal/info/mymeeting/participants/subscriptions/signup')
@@ -732,9 +732,9 @@ class NyMeetingSignupTestCase(NaayaFunctionalTestCase):
 
         form = self.browser.get_form('formSignup')
         self.browser.clicked(form, self.browser.get_form_field(form, 'add_signup'))
-        form['email:utf8:ustring'] = 'test_email'
-        form['organization:utf8:ustring'] = 'test_organization'
-        form['phone:utf8:ustring'] = 'test_phone'
+        form['email:utf8:string'] = 'test_email'
+        form['organization:utf8:string'] = 'test_organization'
+        form['phone:utf8:string'] = 'test_phone'
         self.browser.submit()
 
         self.assertEqual(self.browser.get_url(), 'http://localhost/portal/info/mymeeting/participants/subscriptions/signup')
@@ -747,7 +747,7 @@ class NyMeetingSignupTestCase(NaayaFunctionalTestCase):
 
         form = self.browser.get_form('formSignup')
         self.browser.clicked(form, self.browser.get_form_field(form, 'add_signup'))
-        form['email:utf8:ustring'] = 'test_email@email.com'
+        form['email:utf8:string'] = 'test_email@email.com'
         self.browser.submit()
 
         self.assertEqual(self.browser.get_url(), 'http://localhost/portal/info/mymeeting/participants/subscriptions/signup_successful')
@@ -813,11 +813,11 @@ class NyMeetingSignupTestCase(NaayaFunctionalTestCase):
 
         form = self.browser.get_form('formSignup')
         self.browser.clicked(form, self.browser.get_form_field(form, 'add_signup'))
-        form['first_name:utf8:ustring'] = 'test_first_name'
-        form['last_name:utf8:ustring'] = 'test_last_name'
-        form['email:utf8:ustring'] = 'test_email@email.com'
-        form['organization:utf8:ustring'] = 'test_organization'
-        form['phone:utf8:ustring'] = 'test_phone'
+        form['first_name:utf8:string'] = 'test_first_name'
+        form['last_name:utf8:string'] = 'test_last_name'
+        form['email:utf8:string'] = 'test_email@email.com'
+        form['organization:utf8:string'] = 'test_organization'
+        form['phone:utf8:string'] = 'test_phone'
         self.browser.submit()
 
         self.assertEqual(len(self.diverted_mail), 1)
@@ -1350,7 +1350,7 @@ class NyMeetingItemsRestrictedButAgenda(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/info/mymeeting/edit_html')
         form = self.browser.get_form('frmEdit')
         self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
-        form['agenda_pointer:utf8:ustring'] = 'info/mymeeting/mydoc'
+        form['agenda_pointer:utf8:string'] = 'info/mymeeting/mydoc'
         self.browser.submit()
         self.browser.go('http://localhost/portal/info/mymeeting')
         self.browser_do_logout()
@@ -1363,7 +1363,7 @@ class NyMeetingItemsRestrictedButAgenda(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/info/mymeeting/edit_html')
         form = self.browser.get_form('frmEdit')
         self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
-        form['agenda_pointer:utf8:ustring'] = ''
+        form['agenda_pointer:utf8:string'] = ''
         self.browser.submit()
         self.browser.go('http://localhost/portal/info/mymeeting')
         self.browser_do_logout()

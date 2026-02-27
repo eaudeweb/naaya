@@ -135,7 +135,7 @@
           </select>
 
           <label for="search_term_to" i18n:translate="">containing</label>
-          <input type="text" id="search_term_to" name="search_term_to:utf8:ustring"
+          <input type="text" id="search_term_to" name="search_term_to:utf8:string"
                  tal:attributes="value search_term"/>
 
           <span class="buttons"><a id="search_user_to" i18n:translate=""
@@ -202,7 +202,7 @@
           </select>
 
           <label for="search_term_cc" i18n:translate="">containing</label>
-          <input type="text" id="search_term_cc" name="search_term_cc:utf8:ustring"
+          <input type="text" id="search_term_cc" name="search_term_cc:utf8:string"
                  tal:attributes="value search_term"/>
 
           <span class="buttons"><a id="search_user_cc" i18n:translate=""
@@ -251,7 +251,7 @@
         <label for="message" i18n:translate="">Message body</label>
         <p class="form-errors" tal:define="err errors/message|nothing"
           tal:condition="err" tal:content="err" />
-        <textarea name="message:utf8:ustring" id="message" rows="10" cols="50"
+        <textarea name="message:utf8:string" id="message" rows="10" cols="50"
           tal:content="data/message"></textarea>
     </div>
     <input type="submit" name="do" value="Send email" />

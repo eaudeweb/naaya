@@ -16,7 +16,7 @@
 			</tr>
 			<tr>
 				<td align="left" valign="top"><label for="cb-name"><strong>Title</strong></label></td>
-				<td align="left" valign="top"><input type="text" id="cb-name" name="title:utf8:ustring" size="35" value=""></td>
+				<td align="left" valign="top"><input type="text" id="cb-name" name="title:utf8:string" size="35" value=""></td>
 			</tr>
 			</table><br />
 

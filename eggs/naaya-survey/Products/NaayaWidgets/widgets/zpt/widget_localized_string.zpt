@@ -61,7 +61,7 @@
                     value python: value.get(lang_code, '');
                     size here/width;
                     maxlength python:test(here.size_max, here.size_max, None);
-                    name string:${id}:utf8:ustring;
+                    name string:${id}:utf8:string;
                     id id" />
             <br />
             <br />

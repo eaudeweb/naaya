@@ -13,12 +13,12 @@
 	tal:attributes="action string:${here/absolute_url}/addNyForumTopic">
 <div class="field">
 	<label for="title" i18n:translate="">Subject</label>
-	<input type="text" name="title:utf8:ustring" id="title" size="50"
+	<input type="text" name="title:utf8:string" id="title" size="50"
 		tal:attributes="value python:request.get('title', '')" />
 </div>
 <div class="field">
 	<label for="category" i18n:translate="">Category</label>
-	<select name="category:utf8:ustring" id="category">
+	<select name="category:utf8:string" id="category">
 		<option value="" i18n:translate="">--Select category--</option>
 		<option tal:repeat="item here/get_forum_categories" tal:content="item"
 			tal:attributes="value item;selected python:test(request.get('category', '') == item, 'selected', None)"/>
@@ -27,7 +27,7 @@
 <div class="field">
 	<label for="description" i18n:translate="">Text</label>
 	<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('description', image_support=True)" />
-	<textarea id="description" name="description:utf8:ustring" rows="20" cols="72" class="mceEditor"
+	<textarea id="description" name="description:utf8:string" rows="20" cols="72" class="mceEditor"
 		tal:content="python:request.get('description', '')">
 	</textarea>
 </div>

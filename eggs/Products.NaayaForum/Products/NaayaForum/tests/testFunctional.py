@@ -69,9 +69,9 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
             form = self.browser.get_form('frmEdit')
 
             expected_controls = set([
-                'title:utf8:ustring',
-                'description:utf8:ustring',
-                'categories:utf8:ustring',
+                'title:utf8:string',
+                'description:utf8:string',
+                'categories:utf8:string',
                 'file_max_size:int',
             ])
             found_controls = set(c.name for c in form.controls)
@@ -80,11 +80,11 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
 
             topic = self.portal.forum_id
             file_max_size = topic.file_max_size
-            form['title:utf8:ustring'] = 'My forum %s' % counter
-            form['categories:utf8:ustring'] = 'Test category\n\rTest category 2\n\rTest category%s' % counter
-            form['description:utf8:ustring'] = 'Description %s' % counter
+            form['title:utf8:string'] = 'My forum %s' % counter
+            form['categories:utf8:string'] = 'Test category\n\rTest category 2\n\rTest category%s' % counter
+            form['description:utf8:string'] = 'Description %s' % counter
             form['file_max_size:int'] = '%s%s' % (file_max_size, counter)
-            self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+            self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
             self.browser.submit()
             self.assertEqual(topic.title, 'My forum %s' % counter)
             self.assertEqual(topic.categories, ['Test category', 'Test category 2', 'Test category%s' % counter])
@@ -104,17 +104,17 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/forum_id/topic_add_html')
         form = self.browser.get_form('frmAdd')
         expected_controls = set([
-            'title:utf8:ustring',
-            'description:utf8:ustring',
-            'category:utf8:ustring',
+            'title:utf8:string',
+            'description:utf8:string',
+            'category:utf8:string',
             'attachment',
         ])
         found_controls = set(c.name for c in form.controls)
         self.assertTrue(expected_controls.issubset(found_controls),
             'Missing form controls: %s' % repr(expected_controls - found_controls))
-        form['title:utf8:ustring'] = 'Test Add subject'
-        form['category:utf8:ustring'] = ['Test category 2']
-        form['description:utf8:ustring'] = 'Test Add Description'
+        form['title:utf8:string'] = 'Test Add subject'
+        form['category:utf8:string'] = ['Test category 2']
+        form['description:utf8:string'] = 'Test Add Description'
         mytestfile = BytesIO(b'some test data')
         filename='the_test_file.txt'
         form.find_control('attachment').add_file(
@@ -155,9 +155,9 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser_do_login('admin', '')
         self.browser.go('http://localhost/portal/forum_id/topic_add_html')
         form = self.browser.get_form('frmAdd')
-        form['title:utf8:ustring'] = 'Test subject (Large file)'
-        form['category:utf8:ustring'] = ['Test category']
-        form['description:utf8:ustring'] = 'Test Description (Large file)'
+        form['title:utf8:string'] = 'Test subject (Large file)'
+        form['category:utf8:string'] = ['Test category']
+        form['description:utf8:string'] = 'Test Description (Large file)'
         mytestfile = BytesIO(b'some very large test data')
         filename='the_test_file.txt'
         form.find_control('attachment').add_file(
@@ -170,9 +170,9 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
         html = self.browser.get_html()
         self.assertTrue('The attachment is larger than permitted' in html)
         #Check that the filled values are saved
-        self.assertEqual(form['title:utf8:ustring'], 'Test subject (Large file)')
-        self.assertEqual(form['category:utf8:ustring'], 'Test category')
-        self.assertEqual(form['description:utf8:ustring'], 'Test Description (Large file)')
+        self.assertEqual(form['title:utf8:string'], 'Test subject (Large file)')
+        self.assertEqual(form['category:utf8:string'], 'Test category')
+        self.assertEqual(form['description:utf8:string'], 'Test Description (Large file)')
 
         self.browser_do_logout()
 
@@ -186,17 +186,17 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/forum_id/topic_id/edit_html')
         form = self.browser.get_form('frmEdit')
         expected_controls = set([
-            'title:utf8:ustring',
-            'description:utf8:ustring',
-            'category:utf8:ustring',
+            'title:utf8:string',
+            'description:utf8:string',
+            'category:utf8:string',
         ])
         found_controls = set(c.name for c in form.controls)
         self.assertTrue(expected_controls.issubset(found_controls),
             'Missing form controls: %s' % repr(expected_controls - found_controls))
-        form['title:utf8:ustring'] = 'Test subject 2'
-        form['category:utf8:ustring'] = ['Test category 2']
-        form['description:utf8:ustring'] = 'Description'
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        form['title:utf8:string'] = 'Test subject 2'
+        form['category:utf8:string'] = ['Test category 2']
+        form['description:utf8:string'] = 'Description'
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
         topic = self.portal.forum_id.objectValues(['Naaya Forum Topic'])[0]
         self.assertEqual(topic.title, 'Test subject 2')
@@ -240,16 +240,16 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/forum_id/topic_id/message_add_html')
         form = self.browser.get_form('frmAdd')
         expected_controls = set([
-            'title:utf8:ustring',
-            'description:utf8:ustring',
+            'title:utf8:string',
+            'description:utf8:string',
             'attachment',
         ])
         found_controls = set(c.name for c in form.controls)
         self.assertTrue(expected_controls.issubset(found_controls),
             'Missing form controls: %s' % repr(expected_controls - found_controls))
 
-        form['title:utf8:ustring'] = 'Message title 2'
-        form['description:utf8:ustring'] = 'Message description 2'
+        form['title:utf8:string'] = 'Message title 2'
+        form['description:utf8:string'] = 'Message description 2'
         mytestfile = BytesIO(b'some test data')
         filename='the_test_file.txt'
         form.find_control('attachment').add_file(
@@ -280,8 +280,8 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser_do_login('admin', '')
         self.browser.go('http://localhost/portal/forum_id/topic_id/message_add_html')
         form = self.browser.get_form('frmAdd')
-        form['title:utf8:ustring'] = 'Message title 2'
-        form['description:utf8:ustring'] = 'Message description 2'
+        form['title:utf8:string'] = 'Message title 2'
+        form['description:utf8:string'] = 'Message description 2'
         mytestfile = BytesIO(b'some very very big test data')
         filename='the_test_file.txt'
         form.find_control('attachment').add_file(
@@ -298,8 +298,8 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
 
         #Check that the filled values are saved
         form = self.browser.get_form('frmAdd')
-        self.assertEqual(form['title:utf8:ustring'], 'Message title 2')
-        self.assertEqual(form['description:utf8:ustring'].strip(),
+        self.assertEqual(form['title:utf8:string'], 'Message title 2')
+        self.assertEqual(form['description:utf8:string'].strip(),
                          'Message description 2')
 
         self.browser_do_logout()
@@ -330,15 +330,15 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/forum_id/topic_id/message_id/edit_html')
         form = self.browser.get_form('frmEdit')
         expected_controls = set([
-            'title:utf8:ustring',
-            'description:utf8:ustring',
+            'title:utf8:string',
+            'description:utf8:string',
         ])
         found_controls = set(c.name for c in form.controls)
         self.assertTrue(expected_controls.issubset(found_controls),
             'Missing form controls: %s' % repr(expected_controls - found_controls))
 
-        form['title:utf8:ustring'] = 'Message title modified'
-        form['description:utf8:ustring'] = 'Message description modified'
+        form['title:utf8:string'] = 'Message title modified'
+        form['description:utf8:string'] = 'Message description modified'
         self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
         self.browser.submit()
 

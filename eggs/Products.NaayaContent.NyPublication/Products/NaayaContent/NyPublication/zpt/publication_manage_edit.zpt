@@ -55,7 +55,7 @@
 </tr>
 <tr>
 	<td class="form-label">Internet access (URL)</td>
-	<td><input type="text" name="locator:utf8:ustring" id="locator" tal:attributes="value here/locator" size="50"/></td>
+	<td><input type="text" name="locator:utf8:string" id="locator" tal:attributes="value here/locator" size="50"/></td>
 </tr>
 </tal:block>
 

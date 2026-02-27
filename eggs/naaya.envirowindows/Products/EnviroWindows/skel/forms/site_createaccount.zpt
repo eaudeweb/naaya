@@ -13,31 +13,31 @@
 <table border="0" cellspacing="2" cellpadding="2">
 	<tr>
 		<td valign="top" i18n:translate="">Username</td>
-		<td><input type="text" name="username:utf8:ustring" size="40" tal:attributes="value here/getSessionUserName" />*</td>
+		<td><input type="text" name="username:utf8:string" size="40" tal:attributes="value here/getSessionUserName" />*</td>
 	</tr>
 	<tr>
 		<td i18n:translate="">First name</td>
-		<td><input type="text" name="firstname:utf8:ustring" size="40" tal:attributes="value here/getSessionUserFirstname" />*</td>
+		<td><input type="text" name="firstname:utf8:string" size="40" tal:attributes="value here/getSessionUserFirstname" />*</td>
 	</tr>
 	<tr>
 		<td i18n:translate="">Last name</td>
-		<td><input type="text" name="lastname:utf8:ustring" size="40" tal:attributes="value here/getSessionUserLastname" />*</td>
+		<td><input type="text" name="lastname:utf8:string" size="40" tal:attributes="value here/getSessionUserLastname" />*</td>
 	</tr>
 	<tr>
 		<td i18n:translate="">Email address</td>
-		<td><input type="text" name="email:utf8:ustring" size="40" tal:attributes="value here/getSessionUserEmail" />*</td>
+		<td><input type="text" name="email:utf8:string" size="40" tal:attributes="value here/getSessionUserEmail" />*</td>
 	</tr>
 	<tr>
 		<td i18n:translate="">Password:</td>
-		<td><input type="password" name="password:utf8:ustring" size="30" value="" maxlength="255">*</td>
+		<td><input type="password" name="password:utf8:string" size="30" value="" maxlength="255">*</td>
 	</tr>
 	<tr>
 		<td i18n:translate="">Password verification:</td>
-		<td><input type="password" name="confirm:utf8:ustring" value="" size="30" maxlength="255">*</td>
+		<td><input type="password" name="confirm:utf8:string" value="" size="30" maxlength="255">*</td>
 	</tr>
 	<tr>
 		<td i18n:translate="">Organisation</td>
-		<td><input type="text" name="organisation:utf8:ustring" size="40" tal:attributes="value here/getSessionUserOrganisation" /></td>
+		<td><input type="text" name="organisation:utf8:string" size="40" tal:attributes="value here/getSessionUserOrganisation" /></td>
 	</tr>
 	<tr>
 		<td valign="top" i18n:translate="">Location<br i18n:name="br" />the privileges should apply</td>
@@ -53,7 +53,7 @@
 	</tr>
 	<tr>
 		<td valign="top" i18n:translate="">Comments</td>
-		<td><textarea name="comments:utf8:ustring" rows="10" cols="50" tal:content="here/getSessionUserComments"></textarea>*</td>
+		<td><textarea name="comments:utf8:string" rows="10" cols="50" tal:content="here/getSessionUserComments"></textarea>*</td>
 	</tr>
 	<tr tal:condition="python: not here.checkPermissionSkipCaptcha() and here.recaptcha_is_present()">
 		<td></td>

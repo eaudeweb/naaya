@@ -10,17 +10,17 @@
 	<form method="post" action="addComment" enctype="multipart/form-data">
 		<div class="field">
 			<label for="title"><span i18n:translate="">Coment title</span> <span class="mandatory_field">*</span></label>
-			<input type="text" name="title:utf8:ustring" id="title" />
+			<input type="text" name="title:utf8:string" id="title" />
 		</div>
 		
 		<div class="field">
 			<label for="contributor_name"><span i18n:translate="">Your name</span> <span class="mandatory_field">*</span></label>
-			<input type="text" name="contributor_name:utf8:ustring" id="contributor_name" tal:attributes="value python:here.getAuthenticationTool().getUserFullName(here.REQUEST.AUTHENTICATED_USER)" />
+			<input type="text" name="contributor_name:utf8:string" id="contributor_name" tal:attributes="value python:here.getAuthenticationTool().getUserFullName(here.REQUEST.AUTHENTICATED_USER)" />
 		</div>
 		
 		<div class="field">
 			<label for="message"><span i18n:translate="">Your comment</span> <span class="mandatory_field">*</span></label>
-			<textarea id="message" cols="70" rows="5" name="message:utf8:ustring"></textarea>
+			<textarea id="message" cols="70" rows="5" name="message:utf8:string"></textarea>
 		</div>
 		
 		<div class="field">

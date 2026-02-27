@@ -34,33 +34,33 @@
 		<div class="field-inline">
 			<label for="firstname" i18n:translate="">First name: *</label>
 			<br />
-			<input type="text" id="firstname" name="firstname:utf8:ustring" size="50" maxLength="255" tal:attributes="value here/getSessionUserFirstname" />
+			<input type="text" id="firstname" name="firstname:utf8:string" size="50" maxLength="255" tal:attributes="value here/getSessionUserFirstname" />
 		</div>
 		<div class="field-inline">
 			<label for="lastname" i18n:translate="">Last name: *</label>
 			<br />
-			<input type="text" id="lastname" name="lastname:utf8:ustring" size="50" maxLength="255" tal:attributes="value here/getSessionUserLastname" />
+			<input type="text" id="lastname" name="lastname:utf8:string" size="50" maxLength="255" tal:attributes="value here/getSessionUserLastname" />
 		</div>
 		<div class="field-inline">
 			<label for="email" i18n:translate="">Email address: *</label>
 			<br />
-			<input type="text" id="email" name="email:utf8:ustring" size="50" maxLength="255" tal:attributes="value here/getSessionUserEmail" />
+			<input type="text" id="email" name="email:utf8:string" size="50" maxLength="255" tal:attributes="value here/getSessionUserEmail" />
 		</div>
 		<div class="field-inline">
 			<label for="password" i18n:translate="">Password:</label>
 			<br />
-			<input type="password" id="password" name="password:utf8:ustring" value="" size="25" maxLength="255" />
+			<input type="password" id="password" name="password:utf8:string" value="" size="25" maxLength="255" />
 		</div>
 		<div class="field-inline">
 			<label for="confirm" i18n:translate="">Password verification:</label>
 			<br />
-			<input type="password" id="confirm" name="confirm:utf8:ustring" value="" size="25" maxLength="255" />
+			<input type="password" id="confirm" name="confirm:utf8:string" value="" size="25" maxLength="255" />
 		</div>
 		<p i18n:translate="">
 			Leave password fields empty to keep the current password.
 		</p>
 		<div class="field">
-			<input type="hidden" name="name:utf8:ustring" tal:attributes="value user_account" />
+			<input type="hidden" name="name:utf8:string" tal:attributes="value user_account" />
 			<input type="submit" value="Save changes" i18n:attributes="value" />
 		</div>
 	</form>

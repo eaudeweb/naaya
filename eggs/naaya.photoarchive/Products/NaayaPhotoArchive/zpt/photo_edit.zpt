@@ -12,7 +12,7 @@
 
 <div class="field" metal:fill-slot="doc_title">
 	<label for="title"><span i18n:translate="" tal:omit-tag="">Caption</span></label>
-	<textarea rows="5" cols="50" id="title" name="title:utf8:ustring"
+	<textarea rows="5" cols="50" id="title" name="title:utf8:string"
 	tal:content="python:here.getSession('title', here.getVersionLocalProperty('title', curr_lang))"></textarea>
 </div>
 

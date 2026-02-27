@@ -7,15 +7,15 @@
 <tal:block metal:fill-slot="custom_properties">
 	<tr>
 		<td class="form-label">YouTube ID</td>
-		<td><input type="text" name="youtube_id:utf8:ustring" size="16" tal:attributes="value here/youtube_id" /></td>
+		<td><input type="text" name="youtube_id:utf8:string" size="16" tal:attributes="value here/youtube_id" /></td>
 	</tr>
 	<tr>
 		<td class="form-label">Video width</td>
-		<td><input type="text" name="iframe_width:utf8:ustring" size="4" tal:attributes="value here/iframe_width" /></td>
+		<td><input type="text" name="iframe_width:utf8:string" size="4" tal:attributes="value here/iframe_width" /></td>
 	</tr>
 	<tr>
 		<td class="form-label">Video height</td>
-		<td><input type="text" name="iframe_height:utf8:ustring" size="4" tal:attributes="value here/iframe_height" /></td>
+		<td><input type="text" name="iframe_height:utf8:string" size="4" tal:attributes="value here/iframe_height" /></td>
 	</tr>
 </tal:block>
 

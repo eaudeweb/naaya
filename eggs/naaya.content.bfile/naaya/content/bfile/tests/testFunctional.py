@@ -56,8 +56,8 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BrowserFileTestingMixin
         self.assertTrue('<h1>Submit File</h1>' in self.browser.get_html())
         form = self.browser.get_form('frmAdd')
         expected_controls = set([
-            'lang', 'title:utf8:ustring', 'description:utf8:ustring',
-            'coverage:utf8:ustring', 'keywords:utf8:ustring', 'releasedate',
+            'lang', 'title:utf8:string', 'description:utf8:string',
+            'coverage:utf8:string', 'keywords:utf8:string', 'releasedate',
             'discussion:boolean', 'uploaded_file',
         ])
         found_controls = set(c.name for c in form.controls)
@@ -67,10 +67,10 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BrowserFileTestingMixin
             repr(expected_controls - found_controls))
 
         self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
-        form['title:utf8:ustring'] = 'Test File'
-        form['description:utf8:ustring'] = 'test_bfile_description'
-        form['coverage:utf8:ustring'] = 'test_bfile_coverage'
-        form['keywords:utf8:ustring'] = 'keyw1, keyw2'
+        form['title:utf8:string'] = 'Test File'
+        form['description:utf8:string'] = 'test_bfile_description'
+        form['coverage:utf8:string'] = 'test_bfile_coverage'
+        form['keywords:utf8:string'] = 'keyw1, keyw2'
 
         TEST_FILE_DATA = 'some data for my file'
         form.find_control('uploaded_file').add_file(
@@ -122,9 +122,9 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BrowserFileTestingMixin
         self.browser.go(b_url + 'edit_html')
         form = self.browser.get_form('frmEdit')
 
-        self.assertEqual(form['title:utf8:ustring'], 'My file')
+        self.assertEqual(form['title:utf8:string'], 'My file')
 
-        form['title:utf8:ustring'] = 'New Title'
+        form['title:utf8:string'] = 'New Title'
         TEST_FILE_DATA_2 = 'some new data for my file'
         form.find_control('uploaded_file').add_file(
             StringIO(TEST_FILE_DATA_2),
@@ -132,7 +132,7 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BrowserFileTestingMixin
             content_type='text/plain; charset=latin-1')
 
         self.browser.clicked(form, self.browser.get_form_field(
-            form, 'title:utf8:ustring'))
+            form, 'title:utf8:string'))
         self.browser.submit()
         html = self.browser.get_html()
         self.assertTrue('<h1>Edit File</h1>' in html)
@@ -150,13 +150,13 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BrowserFileTestingMixin
 
         self.browser.go(b_url + 'edit_html?lang=fr')
         form = self.browser.get_form('frmEdit')
-        form['title:utf8:ustring'] = 'french_title'
+        form['title:utf8:string'] = 'french_title'
         TEST_FILE_DATA_3 = 'some new data for my file'
         form.find_control('uploaded_file').add_file(
             StringIO(TEST_FILE_DATA_3), filename='the_new_bfile.html',
             content_type='text/html; charset=utf-8')
         self.browser.clicked(
-            form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+            form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
 
         self.browser.go(b_url + 'download/fr/1/the_new_bfile.html?lang=fr')
@@ -195,7 +195,7 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BrowserFileTestingMixin
         self.browser.go('http://localhost/portal/myfolder/mybfile/edit_html')
         form = self.browser.get_form('frmEdit')
         form['versions_to_remove:list'] = ['2', '4']
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
 
         mybfile = self.portal.myfolder['mybfile']
@@ -219,8 +219,8 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BrowserFileTestingMixin
         self.browser.go('http://localhost/portal/myfolder/mybfile/edit_html')
 
         form = self.browser.get_form('frmEdit')
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
-        form['title:utf8:ustring'] = ''
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
+        form['title:utf8:string'] = ''
         self.browser.submit()
 
         html = self.browser.get_html()

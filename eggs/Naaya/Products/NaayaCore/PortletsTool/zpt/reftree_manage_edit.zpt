@@ -9,11 +9,11 @@
 <table border="0" cellspacing="2" cellpadding="2" width="100%">
 	<tr>
 		<th class="form-label">Title</th>
-		<td><input type="text" name="title:utf8:ustring" id="title" size="50" tal:attributes="value here/title" /></td>
+		<td><input type="text" name="title:utf8:string" id="title" size="50" tal:attributes="value here/title" /></td>
 	</tr>
 	<tr>
 		<th class="form-label" style="vertical-align: top">Description</th>
-		<td><textarea name="description:utf8:ustring" id="description" rows="5" cols="50" tal:content="here/description" /></td>
+		<td><textarea name="description:utf8:string" id="description" rows="5" cols="50" tal:content="here/description" /></td>
 	</tr>
 	<tr><td></td><td><input type="submit" value="Save changes" /></td></tr>
 </table>

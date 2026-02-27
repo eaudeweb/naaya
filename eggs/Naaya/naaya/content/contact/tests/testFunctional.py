@@ -25,18 +25,18 @@ class NyContactFunctionalTestCase(NaayaFunctionalTestCase):
         self.assertTrue('<h1>Submit Contact</h1>' in self.browser.get_html())
         form = self.browser.get_form('frmAdd')
         expected_controls = set([
-            'lang', 'title:utf8:ustring', 'description:utf8:ustring', 'coverage:utf8:ustring',
-            'keywords:utf8:ustring', 'releasedate', 'discussion:boolean',
+            'lang', 'title:utf8:string', 'description:utf8:string', 'coverage:utf8:string',
+            'keywords:utf8:string', 'releasedate', 'discussion:boolean',
         ])
         found_controls = set(c.name for c in form.controls)
         self.assertTrue(expected_controls.issubset(found_controls),
             'Missing form controls: %s' % repr(expected_controls - found_controls))
 
         self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
-        form['title:utf8:ustring'] = 'test_contact'
-        form['description:utf8:ustring'] = 'test_contact_description'
-        form['coverage:utf8:ustring'] = 'test_contact_coverage'
-        form['keywords:utf8:ustring'] = 'keyw1, keyw2'
+        form['title:utf8:string'] = 'test_contact'
+        form['description:utf8:string'] = 'test_contact_description'
+        form['coverage:utf8:string'] = 'test_contact_coverage'
+        form['keywords:utf8:string'] = 'keyw1, keyw2'
 
         self.browser.submit()
         html = self.browser.get_html()
@@ -71,18 +71,18 @@ class NyContactFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/myfolder/mycontact/edit_html')
         form = self.browser.get_form('frmEdit')
 
-        self.assertEqual(form['title:utf8:ustring'], 'My contact')
+        self.assertEqual(form['title:utf8:string'], 'My contact')
 
-        form['title:utf8:ustring'] = 'new_contact_title'
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        form['title:utf8:string'] = 'new_contact_title'
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
 
         self.assertEqual(self.portal.myfolder.mycontact.title, 'new_contact_title')
 
         self.browser.go('http://localhost/portal/myfolder/mycontact/edit_html?lang=fr')
         form = self.browser.get_form('frmEdit')
-        form['title:utf8:ustring'] = 'french_title'
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        form['title:utf8:string'] = 'french_title'
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
 
         self.assertEqual(self.portal.myfolder.mycontact.title, 'new_contact_title')
@@ -95,8 +95,8 @@ class NyContactFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/myfolder/mycontact/edit_html')
 
         form = self.browser.get_form('frmEdit')
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
-        form['title:utf8:ustring'] = ''
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
+        form['title:utf8:string'] = ''
         self.browser.submit()
 
         html = self.browser.get_html()
@@ -110,9 +110,9 @@ class NyContactFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.go('http://localhost/portal/myfolder/mycontact/manage_edit_html')
         form = self.browser.get_form('frmEdit')
-        self.assertEqual(form['title:utf8:ustring'], 'My contact')
-        form['title:utf8:ustring'] = 'new_contact_title'
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        self.assertEqual(form['title:utf8:string'], 'My contact')
+        form['title:utf8:string'] = 'new_contact_title'
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
 
         self.assertEqual(self.portal.myfolder.mycontact.title, 'new_contact_title')
@@ -162,8 +162,8 @@ class NyContactVersioningFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/info/ver_contact/startVersion')
 
         form = self.browser.get_form('frmEdit')
-        form['title:utf8:ustring'] = 'ver_contact_newtitle'
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        form['title:utf8:string'] = 'ver_contact_newtitle'
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
 
         ver_contact = self.portal.info.ver_contact
@@ -178,11 +178,11 @@ class NyContactVersioningFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/info/ver_contact/startVersion')
 
         form = self.browser.get_form('frmEdit')
-        form['title:utf8:ustring'] = 'ver_contact_version'
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        form['title:utf8:string'] = 'ver_contact_version'
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
 
         form = self.browser.get_form('frmEdit')
-        self.assertEqual(form['title:utf8:ustring'], 'ver_contact_version')
+        self.assertEqual(form['title:utf8:string'], 'ver_contact_version')
 
         self.browser_do_logout()

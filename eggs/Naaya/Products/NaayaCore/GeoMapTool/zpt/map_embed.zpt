@@ -125,7 +125,7 @@
 					<p i18n:translate="">Find address</p>
 				</div>
 				<div>
-					<input type="text" id="address" name="address:ustring:utf8"
+					<input type="text" id="address" name="address:string:utf8"
 						readonly="readonly" tal:attributes="value request/address|string:"
 						onkeypress="return handleKeyPress(this, event);" style="width: 100%" />
 					<input type="button" name="address_button" id="address_button"
@@ -137,7 +137,7 @@
 				</div>
 				<div class="map_filters">
 					<div>
-						<input type="text" id="geo_query" name="geo_query:ustring:utf8"
+						<input type="text" id="geo_query" name="geo_query:string:utf8"
 							tal:attributes="value request/geo_query|string:"
 							onkeypress="return handleKeyPress(this, event);"
 							style="width: 100%" />

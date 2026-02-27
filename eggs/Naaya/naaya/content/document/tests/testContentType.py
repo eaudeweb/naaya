@@ -162,23 +162,23 @@ class NaayaContentTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase):
         page = self.browser.get_html()
         self.browser_do_logout()
 
-        tag = re.search(r'<input(?=[^>]*name="title:utf8:ustring")(?=[^>]*value="([^"]*)").*?/?>', page)
+        tag = re.search(r'<input(?=[^>]*name="title:utf8:string")(?=[^>]*value="([^"]*)").*?/?>', page)
         self.assertTrue(tag, 'Missing <input.../> tag for "title"')
         self.assertEqual(tag.group(1), doc.title)
 
-        tag = re.search(r'<textarea[^>]*name="description:utf8:ustring"[^>]*>([^<]*)<', page)
+        tag = re.search(r'<textarea[^>]*name="description:utf8:string"[^>]*>([^<]*)<', page)
         self.assertTrue(tag, 'Missing <textarea.../> tag for "description"')
         self.assertEqual(tag.group(1), doc.description)
 
-        tag = re.search(r'<textarea[^>]*name="body:utf8:ustring"[^>]*>([^<]*)<', page)
+        tag = re.search(r'<textarea[^>]*name="body:utf8:string"[^>]*>([^<]*)<', page)
         self.assertTrue(tag, 'Missing <textarea.../> tag for "body"')
         self.assertEqual(tag.group(1), doc.body)
 
-        tag = re.search(r'<input(?=[^>]*name="coverage:utf8:ustring")(?=[^>]*value="([^"]*)").*?/?>', page)
+        tag = re.search(r'<input(?=[^>]*name="coverage:utf8:string")(?=[^>]*value="([^"]*)").*?/?>', page)
         self.assertTrue(tag, 'Missing <input.../> tag for "coverage"')
         self.assertEqual(tag.group(1), doc.coverage)
 
-        tag = re.search(r'<input(?=[^>]*name="keywords:utf8:ustring")(?=[^>]*value="([^"]*)").*?/?>', page)
+        tag = re.search(r'<input(?=[^>]*name="keywords:utf8:string")(?=[^>]*value="([^"]*)").*?/?>', page)
         self.assertTrue(tag, 'Missing <input.../> tag for "keywords"')
         self.assertEqual(tag.group(1), doc.keywords)
 

@@ -13,7 +13,7 @@
 <form method="post" tal:attributes="action string:${here/absolute_url}/saveProperties">
 <div class="field">
 	<label for="title" i18n:translate="">Title</label>
-	<input type="text" name="title:utf8:ustring" id="title" size="50" tal:attributes="value python:here.getLocalProperty('title', curr_lang)" />
+	<input type="text" name="title:utf8:string" id="title" size="50" tal:attributes="value python:here.getLocalProperty('title', curr_lang)" />
 </div>
 <div class="field">
 	<label for="submit-button" class="invisible">Submit button</label>

@@ -37,7 +37,7 @@ function fPick(glossary_url)
 function fSet(ctrl, value)
 {
 	var frm = document.frmEdit;
-	var items = frm[ctrl + ':utf8:ustring'];
+	var items = frm[ctrl + ':utf8:string'];
 	if (value != '')
 	{
 		if (items.value == '')

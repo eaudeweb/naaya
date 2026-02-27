@@ -16,7 +16,7 @@
 		<form action="manage_folder_properties" method="post">
 			<tr>
 				<td align="left" valign="top"><label for="cb-title"><strong>Title</strong></label></td>
-				<td align="left" valign="top"><input type="text" id="cb-title" name="title:utf8:ustring" size="35" tal:attributes="value here/title" /></td>
+				<td align="left" valign="top"><input type="text" id="cb-title" name="title:utf8:string" size="35" tal:attributes="value here/title" /></td>
 			</tr>
 			<tr>
 				<td><strong>Themes</strong></td>
@@ -32,11 +32,11 @@
 			</tr>
 			<tr>
 				<td align="left" valign="top"><label for="cb-source"><strong>Source</strong></label></td>
-				<td align="left" valign="top"><input type="text" id="cb-source" name="source:utf8:ustring" size="35" tal:attributes="value here/source" /></td>
+				<td align="left" valign="top"><input type="text" id="cb-source" name="source:utf8:string" size="35" tal:attributes="value here/source" /></td>
 			</tr>
 			<tr>
 				<td align="left" valign="top"><label for="cb-contributor"><strong>Contributor</strong></label></td>
-				<td align="left" valign="top"><input type="text" id="cb-contributor" name="contributor:utf8:ustring" size="35" tal:attributes="value here/contributor" /></td>
+				<td align="left" valign="top"><input type="text" id="cb-contributor" name="contributor:utf8:string" size="35" tal:attributes="value here/contributor" /></td>
 			</tr>
 			<tr>
 				<td><strong>Approved</strong></td>
