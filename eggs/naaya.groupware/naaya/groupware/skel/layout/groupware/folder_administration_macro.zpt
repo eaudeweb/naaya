@@ -7,7 +7,7 @@
 		<tal:block metal:define-slot="section">Section</tal:block>
 </div>
 <div id="right_port">
-		<span tal:replace="structure python:here.get_portlet_object('portlet_folder_administration')({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
+		<span tal:replace="structure python:here.getPortletsTool().getPortletById('portlet_folder_administration')({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
 </div>
 <span tal:replace="structure here/standard_html_footer"/>
 

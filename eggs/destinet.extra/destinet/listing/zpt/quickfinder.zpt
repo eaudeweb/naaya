@@ -475,7 +475,7 @@
     <div id="right_port"
         tal:define="right_portlets python:here.get_right_portlets_locations_objects(here)" >
       <tal:admin tal:condition="python:request.AUTHENTICATED_USER.has_role(['Manager', 'Administrator'], here)">
-          <span tal:replace="structure python:here.get_portlet_object('portlet_folder_administration')({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
+          <span tal:replace="structure python:here.getPortletsTool().getPortletById('portlet_folder_administration')({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
       </tal:admin>
       <tal:rportlets tal:repeat="item right_portlets">
           <span tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_right_macro'})" />

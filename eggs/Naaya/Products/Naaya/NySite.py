@@ -898,7 +898,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declareProtected(view, 'getActionLogger')
 
     def getActionLogger(self):
-        return component.getUtility(IActionLogger, context=self)
+        return self.getSiteManager().getUtility(IActionLogger)
 
     security.declarePrivate('setSearchableContent')
 

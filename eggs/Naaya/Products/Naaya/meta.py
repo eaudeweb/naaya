@@ -101,7 +101,7 @@ def rstk_method_directive(_context, handler, name=None,
 
         def compatibility_handler(*args, **kwargs):
             if to_warn:
-                warnings.warn(msg, DeprecationWarning)
+                warnings.warn(msg, DeprecationWarning, stacklevel=2)
                 to_warn[:] = []
 
             return handler(*args, **kwargs)

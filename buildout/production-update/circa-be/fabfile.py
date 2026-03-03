@@ -1,4 +1,4 @@
-"""Fabric 2 deployment tasks for Destinet.
+"""Fabric 2 deployment tasks for Circa-BE (envcoord).
 
 Usage:
     fab update       # pull repos + buildout + rolling restart
@@ -11,21 +11,14 @@ Usage:
 from invoke import task
 from fabric import Connection
 
-HOST = 'edw@destinet.eu'
-REPO = '/var/local/destinet/buildout'
+HOST = 'circa'  # uses SSH config (~/.ssh/config)
+REPO = '/var/local/circa-be/buildout'
 HAPROXY_CFG = f'{REPO}/haproxy.cfg'
-BUILDOUT_REPO = 'https://github.com/eaudeweb/naaya.buildout.destinet.git'
-BUNDLE_REPO = (
-    'https://github.com/eaudeweb/naaya.bundles.NaayaBundles-DESTINET.git'
-)
 
 INSTANCES = [
-    'zope-instance-0',
-    'zope-instance-1',
-    'zope-instance-2',
-    'zope-instance-3',
-    'zope-instance-async',
-    'zope-instance-translations-test',
+    'envcoord-1',
+    'envcoord-2',
+    'envcoord-3',
 ]
 
 
@@ -33,27 +26,10 @@ def get_conn():
     return Connection(HOST)
 
 
-def _git_repo(conn, repo_path, origin_url):
-    result = conn.run(f'test -d {repo_path}/.git', warn=True)
-    if not result.ok:
-        conn.run(f"git clone '{origin_url}' '{repo_path}'")
-    else:
-        with conn.cd(repo_path):
-            conn.run('git pull')
-
-
 @task
 def ssh(c):
     """Open a shell on the remote server."""
     get_conn().run(f'cd {REPO} && exec bash -l', pty=True)
-
-
-@task
-def update_repos(c):
-    """Pull latest buildout and bundle repos."""
-    conn = get_conn()
-    _git_repo(conn, f'{REPO}/src/buildout-destinet', BUILDOUT_REPO)
-    _git_repo(conn, f'{REPO}/src/NaayaBundles-DESTINET', BUNDLE_REPO)
 
 
 @task
@@ -92,6 +68,5 @@ def start(c):
 
 @task
 def update(c):
-    """Full update: pull repos, rebuild, and rolling restart."""
-    update_repos(c)
+    """Full update: rebuild and rolling restart."""
     restart(c)
