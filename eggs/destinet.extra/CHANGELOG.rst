@@ -1,5 +1,6 @@
 1.3.52 - (unreleased)
 =======================
+* add Naaya Hex Folder to the available second level folders (menu) [valipod]
 
 1.3.51 - (2023-12-12)
 =======================
