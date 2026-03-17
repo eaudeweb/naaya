@@ -84,7 +84,9 @@
         if(selected_country){
           $('#coverage').val(selected_country[0]).trigger('change.select2');
           $('#address').val(address || selected_country[0]);
-          findAddress();
+          if (!window._naaya_bounds_from_url) {
+            findAddress();
+          }
           clearTimeout(refreshTimer);
         }
 
@@ -136,52 +138,47 @@
           refreshMap();
         });
 
-        $('#geo_query').select2({
-          allowClear: true,
-          placeholder: 'Enter keyword',
-          tags: true,
-          createTag: function (params) {
-            return {
-              id: params.term,
-              text: params.term,
-              newOption: true
-            }
-          },
-          templateResult: function (data) {
-            var $result = $("<span />");
-
-            $result.text(data.text);
-
-            return $result;
-          }
-        });
-        $('#geo_query').change(function(){
-          refreshMap();
-        });
-
         function refreshMap(){
           clearTimeout(refreshTimer);
           refreshTimer = setTimeout(startMapRefresh, refreshInterval);
         }
 
-        function formatState (state) {
-          if (!state.id) {
-            return state.text;
-          }
-          var baseUrl = "/user/pages/images/flags";
-          var $state = $(
-            '<span><img src="' + baseUrl + '/' + state.element.value.toLowerCase() + '.png" class="img-flag" /> ' + state.text + '<' + '/span>'
-          );
-          return $state;
-        };
         $('#coverage').change(function(){
           var this_country = $(this).val();
           if (this_country != ''){
             $('#address').val(this_country);
-            findAddress();
-            clearTimeout(refreshTimer); 
-        }
+            clearTimeout(refreshTimer);
+            if (!window._naaya_bounds_from_url && typeof map_engine !== 'undefined') {
+              map_engine.go_to_address(this_country);
+            }
+          }
         })
+
+        try {
+          $('#geo_query').select2({
+            allowClear: true,
+            placeholder: 'Enter keyword',
+            tags: true,
+            createTag: function (params) {
+              return {
+                id: params.term,
+                text: params.term,
+                newOption: true
+              }
+            },
+            templateResult: function (data) {
+              var $result = $("<span />");
+
+              $result.text(data.text);
+
+              return $result;
+            }
+          });
+          $('#geo_query').change(function(){
+            refreshMap();
+          });
+        } catch(e) {
+        }
 
       });
     </script>
@@ -294,6 +291,16 @@
         <tal:address condition="address">
           <tal:block define="dummy python:map_override.setdefault('initial_address', address)" />
         </tal:address>
+        <tal:bounds define="lat_min python:request.get('lat_min', None);
+                            lat_max python:request.get('lat_max', None);
+                            lon_min python:request.get('lon_min', None);
+                            lon_max python:request.get('lon_max', None)"
+                    condition="python:lat_min and lat_max and lon_min and lon_max">
+          <tal:block define="dummy python:map_override.update({
+            'lat_center': str((float(lat_min) + float(lat_max)) / 2),
+            'lon_center': str((float(lon_min) + float(lon_max)) / 2),
+          })" />
+        </tal:bounds>
         <tal:block content="structure python:portal_map.setup_map_engine_html(request, **map_override)" />
         <script type="text/javascript" tal:attributes="src string:${portal_map/absolute_url}/map_i18n_js"></script>
         <script type="text/javascript" tal:attributes="src string:${portal_map/absolute_url}/geomaptool.js"></script>
@@ -301,7 +308,7 @@
 
         <form action="." name="frmFilterMap" method="get" id="frmFilterMap" class="clearfix">
           <div class="first-row clearfix" id="filter_map">
-            <div class="portalmap_portlet portalmap_filter">
+            <div class="portalmap_portlet portalmap_filter" tal:attributes="style python:test(here.checkPermissionPublishObjects(), None, 'display: None')">
               <div class="portalmap_portlet_title" i18n:translate="">Filter by Keyword</div>
               <select name="keyword" id="keyword">
                 <option></option>
@@ -394,6 +401,10 @@
               <a href="" rel="nofollow" style="display:none" id="download_georss">Export GeoRSS</a>
             </tal:block>
           </p>
+          <!-- Elements required by geomaptool.js showPageElements() -->
+          <a id="checkall" style="display:none"></a>
+          <input type="button" id="geo_query_button" style="display:none" />
+          <div id="map_links_js" style="display:none"></div>
           <div id="center_content_map" style="overflow-x: auto;">
             <div id="map"></div>
             <br clear="all" style="clear:both"/>
