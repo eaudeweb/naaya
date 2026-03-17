@@ -37,6 +37,7 @@
       $(document).ready(function() {
         var refreshTimer;
         var refreshInterval = 2000;
+
         $('.hidden').prev('h3').addClass('dyn-h3');
         $('.hidden').hide();
         $('.hidden').each(function() {
@@ -88,6 +89,31 @@
           }
         });
 
+        if(selected_country){
+          $('#country').val(selected_country[0]).trigger('change.select2');
+          $('#address').val(address || selected_country[0]);
+          if (!window._naaya_bounds_from_url) {
+            findAddress();
+          }
+          clearTimeout(refreshTimer);
+        }
+
+        //map configuration
+        if(category){
+          $('#category').val(category[0]).trigger('change.select2');
+        }
+        if(credibility){
+          $('#credibility').val(credibility[0]).trigger('change.select2');
+        }
+        if(administrative_level){
+          $('#administrative_level').val(administrative_level[0]).trigger('change.select2');
+        }
+        if(sustainability){
+          $('#sustainability').val(sustainability[0]).trigger('change.select2');
+        }
+        if(certificate_services !== 'all'){
+          $('#certificate_services').val(certificate_services[0]).trigger('change.select2');
+        }
         $('#certificate_services').select2({placeholder: 'All'})
         $('#certificate_services').change(function(){
           if ($(this).val() !== null && $(this).val().indexOf("") !== -1){
@@ -114,7 +140,16 @@
           );
           return $state;
         };
-
+        $('#country').change(function(){
+          var this_country = $(this).val();
+          if (this_country != ''){
+            $('#address').val(this_country);
+            if (!window._naaya_bounds_from_url) {
+              findAddress();
+            }
+            clearTimeout(refreshTimer);
+        }
+        });
       });
     </script>
   </metal:head>
@@ -241,16 +276,41 @@
         define="geo_types python:request.get('geo_types', portal_map.getSymbolsIds());
                 topics python:request.get('topics', []);
                 meta_types python:request.get('meta_types', []);
-                geo_query request/geo_query|nothing;
-                address request/address|nothing;
+                geo_query request/geo_query|string:;
+                address request/address|string:;
+                administrative_level request/administrative_level|python:[];
+                country request/country|python:[];
+                credibility request/credibility|python:[];
+                category request/category|python:[];
+                certificate_services request/certificate_services|string:'all';
+                sustainability request/sustainability|python:[];
                 zoom request/zoom|nothing;
                 path python:'/'.join(here.getSite().getPhysicalPath()) + '/' + request.get('path', '');
                 map_only python:request.get('map_only', 0);
                 map_override python:{};
                 ">
+        <script tal:content="structure python:'var address = \'%s\';' % address"></script>
         <tal:address condition="address">
           <tal:block define="dummy python:map_override.setdefault('initial_address', address)" />
         </tal:address>
+        <tal:bounds define="lat_min python:request.get('lat_min', None);
+                            lat_max python:request.get('lat_max', None);
+                            lon_min python:request.get('lon_min', None);
+                            lon_max python:request.get('lon_max', None)"
+                    condition="python:lat_min and lat_max and lon_min and lon_max">
+          <tal:block define="dummy python:map_override.update({
+            'lat_center': str((float(lat_min) + float(lat_max)) / 2),
+            'lon_center': str((float(lon_min) + float(lon_max)) / 2),
+          })" />
+        </tal:bounds>
+        <script tal:content="structure python:'var administrative_level = %s;' % administrative_level"></script>
+        <script tal:content="structure python:'var category = %s;' % category"></script>
+        <script tal:content="structure python:'var certificate_services = %s;' % certificate_services"></script>
+        <script tal:content="structure python:'var credibility = %s;' % credibility"></script>
+        <script tal:content="structure python:'var geo_query = \'%s\';' % geo_query"></script>
+        <script tal:content="structure python:'var geo_types = %s;' % geo_types"></script>
+        <script tal:content="structure python:'var selected_country = %s;' % country"></script>
+        <script tal:content="structure python:'var sustainability = %s;' % sustainability"></script>
         <tal:block content="structure python:portal_map.setup_map_engine_html(request, **map_override)" />
         <script type="text/javascript" tal:attributes="src string:${portal_map/absolute_url}/map_i18n_js"></script>
         <script type="text/javascript" tal:attributes="src string:${portal_map/absolute_url}/geomaptool.js"></script>
@@ -258,7 +318,7 @@
 
         <form action="." name="frmFilterMap" method="get" id="frmFilterMap" class="clearfix">
           <div class="first-row clearfix" id="filter_map">
-            <div class="portalmap_portlet portalmap_filter" style="display:none">
+            <div class="portalmap_portlet portalmap_filter" tal:attributes="style python:test(here.checkPermissionPublishObjects(), None, 'display: None')">
               <div class="portalmap_portlet_title" i18n:translate="">
                 Filter by Keyword
               </div>
@@ -288,6 +348,16 @@
                 </select>
               </div>
             </div>
+            <div class="portalmap_portlet portalmap_filter" tal:condition="parentsList"
+              tal:define="parentsList portal_map/getParentsListOrdered" style="display:none">
+              <div class="portalmap_portlet_title" i18n:translate="">Category</div>
+
+              <div class="org_list">
+                <select name="geo_types" id="geo_types">
+                  <option value="symbol998" selected="selected">Certificate</option>
+                </select>
+              </div>
+            </div>
 
             <div class="portalmap_portlet portalmap_filter">
               <div class="portalmap_portlet_title" i18n:translate="">Filter by country of operation</div>
@@ -295,10 +365,15 @@
                 <select name="country" id="country" class="map-refresh select2"
                   tal:define="glossary python:here.getSite()['countries_glossary']">
                   <option value="">All</option>
-                  <option tal:attributes="value item/title"
+                  <option tal:attributes="value item/title;"
                     tal:content="item/title"
                     tal:repeat="item python:glossary.get_all_elements(sort_on='name')"/>
                 </select>
+
+                <!--<option tal:attributes="value python:item[0]; selected python:test(item[0] in geo_query, 'selected', None)"
+                tal:content="python:item[1]"
+                tal:repeat="item certificate_keywords" />-->
+
               </div>
             </div>
 
@@ -316,17 +391,6 @@
             </div>
           </div>
           <div class="second-row">
-            <div class="portalmap_portlet portalmap_filter" tal:condition="parentsList"
-              tal:define="parentsList portal_map/getParentsListOrdered" style="display:none">
-              <div class="portalmap_portlet_title" i18n:translate="">Category</div>
-
-              <div class="org_list">
-                <select name="geo_types" id="geo_types">
-                  <option value="symbol998" selected="selected">Certificate</option>
-                </select>
-              </div>
-            </div>
-
             <div class="portalmap_portlet portalmap_filter"
               tal:define="administrative_list python:here.get_list_nodes('administrative_level')">
               <div class="portalmap_portlet_title" i18n:translate="">Operational level</div>
@@ -371,7 +435,6 @@
               <div class="portalmap_portlet_title" i18n:translate="">Services</div>
               <div class="certificate_services">
                 <select name="services" id="certificate_services" multiple="multiple" class="map-refresh">
-                  <option value="">All</option>
                   <option tal:attributes="value item/id"
                           tal:content="item/title"
                           tal:repeat="item services_types" />
@@ -413,6 +476,11 @@
             </span>&nbsp;
             <a rel="nofollow" tal:condition="here/checkPermissionAddObjects"
               href="" style="display:none" id="view_as_list" target="view_as_list">View as list</a>
+            <tal:block condition="here/checkPermissionEditObjects">
+              <a href="" rel="nofollow" style="display:none" id="view_as_map">&#183; Link to portal map</a>
+              <a href="" rel="nofollow" style="display:none" id="view_this_map">&#183; Link to this filtered map</a>
+              <a href="" rel="nofollow" style="display:none" id="download_georss">&#183; Export GeoRSS</a>
+            </tal:block>
           </p>
           <div id="center_content_map" style="overflow-x: auto;">
             <div id="map"></div>

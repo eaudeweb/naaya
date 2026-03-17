@@ -179,7 +179,7 @@ def second_level(context, request):
     """ return second level folders that are not marked as hidden for the
     dropdown navigation (i.e. have 'nomenu' as keyword) """
     second_level_folders = context.utSortObjsListByAttr(
-        [x for x in context.objectValues(['Naaya Folder', 'Naaya Pointer'])
+        [x for x in context.objectValues(['Naaya Folder', 'Naaya Hex Folder', 'Naaya Pointer'])
             if (x.approved or not hasattr(x, 'approved'))],
         'sortorder', 0)
     valid_folders = []

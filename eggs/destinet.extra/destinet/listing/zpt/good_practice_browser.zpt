@@ -97,8 +97,27 @@
           $('#gstc_criteria').val(gstc_criteria).trigger('change.select2');
         }
         $('#gstc_criteria').change(function(){
-          if ($(this).val() !== null && $(this).val().indexOf("all") !== -1){
-            $(this).val("").trigger('change');
+          if ($(this).val() !== null){
+		    if ($(this).val().indexOf("all") !== -1) {
+              $(this).val("").trigger('change');
+			} else {
+              $('#gstc_industry').val(null).trigger('change');
+			}
+          }
+        });
+
+        $('#gstc_industry').select2({placeholder: 'All'})
+        if(gstc_industry){
+          $('#gstc_criteria').val(null).trigger('change');
+          $('#gstc_industry').val(gstc_industry).trigger('change.select2');
+        }
+        $('#gstc_industry').change(function(){
+          if ($(this).val() !== null){
+		    if ($(this).val().indexOf("all") !== -1) {
+              $(this).val("").trigger('change');
+			} else {
+              $('#gstc_criteria').val(null).trigger('change');
+			}
           }
         });
 
@@ -142,6 +161,7 @@
           );
           return $state;
         };
+
       });
     </script>
   </metal:head>
@@ -237,6 +257,7 @@
         define="topics python:request.get('topics', []);
                 geo_types request/geo_types|python:[];
                 gstc_criteria request/gstc_criteria|python:[];
+                gstc_industry request/gstc_industry|python:[];
                 category request/category|python:[];
                 country request/country|python:[];
                 landscape_type request/landscape_type|python:[];
@@ -250,23 +271,40 @@
         <tal:address condition="address">
           <tal:block define="dummy python:map_override.setdefault('initial_address', address)" />
         </tal:address>
+        <tal:bounds define="lat_min python:request.get('lat_min', None);
+                            lat_max python:request.get('lat_max', None);
+                            lon_min python:request.get('lon_min', None);
+                            lon_max python:request.get('lon_max', None)"
+                    condition="python:lat_min and lat_max and lon_min and lon_max">
+          <tal:block define="dummy python:map_override.update({
+            'lat_center': str((float(lat_min) + float(lat_max)) / 2),
+            'lon_center': str((float(lon_min) + float(lon_max)) / 2),
+          })" />
+        </tal:bounds>
         <tal:block content="structure python:portal_map.setup_map_engine_html(request, **map_override)" />
         <script tal:content="structure python:'var category = %s;' % category"></script>
         <script tal:content="structure python:'var landscape_type = %s;' % landscape_type"></script>
         <script tal:content="structure python:'var gstc_criteria = %s;' % gstc_criteria"></script>
+        <script tal:content="structure python:'var gstc_industry = %s;' % gstc_industry"></script>
         <script tal:content="structure python:'var country = %s;' % country"></script>
         <script type="text/javascript" tal:attributes="src string:${portal_map/absolute_url}/map_i18n_js"></script>
         <script type="text/javascript" tal:attributes="src string:${portal_map/absolute_url}/geomaptool.js"></script>
         <script tal:content="structure python:'var portal_map_url=%s;' % here.rstk['json_dumps'](portal_map.absolute_url())"></script>
 
         <form action="." name="frmFilterMap" method="get" id="frmFilterMap" class="clearfix">
+		  <div class="first-row clearfix">
+            <div class="portalmap_portlet portalmap_filter">
+              <div class="portalmap_portlet_title" i18n:translate="">Filter by (GSTC for destinations and GSTC for industry are mutually exclusive):</div>
+            </div>
+		  </div>
           <div class="first-row clearfix" id="filter_map">
             <div class="portalmap_portlet portalmap_filter" style="display:none">
               <div class="portalmap_portlet_title" i18n:translate="">Category</div>
 
               <div class="org_list">
-                <select name="geo_types" id="geo_types">
-                  <option value="symbol818" selected="selected">Best practice</option>
+                <select name="geo_types" id="geo_types" multiple="multiple">
+                  <option value="symbol818" selected="selected">Best practice destinations</option>
+                  <option value="symbol519" selected="selected">Best practice industry</option>
                 </select>
               </div>
             </div>
@@ -284,8 +322,8 @@
               </div>
             </div>
 
-             <div class="portalmap_portlet portalmap_filter">
-              <div class="portalmap_portlet_title" i18n:translate="">Filter by Keyword</div>
+            <div class="portalmap_portlet portalmap_filter">
+              <div class="portalmap_portlet_title" i18n:translate="">Keyword</div>
               <select name="geo_query" id="geo_query">
                 <option></option>
                 <option tal:content="item"
@@ -299,7 +337,7 @@
             </div>
  
             <div class="portalmap_portlet portalmap_filter">
-              <div class="portalmap_portlet_title" i18n:translate="">Filter by country</div>
+              <div class="portalmap_portlet_title" i18n:translate="">Country</div>
               <div class="country_list">
                 <select name="country" id="country" class="to_select2 map-refresh"
                   tal:define="glossary python:here.getSite()['countries_glossary']">
@@ -312,7 +350,7 @@
             </div>
 
             <div class="portalmap_portlet portalmap_filter">
-              <div class="portalmap_portlet_title" i18n:translate="">Filter by categories</div>
+              <div class="portalmap_portlet_title" i18n:translate="">Categories</div>
               <div class="org_list">
                 <select name="category" id="category" multiple="multiple" class="to_select2 map-refresh"
                     tal:define="geo_types python:[org_type.id for org_type in portal_map.getSymbolChildrenOrdered('symbol984')];">
@@ -327,7 +365,7 @@
 
             <div class="portalmap_portlet portalmap_filter"
               tal:define="gstc_criteria python:here.get_list_nodes('gstc_criteria')">
-              <div class="portalmap_portlet_title" i18n:translate="">Filter by GSTC criteria</div>
+              <div class="portalmap_portlet_title" i18n:translate="">GSTC for destinations</div>
               <select id="gstc_criteria" name="gstc_criteria" multiple="multiple" class="to_select2 map-refresh">
                 <option value="all">All</option>
                 <option tal:repeat="item gstc_criteria"
@@ -336,7 +374,17 @@
             </div>
 
             <div class="portalmap_portlet portalmap_filter"
-              tal:define="landscape_list python:here.get_list_nodes('landscape_type')">
+              tal:define="gstc_industry python:here.get_list_nodes('gstc_industry')">
+              <div class="portalmap_portlet_title" i18n:translate="">GSTC for industry</div>
+              <select id="gstc_industry" name="gstc_industry" multiple="multiple" class="to_select2 map-refresh">
+                <option value="all">All</option>
+                <option tal:repeat="item gstc_industry"
+                  tal:attributes="value item/id" tal:content="item/title" />
+              </select>
+            </div>
+
+            <div class="portalmap_portlet portalmap_filter"
+              tal:define="landscape_list python:here.get_list_nodes('landscape_type')" style="display:none">
               <div class="portalmap_portlet_title" i18n:translate="">Filter by landscape type</div>
               <select id="landscape_type" name="landscape_type" multiple="multiple" class="to_select2 map-refresh">
                 <option value="all">All</option>
