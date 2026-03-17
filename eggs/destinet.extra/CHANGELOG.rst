@@ -1,4 +1,7 @@
-1.3.53 - (unreleased)
+1.3.54 - (unreleased)
+=======================
+
+1.3.53 - (2026-03-17)
 =======================
 * Keep zoom level when loading maps from custom links [valipod]
 * add Naaya Hex Folder to the available second level folders (menu) [valipod]
