@@ -248,29 +248,29 @@ class EWInstaller(SimpleItem,
         REQUEST.RESPONSE.redirect('install_step3_html')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'install_step3_process')
-    def install_step3_process(self, theMasterList, theSlaveList, REQUEST=None):
+    def install_step3_process(self, theMainList, theSubordinateList, REQUEST=None):
         """ """
         layout_tool = self.getLayoutTool()
         layout_list = layout_tool.getDataForLayoutSettings()[2]
         install_data = self.getSession(SESSION_INSTALL_DATA, self.getInstallData())
-        if install_data['skin'] == theMasterList and install_data['skin_style'] == theSlaveList:
+        if install_data['skin'] == theMainList and install_data['skin_style'] == theSubordinateList:
             pass
         else:
-            install_data['skin'] = theMasterList
-            install_data['skin_style'] = theSlaveList
+            install_data['skin'] = theMainList
+            install_data['skin_style'] = theSubordinateList
 
         for skin in layout_list:
-            if skin[0] == theMasterList:
+            if skin[0] == theMainList:
                 install_data['skin_name'] = skin[1]
         if 'skin_name' not in install_data:
-            raise ValueError('No skin master match for %s' % theMasterList)
+            raise ValueError('No skin main match for %s' % theMainList)
 
         for skin in layout_list:
             for style in skin[2]:
-                if style[1] == theSlaveList:
+                if style[1] == theSubordinateList:
                     install_data['skin_style_name'] = style[0]
         if 'skin_style_name' not in install_data:
-            raise ValueError('No skin slave match for %s' % theSlaveList)
+            raise ValueError('No skin subordinate match for %s' % theSubordinateList)
 
         self.setSession(SESSION_INSTALL_DATA, install_data)
         #are there any other products to be configured?
@@ -348,8 +348,8 @@ class EWInstaller(SimpleItem,
 
         #change portal layout
         ob.admin_layout(
-            theMasterList=install_data['skin'],
-            theSlaveList=install_data['skin_style']
+            theMainList=install_data['skin'],
+            theSubordinateList=install_data['skin_style']
             )
 
         #change portal logo
