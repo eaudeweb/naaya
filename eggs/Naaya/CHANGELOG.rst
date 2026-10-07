@@ -1,4 +1,7 @@
-5.0.32 (unreleased)
+5.0.33 (unreleased)
+-------------------
+
+5.0.32 (2026-10-07)
 -------------------
 * Use https OSM tiles and Nominatim geocoding in the OpenLayers map engine [dumitval]
 
