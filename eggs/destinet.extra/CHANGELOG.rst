@@ -4,6 +4,9 @@
 * add Naaya Hex Folder to the available second level folders (menu) [valipod]
 * Return a balloon handle from custom_balloon for the OpenLayers map engine [valipod]
 * Zoom the good practice browser map to the selected country [valipod]
+* Remove the duplicate map creation from topic.zpt [valipod]
+* Check history.pushState before calling it on unload in geomaptool.js [valipod]
+* Return a balloon handle from custom_balloon in geomaptool.js [valipod]
 
 1.3.51 - (2023-12-12)
 =======================
