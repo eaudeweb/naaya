@@ -40,14 +40,32 @@ function custom_balloon(lat, lon, content) {
   css.top = map_jq.offset().top + point_position.y - 100;
 
   var balloon = $('<' + 'div>').css(css);
+  var content_div = $('<' + 'div>');
+  var destroy_callbacks = [];
   var close_button = $('<' + 'a>[' + naaya_map_i18n["close"] + ']<' + '/a>').css({ color: '#999', float: 'right' });
   close_button.click(function() { clear_custom_balloon(); });
-  balloon.append(close_button, $('<' + 'div>').html(content));
+  balloon.append(close_button, content_div);
   map_jq.parent().append(balloon);
 
-  $('div.marker-more > a', balloon).attr('target', '_blank');
-  $('div.marker-body > small', balloon).remove();
+  clear_custom_balloon = function() {
+    clear_custom_balloon = function() {};
+    balloon.remove();
+    $.each(destroy_callbacks, function(i, callback) { callback(); });
+  }
 
-  clear_custom_balloon = function() { balloon.remove(); }
+  // Same interface as new_naaya_map_balloon, used by map_marker_clicked.
+  var handle = {
+    html: function(html) {
+      content_div.html(html);
+      $('div.marker-more > a', balloon).attr('target', '_blank');
+      $('div.marker-body > small', balloon).remove();
+      return handle;
+    },
+    destroy: function(callback) {
+      if (callback) destroy_callbacks.push(callback); else clear_custom_balloon();
+      return handle;
+    }
+  };
+  return handle.html(content);
 }
 

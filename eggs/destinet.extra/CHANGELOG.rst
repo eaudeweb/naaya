@@ -1,5 +1,6 @@
 1.3.54 - (unreleased)
 =======================
+* Return a balloon handle from custom_balloon for the OpenLayers map engine [valipod]
 
 1.3.53 - (2026-03-17)
 =======================
