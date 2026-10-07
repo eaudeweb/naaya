@@ -1,4 +1,7 @@
-1.3.56 - (unreleased)
+1.3.57 - (unreleased)
+=======================
+
+1.3.56 - (2026-10-07)
 =======================
 * Remove the duplicate map creation from topic.zpt [valipod]
 * Check history.pushState before calling it on unload in geomaptool.js [valipod]
