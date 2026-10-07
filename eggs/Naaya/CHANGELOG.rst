@@ -1,5 +1,6 @@
 5.0.33 (unreleased)
 -------------------
+* Zoom the OpenLayers map only on ctrl/cmd + mouse wheel and show a hint on plain wheel [dumitval]
 
 5.0.32 (2026-10-07)
 -------------------
