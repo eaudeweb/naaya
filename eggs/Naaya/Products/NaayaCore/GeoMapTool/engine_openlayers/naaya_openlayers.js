@@ -353,6 +353,7 @@
         function setup_event_handlers() {
             marker._ol_marker.events.register("click", null, function() {
                 var balloon = map_marker_clicked(place);
+                if(!balloon) return;  // cluster click zoomed in instead
                 marker._has_balloon = true;
                 update_icon();
                 balloon.destroy(function() {
