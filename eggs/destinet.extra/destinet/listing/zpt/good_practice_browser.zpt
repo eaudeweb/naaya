@@ -70,7 +70,18 @@
         //map configuration
         if(country){
           $('#country').val(country[0]).trigger('change.select2');
+          $('#address').val(country[0]);
+          if (!window._naaya_bounds_from_url) {
+            findAddress();
+          }
         }
+        $('#country').change(function(){
+          var this_country = $(this).val();
+          if (this_country != ''){
+            $('#address').val(this_country);
+            findAddress();
+          }
+        });
 
         $('#category').select2({placeholder: 'All'})
         if(category){
