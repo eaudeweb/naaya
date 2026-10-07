@@ -1,6 +1,7 @@
 5.0.32 (unreleased)
 -------------------
 * Use https OSM tiles and Nominatim geocoding in the OpenLayers map engine [dumitval]
+* Zoom the OpenLayers map only on ctrl/cmd + mouse wheel and show a hint on plain wheel [dumitval]
 
 5.0.31 (2025-09-09)
 -------------------
