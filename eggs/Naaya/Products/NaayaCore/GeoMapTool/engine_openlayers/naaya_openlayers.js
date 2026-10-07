@@ -3,7 +3,9 @@
     window.NaayaOpenLayers = {
 
         osm_layer: function() {
-            return new OpenLayers.Layer.OSM();
+            // OpenLayers 2.12 defaults to http tiles, blocked on https pages
+            return new OpenLayers.Layer.OSM("OpenStreetMap",
+                "https://tile.openstreetmap.org/${z}/${x}/${y}.png");
         },
 
         google_layer: function(layer_info) {
@@ -70,8 +72,19 @@
     };
 
     engine.geocode = function(address, callback) {
-        var url = engine.config['server_url'] + '/geocode';
-        $.getJSON(url, {'address': address}, callback);
+        // Nominatim results converted to the format of GeoMapTool.geocode
+        engine.geocode_nominatim(address, function(data) {
+            var results = $.map(data, function(r) {
+                var bb = $.map(r['boundingbox'], parseFloat);
+                return {
+                    boundingbox: {bottom: bb[0], top: bb[1],
+                                  left: bb[2], right: bb[3]},
+                    location: {lat: parseFloat(r['lat']),
+                               lon: parseFloat(r['lon'])}
+                };
+            });
+            if(results.length) callback(results);
+        });
     };
 
     engine.bounds_btlr = function(box) {
@@ -350,6 +363,8 @@
         map.display_points = function(places) {
             points.empty();
             $.each(places, function(j, place) {
+                // skip points whose geo type has no symbol
+                if(!engine.geotype_icons[place.icon_name]) return;
                 points.add(engine.new_portal_map_marker(place));
             });
         };
