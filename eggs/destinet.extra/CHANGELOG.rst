@@ -1,4 +1,7 @@
-1.3.54 - (unreleased)
+1.3.55 - (unreleased)
+=======================
+
+1.3.54 - (2026-10-07)
 =======================
 * Return a balloon handle from custom_balloon for the OpenLayers map engine [valipod]
 
