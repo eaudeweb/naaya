@@ -1,5 +1,6 @@
 5.0.34 (unreleased)
 -------------------
+* Skip the balloon handling in the OpenLayers map engine when a cluster click zooms in [dumitval]
 
 5.0.33 (2026-10-07)
 -------------------
