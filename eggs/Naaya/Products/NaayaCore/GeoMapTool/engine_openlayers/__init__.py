@@ -17,7 +17,7 @@ from naaya.core.StaticServe import StaticServeFromFolder
 log = logging.getLogger(__name__)
 
 
-NOMINATIM_URL = "http://nominatim.openstreetmap.org/search?"
+NOMINATIM_URL = "https://nominatim.openstreetmap.org/search?"
 NOMINATIM_USER_AGENT = "Naaya OpenLayers map engine"
 DEFAULT_ADDRESS = 'Europe'
 DEFAULT_BBOX = [36, 62, -10, 40] # bottom, top, left, right
