@@ -1,5 +1,6 @@
-1.3.55 - (unreleased)
+1.3.55 - (2026-10-07)
 =======================
+* Zoom the good practice browser map to the selected country [valipod]
 
 1.3.54 - (2026-10-07)
 =======================
