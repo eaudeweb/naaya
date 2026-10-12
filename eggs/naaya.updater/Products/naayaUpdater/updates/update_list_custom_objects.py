@@ -25,7 +25,7 @@ from io import StringIO
 from urllib.request import urlopen
 from urllib.parse import urlencode
 
-import simplejson as json
+import json
 
 #Zope imports
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
