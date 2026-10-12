@@ -1,8 +1,5 @@
 
-try:
-    import simplejson as json
-except ImportError:
-    import json
+import json
 import urllib.request
 import urllib.error
 from urllib.parse import urlencode
