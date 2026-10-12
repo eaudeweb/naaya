@@ -1,4 +1,7 @@
-6.0.1 (unreleased)
+6.0.2 (unreleased)
+------------------
+
+6.0.1 (2026-10-12)
 ------------------
 * Require the Python 3 releases of naaya.content-compat, naaya.flowplayer,
   naaya.content.bfile, naaya.i18n and naaya.cache [dumitval]
