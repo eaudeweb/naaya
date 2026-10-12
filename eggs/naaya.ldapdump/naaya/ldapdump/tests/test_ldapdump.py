@@ -6,6 +6,7 @@ import shutil
 import tempfile
 import unittest
 from datetime import datetime
+from unittest.mock import Mock, patch
 
 from . import fakeldap
 # test imports
@@ -14,6 +15,7 @@ from . import ldap_config
 from naaya.ldapdump import main
 
 realldap = main.ldap
+JPEG_SYNTAX = '1.3.6.1.4.1.1466.115.121.1.28'
 
 class TestLDAPCache(unittest.TestCase):
     def setUp(self):
@@ -51,7 +53,7 @@ class TestLDAPCache(unittest.TestCase):
         ldap_conn = main.get_ldap_connection(config)
         self.assertEqual(len(fakeldap.history), 1)
         self.assertEqual(fakeldap.history[0]['initialize'],
-                         ['ldap://localhost'])
+                         ['ldaps://localhost'])
 
         values = ldap_conn.get_values('ou=people,dc=naaya,dc=org')
         self.assertEqual(len(fakeldap.history), 2)
@@ -60,11 +62,11 @@ class TestLDAPCache(unittest.TestCase):
 
         self.assertEqual(len(values), 3)
         self.assertEqual(values['uid=test,ou=people,dc=naaya,dc=org']['uid'],
-                         ['test'])
+                         {'type': 'text', 'values': ['test']})
         self.assertEqual(values['uid=admin,ou=people,dc=naaya,dc=org']['uid'],
-                         ['admin'])
+                         {'type': 'text', 'values': ['admin']})
         self.assertEqual(values['uid=test2,ou=people,dc=naaya,dc=org']['uid'],
-                         ['test2'])
+                         {'type': 'text', 'values': ['test2']})
 
     def test_refresh(self):
         config_path = os.path.join(self.tmp_dir, 'config.yaml')
@@ -91,6 +93,22 @@ class TestLDAPCache(unittest.TestCase):
 
         self.assertTrue(os.path.exists(db_path))
         os.remove(db_path)
+
+    def test_binary_values(self):
+        photo = b'\xff\xd8\xff\xe0 jpeg'
+        fakeldap.getSubtree(ldap_config.user_dn)['jpegPhoto'] = [photo]
+        schema = Mock()
+        schema.get_syntax.side_effect = lambda attr: (
+            JPEG_SYNTAX if attr == 'jpegPhoto' else None)
+        config_path = os.path.join(self.tmp_dir, 'config.yaml')
+        with patch.object(main.LDAPConnection, 'get_schema',
+                          return_value=schema):
+            main.dump_ldap(config_path)
+
+        values = dict(main.get_reader(config_path).get_dump())
+        record = values[ldap_config.user_dn]
+        self.assertEqual(record['jpegPhoto'], photo)
+        self.assertEqual(record['givenName'], u'G\xc3\xbcnther')
 
     def test_no_db(self):
         db_path = os.path.join(self.tmp_dir, 'missing.test.db')

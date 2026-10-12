@@ -48,6 +48,7 @@ def initialize(uri):
     history.append({'initialize': [uri]})
     return LDAPConn()
 
+schema = ldap.schema
 SCOPE_SUBTREE = ldap.SCOPE_SUBTREE
 LDAPError = ldap.LDAPError
 VERSION3 = ldap.VERSION3
@@ -58,6 +59,9 @@ class LDAPConn(object):
 
     def simple_bind_s(self, dn, password):
         history.append({'simple_bind_s': [dn, password]})
+
+    def search_subschemasubentry_s(self, dn=None):
+        return None
 
     def search_s(self, baseDN, searchScope):
         history.append({'search_s': [baseDN, searchScope]})

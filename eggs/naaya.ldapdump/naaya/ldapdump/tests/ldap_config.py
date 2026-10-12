@@ -88,24 +88,24 @@ schema = {'uid': {'binary': False,
                             'public_name': ''}}
 
 user_dn = 'uid=test,ou=people,dc=naaya,dc=org'
-user = {'uid': ['test'],
-        'cn': ['test'],
-        'sn': ['User'],
-        'mail': ['joe@blow.com'],
-        'givenName': ['G\xc3\xbcnther'],
-        'objectClass': ['top', 'person']}
+user = {'uid': [b'test'],
+        'cn': [b'test'],
+        'sn': [b'User'],
+        'mail': [b'joe@blow.com'],
+        'givenName': [b'G\xc3\xbcnther'],
+        'objectClass': [b'top', b'person']}
 
 manager_user_dn = 'uid=admin,ou=people,dc=naaya,dc=org'
-manager_user = {'uid': ['admin'],
-                'cn': ['admin'],
-                'sn': ['Manager'],
-                'givenName': ['Test'],
-                'objectClass': ['top', 'person']}
+manager_user = {'uid': [b'admin'],
+                'cn': [b'admin'],
+                'sn': [b'Manager'],
+                'givenName': [b'Test'],
+                'objectClass': [b'top', b'person']}
 
 user2_dn = 'uid=test2,ou=people,dc=naaya,dc=org'
-user2 = {'uid': ['test2'],
-         'cn': ['test2'],
-         'sn': ['User2'],
-         'mail': ['joe2@blow.com'],
-         'givenName': ['Test2'],
-         'objectClass': ['top', 'posixAccount']}
+user2 = {'uid': [b'test2'],
+         'cn': [b'test2'],
+         'sn': [b'User2'],
+         'mail': [b'joe2@blow.com'],
+         'givenName': [b'Test2'],
+         'objectClass': [b'top', b'posixAccount']}

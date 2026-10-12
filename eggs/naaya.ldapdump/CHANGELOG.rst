@@ -1,6 +1,10 @@
 1.1.1 (unreleased)
 ------------------
 * Use PEP 420 namespace packages [dumitval]
+* Fix binary values (jpegPhoto) read from the dump as "b'...'" text
+  [dumitval]
+* Fix the dump failing when the LDAP server has no schema subentry
+  [dumitval]
 
 1.1.0 (2019-12-11)
 ------------------

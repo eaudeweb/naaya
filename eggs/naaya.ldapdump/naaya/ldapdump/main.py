@@ -97,7 +97,7 @@ class LDAPConnection(object):
         for dn, attr_dict in returned:
             ret[dn] = {}
             for attr, values in attr_dict.items():
-                syntax = schema.get_syntax(attr)
+                syntax = schema.get_syntax(attr) if schema else None
                 if syntax in \
                         ldap.schema.models.NOT_HUMAN_READABLE_LDAP_SYNTAXES:
                     ret[dn][attr] = {'type': 'binary', 'values': values}
@@ -279,7 +279,7 @@ class DumpReader(object):
         for dn, iter in attriter:
             tuples = [(attr, value) for _dn, attr, value in iter]
             if blob_dn == dn:  # match in iteration
-                tuples.extend([(attr, str(value)) for
+                tuples.extend([(attr, bytes(value)) for
                                _dn, attr, value in blob_iter])
                 try:
                     blob_dn, blob_iter = next(blobiter)
