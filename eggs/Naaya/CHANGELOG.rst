@@ -1,5 +1,7 @@
 6.0.1 (unreleased)
 ------------------
+* Require the Python 3 releases of naaya.content-compat, naaya.flowplayer,
+  naaya.content.bfile, naaya.i18n and naaya.cache [dumitval]
 * Fix templates failing with NotFound when reading action log entries
   [dumitval]
 * Use the standard library json instead of simplejson [dumitval]

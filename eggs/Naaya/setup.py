@@ -54,11 +54,11 @@ setup(name='Naaya',
           'edw-pycaptcha >= 0.3.1',
 
           # Naaya specific
-          'naaya.content-compat',
-          'naaya.flowplayer >= 1.1.7',
-          'naaya.content.bfile >= 1.4.6',
-          'naaya.i18n > 1.1.5',
-          'naaya.cache >= 1.1',
+          'naaya.content-compat >= 2.0.0',
+          'naaya.flowplayer >= 2.0.0',
+          'naaya.content.bfile >= 2.0.0',
+          'naaya.i18n >= 2.0.1',
+          'naaya.cache >= 2.0',
       ],
       extras_require={
           'test': [
