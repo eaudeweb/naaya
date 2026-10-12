@@ -1,5 +1,6 @@
-1.3.18 (unreleased)
+2.0.0 (unreleased)
 ------------------
+* Port to Python 3 and Zope 5 [dumitval]
 * Fix the answers download [dumitval]
 * Fix submitting answers with a file upload [dumitval]
 * Fix the chart statistics [dumitval]

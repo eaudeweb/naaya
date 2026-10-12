@@ -1,5 +1,6 @@
-1.3 (unreleased)
-=======================
+2.0 (unreleased)
+================
+* Port to Python 3 and Zope 5 [dumitval]
 * Fix the blob usage statistics [dumitval]
 * Use PEP 420 namespace packages [dumitval]
 

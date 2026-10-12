@@ -1,5 +1,6 @@
-1.4.29 (unreleased)
---------------------
+2.0.0 (unreleased)
+------------------
+* Port to Python 3 and Zope 5 [dumitval]
 * Fix the fix_nyblobs update script [dumitval]
 * Fix the If-Modified-Since and If-Range checks of file downloads [dumitval]
 * Close blob files after reading file data [dumitval]

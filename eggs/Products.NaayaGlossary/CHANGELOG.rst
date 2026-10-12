@@ -1,5 +1,6 @@
-1.1.22 (unreleased)
+2.0.0 (unreleased)
 ------------------
+* Port to Python 3 and Zope 5 [dumitval]
 * Fix the TMX and XLIFF import [dumitval]
 * Fix the glossary SKOS RDF export [dumitval]
 * Use PEP 420 namespace packages [dumitval]

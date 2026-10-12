@@ -1,5 +1,6 @@
-1.1.17 (unreleased)
--------------------
+2.0.0 (unreleased)
+------------------
+* Port to Python 3 and Zope 5 [dumitval]
 * Fix the documents zip download and zip upload [dumitval]
 * Fix the contacts CSV import [dumitval]
 * Fix the contacts administration page [dumitval]

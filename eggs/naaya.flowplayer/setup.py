@@ -1,7 +1,7 @@
 from setuptools import setup, find_namespace_packages
 
 setup(name='naaya.flowplayer',
-      version='1.1.8',
+      version='2.0.0',
       description="Flowplayer for naaya",
       long_description=open("README.txt").read(),
       classifiers=[

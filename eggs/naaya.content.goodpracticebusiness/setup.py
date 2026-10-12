@@ -1,7 +1,7 @@
 from setuptools import setup, find_namespace_packages
 
 setup(name='naaya.content.goodpracticebusiness',
-      version='0.4',
+      version='1.0',
       author='Eau de Web',
       author_email='office@eaudeweb.ro',
       url='http://naaya.eaudeweb.ro',

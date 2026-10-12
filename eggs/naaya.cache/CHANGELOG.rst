@@ -1,5 +1,6 @@
-1.2 (unreleased)
--------------------
+2.0 (unreleased)
+----------------
+* Port to Python 3 and Zope 5 [dumitval]
 * Use PEP 420 namespace packages [dumitval]
 
 1.1 (2012-11-19)

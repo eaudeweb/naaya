@@ -1,5 +1,6 @@
-0.0.10 (unreleased)
+1.0.0 (unreleased)
 ------------------
+* Port to Python 3 and Zope 5 [dumitval]
 * Fix adding a best practice with a file and no title [dumitval]
 * Use PEP 420 namespace packages [dumitval]
 

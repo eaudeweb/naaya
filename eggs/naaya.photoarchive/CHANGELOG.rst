@@ -1,5 +1,6 @@
-1.5.3 (unreleased)
--------------------
+2.0.0 (unreleased)
+------------------
+* Port to Python 3 and Zope 5 [dumitval]
 * Fix the photo display pages and generating or purging displays [dumitval]
 * Fix single image upload, zip upload adding no photos and zip downloads with
   empty files [dumitval]

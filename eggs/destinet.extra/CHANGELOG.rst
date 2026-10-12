@@ -1,5 +1,6 @@
-1.3.52 - (unreleased)
-=======================
+2.0.0 - (unreleased)
+====================
+* Port to Python 3 and Zope 5 [dumitval]
 * Keep zoom level when loading maps from custom links [valipod]
 * add Naaya Hex Folder to the available second level folders (menu) [valipod]
 * Return a balloon handle from custom_balloon for the OpenLayers map engine [valipod]

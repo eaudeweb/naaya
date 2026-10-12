@@ -1,5 +1,6 @@
-1.2.33 (unreleased)
--------------------
+2.0.0 (unreleased)
+------------------
+* Port to Python 3 and Zope 5 [dumitval]
 * Fix all update scripts and sorting them on the updates page [dumitval]
 * Fix the update_layout, update_forms, update_dynamicprop2schema and
   update_user_management_styles scripts [dumitval]
