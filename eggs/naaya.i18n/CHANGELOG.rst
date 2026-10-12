@@ -1,4 +1,7 @@
-2.0.0 (unreleased)
+2.0.1 (unreleased)
+------------------
+
+2.0.0 (2026-10-12)
 ------------------
 * Port to Python 3 and Zope 5 [dumitval]
 * Stop the LocalizerToNaayaI18n update when Products.Localizer is not installed
