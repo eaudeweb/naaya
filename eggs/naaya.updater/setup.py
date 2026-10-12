@@ -10,6 +10,6 @@ setup(name='naaya.updater',
       url='https://github.com/eaudeweb/naaya/tree/master/eggs/naaya.updater/',
       install_requires=[
           'setuptools',
-          'Naaya',
+          'Naaya >= 6.0.1',
       ]
       )
