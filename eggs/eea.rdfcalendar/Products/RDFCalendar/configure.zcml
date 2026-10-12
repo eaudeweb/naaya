@@ -1,0 +1,14 @@
+<configure
+  xmlns:naaya="http://namespaces.zope.org/naaya"
+  xmlns:zope="http://namespaces.zope.org/zope"
+  xmlns:zcml="http://namespaces.zope.org/zcml"
+  i18n_domain="naaya.content">
+
+  <configure zcml:condition="installed Products.naayaUpdater">
+    <zope:utility name="UpdateRDFCalendarIndex"
+          provides="Products.naayaUpdater.interfaces.IUpdateScript"
+          component=".updates.UpdateRDFCalendarIndex"
+          permission="zope2.ViewManagementScreens" />
+  </configure>
+
+</configure>

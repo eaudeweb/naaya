@@ -1,0 +1,9 @@
+#!/bin/sh
+# This simple script takes the python interpreter and environment
+# from the startup script and then runs one unit test
+
+eval `egrep "(PYTHON|SOFTWARE_HOME|INSTANCE_HOME)=" ../../../bin/zopectl`
+PYTHONPATH="$SOFTWARE_HOME:$PYTHONPATH"
+export PYTHONPATH INSTANCE_HOME SOFTWARE_HOME
+
+exec "$PYTHON" "$@"

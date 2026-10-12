@@ -1,0 +1,7 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<style type="text/css" tal:content="structure here/default_css"></style>
+
+<span tal:replace="structure python:here.show_events_list(day=str(DateTime(request['date']).day()), month=str(DateTime(request['date']).month()), year=str(DateTime(request['date']).year()))" />
+
+<span tal:replace="structure here/standard_html_footer" />

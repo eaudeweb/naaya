@@ -1,0 +1,6 @@
+Parse entities:
+Sometime the link contains &amp; escapes. Sometimes just raw &'s as CDATA.
+The only way I can deal with this without problems, is if I parse all
+entitities (&amp; and &#38; etc.) and store the raw data in the file in UTF-8
+format. Then you would be sure you could use <dtml-var link html_quote>
+without any surprises.

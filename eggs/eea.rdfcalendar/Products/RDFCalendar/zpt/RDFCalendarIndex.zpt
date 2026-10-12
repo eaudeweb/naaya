@@ -1,0 +1,8 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<style type="text/css" tal:content="structure here/default_css"></style>
+
+<span tal:replace="structure python:here.show_events_list(request['month'], request['year'], day=0)" tal:condition="python:request.has_key('month') and request.has_key('year')" />
+<span tal:replace="structure python:here.show_events_list(month=str(here.getMonth()), year=str(here.getYear()), day=0)" tal:condition="not:python:request.has_key('month') or request.has_key('year')" />
+
+<span tal:replace="structure here/standard_html_footer" />
