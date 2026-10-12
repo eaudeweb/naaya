@@ -38,20 +38,20 @@ from OFS.PropertyManager import PropertyManager
 from OFS import SimpleItem
 from DateTime import DateTime
 from os.path  import join
-from ZPublisher import Request
 from Acquisition import Implicit
 from OFS.Cache import Cacheable
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
+from AccessControl.class_init import InitializeClass
+from App.Dialogs import MessageDialog
+from App.special_dtml import DTMLFile
 
 import Products
-import string
-import Globals
 import calendar
 
 _marker = []  # Create a new marker object
 
-manage_addRDFCalendarForm=Globals.DTMLFile('dtml/RDFCalendar_addForm', globals())
+manage_addRDFCalendarForm=DTMLFile('dtml/RDFCalendar_addForm', globals())
 
 def manage_addRDFCalendar(self, id, title='', first_day_week='Monday',
         week_day_len=3, REQUEST=None):
@@ -120,26 +120,26 @@ class RDFCalendar(Implicit, Folder.Folder, PropertyManager, Cacheable):
                 if template.id == 'style_css':
                     default_css = template.read()
                 else:
-                    default_css = Globals.DTMLFile("dtml/default_css", globals())
+                    default_css = DTMLFile("dtml/default_css", globals())
         else:
-            default_css = Globals.DTMLFile("dtml/default_css", globals())
+            default_css = DTMLFile("dtml/default_css", globals())
 
         return default_css
 
     security.declareProtected('View', 'view_calendar')
-    view_calendar = Globals.DTMLFile("dtml/viewCalendar", globals())
+    view_calendar = DTMLFile("dtml/viewCalendar", globals())
 
     security.declareProtected('View management screens', 'readme')
-    readme = Globals.DTMLFile("dtml/readme", globals())
+    readme = DTMLFile("dtml/readme", globals())
 
     security.declareProtected('View', 'show_monthly_events')
-    show_monthly_events = Globals.DTMLFile("dtml/show_monthly_events", globals())
+    show_monthly_events = DTMLFile("dtml/show_monthly_events", globals())
 
     security.declareProtected('View','show_events_list')
-    show_events_list = Globals.DTMLFile("dtml/show_events_list", globals())
+    show_events_list = DTMLFile("dtml/show_events_list", globals())
 
     security.declareProtected('View', 'show_rdf')
-    show_rdf = Globals.DTMLFile("dtml/show_rdf", globals())
+    show_rdf = DTMLFile("dtml/show_rdf", globals())
 
     def __str__(self): return self.index_html()
     def __len__(self): return 1
@@ -165,7 +165,7 @@ class RDFCalendar(Implicit, Folder.Folder, PropertyManager, Cacheable):
     def getYear(self):
         """if REQUEST is None return current year"""
 
-        if self.REQUEST.has_key("year") and self.REQUEST.year!=None:
+        if "year" in self.REQUEST and self.REQUEST.year!=None:
             return int(self.REQUEST.year)
         else:
             return DateTime().year()
@@ -174,7 +174,7 @@ class RDFCalendar(Implicit, Folder.Folder, PropertyManager, Cacheable):
     def getMonth(self):
         """if REQUEST is None return current month"""
 
-        if self.REQUEST.has_key("month") and self.REQUEST.month!=None:
+        if "month" in self.REQUEST and self.REQUEST.month!=None:
             return int(self.REQUEST.month)
         else:
             return DateTime().month()
@@ -230,7 +230,7 @@ class RDFCalendar(Implicit, Folder.Folder, PropertyManager, Cacheable):
     def get_weekheader(self, p_week_day_len):
         """. return the days of week """
         l_result = []
-        for l_day in string.split(calendar.weekheader(9)):
+        for l_day in calendar.weekheader(9).split():
             l_result.append((l_day[:p_week_day_len], l_day))
         return l_result
 
@@ -241,7 +241,7 @@ class RDFCalendar(Implicit, Folder.Folder, PropertyManager, Cacheable):
 
         day_events = []
         for item in self.get_events(year=self.getYear(), month=self.getMonth()):
-            if item.has_key('enddate') and str(item.get('enddate', '')).strip():
+            if 'enddate' in item and str(item.get('enddate', '')).strip():
                 interval = int(DateTime(item['enddate']) - \
                                DateTime(item['startdate']))
                 if interval == 0:
@@ -279,13 +279,13 @@ class RDFCalendar(Implicit, Folder.Folder, PropertyManager, Cacheable):
             elif ob.meta_type == 'Script (Python)' and str(ob.id).startswith('local_'):
                 items = ob(year, month, day)
             for item in items:
-                if not item.has_key('startdate') or item['startdate'] == '':
+                if not 'startdate' in item or item['startdate'] == '':
                     continue
                 try:
                     startdate=DateTime(item['startdate'])
                 except:
                     continue
-                if item.has_key('enddate') and str(item.get('enddate', '')).strip():
+                if 'enddate' in item and str(item.get('enddate', '')).strip():
                     enddate=DateTime(item['enddate'])
                 else:
                     enddate=startdate
@@ -330,7 +330,7 @@ class RDFCalendar(Implicit, Folder.Folder, PropertyManager, Cacheable):
                 location = e.get('location', '')
                 s_date = DateTime(e.get('startdate', None))
 
-                if e.has_key('enddate') and str(e.get('enddate', '')).strip():
+                if 'enddate' in e and str(e.get('enddate', '')).strip():
                     e_date=DateTime(e['enddate'])
                 else:
                     e_date=s_date
@@ -367,7 +367,7 @@ class RDFCalendar(Implicit, Folder.Folder, PropertyManager, Cacheable):
             day_number = 0
             for day in week:
                 l_headers = self.get_weekheader(9)[day_number][0]
-                curr_date = "%s/%s/%s" % (str(self.getYear()), string.zfill(str(self.getMonth()),2), string.zfill(str(day),2))
+                curr_date = "%s/%s/%s" % (str(self.getYear()), str(self.getMonth()).zfill(2), str(day).zfill(2))
                 if day == 0:
                     days.append('<td>')
                 elif DateTime(curr_date).isCurrentDay():
@@ -425,7 +425,7 @@ class RDFCalendar(Implicit, Folder.Folder, PropertyManager, Cacheable):
         """ Manage the design properties """
         self.cal_css=self.REQUEST.CALCSS
         if REQUEST is not None:
-            return Globals.MessageDialog(title = 'Edited',
+            return MessageDialog(title = 'Edited',
              message = "The properties of %s have been changed!" % self.id,
              action = self.REQUEST.HTTP_REFERER,
             )
@@ -456,8 +456,8 @@ class RDFCalendar(Implicit, Folder.Folder, PropertyManager, Cacheable):
                  '</font>'+'<br />')
         self.ZCacheable_invalidate()
         if REQUEST is not None:
-            return Globals.MessageDialog(title='Updated',
+            return MessageDialog(title='Updated',
              message=''.join(msg),action ='manage_main',)
 
 # Initialize the class in order the security assertions be taken into account
-Globals.InitializeClass(RDFCalendar)
+InitializeClass(RDFCalendar)

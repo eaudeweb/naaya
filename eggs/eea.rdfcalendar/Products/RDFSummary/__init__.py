@@ -17,7 +17,7 @@
 #
 # Contributor(s):
 #
-import RDFSummary
+from . import RDFSummary
 
 def initialize(context):
     """Initialize the RDFSummary product.

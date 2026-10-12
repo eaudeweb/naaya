@@ -28,7 +28,7 @@
 #
 # $Id: RDFSummary.py 3319 2005-04-07 08:50:31Z roug $
 
-import urllib2
+import urllib.request
 import feedparser
 from copy import deepcopy
 
@@ -72,17 +72,17 @@ class RDFParser:
             self.channel['encoding'] = encoding
             try: del(self.channel['links'])
             except: pass
-            if self.channel.has_key('image'):
+            if 'image' in self.channel:
                 for k,v in self.channel['image'].items():
                     self.image[k] = v
                 try: self.get_image(self.channel['image']['url'])
                 except: pass
-            if self.channel.has_key('textinput'):
+            if 'textinput' in self.channel:
                 for k,v in self.channel['textinput'].items():
                     self.textinput[k] = v
             #remove keys
-            for k,v in self.channel.items():
-                if type(v) != type(u'') and type(v) != type(''):
+            for k,v in list(self.channel.items()):
+                if not isinstance(v, str):
                     del(self.channel[k])
         else: self.channel = {}
 
@@ -126,31 +126,33 @@ class RDFParser:
                     del item['ev_type']
                 except: pass
                 #remove keys
-                for k,v in item.items():
-                    if type(v) != type(u'') and type(v) != type(''):
+                for k,v in list(item.items()):
+                    if not isinstance(v, str):
                         del(item[k])
         else: self.items = []
 
     def open_url(self, url, proxy_support):
-        import base64, urllib
+        import base64
+        from urllib.parse import splittype, splithost, splituser
+
         auth = None
-        urltype, rest = urllib.splittype(url)
-        realhost, rest = urllib.splithost(rest)
+        urltype, rest = splittype(url)
+        realhost, rest = splithost(rest)
         if realhost:
-            user_passwd, realhost = urllib.splituser(realhost)
+            user_passwd, realhost = splituser(realhost)
             if user_passwd:
                 url = "%s://%s%s" % (urltype, realhost, rest)
-                auth = base64.encodestring(user_passwd).strip()
+                auth = base64.encodebytes(user_passwd.encode()).decode().strip()
 
-        # try to open with urllib2 (to use optional headers)
-        request = urllib2.Request(url)
+        # try to open with urllib.request (to use optional headers)
+        request = urllib.request.Request(url)
         request.add_header("User-Agent", 'RDFSummary (helpdesk@eionet.eu.int)')
         request.add_header("Accept-encoding", "")
         if auth:
             request.add_header("Authorization", "Basic %s" % auth)
-            opener = urllib2.build_opener(proxy_support, auth, urllib2.HTTPHandler)
+            opener = urllib.request.build_opener(proxy_support, urllib.request.HTTPHandler)
         else:
-            opener = urllib2.build_opener(proxy_support, urllib2.HTTPHandler)
+            opener = urllib.request.build_opener(proxy_support, urllib.request.HTTPHandler)
         opener.addheaders = []
         try:
             return opener.open(request)
@@ -160,25 +162,25 @@ class RDFParser:
     def parse_url(self, url, etag, modified, REQUEST):
         """ Grab the file from the webserver and feed it to the parser """
         self.baseurl = url
-        proxy_support = urllib2.ProxyHandler(self._proxies)
+        proxy_support = urllib.request.ProxyHandler(self._proxies)
         f = self.open_url(url, proxy_support)
 
         if not f:
-            raise IOError, "Failure in open"
+            raise IOError("Failure in open")
         self.rdfsource = f.read()
 
         if self.rdfsource:
-            proxy_support = urllib2.ProxyHandler(self._proxies)
+            proxy_support = urllib.request.ProxyHandler(self._proxies)
             p = feedparser.parse(url, etag=etag, modified=modified, handlers=[proxy_support])
             if p.get('bozo', 0) == 1:
                 #some error occurred
-                if p.has_key('status'):
+                if 'status' in p:
                     if p.status == 200:
                         #the feed was harvested but with a warning
                         #store feed stuff
-                        if p.has_key('etag'): etag = p.etag or None
+                        if 'etag' in p: etag = p.etag or None
                         else: etag = None
-                        if p.has_key('modified'): modified = p.modified
+                        if 'modified' in p: modified = p.modified
                         else: modified = None
                         self.__set_feed(feed=p.feed, status=p.status, version=p.version, encoding=p.encoding, etag=etag,
                             modified=modified, entries=p.entries)
@@ -191,18 +193,18 @@ class RDFParser:
                         self.feed_status = p.status
                     else:
                         #don't know how to handle this; set it as error
-                        raise RuntimeError, str(p.bozo_exception)
+                        raise RuntimeError(str(p.bozo_exception))
                 else:
-                    raise RuntimeError, str(p.bozo_exception)
+                    raise RuntimeError(str(p.bozo_exception))
             else:
                 #no error; check for status
-                if p.has_key('status'):
+                if 'status' in p:
                     if p.status == 200:
                         #everything is OK
                         #store feed stuff
-                        if p.has_key('etag'): etag = p.etag or None
+                        if 'etag' in p: etag = p.etag or None
                         else: etag = None
-                        if p.has_key('modified'): modified = p.modified
+                        if 'modified' in p: modified = p.modified
                         else: modified = None
                         self.__set_feed(feed=p.feed, status=p.status, version=p.version, encoding=p.encoding, etag=etag,
                             modified=modified, entries=p.entries)
@@ -210,18 +212,18 @@ class RDFParser:
                         #the feed was permanently moved to a new location
                         #update the new location and also store feed stuff
                         self.set_new_feed_url(p.url)
-                        if p.has_key('etag'): etag = p.etag or None
+                        if 'etag' in p: etag = p.etag or None
                         else: etag = None
-                        if p.has_key('modified'): modified = p.modified
+                        if 'modified' in p: modified = p.modified
                         else: modified = None
                         self.__set_feed(feed=p.feed, status=p.status, version=p.version, encoding=p.encoding, etag=etag,
                             modified=modified, entries=p.entries)
                     elif p.status == 302:
                         #the feed was temporarily moved to a new location
                         #store feed stuff
-                        if p.has_key('etag'): etag = p.etag or None
+                        if 'etag' in p: etag = p.etag or None
                         else: etag = None
-                        if p.has_key('modified'): modified = p.modified
+                        if 'modified' in p: modified = p.modified
                         else: modified = None
                         self.__set_feed(feed=p.feed, status=p.status, version=p.version, encoding=p.encoding, etag=etag,
                             modified=modified, entries=p.entries)
@@ -230,33 +232,33 @@ class RDFParser:
                         self.feed_status = p.status
                     elif p.status == 410:
                         #the feed is gone; DO NOT HARVEST ANYMORE!!!
-                        raise RuntimeError, 'The feed is gone. Do not harvest it anymore!'
+                        raise RuntimeError('The feed is gone. Do not harvest it anymore!')
                     else:
                         #don't know how to handle this; set it as error
-                        raise RuntimeError, 'Don\'t know how to handle this status %s' % p.status
+                        raise RuntimeError('Don\'t know how to handle this status %s' % p.status)
                 else:
                     #don't know how to handle this; set it as error
-                    raise RuntimeError, 'Don\'t know how to handle this, missing status'
+                    raise RuntimeError('Don\'t know how to handle this, missing status')
             p = None
         else:
-            raise RuntimeError, "Unable to GET content"
+            raise RuntimeError("Unable to GET content")
 
     def get_image(self, img_url):
         if self.fetchimage != "yes":
             return
         try:
-            proxy_support = urllib2.ProxyHandler(self._proxies)
-            opener = urllib2.build_opener(proxy_support, urllib2.HTTPHandler)
+            proxy_support = urllib.request.ProxyHandler(self._proxies)
+            opener = urllib.request.build_opener(proxy_support, urllib.request.HTTPHandler)
 
-            urllib2.install_opener(opener)
-            f = urllib2.urlopen(img_url)
+            urllib.request.install_opener(opener)
+            f = urllib.request.urlopen(img_url)
 
             if not f:
-                raise IOError, "Failure in open"
+                raise IOError("Failure in open")
             data = f.read()
             headers = f.info()
             f.close()
-            if headers.has_key('content-type'):
+            if 'content-type' in headers:
                 ctype=headers['content-type']
             else:
                 ctype='image/gif'

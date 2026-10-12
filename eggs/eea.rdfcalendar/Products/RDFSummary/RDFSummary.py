@@ -29,38 +29,48 @@
 # $Id$
 #
 from AccessControl import ClassSecurityInfo
+from AccessControl.class_init import InitializeClass
 from DateTime import *
-import binascii,md5
-import operator, string, time
-import Globals
-from Globals import Persistent
+import binascii
+from hashlib import md5 as _md5_func
+import operator, time
+from persistent import Persistent
 import Acquisition
-from webdav.common import rfc1123_date
+from zope.datetime import rfc1123_date
 import AccessControl
+from AccessControl.rolemanager import RoleManager
 import OFS
-from Products.ZCatalog.CatalogAwareness import CatalogAware
+try:
+    from Products.ZCatalog.CatalogAwareness import CatalogAware
+except ImportError:
+    class CatalogAware:
+        def reindex_object(self): pass
 from App.config import getConfiguration
+from App.special_dtml import DTMLFile
 
-import pickle, types, os, string
+import pickle, types, os
 from os.path import join, isfile
 
 from copy import deepcopy
-from rdfparser import RDFParser
+from .rdfparser import RDFParser
 
 
 CONFIG = getConfiguration()
 CONFIG.environment.update(os.environ)
-_repos = join(CLIENT_HOME, 'RDFSummary')
+try:
+    _repos = join(CONFIG.clienthome, 'RDFSummary')
+except Exception:
+    _repos = join(os.environ.get('CLIENT_HOME', '.'), 'RDFSummary')
 _repos = getattr(CONFIG, 'environment', {}).get('rdfsummary_repo', _repos)
 
-fixslash = string.maketrans('/','-')
+fixslash = str.maketrans('/','-')
 
 
 class RDFSummary (
     CatalogAware,
     Acquisition.Implicit,
     Persistent,
-    AccessControl.Role.RoleManager,
+    RoleManager,
     OFS.SimpleItem.Item):
     "Retrieve RDF Summaries from other websites."
 
@@ -81,15 +91,15 @@ class RDFSummary (
 
     security.declareProtected('View', 'index_html')
 
-    index_html = Globals.DTMLFile("htmlview", globals())
+    index_html = DTMLFile("htmlview", globals())
 
     security.declareProtected('View', 'show_source')
 
-    show_source = Globals.DTMLFile("source", globals())
+    show_source = DTMLFile("source", globals())
 
     security.declareProtected('View management screens', 'manage_main')
 
-    manage_main = Globals.DTMLFile("edit_prop", globals())
+    manage_main = DTMLFile("edit_prop", globals())
 
     security.declareProtected('View', 'channel')
 
@@ -194,23 +204,25 @@ class RDFSummary (
     def _loadpickles(self):
         try:
             pp = self.physicalpath(self._filename)
-            f = open(pp, 'r')
+            f = open(pp, 'rb')
             self._v_mtime = os.stat(pp)[8]
-            self._v_updatedate = pickle.load(f)
-            self._v_textinput = pickle.load(f)
-            self._v_channel = pickle.load(f)
-            self._v_image = pickle.load(f)
-            self._v_items = pickle.load(f)
-            self._v_rdfsource = pickle.load(f)
-            self.feed_gone = pickle.load(f)
-            self.feed_etag = pickle.load(f)
-            self.feed_status = pickle.load(f)
-            self.feed_version = pickle.load(f)
-            self.feed_bozo_exception = pickle.load(f)
-            self.feed_encoding = pickle.load(f)
-            self.feed_modified = pickle.load(f)
+            # latin1 reads pickles written by Python 2
+            load = lambda f: pickle.load(f, encoding='latin1')
+            self._v_updatedate = load(f)
+            self._v_textinput = load(f)
+            self._v_channel = load(f)
+            self._v_image = load(f)
+            self._v_items = load(f)
+            self._v_rdfsource = load(f)
+            self.feed_gone = load(f)
+            self.feed_etag = load(f)
+            self.feed_status = load(f)
+            self.feed_version = load(f)
+            self.feed_bozo_exception = load(f)
+            self.feed_encoding = load(f)
+            self.feed_modified = load(f)
             f.close()
-        except (EOFError,SystemError,IOError):
+        except (EOFError, SystemError, IOError, pickle.UnpicklingError, ValueError):
             self._v_updatedate = None
             self._v_textinput = {}
             self._v_channel = {}
@@ -252,7 +264,7 @@ class RDFSummary (
             try:
                 os.makedirs(_repos)
             except:
-                raise OSError, 'Can\'t create directory %s' %_repos
+                raise OSError('Can\'t create directory %s' %_repos)
         self._v_updatedate = time.time()
         p = RDFParser(self.http_proxy, self.fetchimage)
         p.parse_url(self.rssurl, self.feed_etag, self.feed_modified, REQUEST)
@@ -296,7 +308,7 @@ class RDFSummary (
             pass
 
         #write object
-        f = open(fn, 'w')
+        f = open(fn, 'wb')
         pickle.dump(self._v_updatedate, f)
         pickle.dump(self._v_textinput, f)
         pickle.dump(self._v_channel, f)
@@ -322,14 +334,14 @@ class RDFSummary (
     def picture(self):
         """ Make a img element that displays the picture
         """
-        if self._v_image.has_key('data'):
+        if 'data' in self._v_image:
             lstart=''
             lend=''
-            if self._v_image.has_key('link'):
+            if 'link' in self._v_image:
                 lstart='<a href="%s">' % self._v_image['link']
                 lend='</a>'
             alt=''
-            if self._v_image.has_key('title'):
+            if 'title' in self._v_image:
                 alt='alt="%s" ' % self._v_image['title']
             return ('%s<img src="%s/view_image" border="0" %s/>%s' %
                     ( lstart, self.absolute_url(), alt, lend ))
@@ -345,21 +357,21 @@ class RDFSummary (
         # HTTP If-Modified-Since header handling.
         header=REQUEST.get_header('If-Modified-Since', None)
         if header is not None:
-            header=string.split(header, ';')[0]
+            header=header.split(';')[0]
             # Some proxies seem to send invalid date strings for this
             # header. If the date string is not valid, we ignore it
             # rather than raise an error to be generally consistent
             # with common servers such as Apache (which can usually
             # understand the screwy date string as a lucky side effect
             # of the way they parse it).
-            try:    mod_since=long(DateTime(header).timeTime())
+            try:    mod_since=int(DateTime(header).timeTime())
             except: mod_since=None
-            last_mod = long(0)
+            last_mod = 0
             if mod_since is not None:
                 if self._p_mtime:
-                    last_mod = long(self._p_mtime)
+                    last_mod = int(self._p_mtime)
                 else:
-                    last_mod = long(0)
+                    last_mod = 0
             if last_mod > 0 and last_mod <= mod_since:
                 # Set header values since apache caching will return Content-Length
                 # of 0 in response if size is not set here
@@ -392,7 +404,7 @@ class RDFSummary (
             name is opened, or filehandles, in which case they are accessed
             directly.
         """
-        if type(infile) is types.StringType:
+        if type(infile) is str:
             try:
                 instream = open(infile, 'rb')
             except IOError:
@@ -400,16 +412,16 @@ class RDFSummary (
                 try:
                     instream = open(infile, 'rb')
                 except IOError:
-                    raise IOError, ("%s (%s)" %(self.id, infile))
+                    raise IOError("%s (%s)" %(self.id, infile))
             close_in = 1
         else:
             instream = infile
             close_in = 0
-        if type(outfile) is types.StringType:
+        if type(outfile) is str:
             try:
                 outstream = open(outfile, 'wb')
             except IOError:
-                raise IOError, ("%s (%s)" %(self.id, outfile))
+                raise IOError("%s (%s)" %(self.id, outfile))
             close_out = 1
         else:
             outstream = outfile
@@ -422,7 +434,7 @@ class RDFSummary (
                 block = instream.read(blocksize)
                 outstream.write(block)
         except IOError:
-            raise IOError, ("%s (%s)" %(self.id, filename))
+            raise IOError("%s (%s)" %(self.id, filename))
         try: instream.seek(0)
         except: pass
         if close_in: instream.close()
@@ -442,15 +454,18 @@ class RDFSummary (
             The base64 set of characters are listed in rfc1341. Unfortunately
             it includes the / character, and I must deal with that in UNIX systems.
         """
-        return string.translate(binascii.b2a_base64(md5.new(self.absolute_url(1)).digest()),
-          fixslash,'\r\n')
+        url = self.absolute_url(1)
+        if isinstance(url, str):
+            url = url.encode('utf-8')
+        digest = _md5_func(url).digest()
+        return binascii.b2a_base64(digest).decode('ascii').translate(fixslash).strip()
 
     def physicalpath(self, filename=''):
         """ Generate the full filename, including directories from
             _repos and self._filename
         """
         path = _repos
-        if type(filename)==types.ListType:
+        if type(filename)==list:
             for item in filename:
                 path = join(path,item)
         elif filename != '':
@@ -523,7 +538,7 @@ class RDFSummary (
 
 # Initialize the class in order the security assertions be taken into account
 #
-Globals.InitializeClass(RDFSummary)
+InitializeClass(RDFSummary)
 
 def manage_addRDFSummary(self, id, title, rssurl, http_proxy, fetchimage, REQUEST=None):
     """ Create a summary and install it in its parent Folder.
@@ -534,4 +549,4 @@ def manage_addRDFSummary(self, id, title, rssurl, http_proxy, fetchimage, REQUES
     if REQUEST is not None:
         return self.manage_main(self, REQUEST)
 
-manage_addRDFSummaryForm = Globals.DTMLFile('add_summary', globals())
+manage_addRDFSummaryForm = DTMLFile('add_summary', globals())

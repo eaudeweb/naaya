@@ -21,11 +21,11 @@
     <link><dtml-var link></link>
     <title><dtml-var title></title>
     <ev:startdate><dtml-var startdate></ev:startdate>
-    <dtml-if "item.has_key('enddate') and enddate"><ev:enddate><dtml-var enddate></ev:enddate></dtml-if>
-    <dtml-if "item.has_key('description') and description"><dc:description>&dtml-description;</dc:description></dtml-if>
-    <dtml-if "item.has_key('location') and location"><ev:location><dtml-var location></ev:location></dtml-if>
-    <dtml-if "item.has_key('organiser') and organiser"><ev:organizer><dtml-var organiser></ev:organizer></dtml-if>
-    <dtml-if "item.has_key('type') and type"><ev:type><dtml-var type></ev:type></dtml-if>
+    <dtml-if "'enddate' in item and enddate"><ev:enddate><dtml-var enddate></ev:enddate></dtml-if>
+    <dtml-if "'description' in item and description"><dc:description>&dtml-description;</dc:description></dtml-if>
+    <dtml-if "'location' in item and location"><ev:location><dtml-var location></ev:location></dtml-if>
+    <dtml-if "'organiser' in item and organiser"><ev:organizer><dtml-var organiser></ev:organizer></dtml-if>
+    <dtml-if "'type' in item and type"><ev:type><dtml-var type></ev:type></dtml-if>
   </item>
 </dtml-let>
 </dtml-in>

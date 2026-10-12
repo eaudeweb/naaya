@@ -33,7 +33,7 @@ params: day, month, year
     <tr><td>	
     <dl id="event_list">
     </dtml-if>
-    <dtml-if "item.has_key('link') and link">
+    <dtml-if "'link' in item and link">
     <dt><a href="&dtml-link;">&dtml-title;</a></dt>
     <dtml-else>
     <dt>&dtml-title;</dt>
@@ -42,17 +42,17 @@ params: day, month, year
     <dtml-if "_.hasattr(item, 'description') and description">
 	<dtml-var "item.description" html_quote newline_to_br><br/><br/>
     </dtml-if>
-    <dtml-if "item.has_key('location') and location">
+    <dtml-if "'location' in item and location">
 	Location: <strong>&dtml-location;</strong><br/>
     </dtml-if>
 	Period: <dtml-var "_.DateTime(startdate).Date()"><dtml-if "_.has_key('enddate') and enddate and enddate != startdate"> - <dtml-var "_.DateTime(enddate).Date()"></dtml-if><br/>
-    <dtml-if "item.has_key('type') and type">
+    <dtml-if "'type' in item and type">
 	Event type: &dtml-type;<br/>
     </dtml-if>
-    <dtml-if "item.has_key('organizer') and organizer">
+    <dtml-if "'organizer' in item and organizer">
 	Organizer: &dtml-organizer;<br/>
     </dtml-if>
-    <dtml-if "item.has_key('link') and link">
+    <dtml-if "'link' in item and link">
         See also: <a href="&dtml-link;">&dtml-link;</a>
     </dtml-if>
     </dd>

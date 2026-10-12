@@ -23,7 +23,7 @@
 __doc__="""RDFCalendar initialization module"""
 __version__= '$Revision: 1.5 $'[11:-2]
 
-import RDFCalendar
+from . import RDFCalendar
 from App.ImageFile import ImageFile
 
 def initialize(context):
@@ -37,8 +37,6 @@ def initialize(context):
                         ),
         icon='icons/RDFCalendar.gif',
         )
-    context.registerHelp()
-    context.registerHelpTitle('RDF Calendar')
 
 # Define shared web objects that are used by products.
 # This is usually (always ?) limited to images used

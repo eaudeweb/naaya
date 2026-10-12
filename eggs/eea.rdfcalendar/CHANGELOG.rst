@@ -1,5 +1,6 @@
 1.0.4 (unreleased)
 ----------------
+* Port RDFCalendar and RDFSummary to Python 3 and Zope 5 [dumitval]
 
 1.0.3 (2018-03-15)
 ----------------
