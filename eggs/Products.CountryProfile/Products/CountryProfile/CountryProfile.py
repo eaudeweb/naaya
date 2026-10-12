@@ -3,10 +3,7 @@
 perform searchs on the data
 """
 import os
-try:
-    import json
-except ImportError:
-    import simplejson as json
+import json
 from math import floor
 
 from OFS.SimpleItem import SimpleItem
