@@ -23,7 +23,7 @@ import os
 import sys
 import operator
 from copy import deepcopy
-import simplejson as json
+import json
 
 # Zope imports
 from AccessControl.class_init import InitializeClass

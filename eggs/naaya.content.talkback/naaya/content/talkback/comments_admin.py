@@ -24,10 +24,7 @@ import codecs
 from DateTime import DateTime
 from unidecode import unidecode
 
-try:
-    import json
-except ImportError:
-    import simplejson as json
+import json
 
 import xlwt
 

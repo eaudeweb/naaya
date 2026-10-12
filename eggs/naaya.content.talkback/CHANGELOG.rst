@@ -1,6 +1,7 @@
 1.5.8 (unreleased)
 -----------------
 * allow skipping sections that are marked as header [dumitval]
+* Use the standard library json instead of simplejson [dumitval]
 
 1.5.7 (2020-11-20)
 -----------------
