@@ -1,7 +1,4 @@
-try:
-    import simplejson as json
-except ImportError:
-    import json
+import json
 from OFS.SimpleItem import SimpleItem
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.unauthorized import Unauthorized
