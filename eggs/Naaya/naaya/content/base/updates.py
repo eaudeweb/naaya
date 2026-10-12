@@ -1,8 +1,5 @@
 import os
-try:
-    import simplejson as json
-except ImportError:
-    import json
+import json
 from DateTime import DateTime
 
 from Products.naayaUpdater.updates import UpdateScript

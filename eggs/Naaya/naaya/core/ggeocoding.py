@@ -1,4 +1,4 @@
-import simplejson as json
+import json
 import time
 import urllib.parse
 import urllib.request

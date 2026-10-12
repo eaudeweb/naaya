@@ -1,5 +1,5 @@
 from decimal import Decimal as D
-import simplejson as json
+import json
 
 class Geo(tuple):
     """ Immutable type representing individual geographical points """

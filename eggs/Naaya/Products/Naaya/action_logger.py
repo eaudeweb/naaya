@@ -80,6 +80,9 @@ class ActionLogger(Persistent):
 class ActionLogItem(Persistent):
     """ Action log base class"""
 
+    # Plain data record; templates read its attributes
+    __allow_access_to_unprotected_subobjects__ = 1
+
     def __init__(self, type=None, created_datetime=None, **kw):
         """ Type attribute is used to filter types of logs. """
         if created_datetime is None:

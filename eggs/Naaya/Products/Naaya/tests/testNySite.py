@@ -2,10 +2,7 @@ import time
 import unittest
 from bs4 import BeautifulSoup
 from unittest.mock import patch, Mock
-try:
-    import simplejson as json
-except ImportError:
-    import json
+import json
 
 from DateTime import DateTime
 import transaction

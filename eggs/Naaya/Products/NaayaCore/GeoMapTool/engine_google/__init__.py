@@ -1,4 +1,4 @@
-import simplejson as json
+import json
 
 from App.ImageFile import ImageFile
 from OFS.SimpleItem import SimpleItem

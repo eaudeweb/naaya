@@ -13,7 +13,7 @@ import urllib.parse
 import urllib.request
 import urllib.request
 import urllib.error
-import simplejson as json
+import json
 
 GOOGLE_API_JS = "https://www.google.com/recaptcha/api.js"
 EC_API_JS = "https://webtools.ec.europa.eu/captcha/js/captcha.js"

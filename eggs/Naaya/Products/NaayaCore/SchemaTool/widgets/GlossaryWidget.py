@@ -1,4 +1,4 @@
-import simplejson as json
+import json
 
 from AccessControl.class_init import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile

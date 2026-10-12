@@ -9,7 +9,7 @@ import re
 from copy import deepcopy
 from configparser import ConfigParser
 from os.path import join, dirname
-import simplejson as json
+import json
 
 from AccessControl import ClassSecurityInfo
 from App.ImageFile import ImageFile
@@ -150,7 +150,7 @@ class EditorTool(Folder):
 
         # find class selectors
         selectors_text = re.sub('{(.|\n)*?}', '', text)
-        selectors = re.findall('\\.\w+(?=\s|[,{])', selectors_text)
+        selectors = re.findall(r'\.\w+(?=\s|[,{])', selectors_text)
         selectors = [sel[1:] for sel in selectors]
 
         # add the button and selectors to it

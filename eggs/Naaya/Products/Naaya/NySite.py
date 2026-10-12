@@ -1,7 +1,4 @@
-try:
-    import simplejson as json
-except ImportError:
-    import json
+import json
 
 from AccessControl import ClassSecurityInfo, Unauthorized
 from DateTime import DateTime

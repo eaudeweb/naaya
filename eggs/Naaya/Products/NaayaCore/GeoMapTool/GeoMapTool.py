@@ -10,7 +10,7 @@ from decimal import Decimal
 from datetime import datetime
 import time
 from xml.dom import minidom
-import simplejson as json
+import json
 import operator
 from warnings import warn
 

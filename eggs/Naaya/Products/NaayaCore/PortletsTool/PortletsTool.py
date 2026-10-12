@@ -4,7 +4,7 @@ lists of links (used for menus) and others.
 
 """
 from hashlib import md5 as new_md5
-import simplejson as json
+import json
 from copy import copy
 
 from AccessControl.class_init import InitializeClass

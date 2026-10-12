@@ -1,5 +1,10 @@
 6.0.1 (unreleased)
 ------------------
+* Fix templates failing with NotFound when reading action log entries
+  [dumitval]
+* Use the standard library json instead of simplejson [dumitval]
+* Remove the pas.plugins.ldap code from the LDAP user folder plugin
+  [dumitval]
 
 6.0.0 (2026-10-12)
 ------------------

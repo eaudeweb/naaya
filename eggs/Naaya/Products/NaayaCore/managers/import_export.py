@@ -25,7 +25,7 @@ from Products.NaayaCore.interfaces import ICSVImportExtraColumns
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from naaya.core.zope2util import path_in_site
-import simplejson as json
+import json
 import transaction
 import xlrd
 import xlwt

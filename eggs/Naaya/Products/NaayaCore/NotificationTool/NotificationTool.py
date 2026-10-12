@@ -8,7 +8,7 @@ notified instantly, daily, weekly or monthly.
 import re
 from datetime import time, datetime, timedelta
 import logging
-import simplejson as json
+import json
 from naaya.core.backport import namedtuple
 
 from AccessControl.class_init import InitializeClass

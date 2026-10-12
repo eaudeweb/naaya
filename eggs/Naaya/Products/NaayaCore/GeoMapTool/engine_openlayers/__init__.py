@@ -2,7 +2,7 @@ import urllib.parse
 import urllib.request
 import urllib.request
 import urllib.error
-import simplejson as json
+import json
 import logging
 
 from naaya.core.backport import all

@@ -1,10 +1,7 @@
 # Library code from newer versions of Python
 
 # do not delete, used for imports in several places
-try:
-    import simplejson as json
-except ImportError:
-    import json
+import json
 
 
 def all(l):

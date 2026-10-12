@@ -59,3 +59,23 @@ class UserInfoTest(NaayaTestCase):
         self.assertEqual(local_user_info._source, acl_users)
 
         self.assertRaises(KeyError, acl_users.get_user_info, 'blah')
+
+    def test_user_info_from_ldap_user(self):
+        from unittest.mock import Mock
+        from Products.LDAPUserFolder.LDAPUser import LDAPUser
+        from Products.NaayaCore.AuthenticationTool.plugins.plugLDAPUserFolder \
+                import user_info_from_zope_user
+
+        dn = 'uid=anne,ou=Users,o=EIONET,l=Europe'
+        attrs = {'cn': [b'Anne Tester'], 'givenName': [b'Anne'],
+                 'sn': [b'Tester'], 'mail': [b'anne@example.com'],
+                 'o': [b'K\xc3\xb8benhavn club']}
+        user = LDAPUser('anne', 'anne', '', [], [], dn, attrs, [])
+        info = user_info_from_zope_user(Mock(), user, 'utf-8')
+        self.assertEqual(info.user_id, 'anne')
+        self.assertEqual(info.full_name, 'Anne Tester')
+        self.assertEqual(info.first_name, 'Anne')
+        self.assertEqual(info.last_name, 'Tester')
+        self.assertEqual(info.email, 'anne@example.com')
+        self.assertEqual(info.organisation, 'K\xf8benhavn club')
+        self.assertEqual(info.dn, dn)

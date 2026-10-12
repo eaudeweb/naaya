@@ -128,49 +128,24 @@ class plugLDAPUserFolder(PlugBase):
     def getLDAPServer(self, acl_folder):
         if hasattr(acl_folder, 'getServers'):
             return acl_folder.getServers()[0].get('host', '')
-        # pas.plugins.ldap: get server from UGM config
-        if hasattr(acl_folder, '_ugm'):
-            try:
-                return acl_folder._ugm().ucfg.server or ''
-            except Exception:
-                pass
         return ''
 
     def getLDAPPort(self, acl_folder):
         if hasattr(acl_folder, 'getServers'):
             return acl_folder.getServers()[0].get('port', '')
-        # pas.plugins.ldap: get port from UGM config
-        if hasattr(acl_folder, '_ugm'):
-            try:
-                return acl_folder._ugm().ucfg.port or ''
-            except Exception:
-                pass
         return ''
 
     def getRootDN(self, acl_folder):
         if hasattr(acl_folder, 'groups_base'):
             return acl_folder.groups_base
-        # pas.plugins.ldap: get groups_base from UGM config
-        if hasattr(acl_folder, '_ugm'):
-            try:
-                return acl_folder._ugm().gcfg.baseDN
-            except Exception:
-                pass
         return ''
 
     def _get_users_base(self):
         acl_folder = self.getUserFolder()
         if acl_folder is None:
             return None
-        # Traditional LDAPUserFolder
         if hasattr(acl_folder, 'users_base'):
             return acl_folder.users_base
-        # pas.plugins.ldap: get users_base from UGM config
-        if hasattr(acl_folder, '_ugm'):
-            try:
-                return acl_folder._ugm().ucfg.baseDN
-            except Exception:
-                pass
         return None
 
     def _user_dn_from_id(self, user_id):
@@ -301,34 +276,10 @@ class plugLDAPUserFolder(PlugBase):
         self._p_changed = 1
         return 1
 
-    def _get_pasldap_attrmap(self, acl_folder):
-        """Get the logical->LDAP attribute mapping from pas.plugins.ldap"""
-        if hasattr(acl_folder, '_ugm'):
-            try:
-                return dict(acl_folder._ugm().ucfg.attrmap)
-            except Exception:
-                pass
-        return {}
-
     def getLDAPSchema(self, acl_folder):
         """ returns the schema for a LDAPUserFolder """
         if hasattr(acl_folder, 'getLDAPSchema'):
             return acl_folder.getLDAPSchema()
-        # pas.plugins.ldap: build schema from UGM users attrmap
-        # attrmap maps logical names to LDAP attrs, e.g.
-        # {'id': 'uid', 'fullname': 'cn', 'email': 'mail'}
-        # We need (ldap_attr, friendly_name) tuples, using the LDAP attr
-        # as value and the logical name as friendly name
-        attrmap = self._get_pasldap_attrmap(acl_folder)
-        if attrmap:
-            seen = set()
-            schema = []
-            for logical, ldap_attr in sorted(attrmap.items(),
-                                             key=lambda x: x[1]):
-                if ldap_attr not in seen and logical not in ('rdn',):
-                    seen.add(ldap_attr)
-                    schema.append((ldap_attr, ldap_attr))
-            return schema
         return []
 
     def getPluginPath(self):
@@ -556,26 +507,6 @@ class plugLDAPUserFolder(PlugBase):
                             search_param=params,
                             search_term=term,
                             attrs=attrs)
-                    elif hasattr(acl_folder, 'enumerateUsers'):
-                        # pas.plugins.ldap: map LDAP attr name back to
-                        # logical name for enumerateUsers search.
-                        # Prefer 'login' or 'id' over 'rdn' for uid
-                        attrmap = self._get_pasldap_attrmap(acl_folder)
-                        ldap_to_logical = {}
-                        # Build reverse map, preferring searchable names
-                        for logical, ldap_attr in attrmap.items():
-                            if logical == 'rdn':
-                                continue  # rdn is not searchable
-                            if ldap_attr not in ldap_to_logical:
-                                ldap_to_logical[ldap_attr] = logical
-                        logical_param = ldap_to_logical.get(params, params)
-                        log.debug("findLDAPUsers: params=%r -> logical=%r, "
-                                  "term=%r", params, logical_param, term)
-                        raw = acl_folder.enumerateUsers(
-                            exact_match=False, **{logical_param: term})
-                        users = [{'uid': u['id'],
-                                  'cn': u.get('title', u['id'])}
-                                 for u in raw]
                     else:
                         return ()
                     [self.buffer.setdefault(u['uid'], self.decode_cn(u['cn']))
@@ -839,31 +770,9 @@ allow_class(LDAPUserInfo)
 
 def user_info_from_zope_user(ldap_plugin, zope_user, ldap_encoding):
 
-    # Build a merged dict of all PAS property sheets (if any).
-    # PAS property sheets use logical names (fullname, email) not LDAP names
-    # (cn, mail).  Build a lookup that maps both logical and LDAP attr names.
-    _pas_props = {}
-    if hasattr(zope_user, 'listPropertysheets'):
-        for sheet_id in zope_user.listPropertysheets():
-            sheet = zope_user.getPropertysheet(sheet_id)
-            for pid in sheet.propertyIds():
-                _pas_props[pid] = sheet.getProperty(pid, '')
-
-        # Also index by LDAP attr name using the attrmap
-        acl_folder = ldap_plugin.getUserFolder()
-        attrmap = ldap_plugin._get_pasldap_attrmap(acl_folder)
-        # attrmap is {logical: ldap_attr}, we need {ldap_attr: value}
-        for logical, ldap_attr in attrmap.items():
-            if logical in _pas_props and ldap_attr not in _pas_props:
-                _pas_props[ldap_attr] = _pas_props[logical]
-
     def extract(name):
-        # Try direct attribute first (works for LDAPUserFolder users),
-        # but skip acquisition-inherited attributes by checking on base obj
+        # Skip attributes acquired from the user folder
         value = getattr(aq_base(zope_user), name, None)
-        if value is None or value == '':
-            # Fall back to PAS property sheets (logical or LDAP attr name)
-            value = _pas_props.get(name, '')
         if value is None:
             return ''
         if isinstance(value, list):
@@ -879,10 +788,7 @@ def user_info_from_zope_user(ldap_plugin, zope_user, ldap_encoding):
 
     full_name = extract('cn')
     if not full_name:
-        # Construct from firstname + lastname (PAS logical names)
-        first = extract('givenName') or _pas_props.get('firstname', '')
-        last = extract('sn') or _pas_props.get('lastname', '')
-        full_name = ('%s %s' % (first, last)).strip()
+        full_name = ('%s %s' % (extract('givenName'), extract('sn'))).strip()
 
     dn = extract('dn')
     if not dn:
@@ -895,8 +801,8 @@ def user_info_from_zope_user(ldap_plugin, zope_user, ldap_encoding):
         'user_id': str(user_id),
         'full_name': full_name,
         'email': extract('mail'),
-        'first_name': extract('givenName') or _pas_props.get('firstname', ''),
-        'last_name': extract('sn') or _pas_props.get('lastname', ''),
+        'first_name': extract('givenName'),
+        'last_name': extract('sn'),
         'organisation': extract('o'),
         'postal_address': extract('postalAddress'),
         'phone_number': extract('telephoneNumber'),

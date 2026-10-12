@@ -14,7 +14,7 @@ import types
 import urllib.parse
 import urllib.request
 from unidecode import unidecode
-import simplejson as json
+import json
 from decimal import Decimal
 
 from AccessControl import ClassSecurityInfo, Unauthorized

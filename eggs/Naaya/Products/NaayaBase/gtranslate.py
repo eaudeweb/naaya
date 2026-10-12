@@ -2,7 +2,7 @@ import urllib.parse
 import urllib.request
 import urllib.request
 import urllib.error
-import simplejson
+import json
 import unittest
 
 _GOOGLE_LANGUAGES = {
@@ -242,7 +242,7 @@ def _detect_lang(text):
     page = urllib.request.urlopen(url)
 
     # unpack the data
-    result = simplejson.load(page)
+    result = json.load(page)
     if result is None:
         raise ServiceUnavailableError('detection service unavailable')
     elif result['responseStatus'] != 200:
@@ -261,7 +261,7 @@ def _translate(text, dest_lang, src_lang):
     page = urllib.request.urlopen(url)
 
     # unpack the data
-    result = simplejson.load(page)
+    result = json.load(page)
     if result is None:
         raise ServiceUnavailableError('translation service unavailable')
     elif result['responseStatus'] != 200:
