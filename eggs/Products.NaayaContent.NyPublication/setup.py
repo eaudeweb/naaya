@@ -2,7 +2,7 @@ from setuptools import setup, find_namespace_packages
 
 setup(
     name='Products.NaayaContent.NyPublication',
-    version='2.0.0',
+    version='2.0.1.dev0',
     description="NyPublication",
     long_description=open("README.txt").read() + "\n" +
     open("CHANGELOG.rst").read(),
