@@ -1,4 +1,7 @@
-2.0.0 (unreleased)
+2.0.1 (unreleased)
+------------------
+
+2.0.0 (2026-10-12)
 ------------------
 * Port RDFCalendar and RDFSummary to Python 3 and Zope 5 [dumitval]
 * Use a PEP 420 namespace package for Products [dumitval]

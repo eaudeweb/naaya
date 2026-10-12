@@ -2,7 +2,7 @@ from setuptools import setup, find_namespace_packages
 
 setup(
     name='eea.rdfcalendar',
-    version='2.0.0',
+    version='2.0.1.dev0',
     author='Eau de Web',
     author_email='office@eaudeweb.ro',
     url='http://naaya.eaudeweb.ro',
