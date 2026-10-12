@@ -1,5 +1,5 @@
 import scrubber
-import simplejson
+import json
 import time
 from datetime import datetime
 
@@ -66,7 +66,7 @@ def forum_publish_save_object(context, REQUEST):
 
     response["url"] = "%s/forum_publish_preview/?topic=%s" % \
                       (context.absolute_url(), topic["id"])
-    return simplejson.dumps(response)
+    return json.dumps(response)
 
 
 def forum_publish_preview(context, REQUEST):
@@ -113,7 +113,7 @@ def forum_publish_save(context, REQUEST):
 
         response["url"] = doc.absolute_url()
         REQUEST.RESPONSE.setHeader("Content-Type", "application/json")
-        return simplejson.dumps(response)
+        return json.dumps(response)
     else:
         raise NotFound("No objects to publish")
 
@@ -128,7 +128,7 @@ def forum_publish_remove_object(context, REQUEST):
         del topic.forum_publish_objects[timestamp]
     else:
         raise NotFound
-    return simplejson.dumps(response)
+    return json.dumps(response)
 
 
 def get_document_or_create(site, title):
@@ -155,7 +155,7 @@ def get_or_create_folder(site, id, title):
 
 def forum_publish_clear_preview(context, REQUEST):
     _clear_preview(context, REQUEST.form["topic"])
-    return simplejson.dumps({"status": "success"})
+    return json.dumps({"status": "success"})
 
 
 def forum_publish_translations(context, request):
@@ -165,13 +165,13 @@ def forum_publish_translations(context, request):
         trans[msg] = portal_i18n.get_translation(msg)
 
     request.RESPONSE.setHeader("Content-Type", "application/json")
-    return simplejson.dumps(trans)
+    return json.dumps(trans)
 
 
 def _forum_publish_objects(content, context):
     objects = []
     for item in zip(content, context):
-        data = simplejson.loads(item[1])
+        data = json.loads(item[1])
         data["content"] = item[0]
         # from '17 Feb 2012 17:15:50' string to timestamp
         data["timestamp"] = time.strptime(data["date"], "%d %b %Y %H:%M:%S")
