@@ -259,7 +259,7 @@ class CSVImportTool(Implicit, Item):
                         ob.saveProperties(**properties)
                         edited_number += 1
                     count += 1
-                    if count / 50 * 50 == count:
+                    if count % 50 == 0:
                         # commit the transaction at each 50 items to
                         # avoid database conflict errors
                         transaction.commit()
@@ -652,15 +652,20 @@ class CSVReader(object):
             dialect = csv.excel_tab
         else:
             dialect = csv.excel
-        # In Python 3, csv module handles Unicode natively
-        import io
-        if isinstance(file_ob, (io.RawIOBase, io.BufferedIOBase)):
-            file_ob = io.TextIOWrapper(file_ob, encoding=encoding)
-        self.reader = csv.reader(file_ob, dialect=dialect)
+        self.file_ob = file_ob
+        self.dialect = dialect
+        self.encoding = encoding
 
     def read(self):
         """ return the content of the file """
         try:
+            # FileUpload, file objects and strings may all hold bytes
+            data = (self.file_ob.read() if hasattr(self.file_ob, 'read')
+                    else self.file_ob)
+            if isinstance(data, bytes):
+                data = data.decode(self.encoding)
+            self.reader = csv.reader(StringIO(data, newline=''),
+                                     dialect=self.dialect)
             header = next(self.reader)
             output = []
             for values in self.reader:

@@ -28,6 +28,13 @@
   restriction and logging admin pages [dumitval]
 * Fix adding or deleting a site language and the JSON error dump [dumitval]
 * Fix image uploads from the editor [dumitval]
+* Fix the bulk email XLS export containing only the header row [dumitval]
+* Fix renaming or moving a folder with assigned portlets [dumitval]
+* Fix video conversion and valid mp4 files being re-encoded [dumitval]
+* Fix media file pages without a file [dumitval]
+* Fix CSV imports of uploaded files and committing after every row [dumitval]
+* Fix the tag cloud [dumitval]
+* Fix the XML export writing "b'...'" instead of the file content [dumitval]
 
 5.0.31 (2025-09-09)
 -------------------

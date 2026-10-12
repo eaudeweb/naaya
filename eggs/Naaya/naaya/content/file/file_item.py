@@ -316,7 +316,7 @@ class NyFile_extfile(file_item, NyAttributes, NyItem, NyFolderishVersioning, NyC
     def export_this_tag_custom(self):
         return 'downloadfilename="%s" file="%s" content_type="%s" precondition="%s" validation_status="%s" validation_date="%s" validation_by="%s" validation_comment="%s"' % \
             (self.utXmlEncode(self.downloadfilename()),
-                self.utBase64Encode(str(self.utNoneToEmpty(self.get_data()))),
+                self.utBase64Encode(self.utNoneToEmpty(self.get_data())),
                 self.utXmlEncode(self.getContentType()),
                 self.utXmlEncode(self.precondition),
                 self.utXmlEncode(self.validation_status),

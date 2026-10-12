@@ -4807,7 +4807,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         RESPONSE.setHeader('Content-Type', 'application/vnd.ms-excel')
         RESPONSE.setHeader('Content-Disposition',
                            'attachment; filename=admin_bulk_email_list.xls')
-        cols = zip(headers, keys)
+        cols = list(zip(headers, keys))
         return export_email_list_xcel(self, cols, ids)
 
     security.declarePublic('standard_template_macro')

@@ -328,7 +328,7 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer,
         for i in self.getMediaObjects():
             ra('<file param="0" id="%s" content="%s" />' % (
                 self.utXmlEncode(i.id),
-                self.utXmlEncode(self.utBase64Encode(str(i.get_data())))))
+                self.utXmlEncode(self.utBase64Encode(i.get_data()))))
         return ''.join(r)
 
     security.declarePrivate('syndicateThis')
@@ -482,8 +482,8 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer,
         if is_valid_audio(filepath) or (
                 filename[1] == '.mp4' and
                 resolution[1] <= 720 and
-                int(resolution[0]) / 16 * 16 == resolution[0] and
-                int(resolution[1]) / 16 * 16 == resolution[1]):
+                int(resolution[0]) // 16 * 16 == resolution[0] and
+                int(resolution[1]) // 16 * 16 == resolution[1]):
             mediafile._conversion_log = ''
             mediafile._p_changed = True
         else:
@@ -708,8 +708,9 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer,
 
     def is_audio(self):
         mediafile = self.getSingleMediaObject()
-        filepath = mediafile.get_filename()
-        return is_audio(filepath)
+        if not hasattr(mediafile, 'get_filename'):
+            return False  # no media or a plain OFS File
+        return is_audio(mediafile.get_filename())
 
 
 InitializeClass(NyMediaFile_extfile)

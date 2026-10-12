@@ -407,7 +407,7 @@ class NyExFile_extfile(exfile_item, NyAttributes, NyItem, NyCheckControl, NyVali
         for lang, fileitem in self.getFileItems():
             ra('<item lang="%s" file="%s" precondition="%s" />' % \
             (lang,
-                self.utBase64Encode(str(self.utNoneToEmpty(fileitem.get_data()))),
+                self.utBase64Encode(self.utNoneToEmpty(fileitem.get_data())),
                 self.utXmlEncode(fileitem.precondition)))
         return ''.join(r)
 

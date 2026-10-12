@@ -378,7 +378,7 @@ class NyFolder(
         for i in self.getUploadedImages():
             ra('<img param="0" id="%s" content="%s" />' %
                 (self.utXmlEncode(i.id()),
-                 self.utXmlEncode(self.utBase64Encode(str(i.data)))))
+                 self.utXmlEncode(self.utBase64Encode(bytes(i.data)))))
         return ''.join(r)
 
     def import_data(self, object):
@@ -1317,9 +1317,7 @@ class NyFolder(
             lexicon = index_obj.getLexicon()
             words_score = []
             for c in chars:
-                words = [word.encode(
-                    'utf-8') for word in lexicon.getWordsForRightTruncation(
-                        str(c, 'utf-8'))]
+                words = lexicon.getWordsForRightTruncation(c)
                 words_score.extend(
                     [(len(index_obj.getDocumentsForWord(w)), w)
                      for w in words
@@ -1332,7 +1330,7 @@ class NyFolder(
                 max = buf[-1][0]
                 min = buf[0][0]
                 diff = max - min
-                distribution = diff / 3
+                distribution = diff // 3
                 for score, word in words_score:
                     if score == min:
                         tag = 4

@@ -270,7 +270,7 @@ class NyStory(story_item, NyAttributes, NyContainer, NyCheckControl, NyContentTy
             ra('<source lang="%s"><![CDATA[%s]]></source>' % (l, self.utToUtf8(self.getLocalProperty('source', l))))
         for i in self.getUploadedImages():
             ra('<img param="0" id="%s" content="%s" />' % \
-                (self.utXmlEncode(i.id()), self.utXmlEncode(self.utBase64Encode(str(i.data)))))
+                (self.utXmlEncode(i.id()), self.utXmlEncode(self.utBase64Encode(bytes(i.data)))))
         return ''.join(r)
 
     security.declarePrivate('syndicateThis')

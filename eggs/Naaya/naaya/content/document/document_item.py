@@ -274,7 +274,7 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl,
         for i in self.getUploadedImages():
             ra('<img param="0" id="%s" content="%s" />' % \
                 (self.utXmlEncode(i.id()), self.utXmlEncode(
-                self.utBase64Encode(str(i.data)))))
+                self.utBase64Encode(bytes(i.data)))))
         return ''.join(r)
 
     #zmi actions

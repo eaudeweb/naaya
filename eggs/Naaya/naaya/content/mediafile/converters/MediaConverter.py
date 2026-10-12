@@ -29,16 +29,16 @@ def media2mp4(mediafile):
     fpath, fname = os.path.split(finput)
     tcv_path = finput
     cvd_path = os.path.join(tempdir, fname + ".cvd")  # converted
-    log = open(os.path.join(tempdir, fname + '.log'), 'wr+')
+    log = open(os.path.join(tempdir, fname + '.log'), 'w+')
 
     o_width, o_height = get_resolution(tcv_path)
     ratio = o_width / o_height
     if o_height > 720:
-        width = int(ratio * 720) / 16 * 16
+        width = int(ratio * 720) // 16 * 16
         height = 720
     else:
-        width = int(o_width) / 16 * 16
-        height = int(o_height) / 16 * 16
+        width = int(o_width) // 16 * 16
+        height = int(o_height) // 16 * 16
     cmd = [CONVERSION_TOOL, "-y", "-v", "8", "-benchmark", "-i", tcv_path,
            "-s", "%sx%s" % (width, height), "-c:v", "libx264", "-crf", "20",
            "-c:a", "libfdk_aac", "-q:a", "100", "-f", "mp4", cvd_path]
