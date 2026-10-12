@@ -1,4 +1,7 @@
-1.0.0 (unreleased)
+1.0.1 (unreleased)
+------------------
+
+1.0.0 (2026-10-12)
 ------------------
 * Port to Python 3 and Zope 5 [dumitval]
 * Fix adding a best practice with a file and no title [dumitval]
