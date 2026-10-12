@@ -524,7 +524,7 @@ class NyPhotoFolder(NyRoleManager, NyContentData, NyAttributes, photo_archive_ba
             err = self.uploadZip(upload_file, **schema_raw_data)
             if err:
                 # Add image
-                zLOG.LOG('NyPhotoFolder', zLOG.DEBUG, err)
+                logging.getLogger(__name__).debug(err)
                 upload_file.seek(0)
                 the_file = upload_file.read()
                 is_image = self.isValidImage(the_file)
@@ -605,7 +605,7 @@ class NyPhotoFolder(NyRoleManager, NyContentData, NyAttributes, photo_archive_ba
         Test if the specified uploaded B{file} is a valid image.
         """
         try:
-            Image.open(StringIO(file))
+            Image.open(BytesIO(file))
         except: # Python Imaging Library doesn't recognize it as an image
             return 0
         else:

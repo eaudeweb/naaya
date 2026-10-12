@@ -1,5 +1,6 @@
 1.0.6 (unreleased)
 ==================
+* Fix importing the product [dumitval]
 
 1.0.5 (2012-06-25)
 ==================

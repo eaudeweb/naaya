@@ -1,6 +1,6 @@
 from DateTime import DateTime
 from datetime import datetime, timezone
-from io import StringIO
+from io import BytesIO
 from OFS.Folder import Folder
 from AccessControl import ClassSecurityInfo
 from ZPublisher.HTTPRequest import FileUpload
@@ -121,7 +121,7 @@ class SurveyAnswer(Folder, NyProperties):
             self.manage_delObjects([id, ])
         attached_file.seek(0)
         data = attached_file.read()
-        sfile = StringIO(data)
+        sfile = BytesIO(data)
         sfile.filename = attached_file.filename[-1]
         content_type = mimetypes.guess_type(attached_file.filename)[0]
         if content_type is None:

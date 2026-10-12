@@ -23,7 +23,7 @@ except ImportError:
     import json
 import os
 import logging
-from io import StringIO
+from io import BytesIO
 from zipfile import ZipFile, ZIP_DEFLATED, BadZipfile
 
 # Zope imports
@@ -900,7 +900,7 @@ class EnviroWindowsSite(NySite):
         @doc_ids: folder items
         returns a zip archive content
         """
-        zip_buffer = StringIO()
+        zip_buffer = BytesIO()
         zip_file = ZipFile(zip_buffer, 'w', ZIP_DEFLATED)
 
         for doc_id in doc_ids:
@@ -927,8 +927,8 @@ class EnviroWindowsSite(NySite):
             else:
                 doc_data = doc_file.get_data()
 
-            if not isinstance(doc_data, str):
-                data_buffer = StringIO()
+            if not isinstance(doc_data, bytes):
+                data_buffer = BytesIO()
                 while doc_data is not None:
                     data_buffer.write(doc_data.data)
                     doc_data = doc_data.next
@@ -999,9 +999,8 @@ class EnviroWindowsSite(NySite):
                 continue
 
             headers = {'content-length': filesize}
-            file_buffer = StringIO(file_data)
+            file_buffer = BytesIO(file_data)
 
-            filename = filename.decode("utf-8")
             filename = self.toAscii(filename)
             fs = SimpleFieldStorage(file_buffer, filename, headers)
             file_obj = FileUpload(fs)
@@ -1119,7 +1118,7 @@ class EnviroWindowsSite(NySite):
         if location == '/':
             location = ''
         if file:
-            content = CSVReader(file=file, dialect=dialect, encoding=encoding)
+            content = CSVReader(file, dialect, encoding)
             content = content.read()[0]
             if content is None:
                 self.setSessionErrorsTrans(
@@ -1256,3 +1255,4 @@ class SimpleFieldStorage(object):
         self.file = file
         self.filename = filename
         self.headers = headers
+        self.name = 'file'  # form field name, required by Zope 5 FileUpload

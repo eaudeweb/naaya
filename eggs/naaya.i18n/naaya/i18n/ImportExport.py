@@ -250,6 +250,8 @@ class TranslationsImportExport(object):
         msgid = None
         data = {}
         for cnt, line in enumerate(filehandler):
+            if isinstance(line, bytes):
+                line = line.decode('utf-8')  # only utf-8 files are accepted
             line = line.strip()
             if not line or line.startswith('#'):
                 continue
@@ -281,7 +283,7 @@ class TranslationsImportExport(object):
                 if match is not None:
                     msgid = match.groups()[0]
             else:
-                raise Error('Undefined state in parsing .po file')
+                raise ValueError('Undefined state in parsing .po file')
 
         for (msgid, msgstr) in data.items():
             unescaped_id = self.backslash_unescape(msgid)
@@ -331,7 +333,8 @@ class TranslationsImportExport(object):
         tmp_name = spreadsheet_file(output, dialect)
 
         #return spreadsheet file
-        content = open(str(tmp_name)).read()
+        with open(str(tmp_name), encoding='utf-8') as f:
+            content = f.read()
         headers = [('Content-Type', '%s;charset=%s' % (ct, encoding)),
                    ('Content-Disposition', 'attachment; filename=%s' % '%s-%s.%s' % (orglang, lang, ext))]
         return (headers, content)
@@ -347,7 +350,5 @@ class TranslationsImportExport(object):
         for translation in translations:
             #import only translated messages
             if translation['target'] != '':
-                self._catalog.edit_message(
-                           translation['source'].decode(encoding),
-                           lang,
-                           translation['target'].decode(encoding))
+                self._catalog.edit_message(translation['source'], lang,
+                                           translation['target'])

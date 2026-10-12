@@ -328,25 +328,25 @@ def importNyCertificate(self, param, id, attrs, content, properties,
 
             ob = _create_NyCertificate_object(
                 self, id,
-                self.utEmptyToNone(attrs['contributor'].encode('utf-8')))
-            ob.sortorder = attrs['sortorder'].encode('utf-8')
-            ob.discussion = abs(int(attrs['discussion'].encode('utf-8')))
-            ob.organisation = attrs['organisation'].encode('utf-8')
-            ob.phone = attrs['phone'].encode('utf-8')
-            ob.fax = attrs['fax'].encode('utf-8')
-            ob.cellphone = attrs['cellphone'].encode('utf-8')
-            ob.email = attrs['email'].encode('utf-8')
-            ob.webpage = attrs['webpage'].encode('utf-8')
+                self.utEmptyToNone(attrs['contributor']))
+            ob.sortorder = attrs['sortorder']
+            ob.discussion = abs(int(attrs['discussion']))
+            ob.organisation = attrs['organisation']
+            ob.phone = attrs['phone']
+            ob.fax = attrs['fax']
+            ob.cellphone = attrs['cellphone']
+            ob.email = attrs['email']
+            ob.webpage = attrs['webpage']
 
             for property, langs in properties.items():
                 [ob._setLocalPropValue(property, lang, langs[lang])
                     for lang in langs if langs[lang] != '']
             ob.approveThis(
-                approved=abs(int(attrs['approved'].encode('utf-8'))),
+                approved=abs(int(attrs['approved'])),
                 approved_by=self.utEmptyToNone(
-                    attrs['approved_by'].encode('utf-8')))
-            if attrs['releasedate'].encode('utf-8') != '':
-                ob.setReleaseDate(attrs['releasedate'].encode('utf-8'))
+                    attrs['approved_by']))
+            if attrs['releasedate'] != '':
+                ob.setReleaseDate(attrs['releasedate'])
             ob.import_comments(discussion)
             self.recatalogNyObject(ob)
 

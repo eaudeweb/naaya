@@ -4,6 +4,7 @@ Changelog
 1.1.5 (unreleased)
 ------------------
 * Fix sorting and uncataloging terms [dumitval]
+* Fix importing the product [dumitval]
 
 1.1.4 (2011-09-23)
 ------------------

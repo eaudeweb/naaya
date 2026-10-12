@@ -2,6 +2,9 @@
 -------------------
 * Stop the LocalizerToNaayaI18n update when Products.Localizer is not installed
   [dumitval]
+* Fix the .po import [dumitval]
+* Fix the spreadsheet import and export of translations [dumitval]
+* Fix sorting messages on the Translations admin page [dumitval]
 
 1.1.10 (2017-12-07)
 -------------------

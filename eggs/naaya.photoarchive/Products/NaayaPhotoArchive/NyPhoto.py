@@ -467,7 +467,8 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
     #api
     def getZipData(self):
         display = self._getDisplayId()
-        return str(self.get_data(display).read())
+        data = self.get_data(display)
+        return data if isinstance(data, bytes) else b''
 
     def get_displays(self):
         #returns a list with all dispays minus 'Thumbnail'

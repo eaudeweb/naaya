@@ -102,8 +102,6 @@ class AdminI18n(Implicit):
             if not default:
                 default = m
             if regex.search(default.lower()):
-                if isinstance(m, str):
-                    m = m.encode('utf-8')
                 e = [m]
                 i = 1
                 for lang in langs:

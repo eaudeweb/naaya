@@ -4,10 +4,15 @@ try:
     import simplejson as json
 except ImportError:
     import json
+from importlib.metadata import distributions
+
 import Zope2
 from Products.SiteErrorLog.SiteErrorLog import SiteErrorLog
 from zope.publisher.browser import BrowserPage
 from zope.publisher.browser import NotFound
+
+OWN_PREFIXES = ('naaya', 'products.', 'destinet', 'edw', 'eea.')
+
 
 class Info(BrowserPage):
     """Provides information about installed products
@@ -29,15 +34,12 @@ class Info(BrowserPage):
         return {}
 
     def provide_json(self):
-        products=[]
-        products_folder = self.context.Control_Panel.Products
-        for product_name in products_folder.objectIds():
-            product = products_folder._getOb(product_name, None)
-            if(product is not None and product.thisIsAnInstalledProduct == 1):
-                products.append({
-                    'name': product.id,
-                    'version': product.version
-                })
+        # Zope 5 has no Control_Panel.Products; list our installed distributions
+        products = sorted(
+            ({'name': dist.metadata['Name'], 'version': dist.version}
+             for dist in distributions()
+             if (dist.metadata['Name'] or '').lower().startswith(OWN_PREFIXES)),
+            key=lambda p: p['name'].lower())
         return json.dumps(products)
 
     def publishTraverse(self, request, name):

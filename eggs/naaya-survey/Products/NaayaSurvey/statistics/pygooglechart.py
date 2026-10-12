@@ -659,7 +659,7 @@ class Chart(object):
             self.axis[axis_index].set_positions(positions)
         except IndexError:
             raise InvalidParametersException('Axis index %i has not been ' \
-                'created' % axis)
+                'created' % axis_index)
 
     def set_axis_style(self, axis_index, colour, font_size=None, \
             alignment=None):
@@ -667,7 +667,7 @@ class Chart(object):
             self.axis[axis_index].set_style(colour, font_size, alignment)
         except IndexError:
             raise InvalidParametersException('Axis index %i has not been ' \
-                'created' % axis)
+                'created' % axis_index)
 
     def axis_to_url(self):
         available_axis = []

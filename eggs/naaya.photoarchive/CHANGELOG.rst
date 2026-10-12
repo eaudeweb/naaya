@@ -1,6 +1,8 @@
 1.5.3 (unreleased)
 -------------------
 * Fix the photo display pages and generating or purging displays [dumitval]
+* Fix single image upload, zip upload adding no photos and zip downloads with
+  empty files [dumitval]
 
 1.5.2 (2015-10-23)
 -------------------

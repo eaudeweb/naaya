@@ -28,6 +28,7 @@ from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from .BaseMultipleChoiceStatistic import BaseMultipleChoiceStatistic
+from .BaseStatistic import manage_addStatistic
 
 class MultipleChoiceCssBarChartStatistic(BaseMultipleChoiceStatistic):
     """Barchart ...

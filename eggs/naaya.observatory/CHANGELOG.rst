@@ -1,5 +1,6 @@
 1.1.2 (Unreleased)
 --------------------
+* Fix the map icons and logging reverse geocoding errors [dumitval]
 
 1.1.1 (2012-01-05)
 --------------------

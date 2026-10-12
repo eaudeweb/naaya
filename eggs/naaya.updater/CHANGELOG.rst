@@ -3,6 +3,7 @@
 * Fix all update scripts and sorting them on the updates page [dumitval]
 * Fix the update_layout, update_forms, update_dynamicprop2schema and
   update_user_management_styles scripts [dumitval]
+* Fix the update_translations script on uploaded .po files [dumitval]
 
 1.2.32 (2019-11-07)
 -------------------

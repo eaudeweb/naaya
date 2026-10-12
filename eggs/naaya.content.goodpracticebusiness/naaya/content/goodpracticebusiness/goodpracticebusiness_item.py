@@ -164,7 +164,7 @@ def addNyGoodPracticeBusiness(self, id='', REQUEST=None, contributor=None,
         filename = trim_filename(getattr(_uploaded_file, 'filename', ''))
         base_filename = filename.rsplit('.', 1)[0]  # strip extension
         if base_filename:
-            schema_raw_data['title'] = title = base_filename.decode('utf-8')
+            schema_raw_data['title'] = title = base_filename
     id = toAscii(id)
     id = make_id(self, id=id, title=title, prefix='goodpracticebusiness')
     if contributor is None:

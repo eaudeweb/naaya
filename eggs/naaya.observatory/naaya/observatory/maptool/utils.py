@@ -1,5 +1,5 @@
 import os
-from io import StringIO
+from io import BytesIO
 import math
 
 from PIL import Image
@@ -14,7 +14,7 @@ def query_reverse_geocode(lat, lon):
     try:
         return reverse_geocode(lat, lon)
     except GeocoderServiceError as e:
-        zLOG.LOG('naaya.observatory', zLOG.PROBLEM, str(e))
+        logging.getLogger(__name__).warning(str(e))
         return '', ''
 
 def map_icon(rating, type, number=None):
@@ -84,7 +84,7 @@ def map_icon(rating, type, number=None):
     layer = apply(rating_icon, type_icon, number_icons)
     result_image = Image.composite(layer, rating_icon, layer)
 
-    out_str = StringIO()
+    out_str = BytesIO()
     result_image.save(out_str, 'PNG')
     ret = out_str.getvalue()
     out_str.close()

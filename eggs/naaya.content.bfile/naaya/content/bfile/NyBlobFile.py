@@ -73,14 +73,14 @@ def handleIfModifiedSince(instance, REQUEST, RESPONSE):
         # This happens to be what RFC2616 tells us to do in the face of an
         # invalid date.
         try:
-            mod_since = long(DateTime(header).timeTime())
+            mod_since = int(DateTime(header).timeTime())
         except:
             mod_since = None
         if mod_since is not None:
             if instance._p_mtime:
-                last_mod = long(instance._p_mtime)
+                last_mod = int(instance._p_mtime)
             else:
-                last_mod = long(0)
+                last_mod = 0
             if last_mod > 0 and last_mod <= mod_since:
                 RESPONSE.setStatus(304)
                 return True
@@ -112,14 +112,14 @@ def handleRequestRange(instance, length, REQUEST, RESPONSE):
                 # Date
                 date = if_range.split(';')[0]
                 try:
-                    mod_since = long(DateTime(date).timeTime())
+                    mod_since = int(DateTime(date).timeTime())
                 except:
                     mod_since = None
                 if mod_since is not None:
                     if instance._p_mtime:
-                        last_mod = long(instance._p_mtime)
+                        last_mod = int(instance._p_mtime)
                     else:
-                        last_mod = long(0)
+                        last_mod = 0
                     if last_mod > mod_since:
                         # Modified, so send a normal response. We delete
                         # the ranges, which causes us to skip to the 200

@@ -259,24 +259,24 @@ def importNyPublication(self, param, id, attrs, content, properties,
 
             ob = _create_NyPublication_object(
                 self, id, id, '',
-                self.utEmptyToNone(attrs['contributor'].encode('utf-8')))
-            ob.sortorder = attrs['sortorder'].encode('utf-8')
-            ob.discussion = abs(int(attrs['discussion'].encode('utf-8')))
+                self.utEmptyToNone(attrs['contributor']))
+            ob.sortorder = attrs['sortorder']
+            ob.discussion = abs(int(attrs['discussion']))
 
             for property, langs in properties.items():
                 [ob._setLocalPropValue(property, lang, langs[lang]) for
                  lang in langs if langs[lang] != '']
             ob.approveThis(
-                approved=abs(int(attrs['approved'].encode('utf-8'))),
+                approved=abs(int(attrs['approved'])),
                 approved_by=self.utEmptyToNone(
-                    attrs['approved_by'].encode('utf-8')))
-            if attrs['releasedate'].encode('utf-8') != '':
-                ob.setReleaseDate(attrs['releasedate'].encode('utf-8'))
+                    attrs['approved_by']))
+            if attrs['releasedate'] != '':
+                ob.setReleaseDate(attrs['releasedate'])
             ob.checkThis(
-                attrs['validation_status'].encode('utf-8'),
-                attrs['validation_comment'].encode('utf-8'),
-                attrs['validation_by'].encode('utf-8'),
-                attrs['validation_date'].encode('utf-8'))
+                attrs['validation_status'],
+                attrs['validation_comment'],
+                attrs['validation_by'],
+                attrs['validation_date'])
             ob.import_comments(discussion)
             self.recatalogNyObject(ob)
 

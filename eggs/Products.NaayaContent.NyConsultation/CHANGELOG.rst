@@ -1,6 +1,7 @@
 1.1.4 (unreleased)
 ------------------
 * Fix the question list and deleting ratings [dumitval]
+* Fix sorting reviews by rating [dumitval]
 
 1.1.3 (2011-11-14)
 ------------------

@@ -1,5 +1,6 @@
 0.0.10 (unreleased)
 ------------------
+* Fix adding a best practice with a file and no title [dumitval]
 
 0.0.9 (2022-01-21)
 ------------------

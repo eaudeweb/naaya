@@ -1,5 +1,6 @@
 1.1.10 (unreleased)
 ------------------
+* Fix the XML import storing text fields as bytes [dumitval]
 
 1.1.9 (2015-03-12)
 ------------------

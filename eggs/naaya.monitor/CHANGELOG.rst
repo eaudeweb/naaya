@@ -1,5 +1,6 @@
 1.3 (unreleased)
 =======================
+* Fix the blob usage statistics [dumitval]
 
 1.2 (2019-11-29)
 =======================

@@ -1,6 +1,7 @@
 1.4.29 (unreleased)
 --------------------
 * Fix the fix_nyblobs update script [dumitval]
+* Fix the If-Modified-Since and If-Range checks of file downloads [dumitval]
 
 1.4.28 (2023-02-07)
 --------------------

@@ -672,7 +672,7 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
 
         if rating not in self.getRatingTitles(): return self.sort_reviews_page()
         reviews = [x for x in self.get_reviews()]
-        reviews.sort(lambda x, y: cmp(int(y.getRatings()[rating]), int(x.getRatings()[rating])))
+        reviews.sort(key=lambda x: int(x.getRatings()[rating]), reverse=True)
         return reviews
 
     security.declareProtected(PERMISSION_VIEW_CONSULTATION, 'sort_reviews_page')

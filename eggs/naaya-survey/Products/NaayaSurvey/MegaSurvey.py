@@ -126,11 +126,9 @@ class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
     def download(self, REQUEST=None, RESPONSE=None):
         """returns all the answers in a csv file"""
         def stringify(value):
-            if not isinstance(value, str):
-                value = str(value)
-            if isinstance(value, str):
-                return str(value, 'utf-8')
-            return value
+            if isinstance(value, bytes):
+                return value.decode('utf-8')
+            return value if isinstance(value, str) else str(value)
 
         def all_stringify(row):
             return [stringify(value) for value in row]

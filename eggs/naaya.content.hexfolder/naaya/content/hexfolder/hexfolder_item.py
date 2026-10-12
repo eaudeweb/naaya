@@ -4,7 +4,7 @@ import sys
 
 from AccessControl.class_init import InitializeClass
 from PIL import Image
-from io import StringIO
+from io import BytesIO
 from App.FactoryDispatcher import FactoryDispatcher
 from App.ImageFile import ImageFile
 from AccessControl import ClassSecurityInfo
@@ -250,18 +250,18 @@ def importNyHexfolder(self, param, id, attrs, content, properties, discussion, o
                 try: self.manage_delObjects([id])
                 except: pass
 
-            ob = _create_NyHexfolder_object(self, id, self.utEmptyToNone(attrs['contributor'].encode('utf-8')))
-            ob.sortorder = attrs['sortorder'].encode('utf-8')
+            ob = _create_NyHexfolder_object(self, id, self.utEmptyToNone(attrs['contributor']))
+            ob.sortorder = attrs['sortorder']
             for i in range(5):
-                setattr(ob, "picture_" + str(i), self.utBase64Decode(attrs['picture_' + str(i)].encode('utf-8')))
-            ob.resourceurl = attrs['resourceurl'].encode('utf-8')
+                setattr(ob, "picture_" + str(i), self.utBase64Decode(attrs['picture_' + str(i)]))
+            ob.resourceurl = attrs['resourceurl']
 
             for property, langs in properties.items():
                 [ ob._setLocalPropValue(property, lang, langs[lang]) for lang in langs if langs[lang]!='' ]
-            ob.approveThis(approved=abs(int(attrs['approved'].encode('utf-8'))),
-                approved_by=self.utEmptyToNone(attrs['approved_by'].encode('utf-8')))
-            if attrs['releasedate'].encode('utf-8') != '':
-                ob.setReleaseDate(attrs['releasedate'].encode('utf-8'))
+            ob.approveThis(approved=abs(int(attrs['approved'])),
+                approved_by=self.utEmptyToNone(attrs['approved_by']))
+            if attrs['releasedate'] != '':
+                ob.setReleaseDate(attrs['releasedate'])
             ob.import_comments(discussion)
             self.recatalogNyObject(ob)
 
@@ -281,15 +281,15 @@ class hexfolder_item(Implicit, NyContentData):
             if hasattr(p_picture, 'filename'):
                 if p_picture.filename != '':
                     l_read = p_picture.read()
-                    if l_read != '':
+                    if l_read:
                         p_picture.seek(0)
                         p_picture = Image.open(p_picture)
                         format = p_picture.format
                         aspect = float(p_picture.size[0]) / float(
                             p_picture.size[1])
                         p_picture = p_picture.resize((640, int(640/aspect)),
-                                                     Image.ANTIALIAS)
-                        picture = StringIO()
+                                                     Image.LANCZOS)
+                        picture = BytesIO()
                         p_picture.save(picture, format)
                         picture.seek(0)
                         setattr(self, "picture_%s" % count, picture.read())

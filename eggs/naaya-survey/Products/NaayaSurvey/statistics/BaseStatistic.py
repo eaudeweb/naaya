@@ -88,7 +88,7 @@ class BaseStatistic(SimpleItem, LocalPropertyManager):
         im.load()
         height = im.size[1]
         if len(im.split()) == 4:
-            r, g, b, a = img.split()
+            r, g, b, a = im.split()
             im = Image.merge("RGB", (r, g, b))
         file_name = genRandomId(p_length=8)+'.bmp'
         im.save(path.join(temp_folder, file_name), 'BMP')
@@ -105,7 +105,7 @@ class BaseStatistic(SimpleItem, LocalPropertyManager):
         im.load()
         height = im.size[1]
         if len(im.split()) == 4:
-            r, g, b, a = img.split()
+            r, g, b, a = im.split()
             im = Image.merge("RGB", (r, g, b))
         file_name = genRandomId(p_length=8)+'.bmp'
         im = im.resize((width, height), Image.LANCZOS)

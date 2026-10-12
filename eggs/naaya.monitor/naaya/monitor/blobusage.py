@@ -30,11 +30,10 @@ def blobstorage_stats(app):
                 else:
                     stats[s_id]['objects'] += 1
                     if bfile.meta_type == 'Naaya Localized Blob File':
-                        sizes = 0
+                        sizes = []
                         for lg in bfile._versions.values():
                             stats[s_id]['versions'] += len(lg)
-                            sizes = reduce(operator.add,
-                                           [v.size or 0 for v in lg], sizes)
+                            sizes.extend(v.size or 0 for v in lg)
                     else:
                         try:
                             stats[s_id]['versions'] += len(
@@ -44,8 +43,7 @@ def blobstorage_stats(app):
                         except AttributeError:
                             stats[s_id]['versions'] += len(bfile._versions)
                             sizes = [v.size or 0 for v in bfile._versions]
-                    stats[s_id]['du'] = reduce(operator.add, sizes,
-                                               stats[s_id]['du'])
+                    stats[s_id]['du'] += sum(sizes)
     return (stats, time.time())
 
 

@@ -1,6 +1,10 @@
 Changelog
 =========
 
+0.5 (unreleased)
+----------------
+* Fix the products JSON listing on Zope 5 [dumitval]
+
 0.2 (2010-07-26)
 ----------------
 

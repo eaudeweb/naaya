@@ -19,8 +19,8 @@
 
 #Python imports
 
-#Zope imports
-# import Globals removed
+import os
+
 #Product imports
 
 NAAYANETREPOSITORY_PRODUCT_NAME = 'NaayaNetRepository'

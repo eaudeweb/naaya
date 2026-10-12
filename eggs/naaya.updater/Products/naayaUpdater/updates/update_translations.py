@@ -44,6 +44,8 @@ def read_po(filehandler, overwrite_with_empty=False):
 
     filehandler.seek(0)
     for cnt, line in enumerate(filehandler):
+        if isinstance(line, bytes):
+            line = line.decode('utf-8')  # only utf-8 files are accepted
         line = line.strip()
         if not line or line.startswith('#'):
             continue
@@ -79,7 +81,7 @@ def read_po(filehandler, overwrite_with_empty=False):
             if match is not None:
                 msgid = match.groups()[0]
         else:
-            raise Error('Undefined state in parsing .po file')
+            raise ValueError('Undefined state in parsing .po file')
 
     return data
 

@@ -17,8 +17,8 @@
 # Ghica Alexandru, Finsiel Romania
 
 
-#Zope imports
-# import Globals removed
+import os
+
 #product name
 NAAYATHESAURUS_PRODUCT_NAME =        'Naaya Thesaurus'
 NAAYATHESAURUS_PATH =                os.path.dirname(os.path.abspath(__file__))
