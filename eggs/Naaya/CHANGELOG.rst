@@ -1,4 +1,7 @@
-6.0.0 (unreleased)
+6.0.1 (unreleased)
+------------------
+
+6.0.0 (2026-10-12)
 ------------------
 * Port to Python 3 and Zope 5 [dumitval]
 * Remove the contentratings dependency and the content rating feature [dumitval]
