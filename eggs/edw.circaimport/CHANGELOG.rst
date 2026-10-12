@@ -1,5 +1,7 @@
-1.3.15 (unreleased)
+2.0.0 (unreleased)
 ------------------
+* Port to Python 3 and Zope 5 [dumitval]
+* Require Naaya >= 6.0.1 and naaya.groupware >= 2.0.0 [dumitval]
 * Use PEP 420 namespace packages [dumitval]
 * Fix the zexp copy failing to read the export path from the Zope 5
   export message [dumitval]
