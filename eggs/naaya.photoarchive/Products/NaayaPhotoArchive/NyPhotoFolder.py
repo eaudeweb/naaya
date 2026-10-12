@@ -57,7 +57,7 @@ from .permissions import PERMISSION_ADD_PHOTO
 from .photo_archive import photo_archive_base
 from zope.deprecation import deprecate
 from . import NyPhoto
-import simplejson as json
+import json
 import logging
 DEFAULT_SCHEMA = {}
 DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)

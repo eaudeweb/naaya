@@ -56,7 +56,7 @@ from zope.deprecation import deprecate
 from zope.interface import implementer
 import os
 import re
-import simplejson as json
+import json
 #import sys
 
 DEFAULT_SCHEMA = {}
