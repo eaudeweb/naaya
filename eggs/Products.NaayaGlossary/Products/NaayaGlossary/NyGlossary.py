@@ -38,7 +38,7 @@ from . import NyGlossaryFolder
 import Products
 import logging
 import lxml.etree
-import simplejson as json
+import json
 import transaction
 
 log = logging.getLogger('Products.NaayaGlossary')

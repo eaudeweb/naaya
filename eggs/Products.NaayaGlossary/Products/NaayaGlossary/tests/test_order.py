@@ -1,10 +1,7 @@
 """ Ordering of the Glossary """
 import transaction
 import urllib.parse
-try:
-    import simplejson as json
-except ImportError:
-    import json
+import json
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 from . import helpers
 
