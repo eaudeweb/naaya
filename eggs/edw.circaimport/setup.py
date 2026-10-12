@@ -1,10 +1,10 @@
-from setuptools import setup, find_packages
+from setuptools import setup, find_namespace_packages
 
 setup(name='edw.circaimport',
       version='1.3.15',
       author='Eau de Web',
       author_email='office@eaudeweb.ro',
-      packages=find_packages(),
+      packages=find_namespace_packages(include=['edw.*']),
       include_package_data=True,
       zip_safe=False,
       entry_points={'console_scripts':

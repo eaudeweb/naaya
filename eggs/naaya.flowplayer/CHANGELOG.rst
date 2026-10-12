@@ -1,5 +1,6 @@
 1.1.8 (unreleased)
 ------------------
+* Use PEP 420 namespace packages [dumitval]
 
 1.1.7 (2015-10-15)
 ------------------

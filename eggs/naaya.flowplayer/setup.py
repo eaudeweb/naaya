@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import setup, find_namespace_packages
 
 setup(name='naaya.flowplayer',
       version='1.1.8',
@@ -13,7 +13,7 @@ setup(name='naaya.flowplayer',
       author_email='alin.voinea@eaudeweb.ro',
       url='http://naaya.eaudeweb.ro',
       license='GPL',
-      packages=find_packages(exclude=['ez_setup']),
+      packages=find_namespace_packages(include=['naaya.*']),
       include_package_data=True,
       zip_safe=False,
       install_requires=[

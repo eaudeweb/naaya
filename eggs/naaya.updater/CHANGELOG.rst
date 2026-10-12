@@ -8,6 +8,7 @@
   Files to blobs [dumitval]
 * Replace the deprecated PersistentDict with PersistentMapping and rstk.name
   with rstk['name'] in the update scripts [dumitval]
+* Use PEP 420 namespace packages [dumitval]
 
 1.2.32 (2019-11-07)
 -------------------

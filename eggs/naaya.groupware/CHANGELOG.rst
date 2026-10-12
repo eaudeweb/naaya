@@ -2,6 +2,7 @@
 -------------------
 * Fix the member search on interest groups with an LDAP source [dumitval]
 * Fix the interest group access request email [dumitval]
+* Use PEP 420 namespace packages [dumitval]
 
 1.4.68 (2022-04-08)
 -------------------

@@ -12,7 +12,7 @@ setup(
     author='Eau de Web',
     author_email='office@eaudeweb.ro',
     license='MPL',
-    packages=find_namespace_packages(exclude=['ez_setup']),
+    packages=find_namespace_packages(include=['Products.*']),
     include_package_data=True,
     zip_safe=False,
     install_requires=[

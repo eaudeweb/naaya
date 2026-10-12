@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import setup, find_namespace_packages
 
 import sys
 extra_requires = []
@@ -10,7 +10,7 @@ setup(name='naaya.ldapdump',
       author='Eau de Web',
       author_email='office@eaudeweb.ro',
       url='http://naaya.eaudeweb.ro',
-      packages=find_packages(),
+      packages=find_namespace_packages(include=['naaya.*']),
       keywords='NAAYA NAAYALDAPDUMP LDAPDUMP Zope',
       include_package_data=True,
       zip_safe=False,

@@ -45,6 +45,7 @@
   ffmpeg detection, the object event imports, PersistentDict and html2text
   [dumitval]
 * Log the content type registration messages at info level [dumitval]
+* Use PEP 420 namespace packages [dumitval]
 
 5.0.34 (2026-10-07)
 -------------------

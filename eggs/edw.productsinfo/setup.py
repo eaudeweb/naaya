@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import setup, find_namespace_packages
 import os
 
 NAME = 'edw.productsinfo'
@@ -19,7 +19,7 @@ setup(name=NAME,
       author_email='office@eaudeweb.ro',
       url='http://naaya.eaudeweb.ro',
       license='MPL',
-      packages=find_packages(exclude=['ez_setup']),
+      packages=find_namespace_packages(include=['edw.*']),
       include_package_data=True,
       zip_safe=False,
       install_requires=[

@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.0.0 (unreleased)
+------------------
+* Port to Python 3 and Zope 5 [dumitval]
+* Use PEP 420 namespace packages [dumitval]
+
 1.2.5 (2011-09-23)
 ------------------
 * New release for CHM server migration to use the eggshop (no more svn)

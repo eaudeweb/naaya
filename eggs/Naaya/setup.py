@@ -1,5 +1,5 @@
 ''' Naaya installer '''
-from setuptools import setup, find_packages
+from setuptools import setup, find_namespace_packages
 
 setup(name='Naaya',
       version='6.0.0',
@@ -27,7 +27,7 @@ setup(name='Naaya',
               ' :: Application Frameworks',
       ],
 
-      packages=find_packages(),
+      packages=find_namespace_packages(include=['Products.*', 'naaya.*']),
       include_package_data=True,
       zip_safe=False,
       install_requires=[

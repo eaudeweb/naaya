@@ -1,6 +1,7 @@
 1.3 (unreleased)
 =======================
 * Fix the blob usage statistics [dumitval]
+* Use PEP 420 namespace packages [dumitval]
 
 1.2 (2019-11-29)
 =======================

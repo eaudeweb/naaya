@@ -2,6 +2,7 @@
 -------------------
 * Fix the topic restriction page offering Manager, Anonymous and Owner, and
   replies shown twice in threads [dumitval]
+* Use PEP 420 namespace packages [dumitval]
 
 1.2.21 (2015-08-28)
 -------------------

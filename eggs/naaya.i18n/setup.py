@@ -1,10 +1,10 @@
-from setuptools import setup, find_packages
+from setuptools import setup, find_namespace_packages
 
 setup(name='naaya.i18n',
       version='1.1.11',
       author='Eau de Web',
       author_email='office@eaudeweb.ro',
-      packages=find_packages(),
+      packages=find_namespace_packages(include=['naaya.*']),
       include_package_data=True,
       zip_safe=False,
       entry_points="""

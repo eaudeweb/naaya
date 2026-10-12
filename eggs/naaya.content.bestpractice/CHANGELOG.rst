@@ -1,6 +1,7 @@
 0.0.10 (unreleased)
 ------------------
 * Fix adding a best practice with a file and no title [dumitval]
+* Use PEP 420 namespace packages [dumitval]
 
 0.0.9 (2022-01-21)
 ------------------

@@ -1,4 +1,10 @@
 
+Version 2.0 (unreleased)
+
+- Port to Python 3 and Zope 5 [dumitval]
+
+- Use PEP 420 namespace packages [dumitval]
+
 Version 1.2
 
 - Cookies set on an HTTPS connection are now marked as secure, meaning

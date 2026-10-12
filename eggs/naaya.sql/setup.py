@@ -1,6 +1,6 @@
 """ Installer
 """
-from setuptools import setup, find_packages
+from setuptools import setup, find_namespace_packages
 from sys import version_info
 
 requires = []
@@ -13,7 +13,7 @@ setup(name='naaya.sql',
       author='Eau de Web',
       author_email='office@eaudeweb.ro',
       url='http://naaya.eaudeweb.ro',
-      packages=find_packages(),
+      packages=find_namespace_packages(include=['naaya.*']),
       include_package_data=True,
       zip_safe=False,
       install_requires=requires,

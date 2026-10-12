@@ -1,6 +1,7 @@
 0.0.8 (unreleased)
 ------------------
 * Fix the XML import storing text fields as bytes [dumitval]
+* Use PEP 420 namespace packages [dumitval]
 
 0.0.7 (2019-04-18)
 ------------------

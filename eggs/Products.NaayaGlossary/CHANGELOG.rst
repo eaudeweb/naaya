@@ -2,6 +2,7 @@
 ------------------
 * Fix the TMX and XLIFF import [dumitval]
 * Fix the glossary SKOS RDF export [dumitval]
+* Use PEP 420 namespace packages [dumitval]
 
 1.1.21 (2018-10-05)
 ------------------

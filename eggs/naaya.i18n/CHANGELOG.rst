@@ -5,6 +5,7 @@
 * Fix the .po import [dumitval]
 * Fix the spreadsheet import and export of translations [dumitval]
 * Fix sorting messages on the Translations admin page [dumitval]
+* Use PEP 420 namespace packages [dumitval]
 
 1.1.10 (2017-12-07)
 -------------------

@@ -1,6 +1,7 @@
 0.4 (unreleased)
 ----------------
 * Fix adding a good practice with a file and no title [dumitval]
+* Use PEP 420 namespace packages [dumitval]
 
 0.3 (2022-04-01)
 ----------------
