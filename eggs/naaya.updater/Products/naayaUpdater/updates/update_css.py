@@ -74,10 +74,10 @@ class UpdateCSS(UpdateScript):
                 original_blocks
             ]
 
-        declaration_pattern = ('[[\t\n\r]*[a-zA-Z0-9\.# -_:@]+[\t\n\r]*\{.*'
+        declaration_pattern = ('[[\t\n\r]*[a-zA-Z0-9\\.# -_:@]+[\t\n\r]*\\{.*'
                                '[\t\n\r]*]*')
-        block_pattern = ('(\/\*[^.]+\*\/\n+)?([\t]*[a-zA-Z0-9\.# -_:@\s\n\r]+['
-                         '\t\s]*\{[^}]+\})')
+        block_pattern = ('(\\/\\*[^.]+\\*\\/\n+)?([\t]*[a-zA-Z0-9\\.# -_:@\\s\n\r]+['
+                         '\t\\s]*\\{[^}]+\\})')
 
         form = self.REQUEST.form
         new_css = form.get('new_css', '')

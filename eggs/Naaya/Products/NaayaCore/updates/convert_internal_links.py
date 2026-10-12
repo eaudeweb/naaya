@@ -43,7 +43,7 @@ class UpdateConvertInternalScripts(UpdateScript):
                                 old_value = el.get(attr)
                                 if not old_value:
                                     continue
-                                split = filter(None, old_value.split('/'))
+                                split = [p for p in old_value.split('/') if p]
                                 if split[0] in ['http:', 'https:']:
                                     continue
                                 if split[0].startswith('mailto:'):

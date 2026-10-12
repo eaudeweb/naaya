@@ -1,5 +1,7 @@
 # -*- coding=utf-8 -*-
 
+from functools import reduce
+
 from AccessControl import ClassSecurityInfo
 from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile

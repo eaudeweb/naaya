@@ -207,7 +207,7 @@ def relative_object_path(obj, ancestor):
     warnings.warn("naaya.core.utils.relative_object_path moved "
                   "to naaya.core.zope2util",
                   DeprecationWarning, stacklevel=2)
-    import zope2util
+    from naaya.core import zope2util
     return zope2util.relative_object_path(obj, ancestor)
 
 
@@ -215,7 +215,7 @@ def path_in_site(obj):
     warnings.warn("naaya.core.utils.path_in_site moved "
                   "to naaya.core.zope2util",
                   DeprecationWarning, stacklevel=2)
-    import zope2util
+    from naaya.core import zope2util
     return zope2util.path_in_site(obj)
 
 
@@ -223,7 +223,7 @@ def ofs_path(obj):
     warnings.warn("naaya.core.utils.ofs_path moved "
                   "to naaya.core.zope2util",
                   DeprecationWarning, stacklevel=2)
-    import zope2util
+    from naaya.core import zope2util
     return zope2util.ofs_path(obj)
 
 

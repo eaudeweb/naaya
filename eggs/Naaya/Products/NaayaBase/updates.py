@@ -109,7 +109,7 @@ class RemoveNyContentProps(UpdateScript):
             objects_local_props[meta_type] = localized_props
 
         for ob in portal.getCatalogedObjectsA(
-                meta_type=objects_local_props.keys()):
+                meta_type=list(objects_local_props)):
             for prop in objects_local_props[ob.meta_type]:
                 if prop in ob.__dict__.keys():
                     value = getattr(ob, prop)
@@ -139,7 +139,7 @@ class AddLastModificationProperty(UpdateScript):
 
     def _update(self, portal):
         schema_tool = portal.getSchemaTool()
-        meta_types = schema_tool.listSchemas().keys()
+        meta_types = list(schema_tool.listSchemas())
         for ob in portal.getCatalogedObjectsA(meta_type=meta_types):
             if not hasattr(ob, 'last_modification'):
                 ob.last_modification = DateTime(ob._p_mtime)
@@ -177,7 +177,7 @@ class RemoveDuplicateImages(UpdateScript):
                     for widget in textarea_widgets]
             obj_textarea_props[meta_type] = textarea_props
         for ob in portal.getCatalogedObjectsA(
-                meta_type=obj_textarea_props.keys()):
+                meta_type=list(obj_textarea_props)):
             for dup_id in dup_images.keys():
                 for prop_id in obj_textarea_props[ob.meta_type]:
                     for lang in portal.gl_get_languages():
@@ -189,7 +189,7 @@ class RemoveDuplicateImages(UpdateScript):
                                         dup_id, dup_images[dup_id]))
                             self.log.debug('Object %s, image id changed from %s to %s'
                                     % (ob.absolute_url(), dup_id, dup_images[dup_id]))
-        portal.images.manage_delObjects(dup_images.keys())
+        portal.images.manage_delObjects(list(dup_images))
         for image_id in dup_images.keys():
             self.log.debug('Deleted duplicated image: %s' % image_id)
         return True

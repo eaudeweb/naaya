@@ -1381,8 +1381,8 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         """
         Returns the list of main topic folder objects
         """
-        return filter(lambda ob: ob is not None,
-                      (self.utGetObject(path) for path in self.maintopics))
+        return [ob for ob in (self.utGetObject(path) for path in self.maintopics)
+                if ob is not None]
 
     security.declarePublic('getMainTopic')
 

@@ -19,7 +19,7 @@ class ExportContent(UpdateScript):
         # meta_types = schema_tool.listSchemas().keys()
         process_export = {'Naaya News': self.export_news,
                           'Naaya Event': self.export_events}
-        for ob in portal.getCatalogedObjectsA(meta_type=process_export.keys()):
+        for ob in portal.getCatalogedObjectsA(meta_type=list(process_export)):
             url = path_in_site(ob)
             portal_id = portal.getId()
             ob_data = format_DateTime(dict(ob.__dict__))
@@ -28,7 +28,7 @@ class ExportContent(UpdateScript):
             ob_data = process_export[ob.meta_type](ob, ob_data, portal_id)
 
             data_filename = os.path.join(ob_data['folder'], ob.getId()+'.json')
-            with open(data_filename, 'wb') as f:
+            with open(data_filename, 'w') as f:
                 f.write(json.dumps(ob_data))
                 self.log.info(
                     'Exported %s %s' % (ob.meta_type, ob.absolute_url()))

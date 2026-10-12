@@ -1,5 +1,6 @@
 1.4.29 (unreleased)
 --------------------
+* Fix the fix_nyblobs update script [dumitval]
 
 1.4.28 (2023-02-07)
 --------------------

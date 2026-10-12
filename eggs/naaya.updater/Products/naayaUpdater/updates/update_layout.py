@@ -5,7 +5,8 @@ from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens
 
 from Products.naayaUpdater.updates import UpdateScript
-from Products.naayaUpdater.utils import (get_portals, get_portal,
+from Products.Naaya.managers.skel_parser import skel_parser
+from Products.naayaUpdater.utils import (create_signature, get_portals, get_portal,
                                          get_portal_path, readFile)
 
 class UpdateLayout(UpdateScript):

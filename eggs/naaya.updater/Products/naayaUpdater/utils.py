@@ -44,10 +44,9 @@ def readFile(p_path, p_flag='r'):
 
 def create_signature(s):
     if s is not None:
-        m = sha.new(s)
-        res = m.hexdigest()
-        m = None
-        return res
+        if isinstance(s, str):
+            s = s.encode('utf-8')
+        return hashlib.sha1(s).hexdigest()
     else:
         return s
 

@@ -1,7 +1,7 @@
 #Python imports
 import os
 import logging
-from io import BytesIO
+from io import StringIO
 import traceback
 
 from zope.interface import implementer
@@ -52,7 +52,7 @@ class UpdateScript(Item, Acquisition.Implicit):
     def get_authors_string(self):
         if len(self.authors) == 0:
             return ''
-        return reduce(lambda x, y: x + ', ' + y, self.authors)
+        return ', '.join(self.authors)
 
     security.declareProtected(view_management_screens, 'get_priority_string')
     def get_priority_string(self):

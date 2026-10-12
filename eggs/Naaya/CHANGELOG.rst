@@ -3,6 +3,11 @@
 * Use https OSM tiles and Nominatim geocoding in the OpenLayers map engine [dumitval]
 * Zoom the OpenLayers map only on ctrl/cmd + mouse wheel and show a hint on plain wheel [dumitval]
 * Skip the balloon handling in the OpenLayers map engine when a cluster click zooms in [dumitval]
+* Fix the cleanup_mainsections update script [dumitval]
+* Fix the delete_old_properties, add_last_modification and export_content
+  update scripts [dumitval]
+* Fix the convert_internal_links update script [dumitval]
+* Fix the deprecated path helpers in naaya.core.utils [dumitval]
 
 5.0.31 (2025-09-09)
 -------------------

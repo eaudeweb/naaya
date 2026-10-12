@@ -83,7 +83,7 @@ class UpdateDynamicProp2Schema(UpdateScript):
                         elif isinstance(prop.values, dict):
                             #An existing list/reftree was selected
                             assert len(prop.values.keys()) == 1
-                            args.update({'list_id': prop.values.keys()[0]})
+                            args.update({'list_id': list(prop.values)[0]})
                         else:
                             raise ValueError('unexpected values type')
                     widget = schema.addWidget(prop.id, **args)

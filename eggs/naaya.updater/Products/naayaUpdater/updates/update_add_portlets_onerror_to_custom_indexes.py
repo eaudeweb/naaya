@@ -41,13 +41,13 @@ class UpdateAddPortletsOnerrorToCustomIndexes(UpdateScript):
         return True
 
 def add_onerror_to_portlets_in_tal(tal):
-    left = '<(tal:block|span)\s+(tal:)?(content|replace)="structure python:item\\(\\{\'here\': here, \'portlet_macro\': \'portlet_left_macro\'\\}\\)" ?/>'
-    center = '<(tal:block|span)\s+(tal:)?(content|replace)="structure python:item\\(\\{\'here\': here, \'portlet_macro\': \'portlet_center_macro\'\\}\\)" ?/>'
-    right = '<(tal:block|span)\s+(tal:)?(content|replace)="structure python:item\\(\\{\'here\': here, \'portlet_macro\': \'portlet_right_macro\'\\}\\)" ?/>'
+    left = '<(tal:block|span)\\s+(tal:)?(content|replace)="structure python:item\\(\\{\'here\': here, \'portlet_macro\': \'portlet_left_macro\'\\}\\)" ?/>'
+    center = '<(tal:block|span)\\s+(tal:)?(content|replace)="structure python:item\\(\\{\'here\': here, \'portlet_macro\': \'portlet_center_macro\'\\}\\)" ?/>'
+    right = '<(tal:block|span)\\s+(tal:)?(content|replace)="structure python:item\\(\\{\'here\': here, \'portlet_macro\': \'portlet_right_macro\'\\}\\)" ?/>'
 
-    span_left_new = '<span\s+(tal:)?(content|replace)="structure python:item\\(\\{\'here\': here, \'portlet_macro\': \'portlet_left_macro\'\\}\\)" on-error="python:here.log_page_error\\(error\\)" />'
-    span_center_new = '<span\s+(tal:)?(content|replace)="structure python:item\\(\\{\'here\': here, \'portlet_macro\': \'portlet_center_macro\'\\}\\)" on-error="python:here.log_page_error\\(error\\)" />'
-    span_right_new = '<span\s+(tal:)?(content|replace)="structure python:item\\(\\{\'here\': here, \'portlet_macro\': \'portlet_right_macro\'\\}\\)" on-error="python:here.log_page_error\\(error\\)" />'
+    span_left_new = '<span\\s+(tal:)?(content|replace)="structure python:item\\(\\{\'here\': here, \'portlet_macro\': \'portlet_left_macro\'\\}\\)" on-error="python:here.log_page_error\\(error\\)" />'
+    span_center_new = '<span\\s+(tal:)?(content|replace)="structure python:item\\(\\{\'here\': here, \'portlet_macro\': \'portlet_center_macro\'\\}\\)" on-error="python:here.log_page_error\\(error\\)" />'
+    span_right_new = '<span\\s+(tal:)?(content|replace)="structure python:item\\(\\{\'here\': here, \'portlet_macro\': \'portlet_right_macro\'\\}\\)" on-error="python:here.log_page_error\\(error\\)" />'
 
     left_new = '<tal:block content="structure python:item({\'here\': here, \'portlet_macro\': \'portlet_left_macro\'})" on-error="python:here.log_page_error(error)" />'
     center_new = '<tal:block content="structure python:item({\'here\': here, \'portlet_macro\': \'portlet_center_macro\'})" on-error="python:here.log_page_error(error)" />'

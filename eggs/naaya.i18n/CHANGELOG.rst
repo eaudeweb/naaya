@@ -1,5 +1,7 @@
 1.1.11 (unreleased)
 -------------------
+* Stop the LocalizerToNaayaI18n update when Products.Localizer is not installed
+  [dumitval]
 
 1.1.10 (2017-12-07)
 -------------------

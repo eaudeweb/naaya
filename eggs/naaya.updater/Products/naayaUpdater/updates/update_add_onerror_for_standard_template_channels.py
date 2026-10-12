@@ -37,8 +37,8 @@ class UpdateAddOnerrorForStandardTemplateChannels(UpdateScript):
         strs = []
 
         if re.search(pat(script_channels_start), tal) is not None:
-            if re.search('%s\s*%s' % (pat(script_channels_start), pat(onerror_start)), tal) is None:
-                pattern = '(\s*)%s((?:.|\n)*?)%s' % (pat(script_channels_start), pat(script_channels_end))
+            if re.search('%s\\s*%s' % (pat(script_channels_start), pat(onerror_start)), tal) is None:
+                pattern = '(\\s*)%s((?:.|\n)*?)%s' % (pat(script_channels_start), pat(script_channels_end))
                 replacement = '\\1%s\\1    %s\\2    %s\\1%s' % (script_channels_start, onerror_start, onerror_end, script_channels_end)
                 tal = re.sub(pattern, replacement, tal)
                 strs.append('changed script channels')
@@ -46,8 +46,8 @@ class UpdateAddOnerrorForStandardTemplateChannels(UpdateScript):
             strs.append("can't find script channels")
 
         if re.search(pat(local_channels_start), tal) is not None:
-            if re.search('%s\s*%s' % (pat(local_channels_start), pat(onerror_start)), tal) is None:
-                pattern = '(\s*)%s((?:.|\n)*?)%s' % (pat(local_channels_start), pat(local_channels_end))
+            if re.search('%s\\s*%s' % (pat(local_channels_start), pat(onerror_start)), tal) is None:
+                pattern = '(\\s*)%s((?:.|\n)*?)%s' % (pat(local_channels_start), pat(local_channels_end))
                 replacement = '\\1%s\\1    %s\\2    %s\\1%s' % (local_channels_start, onerror_start, onerror_end, local_channels_end)
                 tal = re.sub(pattern, replacement, tal)
                 strs.append('changed local channels')

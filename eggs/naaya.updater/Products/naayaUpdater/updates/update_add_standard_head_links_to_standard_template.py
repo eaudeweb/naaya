@@ -39,7 +39,7 @@ class UpdateAddStandardHeadLinksMacro(UpdateScript):
         if re.search(macro_start, tal) is not None:
             return True
 
-        pattern = '(\s*)%s((?:.|\n)*?)%s' % (slot_start, slot_end)
+        pattern = '(\\s*)%s((?:.|\n)*?)%s' % (slot_start, slot_end)
         replacement = '\\1%s\\1%s\\2%s\\1%s' % (slot_start, macro_start, macro_end, slot_end)
         tal = re.sub(pattern, replacement, tal)
         self.log.info(t % {'info': 'added macro',

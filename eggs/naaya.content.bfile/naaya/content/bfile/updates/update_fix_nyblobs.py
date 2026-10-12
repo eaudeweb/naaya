@@ -2,7 +2,7 @@
 __author__ = """Tiberiu Ichim"""
 
 from Products.naayaUpdater.updates import UpdateScript, PRIORITY
-from io import StringIO
+from io import BytesIO
 from os.path import join, isfile, isdir, exists
 import hashlib
 import logging
@@ -10,14 +10,13 @@ import mimetypes
 import os
 import re
 
-finder = re.compile('.*\.(\d+)\.*.*$')
+finder = re.compile(r'.*\.(\d+)\.*.*$')
 inter  = lambda x:int((finder.findall(x) or ['0'])[-1])
-sorter = lambda x, y:cmp(inter(x[1]), inter(y[1]))
 
 
 def hashfile(fpath, blocksize=65536):
     hasher = hashlib.md5()
-    with open(fpath) as afile:
+    with open(fpath, 'rb') as afile:
         buf = afile.read(blocksize)
         while len(buf) > 0:
             hasher.update(buf)
@@ -38,9 +37,9 @@ class UpdateFixNyBlobFile(UpdateScript):
 
     def get_content(self, folder, filename):
         path = join(folder, filename)
-        with open(path) as f:
+        with open(path, 'rb') as f:
             content = f.read()
-        sfile = StringIO(content)
+        sfile = BytesIO(content)
         if filename.endswith('.undo'):
             filename = filename[:-5]
         sfile.filename = filename
@@ -70,7 +69,7 @@ class UpdateFixNyBlobFile(UpdateScript):
         # if not other file is found there
 
         versions = [(abspath, f) for f in os.listdir(abspath) if isfile(join(abspath, f))]
-        versions = sorted(versions, sorter)
+        versions = sorted(versions, key=lambda v: inter(v[1]))
         for fpath, filename in versions:
             content = self.get_content(fpath, filename)
             obj._save_file(content, language=None, contributor='')
@@ -80,7 +79,7 @@ class UpdateFixNyBlobFile(UpdateScript):
             lpath = join(abspath, lang)
             if exists(lpath) and isdir(lpath):
                 versions = [f for f in os.listdir(lpath) if isfile(join(lpath, f))]
-                versions = sorted(versions, sorter)
+                versions = sorted(versions, key=inter)
                 for filename in versions:
                     content = self.get_content(lpath, filename)
                     obj._save_file(content, language=lang, contributor='')

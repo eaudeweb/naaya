@@ -84,7 +84,7 @@ class UpdateForms(UpdateScript):
                 try:
                     form_fs = portal_forms._default_form(form_id)
                 except KeyError as exc_error:
-                    zLOG.LOG('Naaya Updater', zLOG.ERROR, '%s: %s' % (portal.id, exc_error))
+                    self.log.error('%s: %s' % (portal.id, exc_error))
                     continue
                 form_zmi = portal_forms._getOb(form_id)
                 if form_fs and form_zmi:

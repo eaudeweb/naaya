@@ -50,10 +50,10 @@ class LocalizerToNaayaI18n(UpdateScript):
          * delete Localizer and portal_translations
 
         """
-        #if Localizer is None:
-        #    self.log.error('Migration unavailable when edw-localizer'
-        #                   ' not installed')
-        #    return False
+        if Localizer is None:
+            self.log.error('Migration unavailable when edw-localizer'
+                           ' not installed')
+            return False
 
         if isinstance(portal.getPortalI18n(), NaayaI18n):
             self.log.debug("Portal already uses naaya.i18n, skipping i18n init")

@@ -59,8 +59,8 @@ class UpdateUserManagementStyles(UpdateScript):
                     and obj.__name__.endswith('.css')):
                 continue
             self.log.debug(obj.absolute_url())
-            new_data = self.process_content(obj.data)
+            new_data = self.process_content(bytes(obj.data).decode('utf-8'))
             if new_data is None:
                 continue
-            obj.data = new_data
+            obj.update_data(new_data.encode('utf-8'))
         return True

@@ -31,10 +31,11 @@ class UpdateScriptsView(BrowserView):
                 ret.append((script, product))
 
         def sort_date(item):
+            # Scripts with an unparsable date go last, as None did on py2.
             try:
-                return strptime(item[0].creation_date, '%b %d, %Y')
+                return (1, strptime(item[0].creation_date, '%b %d, %Y'))
             except ValueError:
-                return None
+                return (0,)
         ret.sort(key=sort_date, reverse=True)
         return ret
 
