@@ -69,7 +69,8 @@ class NyContainer(Folder, NyCommentable, NyBase, NyPermissions, NyDublinCore):
         """
 
         roles = list(self.valid_roles())
-        filter(roles.remove, ['Administrator', 'Anonymous', 'Manager', 'Owner'])
+        roles = [r for r in roles
+                 if r not in ('Administrator', 'Anonymous', 'Manager', 'Owner')]
         return roles
 
     def has_restrictions(self):

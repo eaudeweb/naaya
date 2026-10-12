@@ -105,7 +105,7 @@ def findUsers(site, search_param, search_term):
     for source in auth_tool.getSources():
         acl_folder = source.getUserFolder()
         if schemaHasParam(acl_folder, search_param):
-            attrs = ['employeeType'] + acl_folder.getSchemaConfig().keys()
+            attrs = ['employeeType'] + list(acl_folder.getSchemaConfig())
             users = acl_folder.findUser(
                 search_param=search_param,
                 search_term=search_term,

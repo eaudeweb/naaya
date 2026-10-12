@@ -192,7 +192,7 @@ class NyFeed:
         @param item: feed item
         """
 
-        l_keys = item.keys()
+        l_keys = list(item.keys())
         if 'title' in l_keys:
             l_keys.remove('title')
         if 'link' in l_keys:

@@ -1670,9 +1670,8 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             try:
                 object_add_meth(language_code)
             except Exception as exc_error:
-                zLOG.LOG('NySite', zLOG.DEBUG,
-                         ('Could not add language %s for object %s: %s' %
-                          (language_code, x.absolute_url(1), exc_error)))
+                log.debug('Could not add language %s for object %s: %s',
+                          language_code, x.absolute_url(1), exc_error)
                 continue
 
     def gl_add_site_language_custom(self, language):
@@ -1695,9 +1694,8 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                 try:
                     object_del_meth(language)
                 except Exception as exc_error:
-                    zLOG.LOG('NySite', zLOG.DEBUG,
-                             'Could not delete language %s for object %s: %s'
-                             % (language, x.getId(), exc_error))
+                    log.debug('Could not delete language %s for object %s: %s',
+                              language, x.getId(), exc_error)
                     continue
 
     def gl_del_site_languages_custom(self, languages):
@@ -2222,8 +2220,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         try:
             f.write(json.dumps({'error_time': str(datetime.now()),
                                 'portal_url': self.get_portal_url(),
-                                # INSTANCE_HOME comes from Globals()
-                                'INSTANCE_HOME': INSTANCE_HOME,
+                                'INSTANCE_HOME': conf.instancehome,
                                 'error_type': str(error_type),
                                 'error_value': str(error_value)})
                     + '\n')
@@ -3301,8 +3298,8 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     def admin_ordermaintopics(self, positions=None, REQUEST=None):
         """ Save sortorder to maintopics by creating a new in the new order """
         if positions:
-            new_order = filter(lambda path: path in self.maintopics,
-                               positions.split('|'))
+            new_order = [path for path in positions.split('|')
+                         if path in self.maintopics]
             if len(new_order) == len(self.maintopics):
                 self.maintopics = new_order
                 self._p_changed = True

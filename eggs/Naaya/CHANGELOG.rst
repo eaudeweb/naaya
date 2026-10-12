@@ -10,6 +10,24 @@
 * Fix the deprecated path helpers in naaya.core.utils [dumitval]
 * Remove the background email address validation;
   email addresses are checked for syntax only [dumitval]
+* Fix folder listings and menus sorting sortorder as text (100 before 20)
+  [dumitval]
+* Fix self-registration with email confirmation and the XML import storing
+  empty pictures and files [dumitval]
+* Fix paginated lists with more than one page [dumitval]
+* Fix the translations CSV export [dumitval]
+* Fix photo zip downloads [dumitval]
+* Fix the network portals search and saving the internal search settings
+  [dumitval]
+* Fix role lists offering Manager, Anonymous and Owner [dumitval]
+* Fix deleting map symbols, links, selection list items, channel types,
+  namespaces, network portals and dynamic properties [dumitval]
+* Fix selection dynamic properties, the remote channel page and the user search
+  in meetings and consultation invitations [dumitval]
+* Fix anonymous unsubscribe, reordering main sections and the folder
+  restriction and logging admin pages [dumitval]
+* Fix adding or deleting a site language and the JSON error dump [dumitval]
+* Fix image uploads from the editor [dumitval]
 
 5.0.31 (2025-09-09)
 -------------------

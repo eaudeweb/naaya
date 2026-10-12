@@ -309,7 +309,8 @@ class symbols_tool:
 
     def deleteSymbol(self, ids):
         """ """
-        map(self.__deleteSymbol, ids)
+        for symbol_id in ids:
+            self.__deleteSymbol(symbol_id)
         self._p_changed = 1
 
     security = ClassSecurityInfo()

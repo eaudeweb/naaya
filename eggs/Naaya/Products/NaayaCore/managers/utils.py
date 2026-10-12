@@ -22,6 +22,7 @@ from io import StringIO
 from unidecode import unidecode
 from warnings import warn
 
+from App.config import getConfiguration
 from Products.PythonScripts.standard import url_quote, html_quote
 from DateTime import DateTime
 from OFS.ObjectManager import checkValidId
@@ -362,10 +363,10 @@ class list_utils:
         except TypeError:
             del u
         else:
-            return u.keys()
+            return list(u)
         # brute force
         u = []
-        for x in s:
+        for x in seq:
             if x not in u:
                 u.append(x)
         return u
@@ -518,7 +519,7 @@ class utils:
     def getObjectPaginator(self, objects_list, num_per_page=50, orphans=-1):
         """ Returns objects_list in pages."""
         if orphans == -1:
-            orphans = num_per_page * 20 / 100  # 20 %
+            orphans = num_per_page * 20 // 100  # 20 %
         return ObjectPaginator(objects_list, num_per_page, orphans)
 
     def utGenObjectId(self, s, num_chars=80, removelist=None):
@@ -633,23 +634,21 @@ class utils:
         def sort_key(obj):
             attr = getattr(obj, p_attr, None)
             if isinstance(attr, str):
+                attr = force_to_unicode(attr)
                 if lower:
-                    return (0, force_to_unicode(attr).lower())
-                else:
-                    return (0, force_to_unicode(attr))
-            elif attr is None:
-                return (1, '')
-            else:
-                return (0, str(attr))
+                    attr = attr.lower()
+            return py2_sort_key(attr)
         return sorted(p_list, key=sort_key, reverse=bool(p_desc))
 
     def utSortDictsListByKey(self, p_list, p_key, p_desc=1):
         """Sort a list of dicts by a key value"""
-        return sorted(p_list, key=lambda x: x[p_key], reverse=bool(p_desc))
+        return sorted(p_list, key=lambda x: py2_sort_key(x[p_key]),
+                      reverse=bool(p_desc))
 
     def utSortObjsListByMethod(self, p_list, p_method, p_desc=1):
         """Sort a list of objects by a method's return value"""
-        return sorted(p_list, key=lambda x: getattr(x, p_method)(),
+        return sorted(p_list,
+                      key=lambda x: py2_sort_key(getattr(x, p_method)()),
                       reverse=bool(p_desc))
 
     def utFilterObjsListByAttr(self, p_list, p_attr, p_value):
@@ -827,15 +826,19 @@ class utils:
         return 'attachment; filename*=%s' % encode_rfc2231(filename, 'utf-8')
 
     def utBase64Encode(self, p_string):
-        """ """
-        return base64.encodestring(p_string)
+        """ Base64-encode bytes (or utf-8 text) into an ascii str """
+        if isinstance(p_string, str):
+            p_string = p_string.encode('utf-8')
+        return base64.encodebytes(bytes(p_string)).decode('ascii')
 
     def utBase64Decode(self, p_string):
-        """ """
+        """ Decode base64 str or bytes, b'' if invalid """
+        if isinstance(p_string, str):
+            p_string = p_string.encode('ascii', 'ignore')
         try:
-            return base64.decodestring(p_string)
-        except:
-            return ''
+            return base64.decodebytes(p_string)
+        except (base64.binascii.Error, ValueError):
+            return b''
 
     def utShowSizeKb(self, p_size):
         """ transform a file size in KB """
@@ -1060,7 +1063,7 @@ class utils:
         @param objects: a list of objects
         @type objects: list
         """
-        path = CLIENT_HOME
+        path = getConfiguration().clienthome
         if not os.path.isdir(path):
             try:
                 os.mkdir(path)
@@ -1073,16 +1076,13 @@ class utils:
         for o in objects:
             sz = sz + float(o.get_size())
             timetuple = time.localtime()[:6]
-            filename = name + '/' + self.utToUtf8(o.id)
-            if isinstance(filename, str):
-                filename = filename.encode('utf-8')
-            zfi = ZipInfo(filename)
+            zfi = ZipInfo(name + '/' + o.getId())
             zfi.date_time = timetuple
             zfi.compress_type = ZIP_DEFLATED
             try:
                 zf.writestr(zfi, o.getZipData())
             except:
-                zf.writestr(zfi, '')
+                zf.writestr(zfi, b'')
         zf.close()
         stat = os.stat(tmpfile)
         content = open(tmpfile, 'rb').read()
@@ -1256,9 +1256,10 @@ class spreadsheet_file:
 
     def __init__(self, data, dialect='excel'):
         self.fname = tempfile.mktemp()
-        writer = csv.writer(open(self.fname, 'wb'), dialect)
-        for row in data:
-            writer.writerow(row)
+        with open(self.fname, 'w', newline='', encoding='utf-8') as f:
+            writer = csv.writer(f, dialect)
+            for row in data:
+                writer.writerow(row)
 
     def __str__(self):
         return self.fname
@@ -1272,9 +1273,10 @@ class tmpfile:
 
     def __init__(self, data):
         self.fname = tempfile.mktemp()
-        writer = csv.writer(open(self.fname, 'wb'))
-        for row in data:
-            writer.writerow(row)
+        with open(self.fname, 'w', newline='', encoding='utf-8') as f:
+            writer = csv.writer(f)
+            for row in data:
+                writer.writerow(row)
 
     def __str__(self):
         return self.fname
@@ -1319,33 +1321,37 @@ class InvalidStringError(Exception):
         return 'Invalid string: %s' % self.msg
 
 
+def py2_sort_key(value):
+    """Sort key ordering mixed values as Python 2 did: None, numbers, str, rest."""
+    if value is None:
+        return (0,)
+    if isinstance(value, (int, float)):
+        return (1, value)
+    if isinstance(value, str):
+        return (2, value)
+    return (3, type(value).__name__, value)
+
+
 def object2string(obj):
     """ Pickle obj and base64 encode. Use string2object to recover it.
     """
-    buff = StringIO()
-    pickle.dump(obj, buff)
-    return base64.encodestring(buff.getvalue())
+    return base64.encodebytes(pickle.dumps(obj)).decode('ascii')
 
 
 def string2object(string):
     """ Revert object2string.
     """
-    buff = StringIO()
-    # base64 decode string
+    if isinstance(string, str):
+        string = string.encode('ascii')
     try:
-        text = base64.decodestring(string)
-    except base64.binascii.Error:
+        text = base64.decodebytes(string)
+    except (base64.binascii.Error, ValueError):
         raise InvalidStringError(string)
-    else:
-        buff.write(text)
-        buff.seek(0)
-    # Convert to object
+    # latin1 reads strings pickled by Python 2 before the migration
     try:
-        obj = pickle.load(buff)
-    except IndexError:
+        return pickle.loads(text, encoding='latin1')
+    except (IndexError, EOFError, pickle.UnpicklingError):
         raise InvalidStringError(string)
-    else:
-        return obj
 
 
 class vcard_file:

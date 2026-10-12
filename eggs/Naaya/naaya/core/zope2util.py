@@ -454,7 +454,7 @@ def exorcize_local_properties(obj):
             if default_lang in localdata:
                 value = localdata[default_lang][0]
             else:
-                value = localdata.values()[0][0]
+                value = list(localdata.values())[0][0]
             obj.__dict__[name] = force_to_unicode(value)
             changed = True
             names.append(name)
@@ -569,8 +569,7 @@ def parents_in_site_path(obj):
         obj = obj.aq_parent
     parents.append(site)
     parents.reverse()
-    parents = map(lambda o: o.title_or_id(), parents)
-    return parents
+    return [o.title_or_id() for o in parents]
 
 
 def ofs_walk(top, filter=[IItem], containers=[IObjectManager]):
@@ -629,8 +628,11 @@ def iter_file_data(f):
         f.seek(0)
 
     elif hasattr(f, 'data'):
-        if isinstance(f.data, str):
+        if isinstance(f.data, bytes):
             yield f.data
+
+        elif isinstance(f.data, str):
+            yield f.data.encode('utf-8')
 
         else:
             data = f.data

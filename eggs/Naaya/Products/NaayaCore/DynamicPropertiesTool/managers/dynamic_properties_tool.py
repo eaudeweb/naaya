@@ -39,10 +39,10 @@ class dynamic_property(utils):
             values = self.values
             if type(self.values) == type({}):
                 try:
-                    ref_list = context.get_list_nodes(self.values.keys()[0])
+                    ref_list = context.get_list_nodes(list(self.values)[0])
                     values = self.utConvertListToLines([x.title for x in ref_list])
                 except:
-                    values = self.values.values()[0]
+                    values = list(self.values.values())[0]
             l_html.append('<select name="%s:utf8:string" id="%s">' % (self.utHtmlEncode(self.id), self.utHtmlEncode(self.id)))
             l_html.append('<option value=""></option>')
             for l_value in values.split('\r\n'):
@@ -63,7 +63,7 @@ class dynamic_property(utils):
     def getvalues(self):
         """ """
         if type(self.values) == type({}):
-            return self.values.values()[0]
+            return list(self.values.values())[0]
         else:
             return self.values
 
@@ -125,11 +125,11 @@ class dynamic_properties_tool:
             ref_list = ''
             values = l_dp.values
             if type(l_dp.values) == type({}):
-                ref_list = l_dp.values.keys()[0]
+                ref_list = list(l_dp.values)[0]
                 try:
                     values = self.utConvertListToLines([i.title for i in self.get_list_nodes(ref_list)])
                 except:
-                    values = l_dp.values.values()[0]
+                    values = list(l_dp.values.values())[0]
             return ['update', l_dp.id, l_dp.searchable, l_dp.name, l_dp.type, l_dp.required, l_dp.defaultvalue, values, l_dp.order, ref_list]
         else:
             return ['add', '', 0, '', '', 0, '', '', 0, '']

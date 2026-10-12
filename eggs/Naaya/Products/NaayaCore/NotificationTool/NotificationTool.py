@@ -310,10 +310,10 @@ class NotificationTool(Folder):
         anonymous_subscriptions = [(n, s) for n, s in
                                    subscription_container.list_with_keys()
                                    if hasattr(s, 'email')]
-        subscriptions = filter(lambda s: (s[1].email == email and
-                                          s[1].location == location and
-                                          s[1].notif_type == notif_type),
-                               anonymous_subscriptions)
+        subscriptions = [s for s in anonymous_subscriptions
+                         if s[1].email == email and
+                         s[1].location == location and
+                         s[1].notif_type == notif_type]
         if len(subscriptions) == 1:
             subscription_container.remove(subscriptions[0][0])
         else:

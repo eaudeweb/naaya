@@ -67,7 +67,7 @@ class Role(RoleManager, utils):
         in the administration area.
         """
         roles = list(self.getSite().valid_roles())
-        filter(roles.remove, ['Anonymous', 'Manager', 'Owner'])
+        roles = [r for r in roles if r not in ('Anonymous', 'Manager', 'Owner')]
         if skey == 'name':
             roles.sort()
             if rkey:
@@ -77,7 +77,8 @@ class Role(RoleManager, utils):
     def list_valid_roles(self):
         """ """
         roles = list(self.getSite().valid_roles())
-        filter(roles.remove, ['Anonymous', 'Authenticated', 'Owner'])
+        roles = [r for r in roles
+                 if r not in ('Anonymous', 'Authenticated', 'Owner')]
         return roles
 
     def getLocalRoles(self, local_roles):

@@ -81,5 +81,6 @@ class channeltypes_manager:
 
     def delete_channeltype_item(self, ids):
         #delete 1 or more items
-        map(self.__delete_channeltype_item, ids)
+        for item_id in ids:
+            self.__delete_channeltype_item(item_id)
         self._p_changed = 1

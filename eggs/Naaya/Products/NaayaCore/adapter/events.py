@@ -48,7 +48,8 @@ def removedDynamicPropertiesItem(ob, event):
     """ A DynamicPropertiesItem was removed """
     ids = ob.getDynamicPropertiesIds()
     for item in ob.getCatalogedObjects(ob.id):
-        map(item.deleteProperty, ids)
+        for prop_id in ids:
+            item.deleteProperty(prop_id)
 
 
 def modifiedDynamicPropertiesItem(obj, event):

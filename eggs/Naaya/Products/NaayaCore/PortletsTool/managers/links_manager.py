@@ -89,7 +89,8 @@ class links_manager:
 
     def delete_link_item(self, ids):
         #delete 1 or more items
-        map(self.__delete_link_item, ids)
+        for item_id in ids:
+            self.__delete_link_item(item_id)
         self._p_changed = 1
 
 InitializeClass(links_manager)

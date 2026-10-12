@@ -105,7 +105,8 @@ class DynamicPropertiesItem(SimpleItem, utils, dynamic_properties_tool):
         self.deleteDynamicProperty(l_ids)
         #delete objects dynamic properties
         for l_object in self.getCatalogedObjects(self.id):
-            map(l_object.deleteProperty, l_ids)
+            for l_id in l_ids:
+                l_object.deleteProperty(l_id)
         if REQUEST:
             REQUEST.RESPONSE.redirect('manage_properties_html')
 

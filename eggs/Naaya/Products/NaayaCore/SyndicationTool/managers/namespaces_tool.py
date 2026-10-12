@@ -73,7 +73,8 @@ class namespaces_tool:
 
     def deleteNamespaceItem(self, ids):
         """ """
-        map(self.__deleteNamespaceItem, ids)
+        for item_id in ids:
+            self.__deleteNamespaceItem(item_id)
         self._p_changed = 1
 
     def getNamespaceItemData(self, id):
