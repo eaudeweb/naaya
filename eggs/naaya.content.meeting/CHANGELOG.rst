@@ -1,5 +1,6 @@
 1.3.08 (unreleased)
 -------------------
+* Use the standard library json instead of simplejson [dumitval]
 
 1.3.07 (2022-04-08)
 -------------------

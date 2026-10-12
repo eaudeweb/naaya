@@ -6,10 +6,7 @@ import datetime
 import vobject
 import logging
 from html2text import html2text
-try:
-    import simplejson as json
-except ImportError:
-    import json
+import json
 
 # Zope imports
 from AccessControl import ClassSecurityInfo

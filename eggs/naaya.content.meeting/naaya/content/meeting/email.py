@@ -15,7 +15,7 @@ from Products.NaayaCore.EmailTool.EmailTool import (save_bulk_email,
                                                     _mail_in_queue,
                                                     check_cached_valid_emails,
                                                     export_email_list_xcel)
-import simplejson as json
+import json
 from Products.NaayaCore.managers.utils import import_non_local
 
 # naaya.content.meeting imports
@@ -185,7 +185,7 @@ class EmailSender(SimpleItem):
     def insert_auth_link(self, body_text, key):
         meeting_url = self.getMeeting().absolute_url()
         urls = re.findall(
-            'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|'
+            r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|'
             '(?:%[0-9a-fA-F][0-9a-fA-F]))+', body_text)
         for url in urls:
             if meeting_url in url:
