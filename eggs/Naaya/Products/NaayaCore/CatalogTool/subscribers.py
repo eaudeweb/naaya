@@ -1,6 +1,6 @@
 from zope.component import adapter
-from zope.container.interfaces import (IObjectAddedEvent,
-                                       IObjectRemovedEvent)
+from zope.lifecycleevent.interfaces import (IObjectAddedEvent,
+                                           IObjectRemovedEvent)
 
 from .interfaces import INyCatalogAware
 

@@ -8,7 +8,7 @@ from AccessControl.Permissions import view
 from zope import annotation, component
 from zope.interface import implementer
 from persistent import Persistent
-from persistent.dict import PersistentDict
+from persistent.mapping import PersistentMapping
 
 
 from naaya.core.utils import force_to_unicode
@@ -26,7 +26,7 @@ class SubscriptionContainer(Persistent):
     """ Holds anonymous and authenticated notifications """
 
     def __init__(self):
-        self.subscriptions = PersistentDict()
+        self.subscriptions = PersistentMapping()
         self._next_id = 1
 
     def add(self, subscription):

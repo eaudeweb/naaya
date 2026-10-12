@@ -266,26 +266,29 @@ class ZipExportTool(Implicit, Item):
             "Folders: %s\nFiles: %s\nMeetings: %s\nNews: %s\nURLs: %s\n\n" % (
                 folders, files, meetings, news, urls)
         )
-        temp_file = tempfile.TemporaryFile()
-        zip_file = ZipFile(temp_file, mode='w', allowZip64=True)
-
         sm = get_site_manager(my_container)
-        builder = RecursiveZipBuilder(zip_file, errors, sm)
         zip_adapter = sm.queryAdapter(my_container, IZipExportObject)
         if zip_adapter is None:
             REQUEST.RESPONSE.notFoundError()
-        builder.recurse(my_container, zip_adapter.filename)
-        index = count + builder.index_txt.getvalue()
-        # overwrite builder.write_index() to add the count
-        builder.zip_file.writestr("index.txt", index)
 
-        zip_file.close()
+        temp_file = tempfile.TemporaryFile()
+        try:
+            with ZipFile(temp_file, mode='w', allowZip64=True) as zip_file:
+                builder = RecursiveZipBuilder(zip_file, errors, sm)
+                builder.recurse(my_container, zip_adapter.filename)
+                index = count + builder.index_txt.getvalue()
+                # overwrite builder.write_index() to add the count
+                zip_file.writestr("index.txt", index)
+        except BaseException:
+            temp_file.close()
+            raise
         temp_file.seek(0)
 
         if REQUEST is None:
             return temp_file
 
         if errors:
+            temp_file.close()
             transaction.abort()  # TODO use ZODB savepoints
             self.setSessionErrorsTrans(errors)
             return REQUEST.RESPONSE.redirect(my_container.absolute_url())

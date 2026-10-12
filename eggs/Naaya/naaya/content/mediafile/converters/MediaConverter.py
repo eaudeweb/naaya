@@ -106,8 +106,7 @@ def _get_convertor_tool():
             process = subprocess.Popen([tool, "-h"],
                                        shell=False, stdout=subprocess.PIPE,
                                        stderr=subprocess.STDOUT)
-            stdout = process.stdout.read().decode('utf-8', errors='replace')
-            process.wait()
+            stdout = process.communicate()[0].decode('utf-8', errors='replace')
 
             if process.returncode != 0:
                 continue

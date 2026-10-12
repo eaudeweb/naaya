@@ -41,6 +41,10 @@
 * Fix site, map and editor image searches containing and, or, not or
   parentheses [dumitval]
 * Store images uploaded from the editor in blobs instead of Data.fs [dumitval]
+* Fix the deprecation and unclosed file warnings of the zip export, the
+  ffmpeg detection, the object event imports, PersistentDict and html2text
+  [dumitval]
+* Log the content type registration messages at info level [dumitval]
 
 5.0.34 (2026-10-07)
 -------------------

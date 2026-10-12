@@ -16,7 +16,7 @@ from AccessControl import ClassSecurityInfo, Unauthorized
 from AccessControl.Permissions import view_management_screens, view
 from OFS.Folder import Folder
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from persistent.dict import PersistentDict
+from persistent.mapping import PersistentMapping
 from persistent.list import PersistentList
 import transaction
 
@@ -105,8 +105,8 @@ class NotificationTool(Folder):
         """ """
         self.id = id
         self.title = title
-        self.config = PersistentDict(self.default_config)
-        self.timestamps = PersistentDict()
+        self.config = PersistentMapping(self.default_config)
+        self.timestamps = PersistentMapping()
         # Confirmations list
         self.pending_anonymous_subscriptions = PersistentList()
 

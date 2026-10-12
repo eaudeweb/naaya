@@ -3,7 +3,7 @@
 
 from zope import event as zope_event
 from OFS.event import ObjectWillBeRemovedEvent, ObjectClonedEvent
-from zope.container.interfaces import IObjectRemovedEvent, IObjectAddedEvent
+from zope.lifecycleevent.interfaces import IObjectRemovedEvent, IObjectAddedEvent
 from zope.container.contained import (ObjectMovedEvent,
                                       ObjectRemovedEvent,
                                       ObjectAddedEvent,)

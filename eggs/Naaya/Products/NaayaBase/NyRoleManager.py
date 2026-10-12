@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 
 from AccessControl.rolemanager import RoleManager
-from persistent.dict import PersistentDict
+from persistent.mapping import PersistentMapping
 from persistent.list import PersistentList
 from AccessControl.class_init import InitializeClass
 from AccessControl import getSecurityManager, ClassSecurityInfo
@@ -75,7 +75,7 @@ class RoleLogger(object):
         attr = '__Naaya_ac_local_roles__'
         annotations = IAnnotations(self.context)
         if attr not in annotations:
-            annotations[attr] = PersistentDict()
+            annotations[attr] = PersistentMapping()
         return annotations[attr]
 
 
@@ -86,7 +86,7 @@ class RoleLogger(object):
 
         current_date = datetime.now(timezone.utc)
         auth_user = self._getAuthenticatedUserUID()
-        state[userid].append(PersistentDict({
+        state[userid].append(PersistentMapping({
             'roles': roles,
             'date': current_date,
             'user_granting_roles': auth_user
@@ -98,7 +98,7 @@ class RoleLogger(object):
         current_date = datetime.now(timezone.utc)
         auth_user = self._getAuthenticatedUserUID()
         state[userid] = PersistentList()
-        state[userid].append(PersistentDict({
+        state[userid].append(PersistentMapping({
             'roles': roles,
             'date': current_date,
             'user_granting_roles': auth_user
@@ -136,7 +136,7 @@ class RoleLogger(object):
                 if not has_role:
                     unsaved_roles.append(r)
             if unsaved_roles != []:
-                state[userid].append(PersistentDict({'roles': unsaved_roles}))
+                state[userid].append(PersistentMapping({'roles': unsaved_roles}))
 
         return state
 
@@ -147,7 +147,7 @@ class RoleLogger(object):
         attr = '__Naaya_ac_user_roles__'
         annotations = IAnnotations(self.context)
         if attr not in annotations:
-            annotations[attr] = PersistentDict()
+            annotations[attr] = PersistentMapping()
         return annotations[attr]
 
 
@@ -163,7 +163,7 @@ class RoleLogger(object):
             'date': current_date,
             'user_granting_roles': auth_user
             }
-        state[userid].append(PersistentDict(dict))
+        state[userid].append(PersistentMapping(dict))
 
     def setUserRolesInfo(self, userid, roles):
         state = self._getStorage4UserRolesInfo()
@@ -176,7 +176,7 @@ class RoleLogger(object):
             'date': current_date,
             'user_granting_roles': auth_user
             }
-        state[userid].append(PersistentDict(dict))
+        state[userid].append(PersistentMapping(dict))
 
     def delUserRolesInfo(self, userids):
         state = self._getStorage4UserRolesInfo()
@@ -214,7 +214,7 @@ class RoleLogger(object):
                     unsaved_roles.append(r)
             if unsaved_roles != []:
                 unsaved_roles = PersistentList(unsaved_roles)
-                state[userid].append(PersistentDict({'roles': unsaved_roles}))
+                state[userid].append(PersistentMapping({'roles': unsaved_roles}))
 
         return state
 
@@ -225,7 +225,7 @@ class RoleLogger(object):
         attr = '__Naaya_ac_ldap_group_roles__'
         annotations = IAnnotations(self.context)
         if attr not in annotations:
-            annotations[attr] = PersistentDict()
+            annotations[attr] = PersistentMapping()
         return annotations[attr]
 
 
@@ -241,7 +241,7 @@ class RoleLogger(object):
             'date': current_date,
             'user_granting_roles': auth_user
             }
-        state[group].append(PersistentDict(dict))
+        state[group].append(PersistentMapping(dict))
 
     def removeLDAPGroupRolesInfo(self, group, roles):
         state = self._getStorage4LDAPGroupRolesInfo()
@@ -287,6 +287,6 @@ class RoleLogger(object):
                     unsaved_roles.append(r)
             if unsaved_roles != []:
                 unsaved_roles = PersistentList(unsaved_roles)
-                state[group].append(PersistentDict({'roles': unsaved_roles}))
+                state[group].append(PersistentMapping({'roles': unsaved_roles}))
 
         return state

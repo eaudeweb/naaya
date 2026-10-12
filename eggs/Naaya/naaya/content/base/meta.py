@@ -102,7 +102,7 @@ def register_naaya_content(_context, factory, **kwargs):
 
     InitializeClass(NyFolderBase)
     # log success
-    logging.getLogger('naaya.content').warning('Pluggable content type "%s" registered' % config['meta_type'])
+    logging.getLogger('naaya.content').info('Pluggable content type "%s" registered' % config['meta_type'])
 
 def get_schema_name(portal, meta_type):
     if meta_type == 'Naaya Folder':

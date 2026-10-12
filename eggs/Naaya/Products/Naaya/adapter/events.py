@@ -1,5 +1,5 @@
 from ZPublisher import BeforeTraverse
-from zope.container.interfaces import IObjectRemovedEvent, IObjectAddedEvent
+from zope.lifecycleevent.interfaces import IObjectRemovedEvent, IObjectAddedEvent
 
 #
 # NySite

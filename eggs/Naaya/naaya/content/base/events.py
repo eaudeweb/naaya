@@ -2,7 +2,7 @@ from DateTime import DateTime
 from zope.interface import implementer
 from zope.event import notify
 from zope.component import adapter
-from zope.container.interfaces import IObjectMovedEvent
+from zope.lifecycleevent.interfaces import IObjectMovedEvent
 import transaction
 
 from .interfaces import INyContentObject

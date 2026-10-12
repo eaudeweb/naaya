@@ -193,7 +193,7 @@ def register_content(module, klass, module_methods, klass_methods, add_method):
     klass_label = getattr(klass, 'meta_label', klass.meta_type)
     add_meth, add_perm = add_method
     NyFolderBase.NyFolderBase._dynamic_content_types[klass.meta_type] = (add_meth, klass_label, add_perm)
-    logging.getLogger(module.__name__).warning('Dynamic module "%s" registered' % klass.__name__)
+    logging.getLogger(module.__name__).info('Dynamic module "%s" registered' % klass.__name__)
 
     InitializeClass(NyFolder.NyFolder)
 

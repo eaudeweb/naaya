@@ -10,7 +10,7 @@ import urllib.request
 import time
 import codecs
 from zipfile import *
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, MarkupResemblesLocatorWarning
 
 import csv
 import tempfile
@@ -20,7 +20,7 @@ from email.utils import encode_rfc2231
 from urllib.parse import urlencode
 from io import StringIO
 from unidecode import unidecode
-from warnings import warn
+from warnings import filterwarnings, warn
 
 from App.config import getConfiguration
 from Products.PythonScripts.standard import url_quote, html_quote
@@ -32,6 +32,9 @@ from naaya.core.utils import force_to_unicode, unescape_html_entities
 from naaya.core.zope2util import DT2dt, escape_html
 
 from lxml.builder import ElementMaker
+
+# html2text gets plain text and URLs as well as markup
+filterwarnings('ignore', category=MarkupResemblesLocatorWarning)
 
 # constants
 

@@ -27,7 +27,7 @@ from naaya.core import submitter
 from naaya.core.zope2util import CaptureTraverse
 from naaya.core.zope2util import abort_transaction_keep_session
 from .permissions import PERMISSION_ADD_BFILE
-from persistent.dict import PersistentDict
+from persistent.mapping import PersistentMapping
 from zExceptions import NotFound, BadRequest, ResourceLockedError
 from zope.event import notify
 from zope.interface import implementer
@@ -270,12 +270,12 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
         NyCheckControl.__dict__['__init__'](self)
         NyItem.__dict__['__init__'](self)
         self.contributor = contributor
-        self._versions_i18n = PersistentDict()
+        self._versions_i18n = PersistentMapping()
 
     @property
     def versions_store(self):
         if not hasattr(self, '_versions_i18n'):
-            self._versions_i18n = PersistentDict()
+            self._versions_i18n = PersistentMapping()
         return self._versions_i18n
 
     def all_versions(self, language=None):

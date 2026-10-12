@@ -8,7 +8,7 @@ from AccessControl.unauthorized import Unauthorized
 from AccessControl.class_init import InitializeClass
 from Missing import MV
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from persistent.dict import PersistentDict
+from persistent.mapping import PersistentMapping
 from zope.event import notify
 from zope.interface import implementer
 
@@ -71,7 +71,7 @@ class plugLDAPUserFolder(PlugBase):
 
     object_type = 'LDAPUserFolder'
     meta_type = 'Plugin for user folder'
-    group_to_roles_mapping = PersistentDict()
+    group_to_roles_mapping = PersistentMapping()
     backup_encoding = 'utf-8'
 
     @property

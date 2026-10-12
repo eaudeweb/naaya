@@ -1,5 +1,6 @@
 1.0.6 (unreleased)
 ------------------
+* Replace the deprecated PersistentDict with PersistentMapping [dumitval]
 
 1.0.5 (2013-07-10)
 ------------------

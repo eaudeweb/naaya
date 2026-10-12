@@ -25,7 +25,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens
 from OFS.Folder import Folder
-from persistent.dict import PersistentDict
+from persistent.mapping import PersistentMapping
 from BTrees.OIBTree import OISet as PersistentTreeSet
 import os
 
@@ -50,7 +50,7 @@ class UpdateNotificationTool(UpdateScript):
 
     def add_properties(self, notif_tool):
         if not hasattr(notif_tool, 'config'):
-            setattr(notif_tool, 'config', PersistentDict({
+            setattr(notif_tool, 'config', PersistentMapping({
                 'admin_on_error': True,
                 'admin_on_edit': True,
                 'enable_instant': False,
@@ -71,7 +71,7 @@ class UpdateNotificationTool(UpdateScript):
             self.log.debug("Added 'subscriptions' attribute to notification tool.")
 
         if not hasattr(notif_tool, 'timestamps'):
-            setattr(notif_tool, 'timestamps', PersistentDict())
+            setattr(notif_tool, 'timestamps', PersistentMapping())
             self.log.debug("Added 'timestamps' attribute to notification tool.")
 
     def add_admin_entry(self, portal):

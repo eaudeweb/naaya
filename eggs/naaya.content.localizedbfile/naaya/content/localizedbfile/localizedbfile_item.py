@@ -7,7 +7,7 @@ from AccessControl.Permissions import view
 from zExceptions import NotFound
 from zope.event import notify
 from zope.interface import implementer
-from persistent.dict import PersistentDict
+from persistent.mapping import PersistentMapping
 
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
@@ -208,7 +208,7 @@ class NyLocalizedBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyVa
         NyCheckControl.__dict__['__init__'](self)
         NyItem.__dict__['__init__'](self)
         self.contributor = contributor
-        self._versions = PersistentDict()
+        self._versions = PersistentMapping()
 
     security.declarePrivate('current_version')
     @property

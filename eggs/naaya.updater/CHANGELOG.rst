@@ -6,6 +6,8 @@
 * Fix the update_translations script on uploaded .po files [dumitval]
 * Add the ofs_data_to_blobs update script moving the data of OFS Images and
   Files to blobs [dumitval]
+* Replace the deprecated PersistentDict with PersistentMapping and rstk.name
+  with rstk['name'] in the update scripts [dumitval]
 
 1.2.32 (2019-11-07)
 -------------------

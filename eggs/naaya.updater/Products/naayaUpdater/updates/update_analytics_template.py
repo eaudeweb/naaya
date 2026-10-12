@@ -66,7 +66,8 @@ class UpdateAnalyticsTemplate(UpdateScript):
             self.log.info('MANUAL action: remove analytics code from standard template')
 
         old_code = '<tal:block replace="structure here/portal_statistics/ga_verify" />'
-        new_code = '<tal:block replace="structure python:here.rstk.google_analytics(here.portal_statistics.ga_id)" />'
+        new_code = ('<tal:block replace="structure python:here.rstk'
+                    '[\'google_analytics\'](here.portal_statistics.ga_id)" />')
 
         # clean up any codes
         if std_tpl_tal.find(old_code) > -1:

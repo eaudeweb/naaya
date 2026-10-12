@@ -1,4 +1,4 @@
-from zope.container.interfaces import IObjectRemovedEvent
+from zope.lifecycleevent.interfaces import IObjectRemovedEvent
 
 
 #
