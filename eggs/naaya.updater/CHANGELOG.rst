@@ -1,4 +1,7 @@
-2.0.1 (unreleased)
+2.0.2 (unreleased)
+------------------
+
+2.0.1 (2026-10-12)
 ------------------
 * Require Naaya >= 6.0.1 [dumitval]
 * Use the standard library json instead of simplejson [dumitval]
