@@ -1,4 +1,7 @@
-2.0.1 - (unreleased)
+2.0.2 - (unreleased)
+====================
+
+2.0.1 - (2026-10-12)
 ====================
 * Require the Python 3 releases of Naaya, naaya.content.bfile,
   Products.NaayaContent.NyPublication and naaya.envirowindows [dumitval]
