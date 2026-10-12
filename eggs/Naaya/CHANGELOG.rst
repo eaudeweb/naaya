@@ -39,6 +39,7 @@
   the last page link of the external search [dumitval]
 * Fix site, map and editor image searches containing and, or, not or
   parentheses [dumitval]
+* Store images uploaded from the editor in blobs instead of Data.fs [dumitval]
 
 5.0.31 (2025-09-09)
 -------------------

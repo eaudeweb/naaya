@@ -2,9 +2,10 @@
 
 from AccessControl import ClassSecurityInfo
 from AccessControl.class_init import InitializeClass
-from OFS.Image import manage_addImage, cookId
+from OFS.Image import cookId
 from OFS.ObjectManager import checkValidId
 from html import escape
+from naaya.core.blobofs import manage_addBlobImage
 from naaya.core.zope2util import sha_hexdigest
 from Products.NaayaCore.managers.utils import make_id
 import urllib.parse
@@ -49,7 +50,7 @@ class NyImageContainer(Acquisition.Implicit):
 
         orig_id = id
         id = make_id(self.storage, title=title)
-        id = manage_addImage(self.storage, id, file, title)
+        id = manage_addBlobImage(self.storage, id, file, title)
         if REQUEST:
             return REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
         ob = self.storage._getOb(id)

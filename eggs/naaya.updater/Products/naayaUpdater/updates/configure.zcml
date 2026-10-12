@@ -477,5 +477,10 @@
       provides="..interfaces.IUpdateScript"
       component=".update_root_acl.UpdateACLPluggableAuth"
       permission="zope2.ViewManagementScreens" />
+    <utility
+      name="ofs_data_to_blobs.update"
+      provides="..interfaces.IUpdateScript"
+      component=".update_ofs_data_to_blobs.UpdateOFSDataToBlobs"
+      permission="zope2.ViewManagementScreens" />
 
 </configure>
