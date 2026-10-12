@@ -318,14 +318,13 @@ class NyContentType(object):
         else:
             return self.getLocalProperty(id, lang)
 
-    set_content_rating = PageTemplateFile('zpt/set_content_rating', globals())
+    def set_content_rating(self):
+        """ Content rating was removed with contentratings """
+        return ''
 
     def is_ratable(self):
-        """returns the stars rating view if the content type is ratable"""
-
-        schema = self.getSite().portal_schemas.getSchemaForMetatype(
-            self.meta_type)
-        return schema.is_ratable
+        """ Content rating was removed with contentratings """
+        return False
 
     def can_be_seen(self):
         """

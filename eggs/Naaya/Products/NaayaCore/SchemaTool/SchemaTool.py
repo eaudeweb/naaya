@@ -13,8 +13,6 @@ from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
 from Products.NaayaCore.constants import *
 from Products.NaayaCore.SchemaTool.Schema import Schema
 from Products.NaayaCore.GeoMapTool.GeoMapTool import GeoMapTool
-from contentratings.interfaces import IUserRating
-from naaya.content.base.interfaces import INyContentObject
 from naaya.core.StaticServe import StaticServeFromFolder
 
 _other_schema_products = {}
@@ -229,13 +227,7 @@ class SchemaTool(Folder):
 
     def get_ratings(self):
         """ """
-        objects = self.getSite().getCatalogedObjects()
-        ratings = []
-        for ob in filter(INyContentObject.providedBy, objects):
-            if ob.is_ratable() and IUserRating(ob).averageRating > 0:
-                rating = IUserRating(ob)
-                ratings.append((ob, rating.averageRating, rating.numberOfRatings))
-        return ratings
+        return []
 
     def sort_objects_by_ratings(self, skey=1, rkey=1, max_range=10):
         """ """

@@ -49,7 +49,6 @@ setup(name='Naaya',
           # Zope
           'Zope >= 5.0',
           'zope.deprecation',
-          'contentratings',
 
           # Customized 3rd party
           'edw-pycaptcha >= 0.3.1',

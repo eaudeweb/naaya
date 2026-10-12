@@ -1,8 +1,7 @@
-5.0.32 (unreleased)
--------------------
-* Use https OSM tiles and Nominatim geocoding in the OpenLayers map engine [dumitval]
-* Zoom the OpenLayers map only on ctrl/cmd + mouse wheel and show a hint on plain wheel [dumitval]
-* Skip the balloon handling in the OpenLayers map engine when a cluster click zooms in [dumitval]
+6.0.0 (unreleased)
+------------------
+* Port to Python 3 and Zope 5 [dumitval]
+* Remove the contentratings dependency and the content rating feature [dumitval]
 * Fix the cleanup_mainsections update script [dumitval]
 * Fix the delete_old_properties, add_last_modification and export_content
   update scripts [dumitval]
@@ -42,6 +41,18 @@
 * Fix site, map and editor image searches containing and, or, not or
   parentheses [dumitval]
 * Store images uploaded from the editor in blobs instead of Data.fs [dumitval]
+
+5.0.34 (2026-10-07)
+-------------------
+* Skip the balloon handling in the OpenLayers map engine when a cluster click zooms in [dumitval]
+
+5.0.33 (2026-10-07)
+-------------------
+* Zoom the OpenLayers map only on ctrl/cmd + mouse wheel and show a hint on plain wheel [dumitval]
+
+5.0.32 (2026-10-07)
+-------------------
+* Use https OSM tiles and Nominatim geocoding in the OpenLayers map engine [dumitval]
 
 5.0.31 (2025-09-09)
 -------------------

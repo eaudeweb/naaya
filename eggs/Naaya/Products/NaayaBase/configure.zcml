@@ -9,11 +9,6 @@
     <implements interface="Products.NaayaCore.CatalogTool.interfaces.INyCatalogAware" />
   </class>
 
-  <include package="contentratings" />
-  <class class=".NyContentType.NyContentType">
-    <implements interface="contentratings.interfaces.IUserRatable" />
-  </class>
-
   <adapter
     for=".NyRoleManager.NyRoleManager"
     provides="zope.annotation.interfaces.IAnnotations"
