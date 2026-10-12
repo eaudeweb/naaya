@@ -471,17 +471,15 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
 
     def get_displays(self):
         #returns a list with all dispays minus 'Thumbnail'
-        l = self.displays.keys()
-        l.remove('Thumbnail')
-        l.sort(lambda x,y,d=self.displays: cmp(d[x][0]*d[x][1], d[y][0]*d[y][1]))
-        return l
+        d = self.displays
+        return sorted((x for x in d if x != 'Thumbnail'),
+                      key=lambda x: d[x][0] * d[x][1])
 
     @deprecate('NyPhoto.get_displays_edit is deprecated and will be removed in the next version.')
     def get_displays_edit(self):
         #returns a list with all dispays minus 'Thumbnail'
-        l = self.displays.keys()
-        l.sort(lambda x,y,d=self.displays: cmp(d[x][0]*d[x][1], d[y][0]*d[y][1]))
-        return l
+        d = self.displays
+        return sorted(d, key=lambda x: d[x][0] * d[x][1])
 
     def is_generated(self, display, watermark=False):
         #return whether display has been generated
@@ -520,7 +518,8 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
     def manageGenerateDisplays(self, REQUEST=None):
         """ """
         self.managePurgeDisplays()
-        map(lambda x: self.__generate_display(x), self.displays.keys())
+        for display in list(self.displays):
+            self.__generate_display(display)
 
         if REQUEST: REQUEST.RESPONSE.redirect('manage_displays_html?save=ok')
 

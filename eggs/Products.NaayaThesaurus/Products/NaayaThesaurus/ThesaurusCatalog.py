@@ -131,8 +131,11 @@ class ThesaurusCatalog(ZCatalog):
 
     def UncatalogObject(self, p_ob):
         """ uncatalog objects """
-        if th_utils().utIsListType(p_ob):  map(lambda x, y: x.uncatalog_object(x.BuildCatalogPath(y)), (self,)*len(p_ob), p_ob)
-        else:                              self.uncatalog_object(self.BuildCatalogPath(p_ob))
+        if th_utils().utIsListType(p_ob):
+            for ob in p_ob:
+                self.uncatalog_object(self.BuildCatalogPath(ob))
+        else:
+            self.uncatalog_object(self.BuildCatalogPath(p_ob))
 
     def RecatalogObject(self, p_ob):
         """ recatalog objects """

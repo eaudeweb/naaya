@@ -1,5 +1,7 @@
 1.2.22 (unreleased)
 -------------------
+* Fix the topic restriction page offering Manager, Anonymous and Owner, and
+  replies shown twice in threads [dumitval]
 
 1.2.21 (2015-08-28)
 -------------------

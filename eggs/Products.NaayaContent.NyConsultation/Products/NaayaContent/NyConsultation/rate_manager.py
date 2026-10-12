@@ -99,7 +99,8 @@ class rate_manager:
 
     def delete_item(self, ids):
         #delete 1 or more items
-        map(self.__delete_item, ids)
+        for item_id in ids:
+            self.__delete_item(item_id)
         self._p_changed = 1
 
 InitializeClass(rate_manager)

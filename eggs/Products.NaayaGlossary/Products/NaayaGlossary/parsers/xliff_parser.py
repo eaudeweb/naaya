@@ -77,13 +77,13 @@ class xliff_handler(ContentHandler):
         # Make the attributes available
         # Implicit assumption: There is only one <file> element.
         if name == 'file':
-            tmp = attrs.items()
+            tmp = list(attrs.items())
             for i in [elem for elem in attrs.keys() if elem not in _FILE_ATTRS]:
                 tmp.remove((i, attrs[i]))
             self.setFileTag(tmp)
 
         if name == 'phase':
-            tmp = attrs.items()
+            tmp = list(attrs.items())
             for i in [elem for elem in attrs.keys() if elem not in _PHASE_ATTRS]:
                 tmp.remove((i, attrs[i]))
             self.setPhaseGroup(tmp)

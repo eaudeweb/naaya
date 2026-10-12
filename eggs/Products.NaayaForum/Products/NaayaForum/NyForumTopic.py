@@ -178,7 +178,8 @@ class NyForumTopic(NyRoleManager, NyForumBase, Folder):
         """
         tree = []
         l = [x for x in msgs if x.inreplyto == node]
-        map(msgs.remove, l)
+        for msg in l:
+            msgs.remove(msg)
         for x in l:
             tree.append((depth, x))
             tree.extend(self.__get_messages_thread(msgs, x.id, depth+1))
@@ -215,7 +216,8 @@ class NyForumTopic(NyRoleManager, NyForumBase, Folder):
     def get_valid_roles(self):
         #returns a list of roles that can be used to restrict this folder
         roles = list(self.valid_roles())
-        filter(roles.remove, ['Administrator', 'Anonymous', 'Manager', 'Owner'])
+        roles = [r for r in roles
+                 if r not in ('Administrator', 'Anonymous', 'Manager', 'Owner')]
         return roles
 
     def can_be_seen(self):

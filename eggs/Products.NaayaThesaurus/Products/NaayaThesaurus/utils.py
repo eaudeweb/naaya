@@ -81,8 +81,8 @@ class th_utils(utils):
 
                 #sorting
                 l_len = len(p_list)
-                l_temp = map(None, map(getattr, p_list, (p_attr,)*l_len), range(l_len), p_list)
-                l_temp.sort(lambda x, y: locale.strcoll(x[0], y[0]))
+                l_temp = list(zip([getattr(x, p_attr) for x in p_list], range(l_len), p_list))
+                l_temp.sort(key=lambda x: locale.strxfrm(x[0]))
                 if p_desc: l_temp.reverse()
 
                 locale.setlocale(locale.LC_ALL, default_locale)
@@ -124,8 +124,8 @@ class th_utils(utils):
                 l_append = l_list.append
                 for x in p_list:
                     l_append(str(x[0], 'utf8'))
-                l_temp = map(None, l_list, range(l_len), p_list)
-                l_temp.sort(lambda x, y: locale.strcoll(x[0], y[0]))
+                l_temp = list(zip(l_list, range(l_len), p_list))
+                l_temp.sort(key=lambda x: locale.strxfrm(x[0]))
                 if p_desc: l_temp.reverse()
 
                 locale.setlocale(locale.LC_ALL, default_locale)

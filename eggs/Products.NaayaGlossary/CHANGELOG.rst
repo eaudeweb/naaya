@@ -1,5 +1,6 @@
 1.1.22 (unreleased)
 ------------------
+* Fix the TMX and XLIFF import [dumitval]
 
 1.1.21 (2018-10-05)
 ------------------

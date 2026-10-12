@@ -1,5 +1,6 @@
 1.5.3 (unreleased)
 -------------------
+* Fix the photo display pages and generating or purging displays [dumitval]
 
 1.5.2 (2015-10-23)
 -------------------

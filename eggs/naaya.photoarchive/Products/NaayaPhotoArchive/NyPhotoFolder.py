@@ -282,9 +282,8 @@ class NyPhotoFolder(NyRoleManager, NyContentData, NyAttributes, photo_archive_ba
     @deprecate('NyPhotoFolder.get_displays_edit is deprecated and will be removed in the next version.')
     def get_displays_edit(self):
         #returns a list with all dispays minus 'Thumbnail'
-        l = self.displays.keys()
-        l.sort(lambda x,y,d=self.displays: cmp(d[x][0]*d[x][1], d[y][0]*d[y][1]))
-        return l
+        d = self.displays
+        return sorted(d, key=lambda x: d[x][0] * d[x][1])
 
     @deprecate('NyPhotoFolder.process_querystring is deprecated and will be removed in the next version.')
     def process_querystring(self, p_querystring):
@@ -379,13 +378,15 @@ class NyPhotoFolder(NyRoleManager, NyContentData, NyAttributes, photo_archive_ba
     security.declareProtected(view_management_screens, 'manageGenerateDisplays')
     def manageGenerateDisplays(self, REQUEST=None):
         """ """
-        map(lambda x: x.manageGenerateDisplays(), self.getObjects())
+        for photo in self.getObjects():
+            photo.manageGenerateDisplays()
         if REQUEST: REQUEST.RESPONSE.redirect('manage_displays_html?save=ok')
 
     security.declareProtected(view_management_screens, 'managePurgeDisplays')
     def managePurgeDisplays(self, REQUEST=None):
         """ """
-        map(lambda x: x.managePurgeDisplays(), self.getObjects())
+        for photo in self.getObjects():
+            photo.managePurgeDisplays()
         if REQUEST: REQUEST.RESPONSE.redirect('manage_displays_html?save=ok')
 
     #site actions

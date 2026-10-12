@@ -96,7 +96,7 @@ class MemberSearch(Implicit, Item):
         for source_id in sources_info.keys():
             source = sources_info[source_id]['source']
 
-            individual_userids = sources_info[source_id]['user_roles'].keys()
+            individual_userids = list(sources_info[source_id]['user_roles'])
             group_userids_map = self.get_group_userids_map(source_id,
                                                            sources_info)
             group_userids = []

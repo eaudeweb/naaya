@@ -585,8 +585,7 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
     security.declareProtected(PERMISSION_REVIEW_CONSULTATION, 'get_questions')
     def get_questions(self):
         """ Returns the questions sorted by sortorder (question_id, question_item)"""
-        question_items = self.questions.items()
-        question_items.sort(lambda x, y: cmp(x[1].sortorder, y[1].sortorder))
+        question_items = sorted(self.questions.items(), key=lambda x: x[1].sortorder)
         return question_items
 
     security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'getQuestionById')

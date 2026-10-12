@@ -246,8 +246,7 @@ class glossary_export:
             return MessageDialog(title = 'Parse error',
              message = 'Unable to parse TMX file' ,  action = 'manage_main',)
 
-        l_list = chandler.TMXContent.keys()
-        l_list.sort()
+        l_list = sorted(chandler.TMXContent.keys())
         for k in l_list:
             folder_id = self.utf8_to_latin1(k[:1].upper())
             folder = self.unrestrictedTraverse(folder_id, None)
