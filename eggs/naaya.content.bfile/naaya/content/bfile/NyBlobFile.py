@@ -260,7 +260,8 @@ class NyBlobFile(Item, Persistent, Cacheable, Implicit):
         if hasattr(RESPONSE, '_streaming'):
             return self.open_iterator()
         else:
-            return self.open().read()
+            with self.open() as f:
+                return f.read()
 
     def _current_filename(self):
         """ Convenience function that returns blob's filename """

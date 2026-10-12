@@ -104,7 +104,8 @@ class NyFSContainer(NyContainer):
             # In Zope 5, index_html() returns a BlobStreamIterator
             # instead of raw bytes. Use open().read() for direct data access.
             if hasattr(attached_file, 'open'):
-                return attached_file.open().read()
+                with attached_file.open() as f:
+                    return f.read()
             result = attached_file.index_html()
             return result
         return attached_file

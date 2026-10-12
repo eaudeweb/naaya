@@ -85,7 +85,8 @@ class NyFSFile(File):
             # In Zope 5, index_html() returns a BlobStreamIterator
             # instead of raw bytes. Use open().read() for direct data access.
             if hasattr(self._bfile, 'open'):
-                return self._bfile.open().read()
+                with self._bfile.open() as f:
+                    return f.read()
             return self._bfile.index_html()
 
         if hasattr(self, '_ext_file'):  #not migrated yet?

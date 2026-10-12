@@ -378,6 +378,9 @@ class FileIterator(object):
     def __init__(self, data_file):
         self._data_file = data_file
 
+    def __iter__(self):
+        return self
+
     def __next__(self):
         data = self._data_file.read(2**16)
         if not data:

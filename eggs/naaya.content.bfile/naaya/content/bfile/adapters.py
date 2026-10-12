@@ -17,7 +17,8 @@ class BFileZipAdapter(DefaultZipAdapter):
 
     @property
     def data(self):
-        return self.context.current_version.open().read()
+        with self.context.current_version.open() as f:
+            return f.read()
 
     @property
     def extension(self):
@@ -49,9 +50,10 @@ class ZipViewer(object):
 
     def __call__(self, context):
         from zipfile import ZipFile
-        zfile = ZipFile(self.bfile.open())
+        with self.bfile.open() as f:
+            namelist = ZipFile(f).namelist()
         return context.getFormsTool()['bfile_quickview_zipfile'](
-            namelist=zfile.namelist())
+            namelist=namelist)
 
 
 class BFileViewAdapter(NyContentTypeViewAdapter):

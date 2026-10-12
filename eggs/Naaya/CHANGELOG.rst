@@ -17,6 +17,8 @@
 * Fix paginated lists with more than one page [dumitval]
 * Fix the translations CSV export [dumitval]
 * Fix photo zip downloads [dumitval]
+* Fix the zip export of folders [dumitval]
+* Close blob files after reading file data [dumitval]
 * Fix the network portals search and saving the internal search settings
   [dumitval]
 * Fix role lists offering Manager, Anonymous and Owner [dumitval]
