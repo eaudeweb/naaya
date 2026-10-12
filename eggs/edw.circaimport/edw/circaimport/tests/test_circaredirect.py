@@ -1,5 +1,5 @@
 import unittest
-import mock
+from unittest import mock
 import os.path
 
 from edw.circaimport import ui

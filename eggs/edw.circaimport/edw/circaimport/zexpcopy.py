@@ -24,7 +24,9 @@ def manage_main_catch_path(self, REQUEST, manage_tabs_message, title):
     to get the path of the zexp on server.
 
     """
-    pattern = r'<em>(.*?)</em> successfully exported to <em>(.*?)</em>'
+    # Zope 2 quotes the names with <em>, Zope 5 with double quotes
+    pattern = (r'(?:<em>|")(.*?)(?:</em>|") successfully exported to '
+               r'(?:<em>|")(.*?)(?:</em>|")$')
     path = re.match(pattern, manage_tabs_message)
     if not path:
         raise ValueError("Can not deduct zexp path from ZMI message")

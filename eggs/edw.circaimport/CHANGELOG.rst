@@ -1,6 +1,8 @@
 1.3.15 (unreleased)
 ------------------
 * Use PEP 420 namespace packages [dumitval]
+* Fix the zexp copy failing to read the export path from the Zope 5
+  export message [dumitval]
 
 1.3.14 (2023-09-20)
 ------------------
