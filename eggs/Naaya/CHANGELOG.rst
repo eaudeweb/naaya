@@ -37,6 +37,8 @@
 * Fix the XML export writing "b'...'" instead of the file content [dumitval]
 * Fix the portlet administration pages, the subscription confirmation email and
   the last page link of the external search [dumitval]
+* Fix site, map and editor image searches containing and, or, not or
+  parentheses [dumitval]
 
 5.0.31 (2025-09-09)
 -------------------

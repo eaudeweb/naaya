@@ -25,6 +25,7 @@ from Products.NaayaCore.EditorTool.config import SECTIONS
 from naaya.core.zope2util import url_quote
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from naaya.core.StaticServe import StaticServeFromZip
+from Products.NaayaCore.managers.catalog_tool import plain_words_query
 
 
 TINY_MCE_PATH = '{base_url}/tinymce/js/tinymce'
@@ -300,7 +301,7 @@ class EditorTool(Folder):
                                 self.gl_get_selected_language())
                 ret_brains = ctool.search(
                     {'path': album_url, 'meta_type': 'Naaya Photo',
-                     filter_index: query})
+                     filter_index: plain_words_query(query)})
                 ret = [x.getObject() for x in ret_brains]
 
         total_images = len(ret)

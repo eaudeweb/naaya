@@ -2,8 +2,16 @@
 from AccessControl import getSecurityManager
 from AccessControl.Permissions import view
 from OFS.Uninstalled import BrokenClass
+from Products.ZCTextIndex.ParseTree import ParseError
+import re
 
 from naaya.core.zope2util import ofs_path
+
+
+def plain_words_query(query):
+    """Drop and/or/not and parentheses so ZCTextIndex reads the query as words."""
+    return ' '.join(word for word in re.sub(r'[()]', ' ', query).split()
+                    if word.lower() not in ('and', 'or', 'not'))
 
 class catalog_tool(object):
     """
@@ -282,6 +290,23 @@ class catalog_tool(object):
 
     def query_brains_ex(self, meta_type=None, q=None, lang=None, path=None,
                               howmany=-1, **kwargs):
+        try:
+            return self._query_brains_ex(meta_type, q, lang, path, howmany,
+                                         **kwargs)
+        except ParseError:
+            if q is None:
+                raise
+            q = plain_words_query(q)
+            if not q:
+                return []
+            try:
+                return self._query_brains_ex(meta_type, q, lang, path,
+                                             howmany, **kwargs)
+            except ParseError:
+                return []
+
+    def _query_brains_ex(self, meta_type=None, q=None, lang=None, path=None,
+                         howmany=-1, **kwargs):
         l_results = []
 
         l_filter = {'submitted': 1} #only submitted items

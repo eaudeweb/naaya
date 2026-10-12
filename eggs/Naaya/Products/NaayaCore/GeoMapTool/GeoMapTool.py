@@ -44,6 +44,7 @@ from naaya.core import ggeocoding
 
 from .managers.symbols_tool import symbols_tool
 from .managers.kml_gen import kml_generator
+from Products.NaayaCore.managers.catalog_tool import plain_words_query
 
 all_engines = {}
 
@@ -242,6 +243,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         if custom_filter is not None:
             custom_filter(filters, kwargs)
 
+        query = plain_words_query(query) if query else query
         if query:
             query_filters = []
             for f in filters:
