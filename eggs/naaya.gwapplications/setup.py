@@ -1,7 +1,7 @@
 from setuptools import setup, find_namespace_packages
 
 setup(name='naaya.gwapplications',
-      version='1.1.13',
+      version='2.0.0',
       author='Eau de Web',
       author_email='office@eaudeweb.ro',
       url='http://naaya.eaudeweb.ro',
@@ -9,6 +9,6 @@ setup(name='naaya.gwapplications',
       include_package_data=True,
       zip_safe=False,
       install_requires=[
-          'naaya.groupware',
+          'naaya.groupware >= 2.0.0',
       ]
       )
