@@ -1,9 +1,6 @@
 """ Browser Views
 """
-try:
-    import simplejson as json
-except ImportError:
-    import json
+import json
 from importlib.metadata import distributions
 
 import Zope2

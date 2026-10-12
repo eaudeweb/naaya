@@ -25,7 +25,6 @@ setup(name=NAME,
       install_requires=[
           'setuptools',
           # -*- Extra requirements: -*-
-          'simplejson',
       ],
       entry_points="""
       # -*- Entry points: -*-
