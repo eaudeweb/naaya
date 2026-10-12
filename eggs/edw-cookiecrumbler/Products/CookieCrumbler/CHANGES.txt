@@ -1,5 +1,7 @@
 
-Version 2.0 (unreleased)
+Version 2.1 (unreleased)
+
+Version 2.0 (2026-10-12)
 
 - Port to Python 3 and Zope 5 [dumitval]
 
