@@ -9,6 +9,6 @@ setup(name='naaya.envirowindows',
       include_package_data=True,
       zip_safe=False,
       install_requires=[
-          'Naaya >= 3.4.15',
+          'Naaya >= 6.0.1',
       ]
       )

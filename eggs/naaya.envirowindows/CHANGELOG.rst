@@ -1,5 +1,6 @@
 2.0.1 (unreleased)
 ------------------
+* Require Naaya >= 6.0.1 [dumitval]
 * Use the standard library json instead of simplejson [dumitval]
 
 2.0.0 (2026-10-12)
