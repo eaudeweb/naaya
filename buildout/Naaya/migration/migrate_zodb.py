@@ -8,19 +8,19 @@ and fix_provides have been run on the raw Data.fs).
 
 Steps:
   1. Replace broken PAS CookieAuthHelper (PlonePAS -> basic PAS)
-  2. Deactivate plone.session PAS plugin
-  3. Update LDAP auth source obj_path (ldap-plugin -> pasldap)
-  4. Fix broken TextIndex -> ZCTextIndex in portal_catalog
-  5. Fix relative ajax-loader.gif URL in ZODB slick-theme.css
-  6. Rename bobobase_modification_time -> modification_time in glossary catalogs
-  7. Delete media items whose ExtFile content no longer exists
-  8. Remove contentratings storages from annotations
-  9. Delete /update_logs
-  10. Delete /database (MySQL apps), /fix_sortorder_default and the Acronyms portlet
-  11. Convert Python 2 print statements in stored PythonScripts
-  12. Number duplicate i18n:name values in stored templates
-  13. Remove the 'depth' option from path queries in stored templates
-  14. Replace rstk.name with rstk['name'] in stored templates and scripts
+  2. Replace the Plone PAS plugins with plain PAS and LDAPMultiPlugins ones
+  3. Fix broken TextIndex -> ZCTextIndex in portal_catalog
+  4. Fix relative ajax-loader.gif URL in ZODB slick-theme.css
+  5. Rename bobobase_modification_time -> modification_time in glossary catalogs
+  6. Delete media items whose ExtFile content no longer exists
+  7. Remove contentratings storages from annotations
+  8. Delete /update_logs
+  9. Delete /database (MySQL apps), /fix_sortorder_default and the Acronyms portlet
+  10. Convert Python 2 print statements in stored PythonScripts
+  11. Number duplicate i18n:name values in stored templates
+  12. Remove the 'depth' option from path queries in stored templates
+  13. Replace rstk.name with rstk['name'] in stored templates and scripts
+  14. Use nocall:options/error_value in stored error templates
 """
 
 import io
@@ -95,59 +95,103 @@ def step_fix_pas_cookie(app):
     print(f"  Done (cookie_name={cookie_name}, login_path={login_path})")
 
 
-def step_deactivate_plone_session(app):
-    """Deactivate plone.session plugin (requires plone.keyring, unavailable)."""
+# Plone PAS plugins with a plain PAS equivalent: same id, same stored data
+PAS_REPLACEMENTS = {
+    'Products.PlonePAS.plugins.user.UserManager':
+        ('Products.PluggableAuthService.plugins.ZODBUserManager', 'ZODBUserManager'),
+    'Products.PlonePAS.plugins.group.GroupManager':
+        ('Products.PluggableAuthService.plugins.ZODBGroupManager', 'ZODBGroupManager'),
+    'Products.PlonePAS.plugins.role.GroupAwareRoleManager':
+        ('Products.PluggableAuthService.plugins.ZODBRoleManager', 'ZODBRoleManager'),
+    'Products.PloneLDAP.plugins.ldap.PloneLDAPMultiPlugin':
+        ('Products.LDAPMultiPlugins.LDAPMultiPlugin', 'LDAPMultiPlugin'),
+}
+
+# Plone-only PAS plugins without data Naaya uses
+PAS_REMOVALS = ('Products.PlonePAS.', 'Products.PloneLDAP.', 'borg.localrole.')
+
+
+def _class_path(ob):
+    """Dotted class path; Broken classes keep the original module and name."""
+    cls = type(aq_base(ob))
+    return '%s.%s' % (cls.__module__, cls.__name__)
+
+
+def step_replace_plone_pas_plugins(app):
+    """Replace the Plone PAS plugins in /acl_users with plain PAS and LDAPMultiPlugins ones."""
+    import importlib
+    from ZODB.broken import Broken
     pas = getattr(app, 'acl_users', None)
-    if pas is None:
+    if pas is None or getattr(pas, 'meta_type', '') != 'Pluggable Auth Service':
+        print("  No PAS at app root, skipping")
         return
+    pas = aq_base(pas)
+    changed = []
+    for entry in list(pas._objects):
+        ob_id = entry['id']
+        ob = pas.__dict__.get(ob_id)
+        if ob is None:
+            continue
+        path = _class_path(ob)
+        if path in PAS_REPLACEMENTS:
+            module, name = PAS_REPLACEMENTS[path]
+            cls = getattr(importlib.import_module(module), name)
+            ob._p_activate()
+            state = (ob.__dict__['__Broken_state__'] if isinstance(ob, Broken)
+                     else ob.__getstate__())
+            state = dict(state)
+            state.pop('__provides__', None)  # refers to the old class
+            new = cls.__new__(cls)
+            new.__setstate__(state)
+            pas._setOb(ob_id, new)
+            entry['meta_type'] = new.meta_type
+            changed.append('%s -> %s' % (ob_id, name))
+        elif path.startswith(PAS_REMOVALS):
+            pas._objects = tuple(o for o in pas._objects if o['id'] != ob_id)
+            delattr(pas, ob_id)
+            changed.append('%s removed' % ob_id)
+    # Keep only PAS plugin types and the registrations their plugins provide
+    registry = pas.plugins
 
-    session = getattr(pas, 'session', None)
-    if session is None:
-        print("  No 'session' plugin, skipping")
-        return
-
+    def pas_type(iface):
+        return getattr(iface, '__module__', '').startswith('Products.PluggableAuthService.')
+    for iface in list(registry._plugins.keys()):
+        if not pas_type(iface):
+            del registry._plugins[iface]
+            continue
+        ids = tuple(i for i in registry._plugins[iface]
+                    if i in pas.__dict__ and iface.providedBy(pas.__dict__[i]))
+        if ids != registry._plugins[iface]:
+            registry._plugins[iface] = ids
+    registry._plugin_types = [i for i in registry._plugin_types if pas_type(i)]
+    for iface in list(registry._plugin_type_info.keys()):
+        if not pas_type(iface):
+            del registry._plugin_type_info[iface]
+    # plone.session handles the login cookie, as on the Python 2 sites
     from Products.PluggableAuthService.interfaces.plugins import (
-        IAuthenticationPlugin,
-        ICredentialsResetPlugin,
-        ICredentialsUpdatePlugin,
-        IExtractionPlugin,
-    )
-
-    plugins = pas.plugins
-    deactivated = []
-    for iface in [ICredentialsUpdatePlugin, ICredentialsResetPlugin,
-                  IAuthenticationPlugin, IExtractionPlugin]:
-        active = [id for id, p in plugins.listPlugins(iface)]
-        if 'session' in active:
-            plugins.deactivatePlugin(iface, 'session')
-            deactivated.append(iface.__name__)
-
-    if deactivated:
-        print(f"  Deactivated 'session' from: {', '.join(deactivated)}")
-    else:
-        print("  'session' plugin was already inactive")
-
-
-def step_fix_ldap_sources(app):
-    """Update LDAP auth source obj_path from ldap-plugin to pasldap."""
-    fixed = 0
+        IAuthenticationPlugin, ICredentialsResetPlugin,
+        ICredentialsUpdatePlugin, IExtractionPlugin)
+    if 'session' in pas.__dict__:
+        for iface in (IExtractionPlugin, IAuthenticationPlugin,
+                      ICredentialsUpdatePlugin, ICredentialsResetPlugin):
+            ids = registry._plugins.get(iface, ())
+            if 'session' not in ids:
+                registry._plugins[iface] = ('session',) + tuple(ids)
+                changed.append('session activated for %s' % iface.__name__)
+    registry._p_changed = True
+    for line in changed:
+        print("  " + line)
+    if not changed:
+        print("  No Plone PAS plugins")
+    # Sources moved to pasldap by an earlier version of this script
     for site_id in app.objectIds():
-        try:
-            site = app[site_id]
-            if not hasattr(site, 'getAuthenticationTool'):
-                continue
-            auth_tool = site.getAuthenticationTool()
-            for src in auth_tool.getSources():
-                if hasattr(src, 'obj_path') and 'ldap-plugin' in src.obj_path:
-                    old_path = src.obj_path
-                    src.obj_path = 'acl_users/pasldap'
-                    print(f"  {site_id}: {old_path} -> {src.obj_path}")
-                    fixed += 1
-        except Exception as e:
-            print(f"  {site_id}: error - {e}")
-
-    if not fixed:
-        print("  No LDAP sources needed updating")
+        site = app[site_id]
+        if not hasattr(aq_base(site), 'getAuthenticationTool'):
+            continue
+        for src in site.getAuthenticationTool().getSources():
+            if getattr(src, 'obj_path', '') == 'acl_users/pasldap':
+                src.obj_path = 'acl_users/ldap-plugin/acl_users'
+                print("  %s/%s: obj_path -> acl_users/ldap-plugin/acl_users" % (site_id, src.getId()))
 
 
 def _fix_broken_indexes_in_catalog(catalog, catalog_path):
@@ -657,12 +701,30 @@ def step_rstk_item_access(app):
         print("  No templates or scripts with rstk.name")
 
 
+def step_nocall_error_value(app):
+    """Use nocall:options/error_value; Zope 5 calls HTTP exceptions as WSGI apps."""
+    from Products.PageTemplates.PageTemplate import PageTemplate
+    expr = re.compile(r'((?:structure|text)\s+|=")options/error_value\b')
+    fixed = 0
+    for template in _iter_records(app, b'Template'):
+        if not isinstance(template, PageTemplate):
+            continue
+        text = template._text
+        if not expr.search(text):
+            continue
+        template.pt_edit(expr.sub(r'\1nocall:options/error_value', text),
+                         template.content_type)
+        print("  %s" % '/'.join(template.getPhysicalPath()))
+        fixed += 1
+    if not fixed:
+        print("  No templates with options/error_value")
+
+
 # --- Run all steps ---
 
 STEPS = [
     ("Fix PAS CookieAuthHelper", step_fix_pas_cookie),
-    ("Deactivate plone.session plugin", step_deactivate_plone_session),
-    ("Update LDAP auth source paths", step_fix_ldap_sources),
+    ("Replace the Plone PAS plugins", step_replace_plone_pas_plugins),
     ("Fix broken TextIndex -> ZCTextIndex", step_fix_catalog_indexes),
     ("Fix slick-theme.css ajax-loader.gif URL", step_fix_slick_theme_css),
     ("Fix glossary catalog bobobase_modification_time", step_fix_glossary_catalogs),
@@ -674,6 +736,7 @@ STEPS = [
     ("Number duplicate i18n:name values in templates", step_dedupe_i18n_names),
     ("Remove 'depth' from path queries in templates", step_remove_path_depth),
     ("Use rstk['name'] in templates and scripts", step_rstk_item_access),
+    ("Use nocall:options/error_value in error templates", step_nocall_error_value),
 ]
 
 print("=" * 60)
