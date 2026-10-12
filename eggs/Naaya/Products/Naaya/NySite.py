@@ -16,7 +16,6 @@ from AccessControl.class_init import InitializeClass
 from .NyFolder import folder_add_html, addNyFolder, importNyFolder
 from .NyFolderBase import NyFolderBase
 from OFS.Folder import Folder
-from Persistence.mapping import PersistentMapping
 from Products.Naaya.constants import DEFAULT_MAILSERVERNAME
 from Products.Naaya.constants import DEFAULT_MAILSERVERPORT
 from Products.Naaya.constants import DEFAULT_PORTAL_LANGUAGE_CODE
@@ -315,7 +314,6 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         self.display_subobject_count = ""
         self.display_subobject_count_for_admins = ""
         self.default_logo = ''
-        self.checked_emails = PersistentMapping()
         CookieCrumbler.__dict__['__init__'](self)
         search_tool.__dict__['__init__'](self)
         portlets_manager.__dict__['__init__'](self)

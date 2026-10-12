@@ -8,6 +8,8 @@
   update scripts [dumitval]
 * Fix the convert_internal_links update script [dumitval]
 * Fix the deprecated path helpers in naaya.core.utils [dumitval]
+* Remove the background email address validation;
+  email addresses are checked for syntax only [dumitval]
 
 5.0.31 (2025-09-09)
 -------------------

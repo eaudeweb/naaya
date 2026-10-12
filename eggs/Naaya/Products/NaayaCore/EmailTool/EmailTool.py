@@ -8,7 +8,6 @@ from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens   # , view
 from AccessControl.class_init import InitializeClass
 from OFS.Folder import Folder
-from Products.NaayaCore.EmailTool.EmailValidator import EmailValidator
 from Products.NaayaCore.constants import ID_EMAILTOOL
 from Products.NaayaCore.constants import METATYPE_EMAILTEMPLATE
 from Products.NaayaCore.constants import METATYPE_EMAILTOOL
@@ -48,7 +47,6 @@ except ImportError as e:
     import email.Header as email_header
     import email.Generator as email_generator
 
-email_validator = EmailValidator("checked_emails", maxWorkers=10)
 g_utils = utils.utils()
 
 mail_logger = logging.getLogger('naaya.core.email')
@@ -562,31 +560,17 @@ def export_email_list_xcel(site, cols, filenames=None,
     return r
 
 
+VALID_EMAIL = re.compile(r"(?:^|\s)[-a-zA-Z0-9_.']+@(?:[-a-zA-Z0-9]+\.)+"
+                         r"[a-zA-Z]{2,63}(?:\s|$)")
+
+
 def check_cached_valid_emails(obj, emails):
-    """Instance calling this (obj) must have a dict like member checked_emails
-    on it.
-    This breaks encapsulation and should be done better, probably in NySite"""
-    invalid_emails = {}
-    not_resolved_emails = []
-    if type(emails) == str:
+    """Return ({invalid email: False}, []); syntax check only, no server lookup."""
+    if isinstance(emails, str):
         emails = [emails]
-    email_validator.bind(obj)
-    for eml in emails:
-        check_value = email_validator.validate_from_cache(eml)
-        if check_value is None:
-            not_resolved_emails.append(eml)
-        elif check_value is not True:
-            invalid_emails[eml] = check_value
-    if not_resolved_emails:
-        _defer_check_valid_emails(obj, not_resolved_emails)
-    return invalid_emails, not_resolved_emails
-
-
-def _defer_check_valid_emails(obj, emails):
-    emails = set(emails)
-    email_validator.bind(obj)
-    for eml in emails:
-        email_validator.enqueue(eml)
+    invalid_emails = {eml: False for eml in emails
+                      if not VALID_EMAIL.match(eml)}
+    return invalid_emails, []
 
 
 def get_mail_queue(site):
