@@ -1,6 +1,7 @@
 1.4.69 (unreleased)
 -------------------
 * Fix the member search on interest groups with an LDAP source [dumitval]
+* Fix the interest group access request email [dumitval]
 
 1.4.68 (2022-04-08)
 -------------------

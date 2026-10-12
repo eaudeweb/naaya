@@ -2,6 +2,7 @@
 ------------------
 * Fix the question list and deleting ratings [dumitval]
 * Fix sorting reviews by rating [dumitval]
+* Fix the question edit page [dumitval]
 
 1.1.3 (2011-11-14)
 ------------------

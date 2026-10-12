@@ -52,7 +52,7 @@
 <div tal:content="structure python:here.getLocalProperty('description', lang)" />
 
 
-<!----------- List comments ----------->
+<!-- List comments -->
 <br />
 <tal:block define="comments python:here.objectValues(['Simple Consultation Comment'])">
 <p><span tal:replace="python:len(comments)" /> <span i18n:translate="">reviewers have commented on this consultation.</span></p>

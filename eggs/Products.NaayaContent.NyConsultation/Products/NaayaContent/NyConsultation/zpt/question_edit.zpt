@@ -14,7 +14,7 @@
 					<input type="hidden" name="qid" tal:attributes="value qid" />
 					<input type="hidden" name="lang" tal:attributes="value python:lang" />
 					<br />
-					<input type="submit" value="Save changes" i1n:attributes="value" />
+					<input type="submit" value="Save changes" i18n:attributes="value" />
 				</fieldset>
 			</form>
 		</tal:block>

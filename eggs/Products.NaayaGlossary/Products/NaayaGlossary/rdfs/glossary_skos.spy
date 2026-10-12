@@ -20,21 +20,21 @@ alias_container_utXmlEncode = container.utXmlEncode
 RESPONSE.setHeader('content-type', 'text/xml')
 
 #start generating rdf content
-print '<?xml version="1.0" encoding="UTF-8"?>'
-print '''<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+print('<?xml version="1.0" encoding="UTF-8"?>')
+print('''<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
             xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
             xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-            xml:lang="%s">''' % langcode
+            xml:lang="%s">''' % langcode)
 
 for record in container.GetElementsInfo():
-    print '<rdf:Description rdf:about="%s">' % (record.absolute_url(0))
+    print('<rdf:Description rdf:about="%s">' % (record.absolute_url(0)))
     for language in record.get_english_names():
-        print '<skos:prefLabel xml:lang="%s">%s</skos:prefLabel>' % (record.get_language_code(language), alias_container_utXmlEncode(record.get_translation_by_language(language)))
-    print '<skos:altLabel>%s</skos:altLabel>' % ""
+        print('<skos:prefLabel xml:lang="%s">%s</skos:prefLabel>' % (record.get_language_code(language), alias_container_utXmlEncode(record.get_translation_by_language(language))))
+    print('<skos:altLabel>%s</skos:altLabel>' % "")
     for language in record.get_english_names():
-        print '<skos:definition  xml:lang="%s">%s</skos:definition>' % (record.get_language_code(language), alias_container_utXmlEncode(record.get_def_trans_by_language(language)))
-    print '</rdf:Description>'
-print '</rdf:RDF>'
+        print('<skos:definition  xml:lang="%s">%s</skos:definition>' % (record.get_language_code(language), alias_container_utXmlEncode(record.get_def_trans_by_language(language))))
+    print('</rdf:Description>')
+print('</rdf:RDF>')
 
 #return stuff
 return printed

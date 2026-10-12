@@ -13,7 +13,6 @@
 </div>
 
 <script type="text/javascript">
-<!--
 function add()
 {
 	var selectleft = document.frmportlets.available;
@@ -99,7 +98,6 @@ function dosubmit()
 		selectright.options[i].selected = true;
 	}
 }
-// -->
 </script>
 
 <p i18n:translate="" class="cleaner">

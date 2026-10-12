@@ -104,7 +104,7 @@
 		a comma separated file. In case your Naaya portal has enabled geolocation for Contacts,
 		fill in the <em i18n:name="latitude" i18n:translate="">Latitude</em>, <em i18n:name="longitude" i18n:translate="">Longitude</em> , <em i18n:name="location" i18n:translate="">Location URL</em> and <em i18n:name="location-type" i18n:translate="">Location type</em>.
 		If the latitude and longitude are not provided, the system will try to find these coordinates from the
-		<em i18n:name="postal-address" i18n:translate="">Postal address</em> field. The <em i18n:name="location-type" i18n:translate="">Location type</em> must be one of those <a tal:attributes="href python:'%s/admin_maptypes_html' % here.getGeoMapTool().absolute_url()" i18n:name="defined-in-the-portal" i18n:translate="" > defined in the portal</a>.
+		<em i18n:name="postal-address" i18n:translate="">Postal address</em> field. The <em i18n:name="location-type2" i18n:translate="">Location type</em> must be one of those <a tal:attributes="href python:'%s/admin_maptypes_html' % here.getGeoMapTool().absolute_url()" i18n:name="defined-in-the-portal" i18n:translate="" > defined in the portal</a>.
 		</p>
 		<p i18n:translate=""><strong i18n:name="tip" i18n:translate="">TIP:</strong> Make sure that the encoding of your CSV file is either Latin-1 or UTF-8 and
 		that you select the matching <em i18n:name="encoding" i18n:translate="">Encoding</em> option in the combo box below.

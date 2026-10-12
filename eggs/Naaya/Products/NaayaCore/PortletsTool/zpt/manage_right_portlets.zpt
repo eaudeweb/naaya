@@ -6,7 +6,6 @@
 </p>
 
 <script type="text/javascript">
-<!--
 
 function add()
 {
@@ -98,7 +97,6 @@ function dosubmit()
 	document.frmportlets.submit();
 }
 
-// -->
 </script>
 
 <tal:block
@@ -121,7 +119,6 @@ tal:define="mode python:request.get('mode', '');
 			</tal:block>
 			<tal:block tal:condition="python:mode!='edit'">
 			<script type="text/javascript">
-			<!--
 			function fTreeClick(expand)
 			{
 				var selectleft = document.frmportlets.available;
@@ -139,7 +136,6 @@ tal:define="mode python:request.get('mode', '');
 			{
 				document.frmportlets.folder.value = node_path;
 			}
-			//-->
 			</script>
 			<tal:block tal:define="expand python:request.get('expand', '');
 									expand_list python:here.splitToList(expand);

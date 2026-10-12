@@ -35,6 +35,8 @@
 * Fix CSV imports of uploaded files and committing after every row [dumitval]
 * Fix the tag cloud [dumitval]
 * Fix the XML export writing "b'...'" instead of the file content [dumitval]
+* Fix the portlet administration pages, the subscription confirmation email and
+  the last page link of the external search [dumitval]
 
 5.0.31 (2025-09-09)
 -------------------

@@ -2,6 +2,7 @@
 -------------------
 * Fix the documents zip download and zip upload [dumitval]
 * Fix the contacts CSV import [dumitval]
+* Fix the contacts administration page [dumitval]
 
 1.1.16 (2019-09-30)
 -------------------

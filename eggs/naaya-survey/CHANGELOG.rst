@@ -3,6 +3,7 @@
 * Fix the answers download [dumitval]
 * Fix submitting answers with a file upload [dumitval]
 * Fix the chart statistics [dumitval]
+* Fix the survey messages page [dumitval]
 
 1.3.17 (2022-09-06)
 ------------------

@@ -1,6 +1,7 @@
 1.1.22 (unreleased)
 ------------------
 * Fix the TMX and XLIFF import [dumitval]
+* Fix the glossary SKOS RDF export [dumitval]
 
 1.1.21 (2018-10-05)
 ------------------

@@ -6,7 +6,6 @@
 </p>
 
 <script type="text/javascript">
-<!--
 
 function add()
 {
@@ -98,7 +97,6 @@ function dosubmit()
 	document.frmportlets.submit();
 }
 
-// -->
 </script>
 
 <form name="frmportlets" method="post" action="manage_center_portlets">
