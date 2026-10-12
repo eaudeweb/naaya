@@ -45,7 +45,7 @@
         <tbody>
             <tal:block repeat="role options/roles">
                 <tr 
-                    tal:attributes="class python:('even', 'odd')[int(path('repeat/role/odd'))]+' '+role['parent'];
+                    tal:attributes="class python:('even', 'odd')[bool(path('repeat/role/odd'))]+' '+role['parent'];
                                     id string:row_${role/id}">
                     <td nowrap="nowrap">
                         <div class="arrow toggle_role" tal:condition="role/children"></div>

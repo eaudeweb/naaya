@@ -443,14 +443,8 @@ class GroupwareSite(NySite):
         mail_tool = self.getEmailTool()
         mail_to = self.administrator_email
         mail_from = mail_tool.get_addr_from()
-        try:
-            firstname = getattr(user, 'firstname', '').decode('utf-8')
-        except UnicodeDecodeError:
-            firstname = getattr(user, 'firstname', '').decode('latin1')
-        try:
-            lastname = getattr(user, 'lastname', '').decode('utf-8')
-        except UnicodeDecodeError:
-            lastname = getattr(user, 'lastname', '').decode('latin1')
+        firstname = _to_text(getattr(user, 'firstname', ''))
+        lastname = _to_text(getattr(user, 'lastname', ''))
         mail_data = self.request_ig_access_emailpt.render_email(**{
             'here': self,
             'role': role,
@@ -481,19 +475,19 @@ class GroupwareSite(NySite):
             return REQUEST.RESPONSE.redirect(
                 self.getSite().aq_parent.absolute_url() + '/index_html')
 
-        user = REQUEST.AUTHENTICATED_USER
-        if user.name == 'Anonymous User':
+        user_name = REQUEST.AUTHENTICATED_USER.getUserName()
+        if user_name == 'Anonymous User':
             return REQUEST.RESPONSE.redirect(
                 self.getSite().absolute_url() + '/login_html')
 
         acl = self.getAuthenticationTool()
         relinquished = False
         for source in acl.getSources():
-            relinquished = source.removeUser(user.name)
+            relinquished = source.removeUser(user_name)
 
         try:
-            acl.manage_delUsers([user.name])
-            if user.name not in acl.getUserNames():
+            acl.manage_delUsers([user_name])
+            if user_name not in acl.getUserNames():
                 relinquished = True
         except KeyError:
             pass
@@ -570,6 +564,15 @@ def groupware_bundle_registration():
     from Products.NaayaCore.FormsTool import bundlesupport
     templates_path = os.path.join(os.path.dirname(__file__), 'skel', 'forms')
     bundlesupport.register_templates_in_directory(templates_path, 'Groupware')
+
+
+def _to_text(value):
+    if isinstance(value, bytes):
+        try:
+            return value.decode('utf-8')
+        except UnicodeDecodeError:
+            return value.decode('latin1')
+    return value
 
 
 def _inside_meeting(location_obj):

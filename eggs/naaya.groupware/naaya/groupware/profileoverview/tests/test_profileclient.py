@@ -1,4 +1,4 @@
-from mock import patch
+from unittest.mock import patch
 
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from naaya.groupware.groupware_site import manage_addGroupwareSite

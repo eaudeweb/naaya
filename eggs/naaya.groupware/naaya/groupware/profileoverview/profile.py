@@ -1,9 +1,6 @@
 import operator
 import urllib
-try:
-    import simplejson as json
-except ImportError:
-    import json
+import json
 
 from naaya.groupware.constants import METATYPE_GROUPWARESITE
 from Products.NaayaCore.AuthenticationTool.plugins import plugLDAPUserFolder

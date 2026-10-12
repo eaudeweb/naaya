@@ -3,6 +3,14 @@
 * Fix the member search on interest groups with an LDAP source [dumitval]
 * Fix the interest group access request email [dumitval]
 * Use PEP 420 namespace packages [dumitval]
+* Fix the interest group access request failing on str user names
+  [dumitval]
+* Fix the role tables on the profile overview and access review pages
+  [dumitval]
+* Fix relinquish membership failing for PAS users [dumitval]
+* Use the standard library json instead of simplejson [dumitval]
+* Remove yafowil_resources.py, used by pas.plugins.ldap [dumitval]
+* Make the tests run under zope.testrunner [dumitval]
 
 1.4.68 (2022-04-08)
 -------------------

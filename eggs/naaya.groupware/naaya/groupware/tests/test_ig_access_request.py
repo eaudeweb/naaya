@@ -1,4 +1,4 @@
-from mock import Mock, patch
+from unittest.mock import MagicMock as Mock, patch
 import transaction
 from naaya.groupware.tests import GWFunctionalTestCase
 
@@ -10,8 +10,20 @@ class MockedSource(Mock):
         info.email = 'x@example.com'
         return info
 
+    def getUserFullName(self, userid, acl_folder):
+        return None
 
-class IGRequestTestCase(GWFunctionalTestCase):
+
+class SourceMixin(object):
+
+    def mocked_source(self):
+        # Users come from the root user folder instead of LDAP
+        source = MockedSource()
+        source.getUserFolder.return_value = self.portal.aq_parent.acl_users
+        return source
+
+
+class IGRequestTestCase(SourceMixin, GWFunctionalTestCase):
 
     def afterSetUp(self):
         # Create a no role user so that we can request a role
@@ -24,11 +36,11 @@ class IGRequestTestCase(GWFunctionalTestCase):
         self.p = patch(
             'Products.NaayaCore.AuthenticationTool.AuthenticationTool.'
             'AuthenticationTool.getSources',
-            Mock(return_value=[MockedSource()]))
-        self.p.__enter__()
+            Mock(return_value=[self.mocked_source()]))
+        self.p.start()
 
     def beforeTearDown(self):
-        self.p.__exit__()
+        self.p.stop()
 
     def test_already_member(self):
         """ Admin is already a member of the portal so it doesn't require
@@ -38,8 +50,10 @@ class IGRequestTestCase(GWFunctionalTestCase):
 
         self.browser_do_login('admin', '')
         self.browser.go(self.portal.absolute_url() + '/request_ig_access_html')
-        self.assertTrue('You are already a member of this interest group' in
-                        self.browser.get_html())
+        # Admin has every role, so only Meeting Observer can be requested
+        html = self.browser.get_html()
+        for role in ('Viewer', 'Reviewer', 'Contributor'):
+            self.assertNotIn('value="%s"' % role, html)
 
     def test_send_request(self):
         """ Get the page with the request form and submit it with a normal
@@ -54,6 +68,7 @@ class IGRequestTestCase(GWFunctionalTestCase):
         form = self.browser.get_form(2)
         field = self.browser.get_form_field(form, 'role')
         self.browser.clicked(form, field)
+        form['role'] = 'Reviewer'
         self.browser.submit()
         self.assertTrue('The Interest Group administrators have been notified '
                         'of your access request' in self.browser.get_html())
@@ -66,11 +81,12 @@ class IGRequestTestCase(GWFunctionalTestCase):
         self.assertEqual(action_logger[1].user, 'norole')
 
 
-class IGReviewTestCase(GWFunctionalTestCase):
+class IGReviewTestCase(SourceMixin, GWFunctionalTestCase):
     """ Review process """
 
     def afterSetUp(self):
         # Create a no role user so that we can request a role
+        self.portal.aq_parent.acl_users._doAddUser('norole', 'norole', [], '')
         self.action_logger = self.portal.getActionLogger()
         # Create a log so that we can match a key
         self.action_logger.create(user='norole',
@@ -86,11 +102,27 @@ class IGReviewTestCase(GWFunctionalTestCase):
         self.p = patch(
             'Products.NaayaCore.AuthenticationTool.AuthenticationTool.'
             'AuthenticationTool.getSources',
-            Mock(return_value=[MockedSource()]))
-        self.p.__enter__()
+            Mock(return_value=[self.mocked_source()]))
+        self.p.start()
+        # The first review page reads the user and the roles from LDAP
+        agent = Mock()
+        agent.user_info.return_value = dict.fromkeys(
+            ('first_name', 'last_name', 'email', 'phone', 'mobile', 'fax',
+             'postal_address'), '')
+        agent.user_info.return_value['uid'] = 'norole'
+        client = Mock()
+        client.return_value.roles_list_in_ldap.return_value = []
+        self.patches = [
+            patch('naaya.groupware.groupware_site.agent_from_site',
+                  Mock(return_value=agent)),
+            patch('naaya.groupware.groupware_site.ProfileClient', client)]
+        for p in self.patches:
+            p.start()
 
     def beforeTearDown(self):
-        self.p.__exit__()
+        self.p.stop()
+        for p in self.patches:
+            p.stop()
 
     def test_review_request_fail(self):
         """ An invalid key should display an error message """
@@ -120,7 +152,7 @@ class IGReviewTestCase(GWFunctionalTestCase):
         field = self.browser.get_form_field(form, 'grant')
         self.browser.clicked(form, field)
         self.browser.submit()
-        self.assertTrue('Role has been granted' in self.browser.get_html())
+        self.assertEqual(action_logger[2].action, 'Granted')
         auth_tool = self.portal.getAuthenticationTool()
         self.assertTrue(auth_tool.getSources()[0].addUserRoles.called)
         self.assertEqual(len(action_logger), 2)
@@ -136,7 +168,7 @@ class IGReviewTestCase(GWFunctionalTestCase):
         field = self.browser.get_form_field(form, 'reject')
         self.browser.clicked(form, field)
         self.browser.submit()
-        self.assertTrue('Request has been rejected' in self.browser.get_html())
+        self.assertEqual(action_logger[2].action, 'Rejected')
         self.assertEqual(len(action_logger), 2)
 
     def test_reject_reason(self):
@@ -151,7 +183,8 @@ class IGReviewTestCase(GWFunctionalTestCase):
         self.browser.clicked(form, field)
         form['reason'] = 'Some reason'
         self.browser.submit()
-        self.assertTrue('Request has been rejected' in self.browser.get_html())
+        self.assertEqual(action_logger[2].action, 'Rejected')
+        self.assertEqual(action_logger[2].reason, 'Some reason')
         self.assertEqual(len(action_logger), 2)
 
     def test_reject_reason_email(self):
@@ -182,5 +215,31 @@ class IGReviewTestCase(GWFunctionalTestCase):
         key = action_logger[1].key
         self.browser.go(self.portal.absolute_url() +
                         '/review_ig_request?key=%s' % key)
-        self.assertTrue('Key %s has already been used' % key in
-                        self.browser.get_html())
+        self.assertIn('An administrator already processed this request',
+                      self.browser.get_html())
+
+
+class RelinquishTestCase(SourceMixin, GWFunctionalTestCase):
+
+    def afterSetUp(self):
+        self.source = self.mocked_source()
+        self.source.removeUser.return_value = True
+        self.p = patch(
+            'Products.NaayaCore.AuthenticationTool.AuthenticationTool.'
+            'AuthenticationTool.getSources',
+            Mock(return_value=[self.source]))
+        self.p.start()
+
+    def beforeTearDown(self):
+        self.p.stop()
+
+    def test_relinquish_pas_user(self):
+        from Products.PluggableAuthService.PropertiedUser import (
+            PropertiedUser)
+        request = Mock()
+        request.__getitem__.side_effect = {'REQUEST_METHOD': 'POST'}.get
+        request.AUTHENTICATED_USER = PropertiedUser('norole', 'norole')
+        self.portal.relinquish_membership(request)
+        self.source.removeUser.assert_called_once_with('norole')
+        self.assertTrue(request.RESPONSE.redirect.call_args[0][0].endswith(
+            '/relinquish_membership_html?done=success'))
