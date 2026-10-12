@@ -2,7 +2,7 @@
 from setuptools import setup, find_namespace_packages
 
 setup(name='naaya.groupware',
-      version='1.4.69',
+      version='2.0.0',
       author='Eau de Web',
       author_email='office@eaudeweb.ro',
       url='http://naaya.eaudeweb.ro',
@@ -10,8 +10,8 @@ setup(name='naaya.groupware',
       include_package_data=True,
       zip_safe=False,
       install_requires=[
-          'Naaya >= 5.0.0',
-          'naaya.content.bfile',
-          'collective.autopermission == 1.0b2',
+          'Naaya >= 6.0.1',
+          'naaya.content.bfile >= 2.0.0',
+          'be.ldapadmin >= 1.0',
       ]
       )

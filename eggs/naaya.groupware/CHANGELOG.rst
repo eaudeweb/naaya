@@ -1,5 +1,8 @@
-1.4.69 (unreleased)
--------------------
+2.0.0 (unreleased)
+------------------
+* Port to Python 3 and Zope 5 [dumitval]
+* Require the Python 3 releases of Naaya, naaya.content.bfile and
+  be.ldapadmin; remove the collective.autopermission requirement [dumitval]
 * Fix the member search on interest groups with an LDAP source [dumitval]
 * Fix the interest group access request email [dumitval]
 * Use PEP 420 namespace packages [dumitval]
