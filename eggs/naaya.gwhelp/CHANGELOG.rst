@@ -1,5 +1,7 @@
-1.0.7 (unreleased)
--------------------
+2.0.0 (unreleased)
+------------------
+* Port to Python 3 and Zope 5 [dumitval]
+* Require naaya.groupware >= 2.0.0 [dumitval]
 * Use PEP 420 namespace packages [dumitval]
 
 1.0.6 (2017-05-19)
