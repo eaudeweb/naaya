@@ -17,10 +17,7 @@
 # Alin Voinea
 
 # Python imports
-try:
-    import simplejson as json
-except ImportError:
-    import json
+import json
 import os
 import logging
 from io import BytesIO
