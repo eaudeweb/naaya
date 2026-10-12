@@ -1,5 +1,7 @@
 2.0.1 - (unreleased)
 ====================
+* Require the Python 3 releases of Naaya, naaya.content.bfile,
+  Products.NaayaContent.NyPublication and naaya.envirowindows [dumitval]
 * Use the standard library json instead of simplejson [dumitval]
 
 2.0.0 - (2026-10-12)
