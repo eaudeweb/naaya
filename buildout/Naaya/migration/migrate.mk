@@ -1,6 +1,6 @@
 # Python 2 to Python 3 Data.fs migration; include it after setting INSTANCE and DATAFS
 MIGRATION := $(dir $(lastword $(MAKEFILE_LIST)))
-PIP ?= pip
+PIP ?= bin/pip
 
 .PHONY: migrate
 
