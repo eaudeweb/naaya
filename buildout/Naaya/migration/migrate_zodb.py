@@ -21,6 +21,9 @@ Steps:
   12. Remove the 'depth' option from path queries in stored templates
   13. Replace rstk.name with rstk['name'] in stored templates and scripts
   14. Use nocall:options/error_value in stored error templates
+
+After the commit every catalog is rebuilt (one commit per catalog), then the
+database is packed. '--reindex-only' skips the steps and only rebuilds and packs.
 """
 
 import io
@@ -34,6 +37,7 @@ from Testing.makerequest import makerequest
 app = makerequest(app)  # noqa: F821
 
 dry_run = '--dry-run' in sys.argv
+reindex_only = '--reindex-only' in sys.argv
 
 
 def step_fix_pas_cookie(app):
@@ -202,7 +206,7 @@ def _fix_broken_indexes_in_catalog(catalog, catalog_path):
     """Replace broken TextIndex/TextIndexNG3 indexes with ZCTextIndex in a catalog."""
     from Products.ZCatalog.ZCatalog import ZCatalog
     if not isinstance(catalog, ZCatalog):
-        return
+        return 0
 
     inner = catalog._catalog
 
@@ -217,7 +221,7 @@ def _fix_broken_indexes_in_catalog(catalog, catalog_path):
             broken.append(idx_name)
 
     if not broken:
-        return
+        return 0
 
     print(f"    {catalog_path}: {len(broken)} broken: {broken}")
 
@@ -246,6 +250,7 @@ def _fix_broken_indexes_in_catalog(catalog, catalog_path):
         extra.doc_attr = idx_name
         catalog.addIndex(idx_name, 'ZCTextIndex', extra=extra)
         print(f"    Replaced {idx_name} -> ZCTextIndex")
+    return len(broken)
 
 
 def _find_all_catalogs(container, path=''):
@@ -302,20 +307,12 @@ def step_fix_catalog_indexes(app):
         return
 
     print(f"  Found {len(catalogs)} catalog(s)")
-    fixed_any = False
-    for catalog, catalog_path in catalogs:
-        before = len(catalog._catalog.indexes)
-        _fix_broken_indexes_in_catalog(catalog, catalog_path)
-        if len(catalog._catalog.indexes) != before or any(
-            not hasattr(catalog._catalog.indexes.get(k), '_apply_index', )
-            for k in catalog._catalog.indexes.keys()
-        ):
-            fixed_any = True
-
-    if not fixed_any:
+    replaced = sum(_fix_broken_indexes_in_catalog(catalog, catalog_path)
+                   for catalog, catalog_path in catalogs)
+    if not replaced:
         print("  No broken indexes found in any catalog")
     else:
-        print("  NOTE: Run 'Update Catalog' from ZMI to reindex")
+        print(f"  Replaced {replaced} index(es); all catalogs are rebuilt after the commit")
 
 
 def step_fix_slick_theme_css(app):
@@ -724,6 +721,22 @@ def step_nocall_error_value(app):
         print("  No templates with options/error_value")
 
 
+def reindex_catalogs(app):
+    """Rebuild every catalog from the objects it holds, one commit per catalog."""
+    catalogs = _find_all_catalogs(app)
+    print(f"  Found {len(catalogs)} catalog(s)")
+    for catalog, catalog_path in catalogs:
+        try:
+            catalog.refreshCatalog(clear=1)
+            transaction.get().note(f'Rebuild catalog {catalog_path}')
+            transaction.commit()
+            print(f"  {catalog_path}: {len(catalog)} object(s)")
+        except Exception as e:
+            transaction.abort()
+            print(f"  {catalog_path}: FAILED, {e!r}")
+        app._p_jar.cacheMinimize()
+
+
 # --- Run all steps ---
 
 STEPS = [
@@ -749,7 +762,7 @@ if dry_run:
     print("DRY RUN - no changes will be committed")
 print("=" * 60)
 
-for i, (label, func) in enumerate(STEPS, 1):
+for i, (label, func) in enumerate([] if reindex_only else STEPS, 1):
     print("\n[%d/%d] %s" % (i, len(STEPS), label))
     func(app)
 
@@ -757,8 +770,11 @@ if dry_run:
     print("\nDRY RUN - aborting transaction")
     transaction.abort()
 else:
-    print("\nCommitting transaction...")
-    transaction.commit()
+    if not reindex_only:
+        print("\nCommitting transaction...")
+        transaction.commit()
+    print("\nRebuilding catalogs...")
+    reindex_catalogs(app)
     print("Packing (drops unreachable objects)...")
     app._p_jar.db().pack()
     print("Done.")
