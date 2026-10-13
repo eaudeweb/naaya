@@ -167,6 +167,10 @@ def step_replace_plone_pas_plugins(app):
     for iface in list(registry._plugin_type_info.keys()):
         if not pas_type(iface):
             del registry._plugin_type_info[iface]
+    # fix_provides.py skips the registry: its __provides__ refers to Plone PAS interfaces
+    if '__provides__' in aq_base(registry).__dict__:
+        del aq_base(registry).__provides__
+        changed.append('plugins: __provides__ removed')
     # plone.session handles the login cookie, as on the Python 2 sites
     from Products.PluggableAuthService.interfaces.plugins import (
         IAuthenticationPlugin, ICredentialsResetPlugin,
