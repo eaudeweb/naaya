@@ -16,6 +16,7 @@ import logging
 import transaction
 import ZODB.FileStorage
 import ZODB
+from ZODB.serialize import ObjectWriter
 from ZODB.utils import u64
 from zope.interface import alsoProvides, directlyProvidedBy, implementedBy
 from zope.interface.interface import InterfaceClass
@@ -41,6 +42,7 @@ def fix_provides(datafs_path):
     count = 0
     fixed = 0
     errors = 0
+    skipped = []
 
     # Walk all objects reachable from root using ZODB's internal iteration
     # Use storage-level iteration to find all oids
@@ -75,6 +77,16 @@ def fix_provides(datafs_path):
                 if markers:
                     alsoProvides(obj, *markers)
                 obj._p_changed = True
+                try:
+                    ObjectWriter(obj).serialize(obj)
+                except Exception as e:
+                    # Other attributes refer to missing classes; leave it to migrate_zodb.py
+                    obj._p_changed = False
+                    obj._p_invalidate()
+                    skipped.append(f'{u64(oid):#x} '
+                                   f'({obj.__class__.__module__}.'
+                                   f'{obj.__class__.__name__}): {e}')
+                    continue
                 fixed += 1
                 if fixed <= 5 or markers:
                     oid_hex = f'{u64(oid):#x}'
@@ -101,7 +113,9 @@ def fix_provides(datafs_path):
         transaction.commit()
 
     logger.info(f"Done. Scanned {count} objects, "
-                f"fixed {fixed}, errors {errors}.")
+                f"fixed {fixed}, errors {errors}, skipped {len(skipped)}.")
+    for line in skipped:
+        logger.info(f"  Skipped {line}")
     conn.close()
     db.close()
 
