@@ -36,7 +36,7 @@ def get_languages_list():
     languages = {}
     cwd = __file__.rsplit(os.path.sep, 1)[0]
     filename = os.path.join(cwd, 'languages.txt')
-    with open(filename) as f:
+    with open(filename, encoding='utf-8') as f:
         for line in f:
             line = line.strip()
             if line and line[0] != '#':
