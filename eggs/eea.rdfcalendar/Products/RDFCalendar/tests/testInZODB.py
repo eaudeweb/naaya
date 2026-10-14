@@ -15,9 +15,9 @@ class RDFCalendarInZopeTestCase(ZopeTestCase.ZopeTestCase):
     def test_show_month(self):
         now_month = time.localtime().tm_mon
         self.app.manage_addProduct['RDFCalendar'].manage_addRDFCalendar('mycal', 'Title')
-	self.assertEquals(now_month, self.app.mycal.getMonth())
-	self.app.REQUEST.set('month', '12')
-	self.assertEquals(12, self.app.mycal.getMonth())
+        self.assertEqual(now_month, self.app.mycal.getMonth())
+        self.app.REQUEST.set('month', '12')
+        self.assertEqual(12, self.app.mycal.getMonth())
 
 def test_suite():
     from unittest import TestSuite, makeSuite

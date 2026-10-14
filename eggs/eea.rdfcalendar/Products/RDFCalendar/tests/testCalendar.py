@@ -10,12 +10,12 @@ class RDFCalendarTestCase(ZopeTestCase.ZopeTestCase):
     _setup_fixture = 0
 
     def testCreationWithDefaults(self):
-	c = RDFCalendar('mycal')
-	self.assertEquals(6, c.first_day_week)
+        c = RDFCalendar('mycal')
+        self.assertEqual(6, c.first_day_week)
 
     def testMonday(self):
-	c = RDFCalendar('mycal', '', 'Monday', 3)
-        self.assertEquals(0, c.first_day_week)
+        c = RDFCalendar('mycal', '', 'Monday', 3)
+        self.assertEqual(0, c.first_day_week)
 
 def test_suite():
     from unittest import TestSuite, makeSuite

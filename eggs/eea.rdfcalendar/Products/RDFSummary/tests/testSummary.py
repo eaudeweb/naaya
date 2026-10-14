@@ -8,7 +8,8 @@ ZopeTestCase.installProduct('RDFSummary')
 class RDFSummaryInZopeTestCase(ZopeTestCase.ZopeTestCase):
 
     def afterSetUp(self):
-        rssurl = 'http://svn.eionet.europa.eu/repositories/Zope/trunk/RDFSummary/tests/exampleidabc.rss'
+        # Local copy of the feed, so the test does not need the network
+        rssurl = 'file://' + os.path.join(os.path.dirname(__file__), 'exampleidabc.rss')
         self.app.manage_addProduct['RDFSummary'].manage_addRDFSummary('mysummary', 'Title', rssurl, '', 'no', self.app.REQUEST)
         assert hasattr(self.app, 'mysummary')
         self.assertNotEqual(self.app.mysummary, None)
@@ -16,9 +17,9 @@ class RDFSummaryInZopeTestCase(ZopeTestCase.ZopeTestCase):
     def test_update(self):
         self.app.mysummary.update()
         items = self.app.mysummary.items()
-        self.assertEquals(5, len(items))
-        self.assertEquals("CH: Federal Court's Office suite switch is first step to Open Source desktop",items[0]['title'])
-        self.assertEquals("http://ec.europa.eu/idabc/en/document/7542", items[0]['link'])
+        self.assertEqual(5, len(items))
+        self.assertEqual("CH: Federal Court's Office suite switch is first step to Open Source desktop",items[0]['title'])
+        self.assertEqual("http://ec.europa.eu/idabc/en/document/7542", items[0]['link'])
 
 def test_suite():
     from unittest import TestSuite, makeSuite
