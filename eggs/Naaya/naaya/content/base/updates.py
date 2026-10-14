@@ -25,7 +25,7 @@ class ExportContent(UpdateScript):
             ob_data = process_export[ob.meta_type](ob, ob_data, portal_id)
 
             data_filename = os.path.join(ob_data['folder'], ob.getId()+'.json')
-            with open(data_filename, 'w') as f:
+            with open(data_filename, 'w', encoding='utf-8') as f:
                 f.write(json.dumps(ob_data))
                 self.log.info(
                     'Exported %s %s' % (ob.meta_type, ob.absolute_url()))

@@ -67,7 +67,7 @@ class EmailSender(object):
                 break
 
             tmp_path = os.path.join(self.tmp_folder, file_name)
-            fd = open(tmp_path, 'r')
+            fd = open(tmp_path, 'r', encoding='utf-8')
             email_content = fd.read()
             fd.close()
 
@@ -99,7 +99,7 @@ class EmailSender(object):
         """ on error saves the file in the error_folder """
         error_path = os.path.join(self.error_folder, file_name)
 
-        fd = open(error_path, 'w')
+        fd = open(error_path, 'w', encoding='utf-8')
         fd.write(email_content)
         fd.close()
 
@@ -129,7 +129,7 @@ def save_email(tmp_folder, sender_folder, email_content):
 
     # save it in the tmp and then move it to send folder
     tmp_path = os.path.join(tmp_folder, fname)
-    fd = open(tmp_path, 'w')
+    fd = open(tmp_path, 'w', encoding='utf-8')
     fd.write(email_content)
     fd.close()
 

@@ -193,7 +193,7 @@ class AdditionalStyle(object):
     def __call__(self):
         mtime = os.stat(self.css_path).st_mtime
         if self.last_mtime is None or mtime > self.last_mtime:
-            f = open(self.css_path, 'r')
+            f = open(self.css_path, 'r', encoding='utf-8')
             self.content = self._patch_content(f.read())
             f.close()
             self.last_mtime = mtime

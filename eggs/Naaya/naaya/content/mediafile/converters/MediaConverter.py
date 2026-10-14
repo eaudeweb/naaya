@@ -29,7 +29,7 @@ def media2mp4(mediafile):
     fpath, fname = os.path.split(finput)
     tcv_path = finput
     cvd_path = os.path.join(tempdir, fname + ".cvd")  # converted
-    log = open(os.path.join(tempdir, fname + '.log'), 'w+')
+    log = open(os.path.join(tempdir, fname + '.log'), 'w+', encoding='utf-8')
 
     o_width, o_height = get_resolution(tcv_path)
     ratio = o_width / o_height

@@ -483,7 +483,7 @@ def get_bulk_email(site, filename, where_to_read='sent-bulk',
         if not message_file_path:
             save_path = _get_message_path(site, where_to_read)
             message_file_path = os.path.join(save_path, filename)
-        message_file = open(message_file_path, 'r+')
+        message_file = open(message_file_path, 'r+', encoding='utf-8')
     except (IOError, TypeError, AttributeError):
         return None
 
@@ -589,7 +589,7 @@ def get_mail_queue(site):
                     for filename in sorted(os.listdir(new_queue_path))]
 
         for message in messages:
-            message_file = open(message, 'r+')
+            message_file = open(message, 'r+', encoding='utf-8')
             mail = message_from_file(message_file)
             message_file.close()
 

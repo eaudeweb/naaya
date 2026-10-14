@@ -2,7 +2,6 @@ import json
 import time
 import urllib.parse
 import urllib.request
-import urllib.request
 import urllib.error
 
 RETRIES = 3
@@ -134,7 +133,9 @@ def geocode(address, key=None):
     >>> geocode("Kongens Nytorv 6, 1050 Copenhagen K, Denmark")
     (55.68114360, 12.58664570)
     """
-    params = [('address', address), ('key', key), ('sensor', 'false')]
+    params = [('address', address), ('sensor', 'false')]
+    if key:
+        params.append(('key', key))
     url = _build_url(params)
     result = _get_url_data(url)
     location = _unpack_geocode_data(result)['location']

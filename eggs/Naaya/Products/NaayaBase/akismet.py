@@ -24,7 +24,7 @@ class AkismetError(Exception):
         self.response = response
         self.statuscode = statuscode
     def __str__(self):
-         return repr(self.value)
+         return repr(self.response)
 
 def __post(request, host, path, port = 80):
     connection = httplib.HTTPConnection(host, port)
@@ -33,7 +33,7 @@ def __post(request, host, path, port = 80):
         "Content-type":"application/x-www-form-urlencoded"})
     response = connection.getresponse()
 
-    return response.read(), response.status
+    return response.read().decode('utf-8'), response.status
 
 def verify_key(key, blog):
     """Find out whether a given WordPress.com API key is valid.

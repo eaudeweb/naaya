@@ -19,7 +19,7 @@ class RebuildLatestUploadsRdf(UpdateScript):
         portal_path = utils.get_portal_path(self, NySite)
         py_path = os.path.join(portal_path, 'skel', 'syndication',
                                'latestuploads_rdf.py')
-        f = open(py_path, 'r')
+        f = open(py_path, 'r', encoding='utf-8')
         py_contents = f.read()
         f.close()
         syndication = portal.getSyndicationTool()
@@ -41,7 +41,7 @@ class RebuildLatestUploadsRdfZpt(UpdateScript):
         portal_path = utils.get_portal_path(self, NySite)
         py_path = os.path.join(portal_path, 'skel', 'syndication',
                                'latestuploads_rdf.zpt')
-        f = open(py_path, 'r')
+        f = open(py_path, 'r', encoding='utf-8')
         skel_script = f.read()
         f.close()
         zodb_script = portal.portal_portlets.portlet_latestuploads_rdf

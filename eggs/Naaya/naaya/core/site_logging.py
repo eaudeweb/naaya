@@ -114,7 +114,7 @@ class MonthBasedFileHandler(logging.StreamHandler):
         filename = "%s-%s.log" % (self.baseFilename, self._last_recorded_month)
 
         if self.encoding is None:
-            stream = open(filename, self.mode)
+            stream = open(filename, self.mode, encoding='utf-8')
         else:
             stream = codecs.open(filename, self.mode, self.encoding)
 
@@ -273,7 +273,7 @@ def get_site_logger_content(site, REQUEST=None, RESPONSE=None, month=None):
             writeables.append(False)
             continue
 
-        log_file = open(lfname)
+        log_file = open(lfname, encoding='utf-8')
         writeables.append(True)
 
         c = 0
@@ -314,7 +314,7 @@ def admin_download_log_file(site, REQUEST=None, RESPONSE=None):
     abs_path = get_log_dir(site)
     # TODO: redo this
     log_filepath = os.path.join(abs_path, LOG_FILENAME)
-    log_file = open(log_filepath, 'r+')
+    log_file = open(log_filepath, 'r+', encoding='utf-8')
     data = log_file.read()
     log_file.close()
     output = StringIO()
@@ -336,7 +336,7 @@ def clear_log_file(site, REQUEST=None, RESPONSE=None):
     if is_ajax(REQUEST):
         get_log_dir(site)   # TODO: is this needed?
         # TODO: redo this
-        log_file = open(LOG_FILENAME, 'r+')
+        log_file = open(LOG_FILENAME, 'r+', encoding='utf-8')
         log_file.truncate()
         log_file.close()
         return "SUCCESS"
@@ -415,7 +415,7 @@ def rewrite_logs(path):
 
     for name in to_process:
         fname = os.path.join(path, name)
-        with open(fname) as f:
+        with open(fname, encoding='utf-8') as f:
             counter = 0
             for line in f:
                 counter += 1
@@ -434,5 +434,5 @@ def rewrite_logs(path):
 
     for ident in entries.keys():
         flog = os.path.join(path, "splitlog-" + ident + '.log')
-        with open(flog, 'w') as _log:
+        with open(flog, 'w', encoding='utf-8') as _log:
             _log.writelines(entries[ident])

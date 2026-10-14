@@ -181,7 +181,7 @@ class NaayaTestLayer:
         cls._cleanup_portal = cleanup
 
         cls._old_tmp = tempfile.tempdir
-        tempfile.tempdir = tempfile.mkdtemp()
+        tempfile.tempdir = cls._tmp_dir = tempfile.mkdtemp()
 
     @classmethod
     def tearDown(cls):
@@ -199,7 +199,8 @@ class NaayaTestLayer:
         if os.path.isdir(repository):
             shutil.rmtree(repository)
 
-        shutil.rmtree(tempfile.tempdir, True)
+        # only the directory created in setUp, tempfile.tempdir may point elsewhere
+        shutil.rmtree(cls._tmp_dir, True)
         tempfile.tempdir = cls._old_tmp
 
     @classmethod
@@ -413,6 +414,7 @@ class NaayaPortalTestPlugin(Plugin):
         # prepare a temporary directory for test files, save the old
         # tempfile.tempdir to restore when unloading the plugin
         self.old_tmp, tempfile.tempdir = tempfile.tempdir, tempfile.mkdtemp()
+        self.tmp_dir = tempfile.tempdir
 
     def finalize(self, result):
         assert self.cleanup_test_layer is None
@@ -430,7 +432,7 @@ class NaayaPortalTestPlugin(Plugin):
 
         # remove the temporary files created when testing, restore the old
         # tempfile.tempdir
-        shutil.rmtree(tempfile.tempdir, True)
+        shutil.rmtree(self.tmp_dir, True)
         tempfile.tempdir = self.old_tmp
 
     def prepareTestCase(self, testCase):

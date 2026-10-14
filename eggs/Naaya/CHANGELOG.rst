@@ -1,5 +1,18 @@
 6.0.2 (unreleased)
 ------------------
+* Fix the folder listing failing with UnboundLocalError in
+  GenericViewAdapter.get_modification_date [dumitval]
+* Fix utGenerateZip setting the temporary directory of the whole process to
+  the client home [dumitval]
+* Read and write text files as UTF-8 regardless of the locale
+  (futRead, email queue, site logs, layout CSS, bundle.cfg) [dumitval]
+* Read the .nyexp file as bytes in NyFolder [dumitval]
+* Fix PlugBase.removeUser calling revokeUserRoles with the wrong arguments,
+  which broke relinquish_membership for users from sources [dumitval]
+* Decode the Akismet response as UTF-8 and fix AkismetError.__str__ using a
+  missing attribute [dumitval]
+* Do not send key=None to the Google geocoding API when no API key is set
+  [dumitval]
 
 6.0.1 (2026-10-12)
 ------------------

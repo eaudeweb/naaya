@@ -60,7 +60,7 @@ def register_bundle_factory(bundles_dir, name_prefix, parent_name):
                 raise ValueError("Filesystem bundle %r already exists (%s)" %
                                  (bundle_name, e))
 
-            cfg_file = open(os.path.join(bundle_path, 'bundle.cfg'), 'w')
+            cfg_file = open(os.path.join(bundle_path, 'bundle.cfg'), 'w', encoding='utf-8')
             cfg_file.write("[bundle]\nparent-bundle = %s\n" % parent_name)
             cfg_file.close()
 

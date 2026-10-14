@@ -62,7 +62,10 @@ class UserInfoTest(NaayaTestCase):
 
     def test_user_info_from_ldap_user(self):
         from unittest.mock import Mock
-        from Products.LDAPUserFolder.LDAPUser import LDAPUser
+        try:
+            from Products.LDAPUserFolder.LDAPUser import LDAPUser
+        except ImportError:
+            self.skipTest('Products.LDAPUserFolder is not installed')
         from Products.NaayaCore.AuthenticationTool.plugins.plugLDAPUserFolder \
                 import user_info_from_zope_user
 

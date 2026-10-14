@@ -296,7 +296,7 @@ def str2bool(string):
 
 
 def file_length(file_name):
-    file_content = open(file_name, 'r+')
+    file_content = open(file_name, 'r+', encoding='utf-8')
     length = len(file_content.readlines())
     file_content.close()
 

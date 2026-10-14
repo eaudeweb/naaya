@@ -139,9 +139,9 @@ class PlugBase(SimpleItem):
     def removeUser(self, name):
         acl = self.getUserFolder()
         roles = self.getUsersRoles(acl)
-        if name in roles.keys():
-            roles = [(name + '||' + x[1]) for x in roles[name]]
-            self.revokeUserRoles(roles)
+        if name in roles:
+            for local_roles, location in roles[name]:
+                self.revokeUserRoles(name, location)
             return True
 
     def has_user(self, user_id):

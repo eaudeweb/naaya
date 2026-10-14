@@ -40,7 +40,6 @@ class GenericViewAdapter(object):
         try:
             return DT2dt(getattr(self.ob.aq_base, 'last_modification', DateTime(self.ob._p_mtime)))
         except AttributeError:
-            from DateTime import DateTime
             return DT2dt(DateTime())
 
     def get_info_text(self):

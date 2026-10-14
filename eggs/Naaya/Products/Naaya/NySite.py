@@ -2213,7 +2213,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         if 'JSON_ERROR_DUMPFILE' not in conf.environment:
             return
 
-        f = open(conf.environment['JSON_ERROR_DUMPFILE'], 'a')
+        f = open(conf.environment['JSON_ERROR_DUMPFILE'], 'a', encoding='utf-8')
         try:
             f.write(json.dumps({'error_time': str(datetime.now()),
                                 'portal_url': self.get_portal_url(),

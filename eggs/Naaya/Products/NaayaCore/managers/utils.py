@@ -409,7 +409,8 @@ class file_utils:
 
     def futRead(self, p_path, p_flag='r'):
         """ """
-        with open(p_path, p_flag) as f:
+        encoding = None if 'b' in p_flag else 'utf-8'
+        with open(p_path, p_flag, encoding=encoding) as f:
             return f.read()
 
     def futReadEnc(self, p_path, p_flag='r', p_encode='utf-8'):
@@ -1072,8 +1073,8 @@ class utils:
                 os.mkdir(path)
             except:
                 raise OSError('Can\'t create directory %s' % path)
-        tempfile.tempdir = path
-        tmpfile = tempfile.mktemp(".temp")
+        fd, tmpfile = tempfile.mkstemp(".temp", dir=path)
+        os.close(fd)
         zf = ZipFile(tmpfile, "w")
         sz = 0
         for o in objects:

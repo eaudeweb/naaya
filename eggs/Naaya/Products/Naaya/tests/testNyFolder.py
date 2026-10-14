@@ -521,6 +521,11 @@ class TestNyFolderListing(NaayaFunctionalTestCase):
         self.assertTrue(adapter is not None)
         self.assertTrue(isinstance(adapter, NyContentTypeViewAdapter))
 
+    def test_generic_view_adapter_modification_date(self):
+        from datetime import datetime
+        adapter = GenericViewAdapter(self.portal.info)
+        self.assertIsInstance(adapter.get_modification_date(), datetime)
+
 
 class TestNyFolderPublicInterface(NaayaFunctionalTestCase):
     def setUp(self):

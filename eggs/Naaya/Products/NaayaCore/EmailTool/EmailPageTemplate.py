@@ -99,7 +99,7 @@ def EmailPageTemplateFile(filename, _prefix):
             filename = os.path.join(_prefix, filename)
         else:
             filename = os.path.join(package_home(_prefix), filename)
-    f = open(filename)
+    f = open(filename, encoding='utf-8')
     content = f.read()
     f.close()
     id = os.path.basename(filename)
