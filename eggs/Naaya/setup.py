@@ -43,8 +43,9 @@ setup(name='Naaya',
           'bleach',
           'Unidecode',
           'vobject >= 0.9.6',
-          'xlwt',
+          'openpyxl',
           'xlrd',
+          'xlsxwriter',
 
           # Zope
           'Zope >= 5.0',

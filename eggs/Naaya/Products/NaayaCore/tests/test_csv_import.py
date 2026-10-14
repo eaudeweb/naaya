@@ -1,5 +1,5 @@
 from unittest import TestSuite, TestLoader
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 from io import StringIO, BytesIO
 
 from zope import component, interface
@@ -15,6 +15,8 @@ from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplateFile
 from Products.Naaya.NyFolder import addNyFolder
 
 from Products.NaayaCore.GeoMapTool.tests.test_kml_parser import load_file
+from naaya.core.zope2util import XLSX_CONTENT_TYPE
+from naaya.core.tests.test_excel_reader import make_xlsx, make_xls
 
 csv_data = ('Title,Description,Automatically redirect to the given URL,URL\n'
     'My URL 1,The best URL,no,http://example.com\n'
@@ -191,7 +193,93 @@ class NyCSVImportTest(NaayaTestCase):
         self.assertEqual(my_doc.sortorder, 100)
         self.assertTrue(my_doc.approved)
 
+excel_rows = [
+    ['Title', 'Description', 'Automatically redirect to the given URL', 'URL'],
+    ['My URL 1', 'The best URL', 'no', 'http://example.com'],
+    ['Eau de Web', 'The Naaya company', 'yes', 'http://www.eaudeweb.ro'],
+]
+
+
+class NyExcelImportTest(NaayaTestCase):
+    """ Excel import, with .xlsx and .xls files """
+
+    def afterSetUp(self):
+        addNyFolder(self.portal, 'imported', contributor='contributor',
+                    submitted=1)
+
+    def beforeTearDown(self):
+        self.logout()
+        self.portal.manage_delObjects(['imported'])
+
+    def do_import(self, data, **kwargs):
+        return self.portal.imported.csv_import.do_import(
+            meta_type='Naaya URL', file_type='Excel', data=BytesIO(data),
+            **kwargs)
+
+    def test_import_xlsx(self):
+        self.do_import(make_xlsx(excel_rows))
+        check_uploaded(self)
+
+    def test_import_xls(self):
+        self.do_import(make_xls(excel_rows))
+        check_uploaded(self)
+
+    def test_import_unicode(self):
+        rows = [['Title', 'URL'], ['Forschungsinstitut f\xfcr Freizeit',
+                                   'http://example.com']]
+        for make in (make_xlsx, make_xls):
+            self.do_import(make(rows), overwrite_existing=True)
+            ob = self.portal.imported._getOb(
+                'forschungsinstitut-fur-freizeit')
+            self.assertEqual(ob.title, 'Forschungsinstitut f\xfcr Freizeit')
+            self.portal.imported.manage_delObjects([ob.getId()])
+
+    def test_invalid_file(self):
+        self.assertRaises(ValueError, self.do_import, b'not an excel file')
+        self.assertRaises(ValueError, self.do_import, b'PKnot a zip')
+        self.assertEqual(self.portal.imported.objectIds(), [])
+
+    def test_generate_excel_template(self):
+        import openpyxl
+        self.login('site_admin')
+        request = Mock()
+        ret = self.portal.csv_import.template(
+            'Naaya URL', 'Excel', as_attachment=True, REQUEST=request)
+        ws = openpyxl.load_workbook(BytesIO(ret)).worksheets[0]
+        header = [c.value for c in ws[1]]
+        self.assertEqual(header[0], 'ID')
+        self.assertTrue('Title' in header)
+        self.assertTrue('URL' in header)
+        self.assertTrue(
+            ws['A1'].font.b, 'template header should be bold')
+        response = request.RESPONSE
+        response.setHeader.assert_any_call(
+            'Content-Type', XLSX_CONTENT_TYPE)
+        disposition = [c.args[1] for c in response.setHeader.call_args_list
+                       if c.args[0] == 'Content-Disposition'][0]
+        self.assertTrue(disposition.endswith('.xlsx'), disposition)
+
+
 class CSVImportFunctionalTests(NaayaFunctionalTestCase):
+
+    def test_excel_upload(self):
+        for make, name in ((make_xlsx, 'bulk.xlsx'), (make_xls, 'bulk.xls')):
+            self.browser_do_login('admin', '')
+            self.browser.go('http://localhost/portal/info/csv_import')
+            form = self.browser.get_form('csv_import')
+            form['meta_type'] = ['Naaya URL']
+            form['file_type'] = ['Excel']
+            form.find_control('data').add_file(
+                BytesIO(make(excel_rows)), 'application/octet-stream', name)
+            self.browser.clicked(form, form.find_control('do_import:method'))
+            self.browser.submit()
+            urls = self.portal.info.objectValues('Naaya URL')
+            self.assertEqual(set(u.title for u in urls),
+                             {'My URL 1', 'Eau de Web'})
+            self.portal.info.manage_delObjects([u.getId() for u in urls])
+            import transaction
+            transaction.commit()
+
 
     def test_bad_encoding(self):
         # Produce a CSV with latin-1 encoded data that is NOT valid UTF-8.

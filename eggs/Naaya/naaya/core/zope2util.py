@@ -151,23 +151,93 @@ def dt_strftime(date, format):
     return datetime.datetime.strftime(date, format)
 
 
+XLSX_CONTENT_TYPE = ('application/vnd.openxmlformats-officedocument.'
+                     'spreadsheetml.sheet')
+
+
 def we_provide(feature):
     """ Check if the instance provides certain features """
     if feature == 'Excel export':
         try:
-            from xlwt import Workbook
+            import xlsxwriter  # noqa: F401
             return True
         except ImportError:
             pass
     if feature == 'Excel import':
-        # For excel import we also need xlwt, to generate the template
+        # The import page also generates a template, so it needs the writer
         try:
-            from xlwt import Workbook  # noqa: F811, F401
-            from xlrd import open_workbook  # noqa: F811, F401
+            import xlsxwriter  # noqa: F401
+            import openpyxl  # noqa: F401
+            import xlrd  # noqa: F401
             return True
         except ImportError:
             pass
     return False
+
+
+def new_xlsx_workbook():
+    """ Return (BytesIO, xlsxwriter Workbook); close the workbook, then
+    read the bytes from the BytesIO. """
+    import io
+    import xlsxwriter
+    output = io.BytesIO()
+    workbook = xlsxwriter.Workbook(output, {
+        'in_memory': True, 'strings_to_formulas': False,
+        'strings_to_urls': False, 'strings_to_numbers': False})
+    return output, workbook
+
+
+def read_excel_rows(data):
+    """ Return the rows (lists) of the first sheet of an .xlsx or .xls file
+    given as bytes; raise ValueError if the file cannot be read. """
+    if hasattr(data, 'read'):
+        data = data.read()
+    try:
+        if data[:2] == b'PK':
+            rows = _read_xlsx_rows(data)
+        else:
+            rows = _read_xls_rows(data)
+    except Exception as e:
+        raise ValueError('Invalid Excel file: %s' % e)
+    width = max([len(row) for row in rows] or [0])
+    rows = [row + [''] * (width - len(row)) for row in rows]
+    while rows and not any(value != '' for value in rows[-1]):
+        rows.pop()
+    return rows
+
+
+def _read_xlsx_rows(data):
+    import io
+    import openpyxl
+    from openpyxl.utils.datetime import to_excel
+    wb = openpyxl.load_workbook(io.BytesIO(data), read_only=True,
+                                data_only=True)
+    try:
+        rows = []
+        for row in wb.worksheets[0].iter_rows(values_only=True):
+            values = []
+            for value in row:
+                if value is None:
+                    value = ''
+                elif isinstance(value, (datetime.datetime, datetime.date,
+                                        datetime.time)):
+                    value = float(to_excel(value))
+                elif isinstance(value, (int, float)) and \
+                        not isinstance(value, bool):
+                    value = float(value)
+                elif isinstance(value, bool):
+                    value = int(value)
+                values.append(value)
+            rows.append(values)
+    finally:
+        wb.close()
+    return rows
+
+
+def _read_xls_rows(data):
+    import xlrd
+    ws = xlrd.open_workbook(file_contents=data).sheets()[0]
+    return [ws.row_values(i) for i in range(ws.nrows)]
 
 
 def catch_unauthorized():

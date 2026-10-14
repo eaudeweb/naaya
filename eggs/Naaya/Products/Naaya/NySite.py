@@ -136,6 +136,7 @@ from naaya.core.utils import call_method, cooldown, is_ajax, cleanup_message
 from naaya.core.zope2util import path_in_site, ofs_path, relative_object_path
 from naaya.core.zope2util import permission_add_role, permission_del_role
 from naaya.core.zope2util import redirect_to
+from naaya.core.zope2util import XLSX_CONTENT_TYPE
 from naaya.i18n.LocalPropertyManager import LocalPropertyManager, LocalProperty
 from naaya.i18n.TranslationsToolWrapper import TranslationsToolWrapper
 from naaya.i18n.constants import ID_NAAYAI18N, PERMISSION_TRANSLATE_PAGES
@@ -4801,9 +4802,9 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         if len(headers) != len(keys):
             RESPONSE.badRequestError("MALFORMED_URL")
 
-        RESPONSE.setHeader('Content-Type', 'application/vnd.ms-excel')
+        RESPONSE.setHeader('Content-Type', XLSX_CONTENT_TYPE)
         RESPONSE.setHeader('Content-Disposition',
-                           'attachment; filename=admin_bulk_email_list.xls')
+                           'attachment; filename=admin_bulk_email_list.xlsx')
         cols = list(zip(headers, keys))
         return export_email_list_xcel(self, cols, ids)
 

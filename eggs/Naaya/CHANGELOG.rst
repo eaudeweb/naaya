@@ -13,6 +13,8 @@
   missing attribute [dumitval]
 * Do not send key=None to the Google geocoding API when no API key is set
   [dumitval]
+* Read .xlsx and .xls files in the Excel import [dumitval]
+* Export Excel files as .xlsx with xlsxwriter instead of xlwt [dumitval]
 
 6.0.1 (2026-10-12)
 ------------------

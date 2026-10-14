@@ -40,6 +40,7 @@ from Products.NaayaCore.SchemaTool.widgets.geo import json_encode_helper
 from Products.NaayaCore.GeoMapTool import clusters_catalog
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from naaya.core.zope2util import path_in_site, get_template_source
+from naaya.core.zope2util import XLSX_CONTENT_TYPE
 from naaya.core import ggeocoding
 
 from .managers.symbols_tool import symbols_tool
@@ -1058,9 +1059,9 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         file_type = kw.get('file_type', 'excel')
         if file_type == 'excel':
             ret = csv_export.generate_excel_output(meta_type, objects)
-            RESPONSE.setHeader('Content-Type', 'application/vnd.ms-excel')
+            RESPONSE.setHeader('Content-Type', XLSX_CONTENT_TYPE)
             RESPONSE.setHeader('Content-Disposition',
-                               'attachment; filename="map_contacts.xls"')
+                               'attachment; filename="map_contacts.xlsx"')
         else:
             ret = csv_export.generate_csv_output(meta_type, objects)
             RESPONSE.setHeader('Content-Type', 'text/x-csv')

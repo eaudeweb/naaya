@@ -5,6 +5,9 @@ import unittest
 from unittest.mock import patch
 import os
 import os.path
+from io import BytesIO
+
+import openpyxl
 
 from Products.Naaya.tests.NaayaTestCase import FunctionalTestCase
 from Products.NaayaCore.EmailTool.EmailTool import (EmailTool,
@@ -127,8 +130,9 @@ class EmailToolTestCase(unittest.TestCase):
             'onlyInEmails': 'X',
         }]
         r = export_email_list_xcel(None, cols)
-        with open(os.path.join(
-                os.path.dirname(os.path.abspath(__file__)), 'data/emailList.xls'),
-                'rb') as _f:
-            expected = _f.read()
-        self.assertEqual(r, expected)
+        ws = openpyxl.load_workbook(BytesIO(r)).worksheets[0]
+        self.assertEqual([c.value for c in ws[1]],
+                         ['Subject', 'Recipients', 'onlyInRequest'])
+        self.assertTrue(ws['A1'].font.b)
+        self.assertEqual([c.value for c in ws[2]],
+                         ['bla', 'bla@bla.com, blaxxx@bla.com', None])

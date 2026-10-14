@@ -35,6 +35,7 @@ from naaya.core.zope2util import path_in_site
 from naaya.core.zope2util import relative_object_path
 from naaya.core.zope2util import ofs_path
 from naaya.core.zope2util import folder_manage_main_plus
+from naaya.core.zope2util import XLSX_CONTENT_TYPE
 from naaya.core.exceptions import i18n_exception
 
 from .interfaces import ISubscriptionContainer
@@ -1031,9 +1032,9 @@ class NotificationTool(Folder):
                                'attachment; filename=subscriptions.csv')
             return generate_csv(header, rows)
         if file_type == 'Excel' and self.rstk['we_provide']('Excel export'):
-            RESPONSE.setHeader('Content-Type', 'application/vnd.ms-excel')
+            RESPONSE.setHeader('Content-Type', XLSX_CONTENT_TYPE)
             RESPONSE.setHeader('Content-Disposition',
-                               'attachment; filename=subscriptions.xls')
+                               'attachment; filename=subscriptions.xlsx')
             return generate_excel(header, rows)
         else:
             raise ValueError('unknown file format %r' % file_type)

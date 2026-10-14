@@ -25,10 +25,11 @@ from Products.NaayaCore.interfaces import ICSVImportExtraColumns
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from naaya.core.zope2util import path_in_site
+from naaya.core.zope2util import new_xlsx_workbook
+from naaya.core.zope2util import read_excel_rows
+from naaya.core.zope2util import XLSX_CONTENT_TYPE
 import json
 import transaction
-import xlrd
-import xlwt
 
 logger = logging.getLogger(__name__)
 
@@ -77,8 +78,8 @@ class CSVImportTool(Implicit, Item):
 
         elif file_type == 'Excel':
             ret = generate_excel(columns, [[]])
-            content_type = 'application/vnd.ms-excel'
-            filename = schema.title_or_id() + ' bulk upload.xls'
+            content_type = XLSX_CONTENT_TYPE
+            filename = schema.title_or_id() + ' bulk upload.xlsx'
 
         else:
             raise ValueError('unknown file format %r' % file_type)
@@ -162,19 +163,16 @@ class CSVImportTool(Implicit, Item):
 
         if file_type == 'Excel':
             try:
-                wb = xlrd.open_workbook(file_contents=data.read())
-                ws = wb.sheets()[0]
-                header = ws.row_values(0)
-                rows = []
-                for i in range(ws.nrows)[1:]:
-                    rows.append(ws.row_values(i))
-
-            except xlrd.XLRDError:
+                all_rows = read_excel_rows(data.read())
+                header = all_rows[0]
+                rows = all_rows[1:]
+            except (ValueError, IndexError):
                 msg = 'Invalid Excel file'
                 if REQUEST is None:
                     raise ValueError(msg)
                 else:
                     errors.append(msg)
+                    header = ['']
                     rows = []
         elif file_type == 'CSV':
             rows = UnicodeReader(data)
@@ -517,8 +515,8 @@ class ExportTool(Implicit, Item):
 
         elif file_type == 'Excel':
             ret = self.generate_excel_output(meta_type, objects)
-            content_type = 'application/vnd.ms-excel'
-            filename = '%s Export.xls' % meta_type
+            content_type = XLSX_CONTENT_TYPE
+            filename = '%s Export.xlsx' % meta_type
 
         else:
             raise ValueError('unknown file format %r' % file_type)
@@ -697,36 +695,21 @@ def generate_csv(header, rows):
 
 
 def generate_excel(header, rows):
-    """generate_excel.
-
-    :param header:
-    :param rows:
-    """
-    style = xlwt.XFStyle()
-    normalfont = xlwt.Font()
-    headerfont = xlwt.Font()
-    headerfont.bold = True
-    style.font = headerfont
-
-    wb = xlwt.Workbook(encoding='utf-8')
-    ws = wb.add_sheet('Sheet 1')
-    row = 0
+    """Return the bytes of an .xlsx file with a bold header and the rows."""
+    output, wb = new_xlsx_workbook()
+    header_format = wb.add_format({'bold': True})
+    date_format = wb.add_format({'num_format': 'dd/mm/yyyy'})
+    ws = wb.add_worksheet('Sheet 1')
     for col in range(0, len(header)):
-        ws.write(row, col, header[col], style)
-    style.font = normalfont
+        ws.write(0, col, header[col], header_format)
+    row = 0
     for item in rows:
         row += 1
         for col in range(0, len(item)):
-            style.num_format_str = 'general'
             try:
                 col_date = datetime.strptime(item[col], '%d/%m/%Y')
-                excel_1900 = datetime.strptime('01/01/1900', '%d/%m/%Y')
-                style.num_format_str = 'dd/MM/yyyy'
-                ws.write(row, col, (col_date - excel_1900).days + 2, style)
-            except ValueError:
-                ws.write(row, col, item[col], style)
-    from io import BytesIO
-    output = BytesIO()
-
-    wb.save(output)
+                ws.write_datetime(row, col, col_date, date_format)
+            except (ValueError, TypeError):
+                ws.write(row, col, item[col])
+    wb.close()
     return output.getvalue()
