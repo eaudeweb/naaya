@@ -402,7 +402,7 @@ def _create_forms(ob):
     for fn in ('index_html', 'logged_in', 'logged_out', 'login_form',
                 'standard_login_footer', 'standard_login_header'):
         filename = os.path.join(dtmldir, fn + '.dtml')
-        f = open(filename, 'rt')
+        f = open(filename, 'rt', encoding='utf-8')
         try: data = f.read()
         finally: f.close()
         addDTMLMethod(ob, fn, file=data)

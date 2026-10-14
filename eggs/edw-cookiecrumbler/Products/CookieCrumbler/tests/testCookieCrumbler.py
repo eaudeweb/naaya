@@ -16,10 +16,10 @@ $Id: testCookieCrumbler.py,v 1.7 2004/02/05 15:35:16 shane Exp $
 """
 
 import base64
-from cStringIO import StringIO
+from io import BytesIO, StringIO
 import sys
 import unittest
-import urllib
+import urllib.parse
 
 import Testing
 from OFS.DTMLMethod import DTMLMethod
@@ -31,7 +31,7 @@ from ZPublisher.HTTPRequest import HTTPRequest
 from ZPublisher.HTTPResponse import HTTPResponse
 from ZPublisher.BaseRequest import RequestContainer
 
-from Products.CMFCore.CookieCrumbler \
+from Products.CookieCrumbler.CookieCrumbler \
      import CookieCrumbler, manage_addCC, Redirect
 
 
@@ -43,7 +43,7 @@ def makerequest(root, stdout, stdin=None):
     environ['SERVER_PORT'] = '80'
     environ['REQUEST_METHOD'] = 'GET'
     if stdin is None:
-        stdin = StringIO('')  # Empty input
+        stdin = BytesIO(b'')  # Empty input
     req = HTTPRequest(stdin, environ, resp)
     req['PARENTS'] = [root]
     return req
@@ -88,8 +88,8 @@ class CookieCrumblerTests (unittest.TestCase):
         self.responseOut = StringIO()
         self.req = makerequest(root, self.responseOut)
 
-        self.credentials = urllib.quote(
-            base64.encodestring('abraham:pass-w').rstrip())
+        self.credentials = urllib.parse.quote(
+            base64.encodebytes(b'abraham:pass-w').rstrip().decode())
 
 
     def tearDown(self):
@@ -109,21 +109,21 @@ class CookieCrumblerTests (unittest.TestCase):
         self.req.cookies['__ac_password'] = 'pass-w'
         self.req.traverse('/')
 
-        self.assert_(self.req.has_key('AUTHENTICATED_USER'))
+        self.assertTrue('AUTHENTICATED_USER' in self.req)
         self.assertEqual(self.req['AUTHENTICATED_USER'].getUserName(),
                          'abraham')
         resp = self.req.response
-        self.assert_(resp.cookies.has_key('__ac'))
+        self.assertTrue('__ac' in resp.cookies)
         self.assertEqual(resp.cookies['__ac']['value'],
                          self.credentials)
-        self.assertEqual(resp.cookies['__ac']['path'], '/')
+        self.assertEqual(resp.cookies['__ac']['Path'], '/')
 
 
     def testCookieResume(self):
         # verify the cookie crumbler continues the session
         self.req.cookies['__ac'] = self.credentials
         self.req.traverse('/')
-        self.assert_(self.req.has_key('AUTHENTICATED_USER'))
+        self.assertTrue('AUTHENTICATED_USER' in self.req)
         self.assertEqual(self.req['AUTHENTICATED_USER'].getUserName(),
                          'abraham')
 
@@ -132,18 +132,18 @@ class CookieCrumblerTests (unittest.TestCase):
         # verify the password is shredded before the app gets the request
         self.req.cookies['__ac_name'] = 'abraham'
         self.req.cookies['__ac_password'] = 'pass-w'
-        self.assert_(self.req.has_key('__ac_password'))
+        self.assertTrue('__ac_password' in self.req)
         self.req.traverse('/')
-        self.assert_(not self.req.has_key('__ac_password'))
-        self.assert_(not self.req.has_key('__ac'))
+        self.assertTrue(not '__ac_password' in self.req)
+        self.assertTrue(not '__ac' in self.req)
 
 
     def testCredentialsNotRevealed(self):
         # verify the credentials are shredded before the app gets the request
         self.req.cookies['__ac'] = self.credentials
-        self.assert_(self.req.has_key('__ac'))
+        self.assertTrue('__ac' in self.req)
         self.req.traverse('/')
-        self.assert_(not self.req.has_key('__ac'))
+        self.assertTrue(not '__ac' in self.req)
 
 
     def testAutoLoginRedirection(self):
@@ -171,13 +171,13 @@ class CookieCrumblerTests (unittest.TestCase):
         self.req.cookies['__ac_password'] = 'pass-w'
         try:
             self.req.traverse('/protected')
-        except Redirect, s:
+        except Redirect as s:
             # Test passed
             if hasattr(s, 'args'):
                 s = s.args[0]
-            self.assert_(s.find('came_from=') >= 0)
-            self.assert_(s.find('retry=1') >= 0)
-            self.assert_(s.find('disable_cookie_login__=1') >= 0)
+            self.assertTrue(s.find('came_from=') >= 0)
+            self.assertTrue(s.find('retry=1') >= 0)
+            self.assertTrue(s.find('disable_cookie_login__=1') >= 0)
         else:
             self.fail('Did not redirect')
 
@@ -188,11 +188,11 @@ class CookieCrumblerTests (unittest.TestCase):
         self.req['QUERY_STRING'] = 'a:int=1&x:string=y'
         try:
             self.req.traverse('/protected')
-        except Redirect, s:
+        except Redirect as s:
             if hasattr(s, 'args'):
                 s = s.args[0]
-            to_find = urllib.quote('/protected?' + self.req['QUERY_STRING'])
-            self.assert_(s.find(to_find) >= 0, s)
+            to_find = urllib.parse.quote('/protected?' + self.req['QUERY_STRING'])
+            self.assertTrue(s.find(to_find) >= 0, s)
         else:
             self.fail('Did not redirect')
 
@@ -241,7 +241,7 @@ class CookieCrumblerTests (unittest.TestCase):
         self.assertEqual(self.req['AUTHENTICATED_USER'].getUserName(),
                          'abraham')
         # Here is the real test: the password should have been shredded.
-        self.assert_(not self.req.has_key('__ac_password'))
+        self.assertTrue(not '__ac_password' in self.req)
 
 
     def testDisableLoginDoesNotPreventPasswordShredding2(self):
@@ -250,7 +250,7 @@ class CookieCrumblerTests (unittest.TestCase):
         self.req.traverse('/')
         self.assertEqual(self.req['AUTHENTICATED_USER'].getUserName(),
                          'abraham')
-        self.assert_(not self.req.has_key('__ac'))
+        self.assertTrue(not '__ac' in self.req)
 
 
     def testMidApplicationAutoLoginRedirection(self):
@@ -293,7 +293,7 @@ class CookieCrumblerTests (unittest.TestCase):
         self.req.cookies['__ac'] = self.credentials
         self.req.traverse('/')
 
-        self.assert_(self.req.has_key('AUTHENTICATED_USER'))
+        self.assertTrue('AUTHENTICATED_USER' in self.req)
         self.assertEqual(self.req['AUTHENTICATED_USER'].getUserName(),
                          'isaac')
 
