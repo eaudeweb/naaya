@@ -1,5 +1,6 @@
 2.0.2 (unreleased)
 ------------------
+* Read local_events.py as UTF-8 [dumitval]
 
 2.0.1 (2026-10-12)
 ------------------

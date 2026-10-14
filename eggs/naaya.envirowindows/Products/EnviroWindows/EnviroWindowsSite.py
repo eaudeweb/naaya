@@ -163,7 +163,7 @@ class EnviroWindowsSite(NySite):
         local_events_ob = rdfcalendar_ob._getOb('local_events')
         local_events_ob._params = 'year=None, month=None, day=None'
         with open(os.path.dirname(__file__) +
-                 '/skel/others/local_events.py', 'r') as _f:
+                 '/skel/others/local_events.py', 'r', encoding='utf-8') as _f:
             local_events_ob.write(_f.read())
 
         # Adding custom SchemaTool properties
