@@ -138,7 +138,8 @@ class GroupwareSite(NySite):
             local_events_ob = rdfcalendar_ob._getOb('local_events')
             local_events_ob._params = 'year=None, month=None, day=None'
             local_events_ob.write(open(os.path.dirname(__file__) +
-                                  '/skel/others/local_events.py', 'r').read())
+                                  '/skel/others/local_events.py', 'r',
+                                  encoding='utf-8').read())
 
         self.getPortletsTool().assign_portlet('library', 'right',
                                               'portlet_latestuploads_rdf',

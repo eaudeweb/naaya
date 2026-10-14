@@ -8,7 +8,7 @@
             </span>
         </dt>
         <dd tal:repeat="access options/user_roles">
-            <ul tal:condition="python:access is 'admin'">
+            <ul tal:condition="python:access == 'admin'">
                 <li><span i18n:translate="">Admin access</span></li>
             </ul>
             <ul tal:condition="python:options['ig_details'][ig.id]">

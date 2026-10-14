@@ -1,5 +1,12 @@
 2.0.1 (unreleased)
 ------------------
+* Fix the profile overview login redirect failing on urllib.urlencode
+  [dumitval]
+* Read local_events.py as UTF-8 [dumitval]
+* Decode the LDAP role descriptions shown on the profile overview page
+  [dumitval]
+* Compare the access level with == instead of "is" in ig_roles_ajax.pt
+  [dumitval]
 
 2.0.0 (2026-10-12)
 ------------------

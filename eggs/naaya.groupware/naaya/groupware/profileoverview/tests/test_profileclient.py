@@ -1,3 +1,4 @@
+import unittest
 from unittest.mock import patch
 
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
@@ -24,3 +25,17 @@ class InterestGroupsTestCase(NaayaTestCase):
         ac = client.access_in_igs()
         self.assertEqual(set(ac.keys()), set(['viewer']))
         self.assertEqual(len(ac['viewer']), 3)
+
+
+class ProfileViewAnonymousTest(unittest.TestCase):
+
+    def test_anonymous_redirects_to_login(self):
+        from unittest.mock import MagicMock
+        from naaya.groupware.profileoverview.profile import ProfileView
+        request = MagicMock()
+        request.get.return_value.has_role.return_value = False
+        request.form = {'user': 'anne'}
+        self.assertIsNone(ProfileView(MagicMock(), request))
+        url = request.response.redirect.call_args[0][0]
+        self.assertEqual(url, '/login/login_form?came_from='
+                              '%2Fprofile_overview%3Fuser%3Danne')

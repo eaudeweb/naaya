@@ -1,5 +1,5 @@
 import operator
-import urllib
+import urllib.parse
 import json
 
 from naaya.groupware.constants import METATYPE_GROUPWARESITE
@@ -133,7 +133,10 @@ class ProfileClient(object):
             role = {}
             role['id'] = role_id
             role['name'] = role_id.rsplit('-', 1)[-1]
-            role['description'] = attrs.get('description', ('', ))[0]
+            description = attrs.get('description', (b'', ))[0]
+            if isinstance(description, bytes):
+                description = description.decode('utf-8')
+            role['description'] = description
             role['children'] = []
             direct_address[role_id] = role
             if '-' not in role_id:
@@ -206,7 +209,7 @@ def ProfileView(context, request):
         if not is_ajax:
             referer = '/profile_overview?user=%s' % request.form.get('user',
                                                                      '')
-            qs = urllib.urlencode({'came_from': referer})
+            qs = urllib.parse.urlencode({'came_from': referer})
             url = '/login/login_form?%s' % qs
             request.response.redirect(url)
             return None
