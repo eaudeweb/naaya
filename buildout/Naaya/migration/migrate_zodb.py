@@ -21,6 +21,7 @@ Steps:
   12. Remove the 'depth' option from path queries in stored templates
   13. Replace rstk.name with rstk['name'] in stored templates and scripts
   14. Use nocall:options/error_value in stored error templates
+  15. Remove .decode('utf-8') on request values in stored PythonScripts
 
 After the commit every catalog is rebuilt (one commit per catalog), then the
 database is packed. '--reindex-only' skips the steps and only rebuilds and packs.
@@ -721,6 +722,22 @@ def step_nocall_error_value(app):
         print("  No templates with options/error_value")
 
 
+def step_request_value_decode(app):
+    """Remove .decode('utf-8') on request values; they are str on Python 3."""
+    from Products.PythonScripts.PythonScript import PythonScript
+    expr = re.compile(r"""((?:REQUEST|request|form)(?:\.form)?\.get\([^()]*\))"""
+                      r"""\.decode\(\s*['"]utf-?8['"]\s*\)""")
+    fixed = 0
+    for script in _iter_records(app, b'PythonScript'):
+        if not isinstance(script, PythonScript) or not expr.search(script.body()):
+            continue
+        script.ZPythonScript_edit(script.params(), expr.sub(r'\1', script.body()))
+        print("  %s" % '/'.join(script.getPhysicalPath()))
+        fixed += 1
+    if not fixed:
+        print("  No scripts decoding request values")
+
+
 def reindex_catalogs(app):
     """Rebuild every catalog from the objects it holds, one commit per catalog."""
     catalogs = _find_all_catalogs(app)
@@ -754,6 +771,7 @@ STEPS = [
     ("Remove 'depth' from path queries in templates", step_remove_path_depth),
     ("Use rstk['name'] in templates and scripts", step_rstk_item_access),
     ("Use nocall:options/error_value in error templates", step_nocall_error_value),
+    ("Remove .decode('utf-8') on request values in scripts", step_request_value_decode),
 ]
 
 print("=" * 60)
