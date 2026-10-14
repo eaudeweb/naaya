@@ -40,7 +40,9 @@ def convertLinesToList(value):
 
 def readFile(p_path, p_flag='r'):
     """ """
-    return open(p_path, p_flag).read()
+    encoding = None if 'b' in p_flag else 'utf-8'
+    with open(p_path, p_flag, encoding=encoding) as f:
+        return f.read()
 
 def create_signature(s):
     if s is not None:
@@ -69,7 +71,8 @@ def get_template_content(form):
     try:
         return form._text
     except:
-        return str(form.data)
+        data = form.data
+        return data.decode('utf-8') if isinstance(data, bytes) else str(data)
 
 def get_portals(container, context=None, meta_types=None):
     """ Given a `container` or a `context` recusivly search all portals with

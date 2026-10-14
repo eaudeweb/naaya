@@ -41,7 +41,8 @@ class UpdateRDFCalendar(UpdateScript):
 
             portal_path = get_portal_path(self, portal)
             script_content = open(portal_path +
-                    '/skel/others/local_events.py', 'r').read()
+                    '/skel/others/local_events.py', 'r',
+                    encoding='utf-8').read()
             for rdfcalendar_ob in rdf_calendars:
                 try:
                     rdfcalendar_ob.manage_delObjects(['self_events', ])

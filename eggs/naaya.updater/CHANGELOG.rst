@@ -1,5 +1,8 @@
 2.0.2 (unreleased)
 ------------------
+* Fix get_template_content returning the bytes repr for objects without
+  _text [dumitval]
+* Read text files as UTF-8 regardless of the locale [dumitval]
 
 2.0.1 (2026-10-12)
 ------------------
