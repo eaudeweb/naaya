@@ -21,7 +21,7 @@ log.setLevel(logging.DEBUG)
 
 def get_config(config_path):
     try:
-        file = open(config_path)
+        file = open(config_path, encoding='utf-8')
     except IOError as e:
         return {'_root_path': os.path.dirname(__file__),
                 'sqlite': {'path': ''}}
