@@ -56,7 +56,7 @@ RESOURCE_FRIENDLY_NAMES = {
 
 def get_object_types(context, request):
     """ """
-    return RESOURCE_FRIENDLY_NAMES.keys()
+    return list(RESOURCE_FRIENDLY_NAMES.keys())
 
 
 def get_content(context, request):

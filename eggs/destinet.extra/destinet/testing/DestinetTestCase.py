@@ -1,3 +1,6 @@
+import base64
+
+from AccessControl.SecurityManagement import newSecurityManager
 from Products.Naaya.NyFolder import addNyFolder
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from Products.EnviroWindows.EnviroWindowsSite import manage_addEnviroWindowsSite
@@ -54,6 +57,16 @@ class DestinetTestCase(NaayaTestCase):
         bundle.set_parent(ew_b)
         self.portal.set_bundle(bundle)
 
+    def add_manager(self, user_id='manager', password='secret'):
+        """Add a Manager to the destinet portal and log in as that user."""
+        acl_users = self.portal.acl_users
+        acl_users._doAddUser(user_id, password, ['Manager'], '', 'Site',
+                             'Manager', 'manager@example.com')
+        user = acl_users.getUserById(user_id).__of__(acl_users)
+        self.portal.REQUEST.AUTHENTICATED_USER = user
+        newSecurityManager(None, user)
+        return user
+
 
 class DestinetFunctionalTestCase(DestinetTestCase, TwillMixin):
     """
@@ -67,6 +80,12 @@ class DestinetFunctionalTestCase(DestinetTestCase, TwillMixin):
         self.install_twill()
         #This is needed for absolute_url
         self.portal.REQUEST.setServerURL('http', 'localhost')
+
+    def browser_basic_auth(self, user_id='manager', password='secret'):
+        """Send HTTP Basic credentials with every browser request."""
+        token = base64.b64encode(('%s:%s' % (user_id, password)).encode())
+        self.browser._twill._client.headers['Authorization'] = (
+            'Basic ' + token.decode())
 
     def tearDown(self):
         super(DestinetFunctionalTestCase, self).tearDown()

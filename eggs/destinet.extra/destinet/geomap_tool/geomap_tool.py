@@ -144,7 +144,7 @@ def list_locations(self, REQUEST=None, **kw):
         raise Unauthorized
 
     options = {}
-    get_map_results(self, REQUEST, options, *kw)
+    get_map_results(self, REQUEST, options, **kw)
     if not options:
         # malformed REQUEST led to empty options, most likely bots
         raise Unauthorized

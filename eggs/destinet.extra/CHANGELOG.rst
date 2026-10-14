@@ -1,5 +1,13 @@
 2.0.2 - (unreleased)
 ====================
+* Fix list_locations on the map tool failing with a TypeError when called
+  with keyword arguments (``*kw`` instead of ``**kw``) [dumitval]
+* Fix index_rdf_extended failing on contacts: join the RDF items as text
+  and hash them as UTF-8 bytes [dumitval]
+* Fix allocate_keywords_html and allocateKeywords failing on Zope 5: use
+  the view context instead of the removed view aq_parent [dumitval]
+* Return a list from the get_object_types view instead of dict_keys
+  [dumitval]
 
 2.0.1 - (2026-10-12)
 ====================

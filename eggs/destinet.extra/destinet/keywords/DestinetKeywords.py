@@ -19,7 +19,7 @@ class allocate_keywords_html(BrowserPage):
     Render the 'allocate keywords' form for selected objects
     """
     def __call__(self, REQUEST):
-        context = self.aq_parent
+        context = self.context
         try:
             ids = REQUEST.form['id']
         except KeyError:
@@ -81,7 +81,7 @@ class allocateKeywords(BrowserPage):
         except KeyError:
             self.context.setSessionErrorsTrans('No keywords to allocate!')
             return self.request.RESPONSE.redirect(
-                self.aq_parent.absolute_url())
+                self.context.absolute_url())
 
         bulk_items = REQUEST.form.get('checked_paths', [])
         bulk_keywords = split_keywords(REQUEST.form['bulk_keywords'])

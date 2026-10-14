@@ -55,7 +55,7 @@ def syndicateMore(self, p_url, p_items=[], lang=None):
             Dc.description(s.description),
             Dc.identifier(p_url),
             Dc.date(self.utShowFullDateTimeHTML(self.utGetTodayDate())),
-            Dc.hash(md5(received_items).hexdigest()),
+            Dc.hash(md5(received_items.encode('utf-8')).hexdigest()),
             Dc.publisher(s.publisher),
             Dc.source(s.publisher),
             Dc.subject(s.title),
@@ -140,7 +140,7 @@ def syndicateThisExtended(self):
         Dc.source(l_site.getLocalProperty('publisher', lang)),
     )
     item.extend(the_rest)
-    return etree.tostring(item, xml_declaration=False, encoding="utf-8")
+    return etree.tostring(item, xml_declaration=False, encoding="unicode")
 
 
 def display_date(expiry_date):
