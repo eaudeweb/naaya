@@ -24,7 +24,7 @@ class DemoActor(object):
         self.count['folders'] += 1
 
     def document_entry(self, parent_path, ob_id, filename, data_file,
-                       title, description, keywords, date, userid):
+                       title, description, keywords, date, userid, lang='en'):
         pass  # print ('document %r (%r, %s)' % (title, userid, date))
         self.count['files'] += 1
 
@@ -85,8 +85,8 @@ class ZopeActor(object):
 
     def document_entry(self, parent_path, ob_id, filename, data_file,
                        title, description, keywords, date, userid, lang='en'):
-        from io import StringIO
-        assert isinstance(data_file, StringIO)
+        from io import BytesIO
+        assert isinstance(data_file, BytesIO)
         data_file.filename = filename
         parent = get_parent(self.context, parent_path)
         orig_path = join_parent_path(parent_path, ob_id)

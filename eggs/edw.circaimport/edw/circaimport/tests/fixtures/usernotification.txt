@@ -1,0 +1,4 @@
+user1@circa	(/docs:1)|(/docs/sub:3)
+ghost@circa	(/docs:1)
+user2@circa	(/missing:1)
+!!! not a row

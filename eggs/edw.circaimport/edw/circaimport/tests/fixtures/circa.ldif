@@ -1,0 +1,45 @@
+dn: cn=1,ou=classes,o=testig
+description: Class=1
+cn: 1
+cn: 1-Leader
+classname: FR:Responsable
+classname: EN:Leader
+overwrites: 000 000 000 000 000 000
+grouprole: 000 000 007 FFF 000 000
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: igclass
+
+dn: cn=2,ou=classes,o=testig
+description: Class=2
+cn: 2
+classname: EN:Author
+overwrites: 000 000 000 000 000 000
+grouprole: 000 000 007 FFF 000 000
+objectclass: top
+objectclass: groupOfUniqueNames
+objectclass: igclass
+
+dn: iguid=bob@circa,ou=users,o=testig
+userclass: 1
+overwrites: 000 000 000 000 000 000
+iguid: bob@circa
+grouprole: FFF FFF FFF FFF FFF FFF
+objectclass: top
+objectclass: iguser
+
+dn: iguid=ghost@circa,ou=users,o=testig
+userclass: 2
+overwrites: 000 000 000 000 000 000
+iguid: ghost@circa
+grouprole: FFF FFF FFF FFF FFF FFF
+objectclass: top
+objectclass: iguser
+
+dn: igrid=staff,ou=roles,o=testig
+igrid: staff
+roleclass: 2
+overwrites: 000 000 000 000 000 000
+grouprole: 001 001 001 001 001 001
+objectclass: top
+objectclass: igrole

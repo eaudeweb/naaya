@@ -1,5 +1,22 @@
 2.0.1 (unreleased)
 ------------------
+* Read the redirect config and LDIF files as UTF-8 [dumitval]
+* Fix the CIRCA files and folders import failing with bytes/str errors when
+  reading the zip index and members [dumitval]
+* Fix the CIRCA roles import skipping all LDIF entries because python-ldap
+  returns the values as bytes [dumitval]
+* Fix the CIRCA notifications and ACLs imports failing to parse the exported
+  files opened in binary mode [dumitval]
+* Fix the CIRCA ACLs import failing when the file has no profile entries
+  [dumitval]
+* Fix import_all_from_circa not passing the notification type to the
+  notifications import [dumitval]
+* Fix the import report log formatter failing on messages that contain "%"
+  [dumitval]
+* Fix zimport_data failing to format the error of an unreadable zexp file
+  [dumitval]
+* Fix the circaimport console script failing on the lang argument of
+  DemoActor.document_entry [dumitval]
 
 2.0.0 (2026-10-12)
 ------------------

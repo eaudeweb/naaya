@@ -37,7 +37,7 @@ def get_configuration():
         return redirect_records['data']
 
     found = {}
-    config_file = open(file_path, "r")
+    config_file = open(file_path, "r", encoding="utf-8")
     try:
         for (i, line) in enumerate(config_file):
             line = line.strip()

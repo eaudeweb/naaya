@@ -1,4 +1,4 @@
-from io import StringIO
+from io import BytesIO, StringIO
 from zipfile import ZipFile
 import logging
 import datetime
@@ -33,32 +33,35 @@ def add_files_and_folders_from_circa_export(context, name, root_path):
     zip_fs_file = open(zip_path, 'rb')
 
     zf = ZipFile(zip_fs_file)
-    index_file = StringIO(zf.read('index.txt'))
+    index_file = StringIO(zf.read('index.txt').decode('latin-1'),
+                          newline='')
     current_user = context.REQUEST.AUTHENTICATED_USER.getId()
 
     actor = ZopeActor(context, current_user)
+    member_names = zf.namelist()
 
-    def _open_on_key_error(name):
-        """
-        Patches for when the names are wrong
-        (usually unicode encoding problems)
-        """
+    def zip_member_name(name):
+        """Map an index path to a zip member name."""
+        if name in member_names:
+            return name
+        # CIRCA stores latin-1 names, which ZipFile reads as cp437
+        cp437_name = name.encode('latin-1', 'replace').decode('cp437')
+        if cp437_name in member_names:
+            return cp437_name
+        # name still wrong (usually encoding problems), match on prefix
         chain = name.split('/')
         parent_path = '/'.join(chain[:-1])
         matching_path = parent_path + '/' + chain[-1][0]
-        matches = [fname for fname in zf.namelist()
+        matches = [fname for fname in member_names
                    if fname.startswith(matching_path)]
         assert len(matches) == 1
-        return StringIO(zf.read(matches[0]))
+        return matches[0]
 
     def open_backup_file(name):
-        try:
-            return StringIO(zf.read(name))
-        except KeyError:
-            return _open_on_key_error(name)
+        return BytesIO(zf.read(zip_member_name(name)))
 
     def get_date(name):
-        info = zf.getinfo(name)
+        info = zf.getinfo(zip_member_name(name))
         return datetime.date(*info.date_time[0:3])
 
     backupdata.walk_backup(index_file, open_backup_file, get_date, actor)
@@ -120,7 +123,7 @@ def add_notifications_from_circa_export(site, filepath, notif_type):
     logger.debug('start importing notifications')
 
     from .notifications_extract import get_notifications_mapping
-    dbfile = open(filepath, 'rb')
+    dbfile = open(filepath, 'r', encoding='utf-8')
     notifications, not_matched = get_notifications_mapping(dbfile)
     dbfile.close()
 
@@ -213,9 +216,8 @@ def add_acls_from_circa_export(site, filepath):
             non_userids.extend([val for val in values
                                 if not val.endswith('@circa')])
         roles = [val[2:] for val in non_userids if val.startswith('__')]
-        roles = list(set(roles))  # remove duplicates
-        roles = map(int, roles)  # convert to integers
-        max_role = max(roles)
+        roles = set(map(int, roles))  # convert to integers
+        max_role = max(roles, default=6)
         max_role = max(max_role, 6)  # max role should be at least 6
 
         ROLES_MAPPING[str(max_role)] = 'Authenticated'
@@ -230,7 +232,7 @@ def add_acls_from_circa_export(site, filepath):
             return ROLES_MAPPING[circa_profile]
         return DEFAULT_ROLE
 
-    fd = open(filepath, 'rb')
+    fd = open(filepath, 'r', encoding='utf-8')
     acls, not_matched = get_acl_mapping(fd)
     fd.close()
 

@@ -58,7 +58,7 @@ class UIFormatter(logging.Formatter):
     html = """<span style="color: %s">%s: %s</span>"""
 
     def format(self, record):
-        message = record.msg % record.args
+        message = record.getMessage()
         return self.html % (self.color_codes[record.levelname],
                             record.levelname,
                             message)
@@ -104,7 +104,8 @@ class ImportAllFromCirca(BrowserPage):
                 try:
                     add_notifications_from_circa_export(
                         ctx, os.path.join(upload_prefix,
-                                          filename_notifications))
+                                          filename_notifications),
+                        self.request.form.get('notif_type'))
                 except Exception:
                     logger.critical(traceback.format_exc())
 
@@ -300,11 +301,11 @@ class ZImportData(BrowserPage):
                 sp.rollback()
                 error = (('Can not read file with exported data. '
                           'Did you enter correctly the path you received by '
-                          'email after export?. Error was: %s') % e.args)
+                          'email after export?. Error was: %s') % (e,))
                 logger.exception(error)
             except Exception as e:
                 sp.rollback()
-                error = 'Error importing data from zexp file: %s' % e.args
+                error = 'Error importing data from zexp file: %s' % (e,)
                 logger.exception(error)
                 subject = 'Error importing IG Data'
                 zexpcopy.send_action_completed_mail(error, sender, to, subject)

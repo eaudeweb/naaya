@@ -2,6 +2,7 @@ import sys
 import tarfile
 from ldif import LDIFParser
 from pprint import pprint
+import io
 import os
 
 from App.config import getConfiguration
@@ -9,6 +10,14 @@ from App.config import getConfiguration
 CONFIG = getConfiguration()
 CONFIG.environment.update(os.environ)
 CIRCA_CIRCLE_NAME = getattr(CONFIG, 'environment', {}).get('CIRCA_CIRCLE_NAME', 'eionet-circle')
+
+
+def decode_entry(entry):
+    """LDIFParser gives bytes values; decode them as UTF-8."""
+    return dict((key, [v.decode('utf-8') if isinstance(v, bytes) else v
+                       for v in values])
+                for key, values in entry.items())
+
 
 class LDIFClassesParser(LDIFParser):
     """
@@ -33,6 +42,7 @@ class LDIFClassesParser(LDIFParser):
         LDIFParser.__init__(self, descriptor)
 
     def handle(self, dn, entry):
+        entry = decode_entry(entry)
         assert 'objectclass' in entry
         if 'igclass' not in entry['objectclass']:
             return
@@ -66,6 +76,7 @@ class LDIFUsersParser(LDIFParser):
         LDIFParser.__init__(self, descriptor)
 
     def handle(self, dn, entry):
+        entry = decode_entry(entry)
         assert 'objectclass' in entry
         if 'iguser' not in entry['objectclass']:
             return
@@ -103,6 +114,7 @@ class LDIFRolesParser(LDIFParser):
         LDIFParser.__init__(self, descriptor)
 
     def handle(self, dn, entry):
+        entry = decode_entry(entry)
         assert 'objectclass' in entry
         if 'igrole' not in entry['objectclass']:
             return
@@ -122,11 +134,13 @@ class LDIFOpener(object):
         name, ext = os.path.splitext(tail)
         if ext == '.tgz':
             fd = tarfile.open(path, 'r')
-            fd_ldif = fd.extractfile('%s/ldap/%s.%s.ircnode.ldif'
-                             % (name, CIRCA_CIRCLE_NAME, name))
+            fd_ldif = io.TextIOWrapper(
+                fd.extractfile('%s/ldap/%s.%s.ircnode.ldif'
+                               % (name, CIRCA_CIRCLE_NAME, name)),
+                encoding='utf-8')
             self.fd, self.fd_ldif = fd, fd_ldif
         elif ext == '.ldif':
-            self.fd_ldif = open(path, 'r')
+            self.fd_ldif = open(path, 'r', encoding='utf-8')
         else:
             raise ValueError('Path is not to a .tgz or .ldif file')
 

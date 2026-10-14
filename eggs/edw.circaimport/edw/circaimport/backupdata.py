@@ -36,18 +36,18 @@ def convert_index(i, o):
     reader = csv.reader(i, dialect='excel-tab')
     writer = csv.writer(o)
     for line in reader:
-        writer.writerow([c.decode('latin-1').encode('utf-8') for c in line])
+        writer.writerow(line)
 
 
 def read_index(f, warn):
     # reader = csv.DictReader(f, dialect='excel-tab')
     reader = csv.reader(f, dialect='excel-tab')
-    names = reader.next()
+    names = next(reader)
     n = 0
     for line in reader:
         n += 1
         fix_exceptions(names, line, warn)
-        yield dict((names[i], line[i].decode('latin-1'))
+        yield dict((names[i], line[i])
                    for i in range(len(names)))
 
 
@@ -89,7 +89,7 @@ def walk_backup(index_file, open_backup_file, get_date, actor):
         description = line.get('ABSTRACT', line.get('Abstract'))
         userid = parse_userid(line.get('OWNER', line.get('Owner')))
         filename = line.get('FILENAME', line.get('Filename'))
-        folder_zip_path = filename[:-1].encode('utf-8')
+        folder_zip_path = filename[:-1]
 
         # for zope replace starting underscores
         folder_zope_path = sanitize_folder_path(folder_zip_path)
@@ -150,12 +150,12 @@ def walk_backup(index_file, open_backup_file, get_date, actor):
             date = get_date(doc_zip_path)
 
         doc_split_path = doc_zope_path.split('/')
-        doc_filename = doc_split_path[-1].encode('utf-8')
+        doc_filename = doc_split_path[-1]
         doc_langver = doc_split_path[-2]
         lang = doc_langver[:2].lower()
         doc_dpl_name = str(doc_split_path[-3])
 
-        parent_path = '/'.join(doc_split_path[:-3]).encode('utf-8')
+        parent_path = '/'.join(doc_split_path[:-3])
         parent_path = remove_root_path(parent_path)
         assert parent_path in folders_info['known_folders']
 
@@ -189,10 +189,10 @@ def walk_backup(index_file, open_backup_file, get_date, actor):
             description = (("<p>Reference: %s</p>\n" % reference) +
                            description)
 
-        doc_data_file = open_backup_file(doc_zip_path.encode('latin-1'))
+        doc_data_file = open_backup_file(doc_zip_path)
 
         if doc_filename.endswith('.url'):
-            url = doc_data_file.read().strip()
+            url = doc_data_file.read().decode('latin-1').strip()
             if '\n' in url:
                 matched = re.search(r'URL=(.*)', url)
                 if matched:

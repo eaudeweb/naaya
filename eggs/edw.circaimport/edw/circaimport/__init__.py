@@ -1,5 +1,6 @@
 import sys
-from io import StringIO
+import io
+from io import BytesIO
 from zipfile import ZipFile
 import datetime
 import Zope2
@@ -16,20 +17,22 @@ def demo():
     actor = DemoActor()
 
     if len(sys.argv) > 1 and sys.argv[1] == '-i':
-        index_file = sys.stdin
+        index_file = io.TextIOWrapper(sys.stdin.buffer, encoding='latin-1',
+                                      newline='')
 
         def open_backup_file(name):
-            return StringIO('http://in-case-this-is-a-url')
+            return BytesIO(b'http://in-case-this-is-a-url')
 
         def get_date(name):
             return datetime.date.today()
 
     else:
-        zf = ZipFile(sys.stdin)
-        index_file = StringIO(zf.read('index.txt'))
+        zf = ZipFile(BytesIO(sys.stdin.buffer.read()))
+        index_file = io.StringIO(zf.read('index.txt').decode('latin-1'),
+                                 newline='')
 
         def open_backup_file(name):
-            return StringIO(zf.read(name))
+            return BytesIO(zf.read(name))
 
         def get_date(name):
             info = zf.getinfo(name)
@@ -41,7 +44,9 @@ def demo():
 
 
 def tsv2csv():
-    backupdata.convert_index(sys.stdin, sys.stdout)
+    backupdata.convert_index(
+        io.TextIOWrapper(sys.stdin.buffer, encoding='latin-1', newline=''),
+        sys.stdout)
 
 
 def do_export():

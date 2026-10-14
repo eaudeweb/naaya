@@ -5,7 +5,7 @@ from pprint import pprint
 
 def get_notifications_mapping(dbprintedfd):
     notifications, not_matched = {}, {}
-    row_re = re.compile('([a-zA-Z0-9_@]+)\s+(.*)')
+    row_re = re.compile(r'([a-zA-Z0-9_@]+)\s+(.*)')
     user_re = re.compile('([a-zA-Z0-9_]+)@circa')
 
     for row in dbprintedfd:
@@ -40,7 +40,7 @@ if __name__ == '__main__':
         sys.exit(1)
 
     try:
-        dbfile = open(sys.argv[1], 'rb')
+        dbfile = open(sys.argv[1], 'r', encoding='utf-8')
         notifications, not_matched = get_notifications_mapping(dbfile)
         dbfile.close()
     except ValueError as e:

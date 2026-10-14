@@ -5,7 +5,7 @@ from pprint import pprint
 
 def get_acl_mapping(fd):
     acls, not_matched = {}, []
-    row_re = re.compile('([a-zA-Z0-9_/]+)\s+(.*)')
+    row_re = re.compile(r'([a-zA-Z0-9_/]+)\s+(.*)')
 
     for row in fd:
         acl_match = row_re.match(row)
@@ -26,7 +26,7 @@ if __name__ == '__main__':
         sys.exit(1)
 
     try:
-        fd = open(sys.argv[1], 'rb')
+        fd = open(sys.argv[1], 'r', encoding='utf-8')
         acls, not_matched = get_acl_mapping(fd)
         fd.close()
     except ValueError:
