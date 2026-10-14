@@ -11,7 +11,7 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=['Naaya',
-                      'xlwt',
+                      'xlsxwriter',
                       'pdfkit',
                       'naaya.i18n >= 1.1.8'],
 )

@@ -1,6 +1,7 @@
 2.0.1 (unreleased)
 ------------------
 * Read the report template file as UTF-8 [dumitval]
+* Export the survey answers and statistics as .xlsx [dumitval]
 
 2.0.0 (2026-10-12)
 ------------------

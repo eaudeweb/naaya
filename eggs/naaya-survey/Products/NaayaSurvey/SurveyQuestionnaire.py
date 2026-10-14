@@ -4,7 +4,6 @@ import tempfile
 import shutil
 import os.path
 
-import xlwt
 import pdfkit
 from tempfile import NamedTemporaryFile
 
@@ -36,6 +35,8 @@ from Products.NaayaCore.EmailTool.EmailPageTemplate import (
 from Products.NaayaWidgets.Widget import WidgetError
 from Products.NaayaBase.NyRoleManager import NyRoleManager
 from naaya.core.zope2util import folder_manage_main_plus
+from naaya.core.zope2util import new_xlsx_workbook
+from naaya.core.zope2util import XLSX_CONTENT_TYPE
 
 from .SurveyAnswer import manage_addSurveyAnswer, SurveyAnswer
 from .permissions import PERMISSION_ADD_ANSWER, PERMISSION_EDIT_ANSWERS
@@ -645,36 +646,40 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item,
 
     def generate_excel(self, report, answers):
         state = {}
-        wb = xlwt.Workbook(encoding='utf-8')
-        state['ws'] = wb.add_sheet('Report')
+        output, wb = new_xlsx_workbook()
+        state['wb'] = wb
+        state['ws'] = wb.add_worksheet('Report')
         state['temp_folder'] = tempfile.mkdtemp()
         state['answers'] = answers
-        separator_style = xlwt.easyxf('borders: top thin')
-        # alternatives for formatting
-        # filled_cell_style = xlwt.easyxf(
-        # pattern: pattern solid, fore_colour 0x16')
-        # ws.col(1).width = len('Text in cell') * 256
+        state['header_style'] = wb.add_format(
+            {'bold': True, 'valign': 'vcenter'})
+        state['normal_style'] = wb.add_format({'valign': 'vcenter'})
+        state['italic_style'] = wb.add_format(
+            {'italic': True, 'valign': 'vcenter'})
+        state['hyper_style'] = wb.add_format(
+            {'underline': 1, 'font_color': 'blue', 'valign': 'vcenter'})
+        separator_style = wb.add_format({'top': 1})
         current_row = 1
         question = ''
         for statistic in report.getSortedStatistics():
             if (question != statistic.question.title and
                     report.getSortedStatistics().index(statistic) != 0):
                 question = statistic.question.title
-                state['ws'].write_merge(current_row, current_row, 0, 20, '',
+                state['ws'].merge_range(current_row, 0, current_row, 20, '',
                                         separator_style)
                 current_row += 1
             elif question == statistic.question.title:
-                state['ws'].write_merge(current_row, current_row, 1, 5, '',
+                state['ws'].merge_range(current_row, 1, current_row, 5, '',
                                         separator_style)
                 current_row += 1
             state['current_row'] = current_row
             statistic.add_to_excel(state)
             current_row = state['current_row'] + 1
-        shutil.rmtree(state['temp_folder'])
-        output = tempfile.NamedTemporaryFile()
-        wb.save(output)
-        output.seek(0)
-        return output.read()
+        try:
+            wb.close()
+        finally:
+            shutil.rmtree(state['temp_folder'])
+        return output.getvalue()
 
     security.declarePrivate('generate_pdf')
 
@@ -711,8 +716,8 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item,
             answers = self.getAnswers()
         if type == 'excel':
             ret = self.generate_excel(report, answers=answers)
-            content_type = 'application/vnd.ms-excel'
-            filename = '%s Export.xls' % report.id
+            content_type = XLSX_CONTENT_TYPE
+            filename = '%s Export.xlsx' % report.id
         elif type == 'pdf':
             ret = self.generate_pdf(report_id)
             content_type = 'application/pdf'

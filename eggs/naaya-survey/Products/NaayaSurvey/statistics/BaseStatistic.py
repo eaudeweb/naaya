@@ -79,6 +79,16 @@ class BaseStatistic(SimpleItem, LocalPropertyManager):
         self.question = question
         self.sortorder = kwargs.get('sortorder', question.sortorder)
 
+    security.declarePrivate('merge_cells')
+    def merge_cells(self, ws, first_row, last_row, first_col, last_col,
+                    label, style):
+        ''' Merges the range, or writes one cell if the range is a single cell '''
+        if (first_row, first_col) == (last_row, last_col):
+            ws.write(first_row, first_col, label, style)
+        else:
+            ws.merge_range(first_row, first_col, last_row, last_col, label,
+                           style)
+
     security.declarePrivate('get_bitmap_props')
     def get_bitmap_props(self, file_string, temp_folder):
         ''' Opens the passed string as image, stripps the possible a channel,

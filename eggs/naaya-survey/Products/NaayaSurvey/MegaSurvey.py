@@ -14,6 +14,7 @@ from Products.NaayaBase.NyAccess import NyAccess
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaCore.managers.import_export import generate_csv
 from Products.NaayaCore.managers.import_export import generate_excel
+from naaya.core.zope2util import XLSX_CONTENT_TYPE
 
 from Products.NaayaWidgets.constants import PERMISSION_ADD_WIDGETS
 from .BaseSurveyTemplate import BaseSurveyTemplate
@@ -150,9 +151,9 @@ class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
                                'attachment; filename=%s.csv' % self.id)
             return generate_csv(header, rows)
         if file_type == 'Excel' and self.rstk['we_provide']('Excel export'):
-            RESPONSE.setHeader('Content-Type', 'application/vnd.ms-excel')
+            RESPONSE.setHeader('Content-Type', XLSX_CONTENT_TYPE)
             RESPONSE.setHeader('Content-Disposition',
-                               'attachment; filename=%s.xls' % self.id)
+                               'attachment; filename=%s.xlsx' % self.id)
             return generate_excel(header, rows)
         else:
             log.info('Invalid download file type %s', file_type)

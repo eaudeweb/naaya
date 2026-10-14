@@ -79,7 +79,6 @@ class MatrixCssBarChartStatistic(BaseMatrixStatistic):
     security.declarePrivate('add_to_excel')
     def add_to_excel(self, state):
         """ adds content to the excel file based on the specific statistic type """
-        import xlwt
         temp_folder = state['temp_folder']
         answers = state['answers']
         ws = state['ws']
@@ -89,9 +88,8 @@ class MatrixCssBarChartStatistic(BaseMatrixStatistic):
         total, unanswered, per_row_and_choice = self.calculate(self.question, answers)
         colors=self.getPallete(len(self.question.choices) + 1)
 
-        #define Excel styles
-        header_style = xlwt.easyxf('font: bold on; align: vert centre')
-        normal_style = xlwt.easyxf('align: vert centre')
+        header_style = state['header_style']
+        normal_style = state['normal_style']
 
         #write cell elements similarly to the zpt-->html output
         ws.write(current_row, 1, self.question.title, header_style)
@@ -99,8 +97,8 @@ class MatrixCssBarChartStatistic(BaseMatrixStatistic):
 
         for row in self.question.rows:
             r = self.question.rows.index(row)
-            ws.write_merge(current_row,
-                current_row+len(self.question.choices), 1, 1, row, header_style)
+            self.merge_cells(ws, current_row,
+                current_row + len(self.question.choices), 1, 1, row, header_style)
             for choice in self.question.choices:
                 c = self.question.choices.index(choice)
                 ws.write(current_row, 2, choice, header_style)
@@ -108,13 +106,13 @@ class MatrixCssBarChartStatistic(BaseMatrixStatistic):
                 height = 12
                 if width * height:
                     path = self.set_bitmap_props(file_path, width, height, temp_folder)
-                    ws.insert_bitmap(path, current_row, 3, 0, 3)
+                    ws.insert_image(current_row, 3, path, {'y_offset': 3})
                 current_row += 1
             ws.write(current_row, 2, translator('Not answered'), header_style)
             width = int(unanswered[r][1]) * 2
             if width * height:
                 path = self.set_bitmap_props(file_path, width, height, temp_folder)
-                ws.insert_bitmap(path, current_row, 3, 0, 3)
+                ws.insert_image(current_row, 3, path, {'y_offset': 3})
             current_row += 2
         state['current_row'] = current_row
 

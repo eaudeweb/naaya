@@ -77,4 +77,4 @@ class BaseMultipleChoiceStatistic(BaseStatistic):
         return (total,
                 (answered_count, answered_percent),
                 (unanswered_count, unanswered_percent),
-                zip(per_choice_count, per_choice_percent))
+                list(zip(per_choice_count, per_choice_percent)))

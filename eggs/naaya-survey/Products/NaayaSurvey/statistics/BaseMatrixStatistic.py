@@ -68,8 +68,8 @@ class BaseMatrixStatistic(BaseStatistic):
 
         per_row_and_choice = []
         for x, y in zip(per_row_and_choice_count, per_row_and_choice_percent):
-            per_row_and_choice.append(zip(x, y))
+            per_row_and_choice.append(list(zip(x, y)))
 
         return (total,
-                zip(unanswered_count, unanswered_percent),
+                list(zip(unanswered_count, unanswered_percent)),
                 per_row_and_choice)

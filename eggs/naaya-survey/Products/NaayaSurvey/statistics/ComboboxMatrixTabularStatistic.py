@@ -109,17 +109,15 @@ class ComboboxMatrixTabularStatistic(BaseStatistic):
     security.declarePrivate('add_to_excel')
     def add_to_excel(self, state):
         """ adds content to the excel file based on the specific statistic type """
-        import xlwt
         answers = state['answers']
         ws = state['ws']
         current_row = state['current_row']
         translator = self.getSite().getPortalTranslations()
         total, unanswered, per_row_and_choice = self.calculate(self.question, answers)
 
-        #define Excel styles
-        header_style = xlwt.easyxf('font: bold on; align: vert centre')
-        normal_style = xlwt.easyxf('align: vert centre')
-        italic_style = xlwt.easyxf('align: vert centre; font: italic on')
+        header_style = state['header_style']
+        normal_style = state['normal_style']
+        italic_style = state['italic_style']
 
         #write cell elements similarly to the zpt-->html output
         ws.write(current_row, 1, self.question.title, header_style)
@@ -134,8 +132,8 @@ class ComboboxMatrixTabularStatistic(BaseStatistic):
         for row in self.question.rows:
             r = self.question.rows.index(row)
             current_col = 1
-            ws.write_merge(current_row,
-                current_row+len(self.question.values), 1, 1, row, header_style)
+            self.merge_cells(ws, current_row,
+                current_row + len(self.question.values), 1, 1, row, header_style)
             for value in self.question.values:
                 v = self.question.values.index(value)
                 current_col = 2

@@ -59,7 +59,6 @@ class MultipleChoiceCssBarChartStatistic(BaseMultipleChoiceStatistic):
     security.declarePrivate('add_to_excel')
     def add_to_excel(self, state):
         """ adds content to the excel file based on the specific statistic type """
-        import xlwt
         temp_folder = state['temp_folder']
         answers = state['answers']
         ws = state['ws']
@@ -67,9 +66,8 @@ class MultipleChoiceCssBarChartStatistic(BaseMultipleChoiceStatistic):
         translator = self.getSite().getPortalTranslations()
         total, answered, unanswered, per_choice = self.calculate(self.question, answers)
 
-        #define Excel styles
-        header_style = xlwt.easyxf('font: bold on; align: vert centre')
-        normal_style = xlwt.easyxf('align: vert centre')
+        header_style = state['header_style']
+        normal_style = state['normal_style']
 
         #write cell elements similarly to the zpt-->html output
         ws.write(current_row, 1, self.question.title, header_style)
@@ -84,8 +82,7 @@ class MultipleChoiceCssBarChartStatistic(BaseMultipleChoiceStatistic):
             height = 12
             if width * height:
                 path = self.set_bitmap_props(file_path, width, height, temp_folder)
-                #syntax: insert_bitmap(filename, row, column, delta_x, delta_y)
-                ws.insert_bitmap(path, current_row, 1, 0, 3)
+                ws.insert_image(current_row, 1, path, {'y_offset': 3})
             choice_count += 1
             current_row += 1
         ws.write(current_row, 3, translator('Not answered') + ' (%s)'
@@ -94,7 +91,7 @@ class MultipleChoiceCssBarChartStatistic(BaseMultipleChoiceStatistic):
         height = 12
         if width * height:
             path = self.set_bitmap_props(file_path, width, height, temp_folder)
-            ws.insert_bitmap(path, current_row, 1, 0, 3)
+            ws.insert_image(current_row, 1, path, {'y_offset': 3})
 
         state['current_row'] = current_row + 1
 

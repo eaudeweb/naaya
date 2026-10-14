@@ -96,19 +96,13 @@ class MultipleChoiceGoogleBarChartStatistic(BaseMultipleChoiceStatistic):
     def add_to_excel(self, state):
         """ adds content to the excel file based on the specific
             statistic type """
-        import xlwt
         temp_folder = state['temp_folder']
         answers = state['answers']
         ws = state['ws']
         current_row = state['current_row']
         chart_url = self.get_chart(answers).get_url()
 
-        # define Excel styles
-        style = xlwt.XFStyle()
-        normalfont = xlwt.Font()
-        headerfont = xlwt.Font()
-        headerfont.bold = True
-        style.font = headerfont
+        style = state['header_style']
 
         # write cell elements similarly to the zpt-->html output
         ws.write(current_row, 1, self.question.title, style)
@@ -116,8 +110,8 @@ class MultipleChoiceGoogleBarChartStatistic(BaseMultipleChoiceStatistic):
         file = urlopen(chart_url)
         file_string = BytesIO(file.read())
         bitmap_props = self.get_bitmap_props(file_string, temp_folder)
-        """ insert_bitmap (filename, row, column, delta_x, delta_y) """
-        ws.insert_bitmap(bitmap_props['path'], current_row, 1, 0, 5)
+        ws.insert_image(current_row, 1, bitmap_props['path'],
+                        {'y_offset': 5})
         state['current_row'] = current_row + int(bitmap_props['height']/17) + 1
 
     page = PageTemplateFile(

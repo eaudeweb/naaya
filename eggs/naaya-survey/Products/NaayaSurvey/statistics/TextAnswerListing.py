@@ -63,7 +63,6 @@ class TextAnswerListing(BaseStatistic):
     security.declarePrivate('add_to_excel')
     def add_to_excel(self, state):
         """ adds content to the excel file based on the specific statistic type """
-        import xlwt
         answers = state['answers']
         ws = state['ws']
         current_row = state['current_row']
@@ -71,10 +70,9 @@ class TextAnswerListing(BaseStatistic):
         data=self.calculate(answers)
         question=self.question
 
-        #define Excel styles
-        header_style = xlwt.easyxf('font: bold on; align: vert centre')
-        normal_style = xlwt.easyxf('align: vert centre')
-        hyper_style = xlwt.easyxf('align: vert centre; font: underline single, color-index blue')
+        header_style = state['header_style']
+        normal_style = state['normal_style']
+        hyper_style = state['hyper_style']
 
         #write cell elements similarly to the zpt-->html output
         ws.write(current_row, 1, self.question.title, header_style)
@@ -88,8 +86,8 @@ class TextAnswerListing(BaseStatistic):
             if self.checkPermissionPublishObjects():
                 answer_url = answer.absolute_url()
                 respondent = answer.get_respondent_name()
-                ws.write(current_row, 1, xlwt.Formula('HYPERLINK' + '("%s"; "%s")'
-                    % (answer_url, respondent)), hyper_style)
+                ws.write_url(current_row, 1, answer_url, hyper_style,
+                             string=respondent)
             ws.write(current_row, 2,
                 self.utShowDateTime(answer.modification_time), normal_style)
 
