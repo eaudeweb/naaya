@@ -1,5 +1,7 @@
 2.0.1 (unreleased)
 ------------------
+* Compare file sizes as bytes in the nyfile2nyblob update [dumitval]
+* Write report_unused_files output as UTF-8 [dumitval]
 
 2.0.0 (2026-10-12)
 ------------------

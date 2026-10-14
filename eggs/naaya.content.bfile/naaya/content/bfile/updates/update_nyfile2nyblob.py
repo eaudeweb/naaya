@@ -142,7 +142,7 @@ class Import(object):
             self.context._versions.append(bf)
 
             fname = bf.get_filename()
-            with open(fname) as f:
+            with open(fname, 'rb') as f:
                 version.seek(0)
                 if not len(f.read()) == len(version.read()):
                     raise ValueError("Different size of files")

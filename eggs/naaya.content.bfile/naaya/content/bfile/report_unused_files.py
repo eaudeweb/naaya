@@ -29,7 +29,7 @@ class ReportUnusedFiles(BrowserView):
                         print(path)
                         out.append(path)
 
-        with open('/tmp/files.txt', 'w') as f:
+        with open('/tmp/files.txt', 'w', encoding='utf-8') as f:
             f.write("\n".join(out))
 
         return "Done"
