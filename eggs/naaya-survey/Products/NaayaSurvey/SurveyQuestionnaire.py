@@ -812,7 +812,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item,
                                 'initial_validation_html.txt')
         id = 'validation_html'
         title = "Custom questionnaire HTML"
-        manage_addPageTemplate(self, id, title, open(datafile).read())
+        manage_addPageTemplate(self, id, title, open(datafile, encoding='utf-8').read())
         if REQUEST is not None:
             url = self[id].absolute_url() + '/manage_workspace'
             REQUEST.RESPONSE.redirect(url)
