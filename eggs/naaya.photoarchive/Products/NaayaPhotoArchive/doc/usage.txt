@@ -15,7 +15,7 @@ Gallery
     >>> gallery_id = info.addNyPhotoGallery(id='mygallery', title='My Gallery')
     >>> gallery = info[gallery_id]
     >>> gallery.title
-    u'My Gallery'
+    'My Gallery'
 
 Album
 =====
@@ -24,7 +24,7 @@ Album
     >>> album_id = gallery.addNyPhotoFolder(id='myalbum', title='My Album')
     >>> album = gallery[album_id]
     >>> album.title
-    u'My Album'
+    'My Album'
 
   You can specify maximum photos in album, and maximum photos to display per page.
 
@@ -50,7 +50,7 @@ Album
     >>> error
     "You've reached the maximum number of photos allowed in this album !"
     >>> album.objectIds()
-    ['test.gif', 'a.gif', 'b.gif', 'c-d.gif', 'd_and_d.gif']
+    ['test.gif', 'a.gif', 'b.gif', 'c-d.gif', 'd-and-d.gif']
   
   Albums are displayed in gallery as thumbnails and for that they need a cover image.
   By default this is the first image relative url in album. If there is no image

@@ -232,14 +232,16 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
                     filename='Original', purge=True, watermark=False):
 
         if hasattr(data, '__class__') and data.__class__ is Pdata:
-            data = str(data)
+            data = bytes(data)
         elif getattr(data, 'index_html', None):
             data = data.index_html()
 
         if not isinstance(data, (str, bytes)):   #dealing with a blobstreamiterator
             data = data.read()
+        if isinstance(data, str):
+            data = data.encode('utf-8')
 
-        if purge:
+        if purge and self.objectIds():
             self.manage_delObjects(self.objectIds())
 
         filename = clean_display_id(filename)
@@ -348,8 +350,9 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
         except (KeyError):
             return DEFAULT_QUALITY
         else:
-            quality = 100 - round(imagebytes / filebytes, 2)
-            return quality
+            # Pillow needs an int quality between 1 and 100
+            quality = 100 - round(imagebytes / filebytes)
+            return max(1, min(100, int(quality)))
 
     def __generate_display(self, display, watermark=False):
         #generates and stores a display
@@ -385,14 +388,14 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
         while True:
             size += 1
             nextfont = ImageFont.truetype(FONT, size)
-            nexttextwidth, nexttextheight = nextfont.getsize(text)
+            left, top, right, bottom = nextfont.getbbox(text)
+            nexttextwidth, nexttextheight = right - left, bottom - top
             if nexttextwidth+nexttextheight/3 > watermark.size[0]:
                 break
             font = nextfont
             textwidth, textheight = nexttextwidth, nexttextheight
-        draw.setfont(font)
         draw.text(((watermark.size[0]-textwidth)/2,
-                   (watermark.size[1]-textheight)/2), text)
+                   (watermark.size[1]-textheight)/2), text, font=font)
         watermark = watermark.rotate(degrees(atan(float(img.size[1])/img.size[0])),
                                  Image.BICUBIC)
         mask = watermark.convert("L").point(lambda x: min(x, 88))
@@ -585,7 +588,7 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
             if hasattr(file, 'filename'):
                 if file.filename != '':
                     self.update_data(file)
-        if lang is None: lang = self.get_default_language()
+        if lang is None: lang = self.gl_get_selected_language()
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))

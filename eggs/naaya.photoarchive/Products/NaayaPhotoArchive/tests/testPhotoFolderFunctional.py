@@ -21,7 +21,7 @@
 import re
 from unittest import TestSuite, TestLoader
 import zipfile
-from io import StringIO
+from io import BytesIO
 
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 
@@ -33,10 +33,10 @@ from . import patchTestEnv
 
 def load_file(filename):
     import os
-    from io import StringIO
+    from io import BytesIO
     pass  # package_home import removed (unused)
     filename = os.path.sep.join([os.path.dirname(os.path.abspath(__file__)), filename])
-    data = StringIO(open(filename, 'rb').read())
+    data = BytesIO(open(filename, 'rb').read())
     data.filename = os.path.basename(filename)
     return data
 
@@ -61,7 +61,7 @@ class NyPhotoFolderFunctionalTestCase(NaayaFunctionalTestCase):
     def test_add(self):
         self.browser_do_login('admin', '')
         self.browser.go('http://localhost/portal/myfolder/mygallery/photofolder_add_html')
-        self.failUnless('<h1>Submit album</h1>' in self.browser.get_html())
+        self.assertTrue('<h1>Submit album</h1>' in self.browser.get_html())
         form = self.browser.get_form('frmAdd')
         expected_controls = set([
             'lang', 'title:utf8:string', 'description:utf8:string', 'coverage:utf8:string',
@@ -69,7 +69,7 @@ class NyPhotoFolderFunctionalTestCase(NaayaFunctionalTestCase):
             'author:utf8:string', 'source:utf8:string', 'file', 
         ])
         found_controls = set(c.name for c in form.controls)
-        self.failUnless(expected_controls.issubset(found_controls),
+        self.assertTrue(expected_controls.issubset(found_controls),
             'Missing form controls: %s' % repr(expected_controls - found_controls))
 
         form['title:utf8:string'] = 'test_create_album'
@@ -86,21 +86,21 @@ class NyPhotoFolderFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
 
         html = self.browser.get_html()
-        self.failUnlessEqual(self.browser.get_url(), 'http://localhost/portal/myfolder/mygallery')
-        self.failUnless('test_create_album' in html)
+        self.assertEqual(self.browser.get_url(), 'http://localhost/portal/myfolder/mygallery')
+        self.assertTrue('test_create_album' in html)
 
         album = self.portal.myfolder.mygallery['test_create_album']
-        self.failUnlessEqual(album.description, 'test_album_description')
-        self.failUnlessEqual(album.coverage, 'test_album_coverage')
-        self.failUnlessEqual(album.keywords, 'keyw1, keyw2')
-        self.failUnlessEqual(album.author, 'test_album_author')
-        self.failUnlessEqual(album.source, 'test_album_source')
+        self.assertEqual(album.description, 'test_album_description')
+        self.assertEqual(album.coverage, 'test_album_coverage')
+        self.assertEqual(album.keywords, 'keyw1, keyw2')
+        self.assertEqual(album.author, 'test_album_author')
+        self.assertEqual(album.source, 'test_album_source')
 
         self.browser.go('http://localhost/portal/myfolder/mygallery/test_create_album')
         html = self.browser.get_html()
-        self.failUnless(re.search(r'<h1>.*test_create_album.*</h1>', html, re.DOTALL))
-        self.failUnless('albumphoto.png' in html)
-        self.failUnless('albumphoto.png' in album.objectIds())
+        self.assertTrue(re.search(r'<h1>.*test_create_album.*</h1>', html, re.DOTALL))
+        self.assertTrue('albumphoto.png' in html)
+        self.assertTrue('albumphoto.png' in album.objectIds())
 
         self.browser_do_logout()
 
@@ -121,17 +121,17 @@ class NyPhotoFolderFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.go('http://localhost/portal/myfolder/mygallery/test_create_album_zip')
         html = self.browser.get_html()
-        self.failUnless(re.search(r'<h1>.*test_create_album_zip.*</h1>', html, re.DOTALL))
+        self.assertTrue(re.search(r'<h1>.*test_create_album_zip.*</h1>', html, re.DOTALL))
 
         album = self.portal.myfolder.mygallery['test_create_album_zip']
         pics_in_zip = ['a.gif', 'b.gif', 'c-d.gif', 'd and d.gif', 'e-34.gif', 'k.gif']
         for pic in pics_in_zip:
-            self.failUnless(pic in html)
+            self.assertTrue(pic in html)
 
         pics_ids = ['a.gif', 'b.gif', 'c-d.gif', 'd-and-d.gif', 'e-34.gif', 'k.gif']
         for pic in pics_ids:
-            self.failUnless(pic in album.objectIds())
-            self.failUnlessEqual(album[pic].approved, 1)
+            self.assertTrue(pic in album.objectIds())
+            self.assertEqual(album[pic].approved, 1)
 
         self.browser_do_logout()
 
@@ -139,19 +139,19 @@ class NyPhotoFolderFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser_do_login('admin', '')
         self.browser.go('http://localhost/portal/myfolder/mygallery/myalbum/changecover_html')
         html = self.browser.get_html()
-        self.failUnless(re.search(r'<h1>.*Change cover.*</h1>', html, re.DOTALL))
+        self.assertTrue(re.search(r'<h1>.*Change cover.*</h1>', html, re.DOTALL))
 
         form = self.browser.get_form(2)
         form['cover'] = ['myphoto2']
         self.browser.clicked(form, 'cover')
         self.browser.submit()
 
-        self.failUnlessEqual(self.browser.get_url(), 'http://localhost/portal/myfolder/mygallery/myalbum')
+        self.assertEqual(self.browser.get_url(), 'http://localhost/portal/myfolder/mygallery/myalbum')
 
         self.browser.go('http://localhost/portal/myfolder/mygallery')
         html = self.browser.get_html()
-        self.failUnless(re.search(r'<img src="http://localhost/portal/myfolder/mygallery/'
-                                   'myalbum/myphoto2/view\?display=Gallery"\s+alt="My photo album" />', html))
+        self.assertTrue(re.search(r'<img src="http://localhost/portal/myfolder/mygallery/'
+                                   'myalbum/myphoto2/view\?display=Gallery"\s+alt="My photo album"\s*/>', html))
 
         self.browser_do_logout()
 
@@ -165,8 +165,8 @@ class NyPhotoFolderFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
 
         html = self.browser.get_html()
-        self.failUnless('The form contains errors' in html)
-        self.failUnless('Value required for "Title"' in html)
+        self.assertTrue('The form contains errors' in html)
+        self.assertTrue('Value required for "Title"' in html)
 
     def test_edit(self):
         self.browser_do_login('admin', '')
@@ -174,16 +174,16 @@ class NyPhotoFolderFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/myfolder/mygallery/myalbum/edit_html')
         form = self.browser.get_form('frmEdit')
 
-        self.failUnlessEqual(form['title:utf8:string'], 'My photo album')
+        self.assertEqual(form['title:utf8:string'], 'My photo album')
 
         form['title:utf8:string'] = 'new_album_title'
 
         self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
         html = self.browser.get_html()
-        self.failUnless('<h1>Edit album</h1>' in html)
+        self.assertTrue('<h1>Edit album</h1>' in html)
 
-        self.failUnlessEqual(self.portal.myfolder.mygallery.myalbum.title, 'new_album_title')
+        self.assertEqual(self.portal.myfolder.mygallery.myalbum.title, 'new_album_title')
 
         self.browser.go('http://localhost/portal/myfolder/mygallery/myalbum/edit_html?lang=fr')
         form = self.browser.get_form('frmEdit')
@@ -191,8 +191,8 @@ class NyPhotoFolderFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
 
-        self.failUnlessEqual(self.portal.myfolder.mygallery.myalbum.title, 'new_album_title')
-        self.failUnlessEqual(self.portal.myfolder.mygallery.myalbum.getLocalProperty('title', 'fr'), 'french_title')
+        self.assertEqual(self.portal.myfolder.mygallery.myalbum.title, 'new_album_title')
+        self.assertEqual(self.portal.myfolder.mygallery.myalbum.getLocalProperty('title', 'fr'), 'french_title')
 
         self.browser_do_logout()
 
@@ -206,8 +206,8 @@ class NyPhotoFolderFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
 
         html = self.browser.get_html()
-        self.failUnless('The form contains errors' in html)
-        self.failUnless('Value required for "Title"' in html)
+        self.assertTrue('The form contains errors' in html)
+        self.assertTrue('Value required for "Title"' in html)
 
         self.browser_do_logout()
 
@@ -217,12 +217,12 @@ class NyPhotoFolderFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.go('http://localhost/portal/myfolder/mygallery/myalbum/manage_edit_html')
         form = self.browser.get_form('frmEdit')
-        self.failUnlessEqual(form['title:utf8:string'], 'My photo album')
+        self.assertEqual(form['title:utf8:string'], 'My photo album')
         form['title:utf8:string'] = 'new_album_title'
         self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
 
-        self.failUnlessEqual(self.portal.myfolder.mygallery.title, 'new_album_title')
+        self.assertEqual(self.portal.myfolder.mygallery.title, 'new_album_title')
 
         self.browser_do_logout()
 
@@ -240,11 +240,11 @@ class NyPhotoFolderFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.clicked(form, 'downloadObjects:method')
         self.browser.submit()
 
-        photo_zip = zipfile.ZipFile(StringIO(self.browser.get_html()))
+        photo_zip = zipfile.ZipFile(BytesIO(self.browser.result.content))
 
-        self.failUnlessEqual(photo_zip.namelist(), ['myalbum.zip/myphoto1', 'myalbum.zip/myphoto2'])
-        self.failUnlessEqual(photo_zip.read('myalbum.zip/myphoto1'), myphoto1.getvalue())
-        self.failUnlessEqual(photo_zip.read('myalbum.zip/myphoto2'), myphoto2.getvalue())
+        self.assertEqual(photo_zip.namelist(), ['myalbum.zip/myphoto1', 'myalbum.zip/myphoto2'])
+        self.assertEqual(photo_zip.read('myalbum.zip/myphoto1'), myphoto1.getvalue())
+        self.assertEqual(photo_zip.read('myalbum.zip/myphoto2'), myphoto2.getvalue())
 
     def test_download_zip_selected(self):
         myphoto2 = load_file('data/test.gif')
@@ -258,10 +258,10 @@ class NyPhotoFolderFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.clicked(form, 'downloadObjects:method')
         self.browser.submit()
 
-        photo_zip = zipfile.ZipFile(StringIO(self.browser.get_html()))
+        photo_zip = zipfile.ZipFile(BytesIO(self.browser.result.content))
 
-        self.failUnlessEqual(photo_zip.namelist(), ['myalbum.zip/myphoto2'])
-        self.failUnlessEqual(photo_zip.read('myalbum.zip/myphoto2'), myphoto2.getvalue())
+        self.assertEqual(photo_zip.namelist(), ['myalbum.zip/myphoto2'])
+        self.assertEqual(photo_zip.read('myalbum.zip/myphoto2'), myphoto2.getvalue())
 
     def test_cut_paste(self):
         return #TODO: cannot paste from the test; some photos are not correctly pasted (d and d, e-34, and pasting when id exists)
@@ -288,17 +288,17 @@ class NyPhotoFolderFunctionalTestCase(NaayaFunctionalTestCase):
         album_destination.pasteObjects(cp_data=paste_data)
 
         for pic in pics:
-            self.failIf(pic['portal'] not in album_destination.objectIds(), '%s not in destination.' % pic['portal'])
+            self.assertFalse(pic['portal'] not in album_destination.objectIds(), '%s not in destination.' % pic['portal'])
             self.browser.go('http://localhost/%s/%s/view?display=Original' % (album_destination.absolute_url(1), pic['portal']))
-            self.failUnlessEqual(photos_zip.read(pic['zip']), self.browser.get_html(), '%s contents doesn\'t match original.' % pic['portal'])
+            self.assertEqual(photos_zip.read(pic['zip']), self.browser.get_html(), '%s contents doesn\'t match original.' % pic['portal'])
 
     def test_delete(self):
         self.browser_do_login('admin', '')
 
         album = self.portal.myfolder.mygallery.myalbum
-        self.failUnlessEqual(album.objectIds(), ['myphoto1', 'myphoto2'])
+        self.assertEqual(album.objectIds(), ['myphoto1', 'myphoto2'])
         album.deleteObjects(ids=['myphoto1', 'myphoto2'])
-        self.failUnlessEqual(album.objectIds(), [])
+        self.assertEqual(album.objectIds(), [])
 
         self.browser_do_logout()
 

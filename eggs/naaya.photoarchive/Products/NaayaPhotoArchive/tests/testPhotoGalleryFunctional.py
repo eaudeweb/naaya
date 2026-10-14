@@ -44,14 +44,14 @@ class NyPhotoGalleryFunctionalTestCase(NaayaFunctionalTestCase):
     def test_add(self):
         self.browser_do_login('admin', '')
         self.browser.go('http://localhost/portal/myfolder/gallery_add_html')
-        self.failUnless('<h1>Submit photo gallery</h1>' in self.browser.get_html())
+        self.assertTrue('<h1>Submit photo gallery</h1>' in self.browser.get_html())
         form = self.browser.get_form('frmAdd')
         expected_controls = set([
             'lang', 'title:utf8:string', 'description:utf8:string', 'coverage:utf8:string',
             'keywords:utf8:string', 'releasedate', 'discussion:boolean',
         ])
         found_controls = set(c.name for c in form.controls)
-        self.failUnless(expected_controls.issubset(found_controls),
+        self.assertTrue(expected_controls.issubset(found_controls),
             'Missing form controls: %s' % repr(expected_controls - found_controls))
 
         self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
@@ -63,18 +63,18 @@ class NyPhotoGalleryFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
         html = self.browser.get_html()
 
-        self.failUnlessEqual(self.browser.get_url(), 'http://localhost/portal/myfolder')
-        self.failUnless('test_create_gallery' in html)
+        self.assertEqual(self.browser.get_url(), 'http://localhost/portal/myfolder')
+        self.assertTrue('test_create_gallery' in html)
 
         gallery = self.portal.myfolder['test_create_gallery']
-        self.failUnlessEqual(gallery.description, 'test_gallery_description')
-        self.failUnlessEqual(gallery.coverage, 'test_gallery_coverage')
-        self.failUnlessEqual(gallery.keywords, 'keyw1, keyw2')
+        self.assertEqual(gallery.description, 'test_gallery_description')
+        self.assertEqual(gallery.coverage, 'test_gallery_coverage')
+        self.assertEqual(gallery.keywords, 'keyw1, keyw2')
         gallery.approveThis()
 
         self.browser.go('http://localhost/portal/myfolder/test_create_gallery')
         html = self.browser.get_html()
-        self.failUnless(re.search(r'<h1>.*test_create_gallery.*</h1>', html, re.DOTALL))
+        self.assertTrue(re.search(r'<h1>.*test_create_gallery.*</h1>', html, re.DOTALL))
 
         self.browser_do_logout()
 
@@ -88,8 +88,8 @@ class NyPhotoGalleryFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
 
         html = self.browser.get_html()
-        self.failUnless('The form contains errors' in html)
-        self.failUnless('Value required for "Title"' in html)
+        self.assertTrue('The form contains errors' in html)
+        self.assertTrue('Value required for "Title"' in html)
 
     def test_edit(self):
         self.browser_do_login('admin', '')
@@ -97,16 +97,16 @@ class NyPhotoGalleryFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/myfolder/mygallery/edit_html')
         form = self.browser.get_form('frmEdit')
 
-        self.failUnlessEqual(form['title:utf8:string'], 'My photo gallery')
+        self.assertEqual(form['title:utf8:string'], 'My photo gallery')
 
         form['title:utf8:string'] = 'new_gallery_title'
 
         self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
         html = self.browser.get_html()
-        self.failUnless('<h1>Edit photo gallery</h1>' in html)
+        self.assertTrue('<h1>Edit photo gallery</h1>' in html)
 
-        self.failUnlessEqual(self.portal.myfolder.mygallery.title, 'new_gallery_title')
+        self.assertEqual(self.portal.myfolder.mygallery.title, 'new_gallery_title')
         self.portal.myfolder.mygallery.approveThis()
 
         self.browser.go('http://localhost/portal/myfolder/mygallery/edit_html?lang=fr')
@@ -115,8 +115,8 @@ class NyPhotoGalleryFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
 
-        self.failUnlessEqual(self.portal.myfolder.mygallery.title, 'new_gallery_title')
-        self.failUnlessEqual(self.portal.myfolder.mygallery.getLocalProperty('title', 'fr'), 'french_title')
+        self.assertEqual(self.portal.myfolder.mygallery.title, 'new_gallery_title')
+        self.assertEqual(self.portal.myfolder.mygallery.getLocalProperty('title', 'fr'), 'french_title')
 
         self.browser_do_logout()
 
@@ -130,8 +130,8 @@ class NyPhotoGalleryFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
 
         html = self.browser.get_html()
-        self.failUnless('The form contains errors' in html)
-        self.failUnless('Value required for "Title"' in html)
+        self.assertTrue('The form contains errors' in html)
+        self.assertTrue('Value required for "Title"' in html)
 
         self.browser_do_logout()
 
@@ -141,12 +141,12 @@ class NyPhotoGalleryFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.go('http://localhost/portal/myfolder/mygallery/manage_edit_html')
         form = self.browser.get_form('frmEdit')
-        self.failUnlessEqual(form['title:utf8:string'], 'My photo gallery')
+        self.assertEqual(form['title:utf8:string'], 'My photo gallery')
         form['title:utf8:string'] = 'new_gallery_title'
         self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
 
-        self.failUnlessEqual(self.portal.myfolder.mygallery.title, 'new_gallery_title')
+        self.assertEqual(self.portal.myfolder.mygallery.title, 'new_gallery_title')
 
         self.browser_do_logout()
 

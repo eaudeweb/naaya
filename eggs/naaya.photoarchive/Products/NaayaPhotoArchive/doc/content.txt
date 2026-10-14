@@ -28,8 +28,8 @@ Was it indexed in portal catalog ?
 
     >>> ctool = self.portal.portal_catalog
     >>> brains = ctool(title='My Album')
-    >>> [brain.getObject().getId() for brain in brains]
-    ['myalbum', 'copy_of_myalbum']
+    >>> sorted(brain.getObject().getId() for brain in brains)
+    ['copy_of_myalbum', 'myalbum']
 
 Let's cut an album
 
@@ -61,7 +61,7 @@ Add some photos
     >>> zip = self.loadFile('data/test.zip')
     >>> error = album.uploadPhotoOrZip(zip)
     >>> album.objectIds()
-    ['a.gif', 'b.gif', 'c-d.gif', 'd_and_d.gif', 'e-34.gif', 'k.gif']
+    ['a.gif', 'b.gif', 'c-d.gif', 'd-and-d.gif', 'e-34.gif', 'k.gif']
     >>> album['a.gif'].saveProperties(title='A GIF Image')
     >>> album['b.gif'].saveProperties(title='B GIF Image')
 
@@ -70,8 +70,8 @@ Copy/paste them
     >>> cp = album.copyObjects(ids=['a.gif', 'b.gif'])
     >>> res = album.pasteObjects(cp_data=cp)
     >>> brains = ctool(title='GIF Image')
-    >>> [brain.getObject().getId() for brain in brains]
-    ['a.gif',  'b.gif', 'copy_of_a.gif', 'copy_of_b.gif']
+    >>> sorted(brain.getObject().getId() for brain in brains)
+    ['a.gif', 'b.gif', 'copy_of_a.gif', 'copy_of_b.gif']
 
 Cut/paste
 
@@ -80,7 +80,7 @@ Cut/paste
     >>> cp = album.cutObjects(ids=['copy_of_a.gif', 'copy_of_b.gif'])
     >>> res = new_album.pasteObjects(cp_data=cp)
     >>> album.objectIds()
-    ['a.gif', 'b.gif', 'c-d.gif', 'd_and_d.gif', 'e-34.gif', 'k.gif']
+    ['a.gif', 'b.gif', 'c-d.gif', 'd-and-d.gif', 'e-34.gif', 'k.gif']
     >>> new_album.objectIds()
     ['copy_of_a.gif', 'copy_of_b.gif']
     >>> brains = ctool(title='GIF Image')

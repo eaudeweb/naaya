@@ -5,24 +5,15 @@ def patch_NyPhoto_view():
     """ We need to patch NyPhoto.view because the test publisher doesn't
     know about the IStreamIterator interface """
     from Products.NaayaPhotoArchive.NyPhoto import NyPhoto
-    from Products.ExtFile.ExtFile import stream_iterator
-    from io import StringIO
 
     old_view = NyPhoto.view
 
     def new_view(self, REQUEST, display='', **kwargs):
-        """ patch NyPhoto.view to always return a str """
+        """ patch NyPhoto.view to return the whole body """
         ret = old_view(self, REQUEST, display, **kwargs)
-        if isinstance(ret, str):
+        if isinstance(ret, (str, bytes)):
             return ret
-        else:
-            output = StringIO()
-            try:
-                while True:
-                    output.write(ret.next())
-            except StopIteration:
-                pass
-            return output.getvalue()
+        return b''.join(ret)
 
     NyPhoto.view = new_view
 

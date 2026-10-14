@@ -27,10 +27,10 @@ from . import patchTestEnv
 
 def load_file(filename):
     import os
-    from io import StringIO
+    from io import BytesIO
     pass  # package_home import removed (unused)
     filename = os.path.sep.join([os.path.dirname(os.path.abspath(__file__)), filename])
-    data = StringIO(open(filename, 'rb').read())
+    data = BytesIO(open(filename, 'rb').read())
     data.filename = os.path.basename(filename)
     return data
 
@@ -55,14 +55,14 @@ class NyPhotoFunctionalTestCase(NaayaFunctionalTestCase):
     def test_add(self):
         self.browser_do_login('contributor', 'contributor')
         self.browser.go('http://localhost/portal/myfolder/g/f/photo_add_html')
-        self.failUnless('<h1>Photo submission</h1>' in self.browser.get_html())
+        self.assertTrue('<h1>Photo submission</h1>' in self.browser.get_html())
         form = self.browser.get_form('frmAdd')
         expected_controls = set([
             'lang', 'title:utf8:string', 'description:utf8:string', 'author:utf8:string',
             'source:utf8:string', 'releasedate', 'discussion:boolean', 'file',
         ])
         found_controls = set(c.name for c in form.controls)
-        self.failUnless(expected_controls.issubset(found_controls),
+        self.assertTrue(expected_controls.issubset(found_controls),
             'Missing form controls: %s' % repr(expected_controls - found_controls))
 
         self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
@@ -75,33 +75,33 @@ class NyPhotoFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
         html = self.browser.get_html()
 
-        self.failUnlessEqual(self.browser.get_url(), 'http://localhost/portal/myfolder/g/f')
-        self.failUnless('test_create_photo' in html)
+        self.assertEqual(self.browser.get_url(), 'http://localhost/portal/myfolder/g/f')
+        self.assertTrue('test_create_photo' in html)
 
         photo = self.portal.myfolder.g.f['test_create_photo']
-        self.failUnlessEqual(photo.description, 'test_photo_description')
-        self.failUnlessEqual(photo.author, 'test_author')
-        self.failUnlessEqual(photo.source, 'test_source')
-        self.failUnlessEqual(photo.approved, 1)
+        self.assertEqual(photo.description, 'test_photo_description')
+        self.assertEqual(photo.author, 'test_author')
+        self.assertEqual(photo.source, 'test_source')
+        self.assertEqual(photo.approved, 1)
 
         self.browser.go('http://localhost/portal/myfolder/g/f/test_create_photo')
         html = self.browser.get_html()
-        self.failUnless(re.search(r'<h1>.*My folder.*</h1>', html, re.DOTALL))
-        self.failUnless('image/gif' in html)
-        self.failUnless('26.66 KB' in html)
-        self.failUnless('test_author' in html)
-        self.failUnless('test_source' in html)
-        self.failUnless('test_create_photo' in html)
+        self.assertTrue(re.search(r'<h1>.*My folder.*</h1>', html, re.DOTALL))
+        self.assertTrue('image/gif' in html)
+        self.assertTrue('26.66 KB' in html)
+        self.assertTrue('test_author' in html)
+        self.assertTrue('test_source' in html)
+        self.assertTrue('test_create_photo' in html)
 
         self.browser.go('http://localhost/portal/myfolder/g/f/test_create_photo/view?display=Original')
-        self.failUnlessEqual(self.browser_get_header('content-type'), 'image/gif')
-        self.failUnlessEqual(self.browser.get_html(),
+        self.assertEqual(self.browser_get_header('content-type'), 'image/gif')
+        self.assertEqual(self.browser.result.content,
             load_file('data/test.gif').getvalue())
 
-        self.failIf('XSmall-test_create_photo' in
+        self.assertFalse('XSmall-test_create_photo' in
                      self.portal.myfolder.g.f.test_create_photo.objectIds())
         self.browser.go('http://localhost/portal/myfolder/g/f/test_create_photo/view?display=XSmall')
-        self.failUnless('XSmall-test_create_photo' in
+        self.assertTrue('XSmall-test_create_photo' in
                          self.portal.myfolder.g.f.test_create_photo.objectIds())
 
         self.browser_do_logout()
@@ -117,8 +117,8 @@ class NyPhotoFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
 
         html = self.browser.get_html()
-        self.failUnless('The form contains errors' in html)
-        self.failUnless('Value required for "Title"' in html)
+        self.assertTrue('The form contains errors' in html)
+        self.assertTrue('Value required for "Title"' in html)
 
     def test_edit(self):
         self.browser_do_login('contributor', 'contributor')
@@ -126,16 +126,16 @@ class NyPhotoFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/myfolder/g/f/myphoto/edit_html')
         form = self.browser.get_form('frmEdit')
 
-        self.failUnlessEqual(form['title:utf8:string'], 'My photo')
+        self.assertEqual(form['title:utf8:string'], 'My photo')
 
         form['title:utf8:string'] = 'new_photo_title'
 
         self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
         html = self.browser.get_html()
-        self.failUnless('<h1>Edit photo</h1>' in html)
+        self.assertTrue('<h1>Edit photo</h1>' in html)
 
-        self.failUnlessEqual(self.portal.myfolder.g.f.myphoto.title, 'new_photo_title')
+        self.assertEqual(self.portal.myfolder.g.f.myphoto.title, 'new_photo_title')
         self.portal.myfolder.g.f.myphoto.approveThis()
 
         self.browser.go('http://localhost/portal/myfolder/g/f/myphoto/edit_html?lang=fr')
@@ -144,8 +144,8 @@ class NyPhotoFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
 
-        self.failUnlessEqual(self.portal.myfolder.g.f.myphoto.title, 'new_photo_title')
-        self.failUnlessEqual(self.portal.myfolder.g.f.myphoto.getLocalProperty('title', 'fr'), 'french_title')
+        self.assertEqual(self.portal.myfolder.g.f.myphoto.title, 'new_photo_title')
+        self.assertEqual(self.portal.myfolder.g.f.myphoto.getLocalProperty('title', 'fr'), 'french_title')
 
         self.browser_do_logout()
 
@@ -159,8 +159,8 @@ class NyPhotoFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
 
         html = self.browser.get_html()
-        self.failUnless('The form contains errors' in html)
-        self.failUnless('Value required for "Title"' in html)
+        self.assertTrue('The form contains errors' in html)
+        self.assertTrue('Value required for "Title"' in html)
 
         self.browser_do_logout()
 
@@ -170,17 +170,17 @@ class NyPhotoFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.go('http://localhost/portal/myfolder/g/f/myphoto/manage_edit_html')
         form = self.browser.get_form('frmEdit')
-        self.failUnlessEqual(form['title:utf8:string'], 'My photo')
+        self.assertEqual(form['title:utf8:string'], 'My photo')
         form['title:utf8:string'] = 'new_photo_title'
         self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
         self.browser.submit()
 
-        self.failUnlessEqual(self.portal.myfolder.g.f.myphoto.title, 'new_photo_title')
+        self.assertEqual(self.portal.myfolder.g.f.myphoto.title, 'new_photo_title')
 
         self.browser_do_logout()
 
     def test_photo_thumbnails(self):
-        import StringIO
+        from io import BytesIO
         from PIL import Image
         picture = load_file('data/pink.png')
         self.portal.myfolder.g.f.myphoto.update_data(picture)
@@ -189,16 +189,16 @@ class NyPhotoFunctionalTestCase(NaayaFunctionalTestCase):
         picture = Image.open(picture)
 
         self.browser.go('http://localhost/portal/myfolder/g/f/myphoto/view?display=Gallery')
-        gallery_picture = StringIO(self.browser.get_html())
+        gallery_picture = BytesIO(self.browser.result.content)
         gallery_picture.seek(0)
         gallery_picture = Image.open(gallery_picture)
-        self.failUnlessEqual(gallery_picture.tostring(), picture.resize((200, 200)).tostring())
+        self.assertEqual(gallery_picture.tobytes(), picture.resize((200, 200)).tobytes())
 
         self.browser.go('http://localhost/portal/myfolder/g/f/myphoto/view?display=Album')
-        album_picture = StringIO(self.browser.get_html())
+        album_picture = BytesIO(self.browser.result.content)
         album_picture.seek(0)
         album_picture = Image.open(album_picture)
-        self.failUnlessEqual(album_picture.tostring(), picture.resize((100, 100)).tostring())
+        self.assertEqual(album_picture.tobytes(), picture.resize((100, 100)).tobytes())
 
 
         picture_formats = [
@@ -212,10 +212,10 @@ class NyPhotoFunctionalTestCase(NaayaFunctionalTestCase):
 
         for format in picture_formats:
             self.browser.go('http://localhost/portal/myfolder/g/f/myphoto/?display=%s&view%%3Amethod=View' % format['size'])
-            pic = StringIO(self.browser.get_html())
+            pic = BytesIO(self.browser.result.content)
             pic.seek(0)
             pic = Image.open(pic)
-            self.failUnlessEqual(pic.tostring(), picture.resize((format['width'], format['height'])).tostring())
+            self.assertEqual(pic.tobytes(), picture.resize((format['width'], format['height'])).tobytes())
 
 
 def test_suite():

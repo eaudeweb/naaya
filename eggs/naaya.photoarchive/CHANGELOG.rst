@@ -1,5 +1,13 @@
 2.0.2 (unreleased)
 ------------------
+* Fix adding a photo failing on manage_delObjects([]) and on str data
+  [dumitval]
+* Fix saving photos failing with "Invalid quality setting" [dumitval]
+* Fix the watermark on Pillow 10+ (getbbox instead of getsize, no setfont)
+  [dumitval]
+* Port the tests to Python 3 [dumitval]
+* Fix replacing a photo file failing on get_default_language [dumitval]
+* Port the doctests to the Naaya test layer [dumitval]
 
 2.0.1 (2026-10-12)
 ------------------

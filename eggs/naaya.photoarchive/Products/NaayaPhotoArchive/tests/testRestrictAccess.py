@@ -25,10 +25,10 @@ from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 
 def load_file(filename):
     import os
-    from io import StringIO
+    from io import BytesIO
     pass  # package_home import removed (unused)
     filename = os.path.sep.join([os.path.dirname(os.path.abspath(__file__)), filename])
-    data = StringIO(open(filename, 'rb').read())
+    data = BytesIO(open(filename, 'rb').read())
     data.filename = os.path.basename(filename)
     return data
 
@@ -63,12 +63,12 @@ class PhotoRestrictAccessTestCase(NaayaFunctionalTestCase):
 
         # download the photo, making sure it's public by default
         self.browser.go(photo_url + '/view?display=Original')
-        self.assertEqual(picture_data, self.browser.get_html())
+        self.assertEqual(picture_data, self.browser.result.content)
 
         # also get a thumbnail
         self.browser.go(photo_url + '/view?display=Small')
-        picture_data_small = self.browser.get_html()
-        self.assertTrue(picture_data_small.startswith('\x89PNG'))
+        picture_data_small = self.browser.result.content
+        self.assertTrue(picture_data_small.startswith(b'\x89PNG'))
         self.assertNotEqual(picture_data_small, picture_data)
 
         # restrict access to original photo
@@ -77,16 +77,16 @@ class PhotoRestrictAccessTestCase(NaayaFunctionalTestCase):
 
         # try to download original and thumbnail
         self.browser.go(photo_url + '/view?display=Original')
-        self.assertNotEqual(picture_data, self.browser.get_html())
+        self.assertNotEqual(picture_data, self.browser.result.content)
         self.assertTrue(self.browser.get_url().startswith(
             'http://localhost/portal/login_html'))
         self.browser.go(photo_url + '/view?display=Small')
-        self.assertEqual(picture_data_small, self.browser.get_html())
+        self.assertEqual(picture_data_small, self.browser.result.content)
 
         # log in, try to download it again
         self.browser_do_login('admin', '')
         self.browser.go(photo_url + '/view?display=Original')
-        self.assertEqual(picture_data, self.browser.get_html())
+        self.assertEqual(picture_data, self.browser.result.content)
         self.browser_do_logout()
 
 def test_suite():
