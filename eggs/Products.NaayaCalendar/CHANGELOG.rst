@@ -1,5 +1,6 @@
 2.0.1 (unreleased)
 ------------------
+* Read text files as UTF-8 regardless of the locale [dumitval]
 
 2.0.0 (2026-10-12)
 ------------------

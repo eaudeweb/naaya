@@ -137,7 +137,9 @@ class Utils:
 
     def utRead(self, p_path, p_flag='r'):
         """ read """
-        return open(p_path, p_flag).read()
+        encoding = None if 'b' in p_flag else 'utf-8'
+        with open(p_path, p_flag, encoding=encoding) as f:
+            return f.read()
 
     #####################
     #   URL Functions   #
