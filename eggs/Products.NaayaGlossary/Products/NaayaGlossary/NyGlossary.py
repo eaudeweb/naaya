@@ -61,7 +61,7 @@ def manage_addGlossaryCentre(self, id, title='', parent_anchors=False,
     obj.loadRDF()
 
     style_css = open(join(NAAYAGLOSSARY_PATH, 'zpt', 'NaayaGlossary',
-                          'style_presentation.zpt'))
+                          'style_presentation.zpt'), encoding='utf-8')
     content = style_css.read()
     style_css.close()
     manage_addPageTemplate(obj, 'style_presentation_css',
@@ -1400,7 +1400,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         from Products.PythonScripts.PythonScript import manage_addPythonScript
 
         with open(join(NAAYAGLOSSARY_PATH, 'rdfs',
-                      'glossary_skos.spy'), 'r') as _f:
+                      'glossary_skos.spy'), 'r', encoding='utf-8') as _f:
             file_content = _f.read()
         manage_addPythonScript(self, 'glossary_skos.rdf')
         self._getOb('glossary_skos.rdf').write(file_content)
