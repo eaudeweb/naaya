@@ -1,5 +1,6 @@
 1.4.70 (unreleased)
 -------------------
+* Privacy Statement customisations [dumitval]
 
 1.4.69 (2026-10-15)
 -------------------
