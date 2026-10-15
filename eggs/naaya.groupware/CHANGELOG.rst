@@ -1,4 +1,7 @@
-1.4.70 (unreleased)
+1.4.71 (unreleased)
+-------------------
+
+1.4.70 (2026-10-15)
 -------------------
 * Privacy Statement customisations [dumitval]
 
