@@ -592,7 +592,7 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
             if hasattr(file, 'filename'):
                 if file.filename != '':
                     self.update_data(file)
-        if lang is None: lang = self.get_default_language()
+        if lang is None: lang = self.gl_get_selected_language()
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))

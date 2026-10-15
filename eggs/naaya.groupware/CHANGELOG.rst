@@ -1,5 +1,10 @@
 1.4.69 (unreleased)
 -------------------
+* relinquish_membership: take the user name from getUserName(); the
+  authenticated PAS user has no name attribute, so the page always failed
+  with AttributeError [dumitval]
+* ig_roles_ajax.pt: compare the access level with == instead of "is"
+  [dumitval]
 
 1.4.68 (2022-04-08)
 -------------------

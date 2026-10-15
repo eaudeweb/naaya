@@ -1,5 +1,15 @@
 1.3.15 (unreleased)
 ------------------
+* compute_roles_mapping: do not fail on max() of an empty list when the
+  ACLs file has no __N profiles [dumitval]
+* Import all: pass the selected notification type to the notifications
+  import [dumitval]
+* Import report: format the log records with getMessage(), so messages that
+  contain "%" do not fail [dumitval]
+* zimport_data: format the error of an unreadable zexp file with (e,);
+  formatting e.args fails for exceptions with two arguments [dumitval]
+* DemoActor.document_entry: accept the lang argument passed by the importer
+  [dumitval]
 
 1.3.14 (2023-09-20)
 ------------------

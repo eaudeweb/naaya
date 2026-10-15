@@ -1,5 +1,19 @@
 5.0.35 (unreleased)
 -------------------
+* utGenerateZip: create the temporary zip file in the client home with
+  mkstemp instead of setting tempfile.tempdir, which changed the temporary
+  directory of the whole Zope process after the first zip download
+  [dumitval]
+* PlugBase.removeUser: call revokeUserRoles(user, location) for each
+  location; it was called with a list of 'user||location' strings, so
+  relinquishing a membership never removed the roles of source (LDAP) users
+  [dumitval]
+* AkismetError.__str__: use self.response; self.value does not exist
+  [dumitval]
+* geocode: leave out the key parameter when no API key is set, instead of
+  sending key=None to Google [dumitval]
+* do_import: set header when the Excel file cannot be read, so the error
+  message is shown instead of a NameError [dumitval]
 
 5.0.34 (2026-10-07)
 -------------------

@@ -1,5 +1,7 @@
 1.3.57 - (unreleased)
 =======================
+* list_locations: pass the keyword arguments to get_map_results with **kw
+  instead of *kw, which raised TypeError [dumitval]
 
 1.3.56 - (2026-10-07)
 =======================

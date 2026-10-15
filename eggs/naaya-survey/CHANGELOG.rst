@@ -1,5 +1,7 @@
 1.3.18 (unreleased)
 ------------------
+* Statistics Excel export: write the total as "100%" instead of the literal
+  "100%%" [dumitval]
 
 1.3.17 (2022-09-06)
 ------------------

@@ -174,6 +174,7 @@ class CSVImportTool(Implicit, Item):
                     raise ValueError(msg)
                 else:
                     errors.append(msg)
+                    header = ['']
                     rows = []
         elif file_type == 'CSV':
             rows = UnicodeReader(data)

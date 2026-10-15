@@ -94,7 +94,7 @@ class MultipleChoiceTabularStatistic(BaseMultipleChoiceStatistic):
         current_row += 1
         ws.write(current_row, 1, translator('Total'), header_style)
         ws.write(current_row, 2, total, normal_style)
-        ws.write(current_row, 3, '100%%', normal_style)
+        ws.write(current_row, 3, '100%', normal_style)
         state['current_row'] = current_row + 1
 
 InitializeClass(MultipleChoiceTabularStatistic)

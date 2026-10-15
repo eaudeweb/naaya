@@ -1,5 +1,8 @@
 1.5.3 (unreleased)
 -------------------
+* saveUpload: use gl_get_selected_language(); get_default_language() does
+  not exist on Naaya sites, so replacing a photo file without a lang
+  argument failed [dumitval]
 
 1.5.2 (2015-10-23)
 -------------------
