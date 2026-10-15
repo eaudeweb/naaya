@@ -1,4 +1,7 @@
-5.0.35 (unreleased)
+5.0.36 (unreleased)
+-------------------
+
+5.0.35 (2026-10-15)
 -------------------
 * utGenerateZip: create the temporary zip file in the client home with
   mkstemp instead of setting tempfile.tempdir, which changed the temporary
