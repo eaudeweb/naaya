@@ -1,5 +1,8 @@
-1.3.15 (unreleased)
-------------------
+1.3.16 (unreleased)
+-------------------
+
+1.3.15 (2026-10-15)
+-------------------
 * compute_roles_mapping: do not fail on max() of an empty list when the
   ACLs file has no __N profiles [dumitval]
 * Import all: pass the selected notification type to the notifications
