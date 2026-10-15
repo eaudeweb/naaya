@@ -1,5 +1,8 @@
-1.3.57 - (unreleased)
-=======================
+1.3.58 - (unreleased)
+=====================
+
+1.3.57 - (2026-10-15)
+=====================
 * list_locations: pass the keyword arguments to get_map_results with **kw
   instead of *kw, which raised TypeError [dumitval]
 
