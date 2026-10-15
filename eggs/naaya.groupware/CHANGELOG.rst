@@ -7,6 +7,9 @@
   [dumitval]
 * Compare the access level with == instead of "is" in ig_roles_ajax.pt
   [dumitval]
+* Privacy Statement customisations: links (NL-BE, FR-BE) in the footer of
+  standard_template and the privacy and privacy_fr pages in the skel
+  [dumitval]
 
 2.0.0 (2026-10-12)
 ------------------
