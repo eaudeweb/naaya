@@ -1,4 +1,7 @@
-1.4.69 (unreleased)
+1.4.70 (unreleased)
+-------------------
+
+1.4.69 (2026-10-15)
 -------------------
 * relinquish_membership: take the user name from getUserName(); the
   authenticated PAS user has no name attribute, so the page always failed
