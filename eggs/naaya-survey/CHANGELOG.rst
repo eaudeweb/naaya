@@ -1,5 +1,8 @@
-1.3.18 (unreleased)
-------------------
+1.3.19 (unreleased)
+-------------------
+
+1.3.18 (2026-10-15)
+-------------------
 * Statistics Excel export: write the total as "100%" instead of the literal
   "100%%" [dumitval]
 
