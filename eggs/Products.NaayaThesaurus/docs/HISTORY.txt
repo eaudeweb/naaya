@@ -1,10 +1,7 @@
 Changelog
 =========
 
-2.0.1 (unreleased)
-------------------
-
-2.0.0 (2026-10-16)
+2.0.0 (unreleased)
 ------------------
 * Port to Python 3 and Zope 5 [dumitval]
 * Fix sorting and uncataloging terms [dumitval]
