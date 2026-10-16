@@ -1,5 +1,8 @@
-1.1.4 (unreleased)
--------------------
+1.1.5 (unreleased)
+------------------
+
+1.1.4 (2026-10-16)
+------------------
 * Fix the simple consultation page [dumitval]
 
 1.1.3 (2011-11-14)
