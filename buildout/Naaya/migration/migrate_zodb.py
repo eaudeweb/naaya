@@ -20,7 +20,7 @@ Steps:
   11. Number duplicate i18n:name values in stored templates
   12. Remove the 'depth' option from path queries in stored templates
   13. Replace rstk.name with rstk['name'] in stored templates and scripts
-  14. Use nocall:options/error_value in stored error templates
+  14. Render error_value escaped with str() in stored error templates and DTML
   15. Remove .decode('utf-8') on request values in stored PythonScripts
 
 After the commit every catalog is rebuilt (one commit per catalog), then the
@@ -704,22 +704,35 @@ def step_rstk_item_access(app):
 
 
 def step_nocall_error_value(app):
-    """Use nocall:options/error_value; Zope 5 calls HTTP exceptions as WSGI apps."""
+    """Render error_value escaped with str(); Zope 5 calls HTTP exceptions as WSGI apps."""
+    from OFS.DTMLMethod import DTMLMethod
     from Products.PageTemplates.PageTemplate import PageTemplate
-    expr = re.compile(r'((?:structure|text)\s+|=")options/error_value\b')
+    pt_expr = re.compile(
+        r"(?:(?:structure|text)\s+)?(?:nocall:)?options/error_value\b")
+    pt_new = "python:str(options.get('error_value', ''))"
+    dtml_expr = re.compile(r"&dtml-error_value;|<dtml-var\s+error_value\s*>")
+    dtml_new = '<dtml-var expr="str(error_value)" html_quote>'
     fixed = 0
     for template in _iter_records(app, b'Template'):
         if not isinstance(template, PageTemplate):
             continue
         text = template._text
-        if not expr.search(text):
+        if not pt_expr.search(text):
             continue
-        template.pt_edit(expr.sub(r'\1nocall:options/error_value', text),
-                         template.content_type)
+        template.pt_edit(pt_expr.sub(pt_new, text), template.content_type)
         print("  %s" % '/'.join(template.getPhysicalPath()))
         fixed += 1
+    for method in _iter_records(app, b'DTMLMethod'):
+        if not isinstance(method, DTMLMethod):
+            continue
+        text = method.read()
+        if not dtml_expr.search(text):
+            continue
+        method.manage_edit(dtml_expr.sub(dtml_new, text), method.title)
+        print("  %s" % '/'.join(method.getPhysicalPath()))
+        fixed += 1
     if not fixed:
-        print("  No templates with options/error_value")
+        print("  No templates with options/error_value or &dtml-error_value;")
 
 
 def step_request_value_decode(app):
