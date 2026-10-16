@@ -1,4 +1,6 @@
 
+Version 2.3 (unreleased)
+
 Version 2.2 (2026-10-16)
 
 - Add MANIFEST.in and include_package_data; the 2.1 release lacked the dtml
