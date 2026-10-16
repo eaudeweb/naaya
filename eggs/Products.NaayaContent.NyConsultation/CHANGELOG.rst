@@ -1,4 +1,7 @@
-1.1.4 (unreleased)
+1.1.5 (unreleased)
+------------------
+
+1.1.4 (2026-10-16)
 ------------------
 * Fix the question list and deleting ratings [dumitval]
 * Fix sorting reviews by rating [dumitval]
