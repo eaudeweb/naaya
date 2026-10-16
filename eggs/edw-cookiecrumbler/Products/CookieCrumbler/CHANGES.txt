@@ -1,6 +1,9 @@
 
 Version 2.2 (unreleased)
 
+- Add MANIFEST.in and include_package_data; the 2.1 release lacked the dtml
+  templates, cookie.gif and version.txt [dumitval]
+
 Version 2.1 (2026-10-16)
 
 - Read the login form templates as UTF-8 [dumitval]
