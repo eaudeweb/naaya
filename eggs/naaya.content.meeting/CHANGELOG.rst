@@ -1,4 +1,7 @@
-1.3.08 (unreleased)
+1.3.09 (unreleased)
+-------------------
+
+1.3.08 (2026-10-16)
 -------------------
 * Use the standard library json instead of simplejson [dumitval]
 
