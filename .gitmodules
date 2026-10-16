@@ -56,3 +56,7 @@
 [submodule "buildout/ispraforum"]
 	path = buildout/ispraforum
 	url = git@github.com:eaudeweb/naaya.buildout.ispraforum.git
+[submodule "buildout/naaya"]
+	path = buildout/naaya
+	url = git@github.com:eaudeweb/naaya.buildout.naaya.git
+	branch = python3
