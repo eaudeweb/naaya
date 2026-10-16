@@ -1,4 +1,7 @@
-2.0.2 (unreleased)
+2.0.3 (unreleased)
+------------------
+
+2.0.2 (2026-10-16)
 ------------------
 * Read the language list file as UTF-8 [dumitval]
 
