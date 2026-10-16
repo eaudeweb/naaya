@@ -1,4 +1,7 @@
-2.0.1 (unreleased)
+2.0.2 (unreleased)
+------------------
+
+2.0.1 (2026-10-16)
 ------------------
 * Fix the test modules syntax for Python 3 [dumitval]
 * Read the RDFSummary test feed from a local file instead of the network
