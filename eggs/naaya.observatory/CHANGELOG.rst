@@ -1,4 +1,7 @@
-2.0.0 (unreleased)
+2.0.1 (unreleased)
+------------------
+
+2.0.0 (2026-10-16)
 ------------------
 * Port to Python 3 and Zope 5 [dumitval]
 * Fix the map icons and logging reverse geocoding errors [dumitval]

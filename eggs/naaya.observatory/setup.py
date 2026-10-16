@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='naaya.observatory',
-      version='2.0.0.dev0',
+      version='2.0.1.dev0',
       author='Eau de Web',
       author_email='office@eaudeweb.ro',
       url='http://naaya.eaudeweb.ro',
