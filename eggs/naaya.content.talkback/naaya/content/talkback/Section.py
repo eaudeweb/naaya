@@ -104,9 +104,8 @@ class Section(Folder):
             self.paragraph_ids = actual_paragraphs
             self._p_changed = 1
         if len(self.paragraph_ids) != len(actual_paragraphs):
-            for p_id in self.paragraph_ids:
-                if p_id not in actual_paragraphs:
-                    self.paragraph_ids.remove(p_id)
+            self.paragraph_ids = [p_id for p_id in self.paragraph_ids
+                                  if p_id in actual_paragraphs]
 
     security.declareProtected(view, 'get_section')
 

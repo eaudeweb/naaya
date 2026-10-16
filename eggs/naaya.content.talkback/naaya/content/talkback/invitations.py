@@ -18,10 +18,9 @@
 # Alex Morega, Eau de Web
 
 from base64 import urlsafe_b64encode
-from random import randrange
+import secrets
 from datetime import date
 import json
-from io import StringIO
 
 from BTrees.OOBTree import OOBTree
 from Persistence import Persistent
@@ -41,9 +40,9 @@ from Products.NaayaCore.EmailTool.EmailTool import (save_bulk_email,
                                                     check_cached_valid_emails,
                                                     export_email_list_xcel)
 from naaya.core.zope2util import path_in_site
+from naaya.core.zope2util import XLSX_CONTENT_TYPE
+from naaya.core.zope2util import new_xlsx_workbook, read_excel_rows
 from .permissions import PERMISSION_INVITE_TO_TALKBACKCONSULTATION
-import xlwt
-import xlrd
 
 from datetime import datetime
 from Products.NaayaCore.managers import utils
@@ -55,13 +54,26 @@ class FormError(Exception):
         self.errors = errors
 
 
+def _cell_text(value):
+    """ Spreadsheet cell value as stripped text """
+    if value is None:
+        return ''
+    if isinstance(value, float) and value.is_integer():
+        value = int(value)
+    return str(value).strip()
+
+
+def read_spreadsheet_rows(data):
+    """ Rows of the first sheet of an .xlsx or .xls file, as lists of text """
+    return [[_cell_text(v) for v in row] for row in read_excel_rows(data)]
+
+
 class InvitationsContainer(SimpleItem):
     security = ClassSecurityInfo()
 
     title = "Consultation invitations"
 
     def __init__(self, id):
-        super(SimpleItem, self).__init__(id)
         self.id = id
         self._invites = OOBTree()
 
@@ -174,8 +186,11 @@ class InvitationsContainer(SimpleItem):
         return self._create_email_html(formdata=formdata,
                                        formerrors=formerrors)
 
+    security.declareProtected(PERMISSION_INVITE_TO_TALKBACKCONSULTATION,
+                              'bulk_create')
+
     def bulk_create(self, REQUEST):
-        """ Same as `create`, but input is an xls file """
+        """ Same as `create`, but input is an .xlsx or .xls file """
         keys = ('name', 'email', 'organization', 'notes', 'message')
         previews = []
         if REQUEST.REQUEST_METHOD == 'POST':
@@ -184,21 +199,27 @@ class InvitationsContainer(SimpleItem):
             inviter_userid, inviter_name = self._get_inviter_info()
 
             try:
-                xls = REQUEST.form.get('input_file')
-                spreadsheet = xlrd.open_workbook(file_contents=xls.read())
-                sheet = spreadsheet.sheet_by_index(0)
+                upload = REQUEST.form.get('input_file')
+                rows = read_spreadsheet_rows(upload.read())
             except Exception:
                 self.setSessionErrorsTrans('Error reading the spreadsheet.')
             else:
-                assert sheet.ncols == 5, "Expected sheet with 5 columns"
-                header = sheet.row(0)
-                assert (
-                    [x.value.strip() for x in header] == [
-                        'Name', 'Email', 'Organization', 'Notes',
-                        'Message']), "Unexpected table header in spreadsheet"
+                assert rows and len(rows[0]) == 5, \
+                    "Expected sheet with 5 columns"
+                assert rows[0] == [
+                    'Name', 'Email', 'Organization', 'Notes',
+                    'Message'], "Unexpected table header in spreadsheet"
 
                 # on behalf situation
                 on_behalf_uid = REQUEST.form.get('on_behalf', '')
+                is_manager = 'Manager' in REQUEST.AUTHENTICATED_USER.getRoles()
+                if on_behalf_uid != '' and not is_manager:
+                    self.setSessionErrorsTrans(
+                        'Only managers can invite on behalf of another user')
+                    return self._create_html(formdata=dict((key, '') for
+                                             key in keys),
+                                             formerrors={},
+                                             previews=previews)
                 if on_behalf_uid != '':
                     auth_tool = self.getAuthenticationTool()
                     on_behalf_name = auth_tool.name_from_userid(on_behalf_uid)
@@ -215,11 +236,9 @@ class InvitationsContainer(SimpleItem):
                                                  previews=previews)
 
                 errors = []
-                for i in range(1, sheet.nrows):
-                    cells = sheet.row(i)
-                    clean_it = lambda x: x.value.strip()
-                    formdata = dict((key, clean_it(cells[i])) for (i, key) in
-                                    enumerate(keys))
+                for i in range(1, len(rows)):
+                    cells = rows[i] + [''] * len(keys)
+                    formdata = dict(zip(keys, cells))
 
                     kwargs = dict(formdata, web_form=True,
                                   inviter_userid=inviter_userid,
@@ -403,29 +422,23 @@ class InvitationsContainer(SimpleItem):
         return row_data
 
     def _xcel_populate_sheet(self, wb, sheet_name, header, keys, invitations):
-        style = xlwt.XFStyle()
-        normalfont = xlwt.Font()
-        headerfont = xlwt.Font()
-        headerfont.bold = True
-        style.font = headerfont
+        header_format = wb.add_format({'bold': True})
 
-        ws = wb.add_sheet(sheet_name)
+        ws = wb.add_worksheet(sheet_name)
         for col_idx, col_name in enumerate(header):
-            ws.row(0).set_cell_text(col_idx, col_name, style)
-        style.font = normalfont
+            ws.write_string(0, col_idx, col_name, header_format)
         for row_idx, invitation in enumerate(invitations, 1):
             row = self._xcel_prepare_data(invitation, keys)
             for col_idx, col_value in enumerate(row):
-                ws.row(row_idx).set_cell_text(col_idx, col_value, style)
+                ws.write_string(row_idx, col_idx, col_value)
 
     def _xcel_export_invitations(self, header, keys, options):
-        wb = xlwt.Workbook(encoding='utf-8')
+        output, wb = new_xlsx_workbook()
         self._xcel_populate_sheet(wb, 'Active Invitations', header, keys,
                                   options['invites_active'])
         self._xcel_populate_sheet(wb, 'Revoked Invitations', header, keys,
                                   options['invites_revoked'])
-        output = StringIO()
-        wb.save(output)
+        wb.close()
         return output.getvalue()
 
     security.declareProtected(PERMISSION_INVITE_TO_TALKBACKCONSULTATION,
@@ -445,9 +458,10 @@ class InvitationsContainer(SimpleItem):
         if len(headers) != len(keys):
             RESPONSE.badRequestError("MALFORMED_URL")
 
-        RESPONSE.setHeader('Content-Type', 'application/vnd.ms-excel')
-        RESPONSE.setHeader('Content-Disposition',
-                           'attachment; filename=consultation_invitations.xls')
+        RESPONSE.setHeader('Content-Type', XLSX_CONTENT_TYPE)
+        RESPONSE.setHeader(
+            'Content-Disposition',
+            'attachment; filename=consultation_invitations.xlsx')
         options = self._get_invitations()
         return self._xcel_export_invitations(headers, keys, options)
 
@@ -515,6 +529,16 @@ class InvitationsContainer(SimpleItem):
         return REQUEST.RESPONSE.redirect(
             self.get_consultation().absolute_url())
 
+    security.declarePublic('get_current_invitee')
+
+    def get_current_invitee(self, REQUEST):
+        """ Name and logout URL of the invitee in this session, or None """
+        invitation = self.get_current_invitation(REQUEST)
+        if invitation is None:
+            return None
+        return {'name': invitation.name,
+                'logout_url': self.absolute_url() + '/welcome?logout=on'}
+
     security.declarePrivate('get_current_invitation')
 
     def get_current_invitation(self, REQUEST):
@@ -560,14 +584,15 @@ class InvitationsContainer(SimpleItem):
         if len(headers) != len(keys):
             RESPONSE.badRequestError("MALFORMED_URL")
 
-        RESPONSE.setHeader('Content-Type', 'application/vnd.ms-excel')
-        RESPONSE.setHeader('Content-Disposition',
-                           ('attachment; filename='
-                            'consultation_invitation_emails.xls'))
-        cols = zip(headers, keys)
-        return export_email_list_xcel(self.getSite(), cols, ids,
+        cols = list(zip(headers, keys))
+        data = export_email_list_xcel(self.getSite(), cols, ids,
                                       where_to_read=path_in_site(
                                           self.get_consultation()))
+        RESPONSE.setHeader('Content-Type', XLSX_CONTENT_TYPE)
+        RESPONSE.setHeader('Content-Disposition',
+                           ('attachment; filename='
+                            'consultation_invitation_emails.xlsx'))
+        return data
 
     NaayaPageTemplateFile('zpt/email_view', globals(),
                           'tb_consultation-view_email')
@@ -603,6 +628,10 @@ InitializeClass(InvitationsContainer)
 
 
 class Invitation(Persistent):
+    security = ClassSecurityInfo()
+    security.declareObjectPublic()
+    security.setDefaultAccess('allow')
+
     def __init__(self, inviter_userid, key, name, email, organization, notes):
         self.inviter_userid = inviter_userid
         self.name = name
@@ -616,6 +645,9 @@ class Invitation(Persistent):
     @property
     def pretty_date(self):
         return self.create_date.strftime('%Y/%m/%d')
+
+
+InitializeClass(Invitation)
 
 
 class InvitationUsersTool(BasicUserFolder):
@@ -633,4 +665,4 @@ InitializeClass(InvitationUsersTool)
 
 def random_key():
     """ generate a 120-bit random key, expressed as 20 base64 characters """
-    return urlsafe_b64encode(''.join(chr(randrange(256)) for i in range(15)))
+    return urlsafe_b64encode(secrets.token_bytes(15)).decode('ascii')

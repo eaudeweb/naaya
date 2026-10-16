@@ -100,7 +100,7 @@
 
 <hr />
 <p>
-    You can also provide an XLS file with more recipients.
+    You can also provide an Excel file (.xlsx or .xls) with more recipients.
     You can download the <a tal:attributes="href string:/++resource++naaya.content.talkback/template.xls;">
     template from here</a>.<br />
     Hint: It's useful to first hit the Preview button in order to check
@@ -110,8 +110,8 @@
       tal:define="data options/formdata; errors options/formerrors"
       tal:attributes="action string:${here/absolute_url}/bulk_create">
     <div class="field">
-    <label for="input_file" i18n:translate="">Spreadsheet file (*.xls)</label>
-    <input type="file" name="input_file" id="input_file"  />
+    <label for="input_file" i18n:translate="">Spreadsheet file (*.xlsx, *.xls)</label>
+    <input type="file" name="input_file" id="input_file" accept=".xlsx,.xls" />
     </div>
     <div tal:define="user python:request.AUTHENTICATED_USER"
             tal:condition="python:user.getUserName() != 'Anonymous User'" tal:omit-tag="">

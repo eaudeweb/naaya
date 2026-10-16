@@ -18,21 +18,19 @@
 # Alex Morega, Eau de Web
 # Mihai Tabara, Eau de Web
 
-from io import BytesIO
+from io import StringIO
 import csv
 import codecs
 from DateTime import DateTime
-from unidecode import unidecode
 
 import json
-
-import xlwt
 
 from AccessControl.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo, Unauthorized
 from OFS.SimpleItem import SimpleItem
 
 from .Paragraph import Paragraph
+from naaya.core.zope2util import XLSX_CONTENT_TYPE, new_xlsx_workbook
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaCore.managers.import_export import set_response_attachment
 
@@ -83,8 +81,8 @@ class CommentsAdmin(SimpleItem):
                 anonymous_count += 1
 
         contributors = self._get_contributors_stats()
-        invited = filter(lambda x: x['invited'], contributors)
-        anonymous = filter(lambda x: x['anonymous'], contributors)
+        invited = [x for x in contributors if x['invited']]
+        anonymous = [x for x in contributors if x['anonymous']]
 
         options = {
             'contributors_count': len(contributors),
@@ -162,32 +160,31 @@ class CommentsAdmin(SimpleItem):
         csv_writer.writerow([field[0] for field in fields])
 
         for n, item in enumerate(comments):
-            row = [field[1](item).encode('utf-8') for field in fields]
+            row = [field[1](item) for field in fields]
             csv_writer.writerow(row)
 
-        return codecs.BOM_UTF8 + output.getvalue()
+        return codecs.BOM_UTF8 + output.getvalue().encode('utf-8')
 
     security.declarePrivate('generate_excel_output')
 
     def generate_excel_output(self, fields, comments):
 
-        header_style = xlwt.easyxf('font: bold on; align: horiz left;')
-        normal_style = xlwt.easyxf('align: horiz left, vert top;')
-        link_style = xlwt.easyxf('font: colour blue, underline on;')
+        output, wb = new_xlsx_workbook()
+        header_style = wb.add_format({'bold': True, 'align': 'left'})
+        normal_style = wb.add_format({'align': 'left', 'valign': 'top'})
+        link_style = wb.add_format({'font_color': 'blue', 'underline': 1})
+        ws = wb.add_worksheet('Sheet 1')
 
-        wb = xlwt.Workbook(encoding='utf-8')
-        ws = wb.add_sheet('Sheet 1')
-
-        ws.row(0).set_cell_text(0, 'Consultation deadline', header_style)
-        ws.row(0).set_cell_text(
-            1, (self.end_date + 1).strftime('%Y/%m/%d %H:%M'), normal_style)
-        ws.row(1).set_cell_text(0, 'Date of export', header_style)
-        ws.row(1).set_cell_text(1, DateTime().strftime('%Y/%m/%d %H:%M'),
-                                normal_style)
+        ws.write_string(0, 0, 'Consultation deadline', header_style)
+        ws.write_string(0, 1, (self.end_date + 1).strftime('%Y/%m/%d %H:%M'),
+                        normal_style)
+        ws.write_string(1, 0, 'Date of export', header_style)
+        ws.write_string(1, 1, DateTime().strftime('%Y/%m/%d %H:%M'),
+                        normal_style)
 
         row = 2
         for col in range(len(fields)):
-            ws.row(row).set_cell_text(col, fields[col][0], header_style)
+            ws.write_string(row, col, fields[col][0], header_style)
 
         for item in comments:
             row += 1
@@ -198,20 +195,13 @@ class CommentsAdmin(SimpleItem):
                 if (fields[col][0] == 'Contributor' and
                         'invited by' not in text and
                         '(' in text):
-                    link = 'https://www.eionet.europa.eu/users/' + text[
-                        text.find("(") + 1:text.find(")")]
-                    try:
-                        formula = u'HYPERLINK("{}", "{}")'.format(
-                            link, text)
-                    except UnicodeEncodeError:
-                        formula = u'HYPERLINK("{}", "{}")'.format(
-                            link, unidecode(text))
-
-                    ws.write(row, col, xlwt.Formula(formula), link_style)
+                    # display_name is "userid (full name)"
+                    link = ('https://www.eionet.europa.eu/users/' +
+                            text[:text.find(' (')])
+                    ws.write_url(row, col, link, link_style, string=text)
                 else:
-                    ws.row(row).set_cell_text(col, text, normal_style)
-        output = StringIO()
-        wb.save(output)
+                    ws.write_string(row, col, text, normal_style)
+        wb.close()
 
         return output.getvalue()
 
@@ -219,29 +209,28 @@ class CommentsAdmin(SimpleItem):
 
     def generate_custom_excel_output(self, fields, comments):
 
-        normal_style = xlwt.easyxf('align: wrap on, horiz left, vert top;')
-        header_style = xlwt.easyxf(
-            'font: bold on; align: wrap on, horiz left;')
-
-        wb = xlwt.Workbook(encoding='utf-8')
-        ws = wb.add_sheet('Sheet 1')
+        output, wb = new_xlsx_workbook()
+        normal_style = wb.add_format({'text_wrap': True, 'align': 'left',
+                                      'valign': 'top'})
+        header_style = wb.add_format({'bold': True, 'text_wrap': True,
+                                      'align': 'left'})
+        ws = wb.add_worksheet('Sheet 1')
         row = 0
         for col in range(len(fields)):
-            ws.row(row).set_cell_text(col, fields[col][0], header_style)
+            ws.write_string(row, col, fields[col][0], header_style)
 
-        ws.col(0).width = 3000
-        ws.col(1).width = 20000
-        ws.col(2).width = 7500
-        ws.col(3).width = 5000
+        # xlwt widths (1/256 of a character) converted to characters
+        ws.set_column(0, 0, 3000 / 256)
+        ws.set_column(1, 1, 20000 / 256)
+        ws.set_column(2, 2, 7500 / 256)
+        ws.set_column(3, 3, 5000 / 256)
         for item in comments:
             row += 1
             for col in range(len(fields)):
-                ws.row(row).set_cell_text(col, fields[col][1](item),
-                                          normal_style)
+                ws.write_string(row, col, fields[col][1](item), normal_style)
             row += 1
-            ws.row(row).set_cell_text(0, 'EEA Comments', header_style)
-        output = StringIO()
-        wb.save(output)
+            ws.write_string(row, 0, 'EEA Comments', header_style)
+        wb.close()
 
         return output.getvalue()
 
@@ -306,20 +295,23 @@ class CommentsAdmin(SimpleItem):
 
         elif file_type == 'Excel':
             ret = self.generate_excel_output(fields, comments)
-            content_type = 'application/vnd.ms-excel'
-            filename = 'comments.xls'
+            content_type = XLSX_CONTENT_TYPE
+            filename = 'comments.xlsx'
 
         elif file_type == 'CustomExcel':
             fields = [
-                ('Section', lambda c: c.get_section().title_or_id()),
-                ('Message', lambda c: plain(c.message)),
+                ('Section',
+                 lambda i: i['comment'].get_section().title_or_id()),
+                ('Message', lambda i: plain(i['comment'].message)),
                 ('Contributor',
-                 lambda c: c.get_contributor_info()['display_name']),
-                ('Date', lambda c: c.comment_date.strftime('%Y/%m/%d %H:%M')),
+                 lambda i: (i['comment'].get_contributor_info()
+                            ['display_name'])),
+                ('Date', lambda i: (i['comment'].comment_date
+                                    .strftime('%Y/%m/%d %H:%M'))),
             ]
             ret = self.generate_custom_excel_output(fields, comments)
-            content_type = 'application/vnd.ms-excel'
-            filename = 'comments.xls'
+            content_type = XLSX_CONTENT_TYPE
+            filename = 'comments.xlsx'
 
         else:
             raise ValueError('unknown file format %r' % file_type)

@@ -27,10 +27,14 @@ from Products.Naaya.NyFolder import addNyFolder
 from naaya.content.talkback.tbconsultation_item import addNyTalkBackConsultation
 from naaya.content.talkback.comment_item import addComment
 from Products.NaayaCore.EmailTool.EmailTool import divert_mail
+from naaya.content.talkback.tests import (user_contributor,
+                                          invite_contributor,
+                                          use_temp_sites_log)
 
 
 class CommentsAdminTestCase(NaayaFunctionalTestCase):
     def afterSetUp(self):
+        use_temp_sites_log(self)
         addNyFolder(self.portal, 'myfolder', contributor='admin', submitted=1)
         start_date = (date.today() - timedelta(days=1)).strftime('%d/%m/%Y')
         end_date = (date.today() + timedelta(days=10)).strftime('%d/%m/%Y')
@@ -47,7 +51,8 @@ class CommentsAdminTestCase(NaayaFunctionalTestCase):
             name='The Invitee', email='invitee@thinkle.edu',
             organization='Thinkle University', notes='Knows his shit',
             inviter_userid='contributor', inviter_name='Contributor Test', message='')
-        self.invite_key = consultation.invitations._invites.values()[0].key
+        invitation = list(consultation.invitations._invites.values())[0]
+        self.invite_key = invitation.key
 
         permattr = '_Naaya___Invite_to_TalkBack_Consultation_Permission'
         setattr(consultation, permattr, ['Reviewer'])
@@ -56,14 +61,14 @@ class CommentsAdminTestCase(NaayaFunctionalTestCase):
         paragraph_000 = consultation['test-section']['000']
         # comment 0
         id0 = addComment(paragraph_000,
-                         contributor='contributor',
-                         message=u'comment by contributor (0)')
+                         contributor=user_contributor('contributor'),
+                         message='comment by contributor (0)')
         comments.append(paragraph_000[id0])
 
         # comment 1
         id1 = addComment(consultation['test-section']['000'],
-                         contributor='invite:' + self.invite_key,
-                         message=u'invitee comment (1)')
+                         contributor=invite_contributor(invitation),
+                         message='invitee comment (1)')
         comments.append(paragraph_000[id1])
 
         transaction.commit()

@@ -18,8 +18,11 @@
 # Alex Morega, Eau de Web
 
 from unittest import TestSuite, TestLoader, TestCase
-from mock import Mock, MagicMock
+from unittest.mock import Mock, MagicMock
 from datetime import date, timedelta
+from io import BytesIO
+
+import openpyxl
 
 import transaction
 
@@ -29,12 +32,13 @@ from naaya.content.talkback.tbconsultation_item import addNyTalkBackConsultation
 from naaya.content.talkback.comment_item import addComment
 from naaya.content.talkback.invitations import InvitationsContainer
 from Products.NaayaCore.EmailTool.EmailTool import divert_mail
-# import Globals removed
-import os
+from naaya.content.talkback.tests import (invite_contributor,
+                                          use_temp_sites_log)
 
 
 class InvitationTestCase(NaayaFunctionalTestCase):
     def afterSetUp(self):
+        use_temp_sites_log(self)
         addNyFolder(self.portal, 'myfolder', contributor='admin', submitted=1)
         start_date = (date.today() - timedelta(days=1)).strftime('%d/%m/%Y')
         end_date = (date.today() + timedelta(days=10)).strftime('%d/%m/%Y')
@@ -63,7 +67,7 @@ class InvitationTestCase(NaayaFunctionalTestCase):
         }
         self.consultation.invitations._send_invitation(**data)
         self.assertEqual(len(self.consultation.invitations._invites), 1)
-        i = self.consultation.invitations._invites.values()[0]
+        i = list(self.consultation.invitations._invites.values())[0]
         self.assertEqual(i.name, data['name'])
         self.assertEqual(i.email, data['email'])
         self.assertEqual(i.organization, data['organization'])
@@ -94,12 +98,12 @@ class InvitationTestCase(NaayaFunctionalTestCase):
         form['organization:utf8:string'] = data['organization']
         form['notes:utf8:string'] = data['notes']
         form['message:utf8:string'] = data['message']
-        for control in form.controls:
-            if control.name == 'do' and control.value == 'Send invitation':
-                self.browser.clicked(form, control)
+        send_button = form._form.xpath(
+            './/input[@name="do"][@value="Send invitation"]')[0]
+        self.browser.clicked(form, send_button)
         self.browser.submit()
         self.assertEqual(len(self.consultation.invitations._invites), 1)
-        i = self.consultation.invitations._invites.values()[0]
+        i = list(self.consultation.invitations._invites.values())[0]
         self.assertEqual(i.name, data['name'])
         self.assertEqual(i.email, data['email'])
         self.assertEqual(i.organization, data['organization'])
@@ -141,7 +145,7 @@ class InvitationTestCase(NaayaFunctionalTestCase):
 
         self.browser.go('http://localhost/portal/myfolder/test-consultation/edit_html')
         form = self.browser.get_form('frmEdit')
-        self.assertEqual(form['allow_reviewer_invites:boolean'], [])
+        self.assertFalse(form['allow_reviewer_invites:boolean'])
         form['allow_reviewer_invites:boolean'] = ['on']
         self.browser.clicked(form, form.find_control('title:utf8:string'))
         self.browser.submit()
@@ -150,11 +154,11 @@ class InvitationTestCase(NaayaFunctionalTestCase):
 
         self.browser.go('http://localhost/portal/myfolder/test-consultation/edit_html')
         form = self.browser.get_form('frmEdit')
-        self.assertEqual(form['allow_reviewer_invites:boolean'], ['on'])
+        self.assertTrue(form['allow_reviewer_invites:boolean'])
 
         self.browser.go('http://localhost/portal/myfolder/talkbackconsultation_add_html')
         form = self.browser.get_form('frmAdd')
-        self.assertEqual(form['allow_reviewer_invites:boolean'], [])
+        self.assertFalse(form['allow_reviewer_invites:boolean'])
 
         self.browser_do_logout()
 
@@ -201,6 +205,7 @@ class InvitationTestCase(NaayaFunctionalTestCase):
 
 class InviteeCommentTestCase(NaayaFunctionalTestCase):
     def afterSetUp(self):
+        use_temp_sites_log(self)
         addNyFolder(self.portal, 'myfolder', contributor='admin', submitted=1)
         start_date = (date.today() - timedelta(days=1)).strftime('%d/%m/%Y')
         end_date = (date.today() + timedelta(days=10)).strftime('%d/%m/%Y')
@@ -218,7 +223,8 @@ class InviteeCommentTestCase(NaayaFunctionalTestCase):
         transaction.commit()
 
         self.consultation = self.portal.myfolder['test-consultation']
-        self.invite_key = self.consultation.invitations._invites.values()[0].key
+        self.invite_key = list(
+            self.consultation.invitations._invites.values())[0].key
         self.diverted_mail = divert_mail()
         self.cons_url = 'http://localhost/portal/myfolder/test-consultation'
 
@@ -228,12 +234,12 @@ class InviteeCommentTestCase(NaayaFunctionalTestCase):
         transaction.commit()
 
     def test_key_auth(self):
+        # a valid key redirects to the consultation index
         self.browser.go(self.cons_url + '/invitations/welcome?key=' + self.invite_key)
+        self.assertEqual(self.browser.get_url(), self.cons_url)
         html = self.browser.get_html()
-        self.assertTrue('You have been invited' in html)
-        self.assertTrue('The Invitee' in html)
+        self.assertTrue('Welcome, The Invitee.' in html)
         self.assertTrue('Test consultation' in html)
-        self.assertTrue('Contributor Test' in html)
         self.assertFalse(self.invite_key in html)
 
         self.browser.go(self.cons_url + '/test-section/000')
@@ -241,7 +247,8 @@ class InviteeCommentTestCase(NaayaFunctionalTestCase):
         self.assertTrue('The Invitee' in html)
         form = self.browser.get_form('frmAdd')
         form_controls = set(c.name for c in form.controls)
-        self.assertTrue('contributor_name:utf8:string' not in form_controls)
+        self.assertTrue('contributor.name:utf8:string:record'
+                        not in form_controls)
         form['message:utf8:string'] = 'The invitee speaks!'
         self.browser.clicked(form, form.find_control('message:utf8:string'))
         self.browser.submit()
@@ -249,12 +256,45 @@ class InviteeCommentTestCase(NaayaFunctionalTestCase):
         paragraph = self.consultation['test-section']['000']
         self.assertEqual(len(paragraph.objectIds()), 1)
         comment = paragraph.objectValues()[0]
-        self.assertEqual(comment.contributor, 'invite:' + self.invite_key)
+        self.assertEqual(comment.contributor.source, 'invite')
+        self.assertEqual(comment.contributor.invite, self.invite_key)
         self.assertEqual(comment.message, 'The invitee speaks!')
 
         self.browser.go(self.cons_url + '/test-section/000')
         html = self.browser.get_html()
         self.assertTrue('The Invitee (invited by Contributor Test)' in html)
+
+    def test_invitee_logout_link(self):
+        self.browser.go(self.cons_url)
+        self.assertFalse('Commenting as invitee' in self.browser.get_html())
+
+        self.browser.go(self.cons_url + '/invitations/welcome?key=' +
+                        self.invite_key)
+        html = self.browser.get_html()
+        self.assertTrue('Commenting as invitee' in html)
+        self.assertTrue('/invitations/welcome?logout=on' in html)
+
+        self.browser.go(self.cons_url + '/invitations/welcome?logout=on')
+        self.assertEqual(self.browser.get_url(), self.cons_url)
+        self.assertFalse('Commenting as invitee' in self.browser.get_html())
+        self.browser.go(self.cons_url + '/test-section/000')
+        self.assertRaises(LookupError, self.browser.get_form, 'frmAdd')
+
+    def test_invitee_logout_link(self):
+        self.browser.go(self.cons_url)
+        self.assertFalse('Commenting as invitee' in self.browser.get_html())
+
+        self.browser.go(self.cons_url + '/invitations/welcome?key=' +
+                        self.invite_key)
+        html = self.browser.get_html()
+        self.assertTrue('Commenting as invitee' in html)
+        self.assertTrue('/invitations/welcome?logout=on' in html)
+
+        self.browser.go(self.cons_url + '/invitations/welcome?logout=on')
+        self.assertEqual(self.browser.get_url(), self.cons_url)
+        self.assertFalse('Commenting as invitee' in self.browser.get_html())
+        self.browser.go(self.cons_url + '/test-section/000')
+        self.assertRaises(LookupError, self.browser.get_form, 'frmAdd')
 
     def test_invalid_or_revoked_key(self):
         self.browser.go(self.cons_url + '/invitations/welcome?key=INVALIDVALUE')
@@ -263,28 +303,30 @@ class InviteeCommentTestCase(NaayaFunctionalTestCase):
 
         self.browser.go(self.cons_url + '/test-section/000')
         self.assertFalse('The Invitee' in self.browser.get_html())
-        self.assertEqual(self.browser.get_form('frmAdd'), None)
+        self.assertRaises(LookupError, self.browser.get_form, 'frmAdd')
 
         self.browser.go(self.cons_url + '/invitations/welcome?key=' + self.invite_key)
-        self.assertTrue('You have been invited' in self.browser.get_html())
+        self.assertTrue('Welcome, The Invitee.' in self.browser.get_html())
 
         self.consultation.invitations._invites[self.invite_key].enabled = False
         transaction.commit()
 
         self.browser.go(self.cons_url + '/invitations/welcome?key=' + self.invite_key)
         html = self.browser.get_html()
-        self.assertFalse('You have been invited' in html)
+        self.assertFalse('Welcome, The Invitee.' in html)
         self.assertTrue('Invalid key' in html)
 
         self.browser.go(self.cons_url + '/test-section/000')
         self.assertFalse('The Invitee' in self.browser.get_html())
-        self.assertEqual(self.browser.get_form('frmAdd'), None)
+        self.assertRaises(LookupError, self.browser.get_form, 'frmAdd')
 
 
     def test_invited_comments_admin(self):
+        invitation = self.consultation.invitations.get_invitation(
+            self.invite_key)
         comment_id = addComment(self.consultation['test-section']['000'],
-                                contributor='invite:' + self.invite_key,
-                                message=u'invitee comment')
+                                contributor=invite_contributor(invitation),
+                                message='invitee comment')
         transaction.commit()
 
         self.browser_do_login('contributor', 'contributor')
@@ -340,7 +382,7 @@ class InviteeCommentTestCase(NaayaFunctionalTestCase):
 
         # next authenticate using a key. we should not see admin buttons anymore.
         self.browser.go(welcome_url + '?key=' + self.invite_key)
-        self.assertTrue(welcome_url + '?logout=on' in self.browser.get_html())
+        self.assertTrue('Welcome, The Invitee.' in self.browser.get_html())
         self.browser.go(self.cons_url)
         self.assertTrue('Manage comments' not in self.browser.get_html())
         # but if we really go to a protected page, zope will authenticate us as admin
@@ -386,12 +428,22 @@ class InvitationsContainerTestCase(TestCase):
             'invites_revoked': revoked,
         }
         r = self.invitation._xcel_export_invitations(headers, keys_in_request, options)
-        # This is a little extreme - we test xlwt/xlrd this way...
-        # What if the lib changes, the xcel version does,
-        # any small change in the binary xcel file produced could affect our test.
-        expected = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                            'data/invitationList.xls'),'r').read()
-        self.assertEqual(r, expected)
+        wb = openpyxl.load_workbook(BytesIO(r))
+        self.assertEqual(wb.sheetnames,
+                         ['Active Invitations', 'Revoked Invitations'])
+
+        def rows(ws):
+            return [[c if c is not None else '' for c in row]
+                    for row in ws.iter_rows(values_only=True)]
+        self.assertEqual(rows(wb['Active Invitations']), [
+            headers,
+            ['aValue00', 'anUserName', ''],
+            ['aValue10', 'anUserName', ''],
+        ])
+        self.assertEqual(rows(wb['Revoked Invitations']), [
+            headers,
+            ['aValue20', 'anUserName', ''],
+        ])
 
 
 def test_suite():

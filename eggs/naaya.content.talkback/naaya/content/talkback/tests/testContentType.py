@@ -24,11 +24,6 @@ from Products.Naaya.NyFolder import addNyFolder
 from Products.Naaya.tests import NaayaTestCase
 from naaya.content.talkback.parser import parse
 
-try:
-    set()
-except:
-    from sets import Set as set
-
 class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):
     """ TestCase for NaayaContent object
     """
@@ -91,9 +86,9 @@ class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):
 class TestSimpleParsing(NaayaTestCase.NaayaTestCase):
     def assert_parse_ok(self, input_text, expected_output):
         output = parse(''.join(input_text))
-        self.failUnless(isinstance(output, list))
-        self.failUnlessEqual(len(expected_output), len(output))
-        self.failUnlessEqual(set(expected_output), set(output))
+        self.assertTrue(isinstance(output, list))
+        self.assertEqual(len(expected_output), len(output))
+        self.assertEqual(set(expected_output), set(output))
 
     def test_two_paragraphs(self):
         self.assert_parse_ok(

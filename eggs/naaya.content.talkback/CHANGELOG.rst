@@ -1,7 +1,38 @@
-1.5.8 (unreleased)
------------------
+2.0.0 (unreleased)
+------------------
+* Port to Python 3 and Zope 5 [dumitval]
+* Replace scrubber with bleach for sanitizing comments [dumitval]
+* Export comments as .xlsx and import invitations from .xlsx or .xls
+  [dumitval]
+* Export invitations as .xlsx [dumitval]
+* Protect InvitationsContainer.bulk_create with the Invite to TalkBack
+  Consultation permission [dumitval]
+* Generate invitation keys with the secrets module [dumitval]
+* Fix the Excel export of comments failing for the CustomExcel type
+  [dumitval]
+* Fix the contributor hyperlink in the Excel export of comments using the
+  full name instead of the user id [dumitval]
+* Fix the invitations admin page failing on Invitation attribute access
+  [dumitval]
+* Fix the ZMI comment page failing on the removed contributor_name
+  attribute [dumitval]
+* Fix delete_sections failing when no section is selected [dumitval]
+* Fix Section._ensure_paragraph_ids skipping stale paragraph ids [dumitval]
+* Fix the set_reviewer_permission update failing on tuple roles [dumitval]
+* Fix the migrate_to_contributor update failing on anonymous names that
+  contain ":" [dumitval]
+* Omit the empty organisation in the name of anonymous contributors
+  [dumitval]
+* Send the comments Atom feed with charset=utf-8 [dumitval]
 * allow skipping sections that are marked as header [dumitval]
 * Use the standard library json instead of simplejson [dumitval]
+* Allow on_behalf in the bulk invitations only for Managers [dumitval]
+* Clear the contributor session data after a comment is posted, instead
+  of the unused username key [dumitval]
+* Show invitees a Logout link on the consultation page [dumitval]
+* Keep the alignment (align, text-align) and the colours (color,
+  background-color) of comments, filtered with bleach's CSSSanitizer
+  [dumitval]
 
 1.5.7 (2020-11-20)
 -----------------

@@ -17,3 +17,39 @@
 #
 # Alex Morega, Eau de Web
 # David Batranu, Eau de Web
+
+import os
+import shutil
+import tempfile
+from unittest.mock import patch
+
+from App.config import getConfiguration
+
+from naaya.content.talkback.comment_item import Contributor
+
+
+def user_contributor(userid):
+    return Contributor(name=userid, email='', organisation='', source='',
+                       invite='')
+
+
+def invite_contributor(invitation):
+    return Contributor(name=invitation.name, email=invitation.email,
+                       organisation='', source='invite', invite=invitation.key)
+
+
+def anonymous_contributor(name, email='', organisation=''):
+    return Contributor(name=name, email=email, organisation=organisation,
+                       source='anonymous', invite='')
+
+
+def use_temp_sites_log(test):
+    """ Point SITES_LOG_PATH (saved emails, site logs) to a temp dir """
+    tmp_dir = tempfile.mkdtemp(prefix='talkback-sites-log-')
+    test.addCleanup(shutil.rmtree, tmp_dir, True)
+    # getExtConfiguration copies os.environ over the configuration
+    for environment in (getConfiguration().environment, os.environ):
+        env_patch = patch.dict(environment, {'SITES_LOG_PATH': tmp_dir})
+        env_patch.start()
+        test.addCleanup(env_patch.stop)
+    return tmp_dir

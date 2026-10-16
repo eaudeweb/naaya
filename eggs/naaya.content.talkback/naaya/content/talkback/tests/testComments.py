@@ -8,9 +8,11 @@ from Products.Naaya.NyFolder import addNyFolder
 from naaya.content.talkback.tbconsultation_item import addNyTalkBackConsultation
 from naaya.content.talkback.comment_item import addComment
 from naaya.core.zope2util import dt2DT, DT2dt
+from naaya.content.talkback.tests import user_contributor, use_temp_sites_log
 
 class CommentsFeedTest(NaayaTestCase):
     def setUp(self):
+        use_temp_sites_log(self)
         super(CommentsFeedTest, self).setUp()
         addNyFolder(self.portal, 'myfolder', contributor='admin', submitted=1)
         myfolder = self.portal['myfolder']
@@ -54,7 +56,7 @@ class CommentsFeedTest(NaayaTestCase):
 
     def test_one_entry(self):
         comment_id = addComment(self.tb['sec']['000'],
-                                contributor='contributor',
+                                contributor=user_contributor('contributor'),
                                 message="hello world")
 
         doc = self.tb.comments_atom()
@@ -64,12 +66,12 @@ class CommentsFeedTest(NaayaTestCase):
         entry = dom.getElementsByTagName('entry')[0]
 
         assert (entry.getElementsByTagName('title')[0].firstChild.data ==
-                "Comment by Contributor Test (contributor)")
+                "Comment by contributor (Contributor Test)")
 
         assert len(entry.getElementsByTagName('author')) == 1
         author = entry.getElementsByTagName('author')[0]
         assert (author.getElementsByTagName('name')[0].firstChild.data ==
-                "Contributor Test (contributor)")
+                "contributor (Contributor Test)")
 
         assert (entry.getElementsByTagName('id')[0].firstChild.data ==
                 self.tb_url + '/sec/000/' + comment_id)
@@ -79,10 +81,12 @@ class CommentsFeedTest(NaayaTestCase):
 
     def test_html_summary(self):
         # some simple html
-        addComment(self.tb['sec']['000'], contributor='contributor',
+        addComment(self.tb['sec']['000'],
+                   contributor=user_contributor('contributor'),
                    message="teh <em>html</em> comment & stuff")
         # a broken piece of html
-        addComment(self.tb['sec']['000'], contributor='contributor',
+        addComment(self.tb['sec']['000'],
+                   contributor=user_contributor('contributor'),
                    message="so <p><b>hello<i>world</b>!</i>")
 
         doc = self.tb.comments_atom()
@@ -102,7 +106,7 @@ class CommentsFeedTest(NaayaTestCase):
 
     def test_http_content_type(self):
         comment_id = addComment(self.tb['sec']['000'],
-                                contributor='contributor',
+                                contributor=user_contributor('contributor'),
                                 message="hello world")
         transaction.commit()
 
@@ -112,12 +116,13 @@ class CommentsFeedTest(NaayaTestCase):
         assert (response.headers['Content-Type'] ==
                 'application/atom+xml; charset=utf-8')
 
-        assert "hello world" in response.body
+        assert b"hello world" in response.body
 
     def test_limit_by_date(self):
         def add_comment(msg, delta=timedelta()):
             para = self.tb['sec']['000']
-            cid = addComment(para, contributor='contributor', message=msg)
+            cid = addComment(para, contributor=user_contributor('contributor'),
+                             message=msg)
             comment = para[cid]
             comment.comment_date = dt2DT(DT2dt(comment.comment_date) + delta)
             return comment

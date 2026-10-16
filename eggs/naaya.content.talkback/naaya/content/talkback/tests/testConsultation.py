@@ -21,7 +21,7 @@ import re
 from unittest import TestSuite, TestLoader
 from datetime import date, timedelta
 from DateTime import DateTime
-from io import StringIO
+from io import BytesIO
 from bs4 import BeautifulSoup
 from copy import deepcopy
 
@@ -32,6 +32,7 @@ from Products.Naaya.NyFolder import addNyFolder
 from naaya.content.talkback.tbconsultation_item import addNyTalkBackConsultation, NyTalkBackConsultation
 from naaya.content.talkback.comment_item import addComment
 from Products.NaayaBase.NyRoleManager import NyRoleManager
+from naaya.content.talkback.tests import user_contributor, use_temp_sites_log
 
 
 class ConsultationBasicTestCase(NaayaFunctionalTestCase):
@@ -105,7 +106,7 @@ class ConsultationBasicTestCase(NaayaFunctionalTestCase):
         paragraph = self.portal.myfolder['test-consultation']['sec1']['000']
         self.assertEqual(len(paragraph.objectIds()), 1)
         comment = paragraph.objectValues()[0]
-        self.assertEqual(comment.contributor, 'admin')
+        self.assertEqual(comment.contributor.name, 'admin')
         self.assertEqual(comment.message, 'I has something to say')
 
         self.browser_do_logout()
@@ -135,7 +136,7 @@ class ConsultationBasicTestCase(NaayaFunctionalTestCase):
         paragraph = consultation['sec2']['000']
         self.assertEqual(len(paragraph.objectIds()), 1)
         comment = paragraph.objectValues()[0]
-        self.assertEqual(comment.contributor, 'admin')
+        self.assertEqual(comment.contributor.name, 'admin')
         self.assertEqual(comment.message, 'I has something to say 2')
 
         self.browser_do_logout()
@@ -196,16 +197,23 @@ class CommentSubmissionTestCase(NaayaFunctionalTestCase):
         self.browser.go(self.section_url + '/000')
         self.assertTrue('Add a comment' in self.browser.get_html())
         form = self.browser.get_form('frmAdd')
-        form['contributor_name:utf8:string'] = 'gigi'
+        form['contributor.name:utf8:string:record'] = 'gigi'
+        form['contributor.email:utf8:string:record'] = 'gigi@example.com'
+        form['contributor.organisation:utf8:string:record'] = 'Gigi Inc'
         form['message:utf8:string'] = 'I has something to say'
         self.browser.clicked(form, form.find_control('message:utf8:string'))
         self.browser.submit()
 
         self.assertEqual(len(self.section['000'].objectIds()), 1)
         comment = self.section['000'].objectValues()[0]
-        self.assertEqual(comment.contributor, 'anonymous:gigi')
+        self.assertEqual(comment.contributor.name, 'gigi')
+        self.assertEqual(comment.contributor.source, 'anonymous')
+        self.assertEqual(comment.contributor.email, 'gigi@example.com')
+        self.assertEqual(comment.contributor.organisation, 'Gigi Inc')
         self.assertEqual(comment.message, 'I has something to say')
-        self.assertEqual(comment.title, 'Comment by anonymous:gigi')
+        self.assertEqual(comment.title, 'Comment by gigi')
+        self.assertEqual(comment.get_contributor_info()['display_name'],
+                         'gigi - Gigi Inc (not authenticated)')
 
     def test_logged_in_comment(self):
         self.browser_do_login('contributor', 'contributor')
@@ -214,14 +222,15 @@ class CommentSubmissionTestCase(NaayaFunctionalTestCase):
         self.assertTrue('Add a comment' in self.browser.get_html())
         form = self.browser.get_form('frmAdd')
         form_controls = set(c.name for c in form.controls)
-        self.assertTrue('contributor_name:utf8:string' not in form_controls)
+        self.assertTrue('contributor.name:utf8:string:record'
+                        not in form_controls)
         form['message:utf8:string'] = 'Logged in comment'
         self.browser.clicked(form, form.find_control('message:utf8:string'))
         self.browser.submit()
 
         self.assertEqual(len(self.section['000'].objectIds()), 1)
         comment = self.section['000'].objectValues()[0]
-        self.assertEqual(comment.contributor, 'contributor')
+        self.assertEqual(comment.contributor.name, 'contributor')
         self.assertEqual(comment.message, 'Logged in comment')
         self.assertEqual(comment.title_or_id(), 'Comment by contributor')
 
@@ -243,14 +252,14 @@ class CommentSubmissionTestCase(NaayaFunctionalTestCase):
         form_controls = set(c.name for c in form.controls)
         self.assertTrue('file' in form_controls)
         form['message:utf8:string'] = 'Comment with attachment'
-        form.find_control('file').add_file(StringIO('some data'),
+        form.find_control('file').add_file(BytesIO(b'some data'),
             filename='attached.txt', content_type='text/plain; charset=utf-8')
         self.browser.clicked(form, form.find_control('message:utf8:string'))
         self.browser.submit()
 
         self.assertEqual(len(self.section['000'].objectIds()), 1)
         comment = self.section['000'].objectValues()[0]
-        self.assertEqual(comment.contributor, 'contributor')
+        self.assertEqual(comment.contributor.name, 'contributor')
         self.assertEqual(comment.message, 'Comment with attachment')
 
         self.browser.go('%s/000/%s/get_talkback_file' %
@@ -260,13 +269,14 @@ class CommentSubmissionTestCase(NaayaFunctionalTestCase):
             'attachment;filename*=UTF-8\'\'attached.txt')
         self.assertEqual(self.browser_get_header('content-type'),
             'text/plain; charset=utf-8')
-        self.assertEqual(self.browser.get_html(), 'some data')
+        self.assertEqual(self.browser.result.content, b'some data')
 
         self.browser_do_logout()
 
     def test_edit_comment(self):
         comment_id = addComment(self.section['000'],
-            contributor='contributor', message='original comment')
+            contributor=user_contributor('contributor'),
+            message='original comment')
         transaction.commit()
 
         self.browser_do_login('admin', '')
@@ -287,7 +297,8 @@ class CommentSubmissionTestCase(NaayaFunctionalTestCase):
         self.browser_do_login('reviewer', 'reviewer')
 
         comment_id = addComment(self.section['000'],
-            contributor='reviewer', message='original comment')
+            contributor=user_contributor('reviewer'),
+            message='original comment')
         transaction.commit()
 
         self.browser.go('%s/000/%s/edit_html' % (self.section_url, comment_id))
@@ -338,7 +349,8 @@ class CommentSubmissionTestCase(NaayaFunctionalTestCase):
 
     def test_threaded_comments(self):
         comment1_id = addComment(self.section['000'],
-            contributor='contributor', message='original comment')
+            contributor=user_contributor('contributor'),
+            message='original comment')
         transaction.commit()
 
         self.browser_do_login('contributor', 'contributor')

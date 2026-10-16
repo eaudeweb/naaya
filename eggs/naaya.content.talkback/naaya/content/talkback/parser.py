@@ -20,6 +20,8 @@
 
 import re
 from bs4 import BeautifulSoup, Tag
+from bs4.dammit import EntitySubstitution
+from bs4.formatter import HTMLFormatter
 
 # FIXME: if tags in the source code are uppercase, the parser will not
 # recognise them.
@@ -28,6 +30,19 @@ big_tags = ['img', 'object', 'embed']
 heading_tags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'h7']
 block_level_tags = big_tags + heading_tags + \
                  ['p', 'div', 'ol', 'ul', 'dl', 'table', 'blockquote', 'pre']
+
+# Keep &nbsp; and "<br />" as written, like BeautifulSoup 3 did
+FORMATTER = HTMLFormatter(
+    entity_substitution=lambda text: (
+        EntitySubstitution.substitute_xml(text).replace('\xa0', '&nbsp;')),
+    void_element_close_prefix=' /')
+
+
+def to_html(node):
+    if isinstance(node, Tag):
+        return node.decode(formatter=FORMATTER)
+    return node.output_ready(FORMATTER)
+
 
 class Paragraph(object):
     def __init__(self, content, is_blank, is_heading=False):
@@ -59,12 +74,13 @@ def check_heading(content):
 def parse(content):
     output = []
 
-    soup = BeautifulSoup(content, "lxml")
+    soup = BeautifulSoup(content, "html.parser")
     current_paragraph = ''
 
     def add_paragraph(content):
         output.append(
-            Paragraph(str(content),
+            Paragraph(to_html(content) if isinstance(content, Tag)
+                      else content,
                     check_blank(content),
                     check_heading(content)))
 
@@ -83,7 +99,7 @@ def parse(content):
 
         else:
             # this is not a tag, so it must be plain text; store it.
-            current_paragraph += str(current_element)
+            current_paragraph += to_html(current_element)
 
     # make sure we don't miss text at the end of the document
     if current_paragraph:

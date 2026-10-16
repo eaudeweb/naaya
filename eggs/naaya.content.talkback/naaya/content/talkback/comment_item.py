@@ -22,13 +22,56 @@
 
 import re
 from collections import namedtuple
+from urllib.parse import quote
 
-import scrubber
+import bleach
+from bleach.css_sanitizer import CSSSanitizer
+from bs4 import BeautifulSoup
 
-if 'any' not in dir(__builtins__):
-    from naaya.core.backport import any
-    scrubber.any = any
-sanitize = scrubber.Scrubber().scrub
+# Tags and attributes kept in comments; everything else is stripped
+ALLOWED_TAGS = {'a', 'abbr', 'acronym', 'b', 'blockquote', 'br', 'code', 'dd',
+                'del', 'div', 'dl', 'dt', 'em', 'h1', 'h2', 'h3', 'h4', 'h5',
+                'h6', 'hr', 'i', 'img', 'ins', 'li', 'ol', 'p', 'pre', 'q', 's',
+                'small', 'span', 'strike', 'strong', 'sub', 'sup', 'table',
+                'tbody', 'td', 'tfoot', 'th', 'thead', 'tr', 'u', 'ul'}
+ALLOWED_ATTRIBUTES = {'a': ['href', 'title'],
+                      'img': ['src', 'alt', 'title', 'width', 'height'],
+                      'td': ['colspan', 'rowspan', 'align', 'style'],
+                      'th': ['colspan', 'rowspan', 'align', 'style']}
+for _tag in ('p', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'):
+    ALLOWED_ATTRIBUTES[_tag] = ['align', 'style']
+for _tag in ('span', 'li'):
+    ALLOWED_ATTRIBUTES[_tag] = ['style']
+# Only the colour and alignment set by the editor buttons
+CSS_SANITIZER = CSSSanitizer(
+    allowed_css_properties=['color', 'background-color', 'text-align'])
+
+
+# Tags removed together with their content
+DROP_CONTENT_TAGS = ('script', 'style')
+
+
+def _drop_content_tags(message):
+    if not re.search(r'<\s*(script|style)\b', message, re.I):
+        return message
+    soup = BeautifulSoup(message, 'html.parser')
+    for tag in soup.find_all(DROP_CONTENT_TAGS):
+        tag.decompose()
+    return str(soup)
+
+
+def _mark_external(attrs, new=False):
+    attrs[(None, 'rel')] = 'nofollow'
+    attrs[(None, 'class')] = 'external'
+    return attrs
+
+
+def sanitize(message):
+    cleaned = bleach.clean(_drop_content_tags(message), tags=ALLOWED_TAGS,
+                           attributes=ALLOWED_ATTRIBUTES,
+                           css_sanitizer=CSS_SANITIZER, strip=True)
+    return bleach.linkify(cleaned, callbacks=[_mark_external],
+                          parse_email=False)
 
 
 def trim(message):
@@ -150,10 +193,13 @@ class TalkBackConsultationComment(NyFSFile):
             if contributor.source == 'anonymous':
                 contributor_name = contributor.name
                 contributor_organisation = contributor.organisation
-                info['display_name'] = u'{} {} (not authenticated)'.format(
-                    contributor_name,
-                    u'- {}'.format(contributor_organisation),
-                )
+                if contributor_organisation:
+                    info['display_name'] = (
+                        '{} - {} (not authenticated)'.format(
+                            contributor_name, contributor_organisation))
+                else:
+                    info['display_name'] = '{} (not authenticated)'.format(
+                        contributor_name)
                 info['name'] = contributor_name
                 info['email'] = contributor.email
                 info['organisation'] = contributor_organisation
@@ -197,7 +243,7 @@ class TalkBackConsultationComment(NyFSFile):
         RESPONSE.setHeader('Content-Type', self.content_type)
         RESPONSE.setHeader('Content-Length', self.size)
         RESPONSE.setHeader('Content-Disposition',
-            "attachment;filename*=UTF-8''" + self.utToUtf8(self.filename))
+            "attachment;filename*=UTF-8''" + quote(self.filename))
         RESPONSE.setHeader('Pragma', 'public')
         RESPONSE.setHeader('Cache-Control', 'max-age=0')
         return self.index_html()

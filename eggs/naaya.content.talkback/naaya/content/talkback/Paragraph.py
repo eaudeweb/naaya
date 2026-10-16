@@ -20,9 +20,6 @@
 
 import re
 
-# Python imports
-from collections import defaultdict
-
 # Zope imports
 from OFS.Folder import Folder
 from AccessControl.class_init import InitializeClass
@@ -278,7 +275,9 @@ class Paragraph(Folder):
         next_page = REQUEST.get('next_page', self.absolute_url())
         reply_to = REQUEST.form.get('reply_to', None)
 
-        req_contributor = REQUEST.form.get('contributor', defaultdict(str))
+        form_contributor = REQUEST.form.get('contributor') or {}
+        req_contributor = dict((key, form_contributor.get(key, ''))
+                               for key in ('name', 'email', 'organisation'))
         contributor_name = req_contributor['name']
 
         errors = []
@@ -308,7 +307,7 @@ class Paragraph(Folder):
             self.setSession('message', message)
             return REQUEST.RESPONSE.redirect(next_page)
         else:
-            self.delSession('username')
+            self.delSession('contributor')
             self.delSession('message')
 
         form_data = {
