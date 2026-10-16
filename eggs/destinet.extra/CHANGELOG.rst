@@ -1,4 +1,7 @@
-2.0.2 - (unreleased)
+2.0.3 - (unreleased)
+====================
+
+2.0.2 - (2026-10-16)
 ====================
 * Fix list_locations on the map tool failing with a TypeError when called
   with keyword arguments (``*kw`` instead of ``**kw``) [dumitval]
