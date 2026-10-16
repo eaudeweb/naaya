@@ -1,4 +1,7 @@
-6.0.2 (unreleased)
+6.0.3 (unreleased)
+------------------
+
+6.0.2 (2026-10-16)
 ------------------
 * Fix the folder listing failing with UnboundLocalError in
   GenericViewAdapter.get_modification_date [dumitval]
