@@ -1,4 +1,7 @@
-2.0.2 (unreleased)
+2.0.3 (unreleased)
+------------------
+
+2.0.2 (2026-10-16)
 ------------------
 * Leave Products.NaayaContent out of the packages so naaya.content-compat
   provides it; editable installs made it a namespace package without __file__

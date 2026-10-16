@@ -2,7 +2,7 @@
 from setuptools import setup, find_namespace_packages
 
 setup(name='naaya.content.talkback',
-      version='2.0.2.dev0',
+      version='2.0.3.dev0',
       author='Eau de Web',
       author_email='office@eaudeweb.ro',
       url='http://naaya.eaudeweb.ro',
