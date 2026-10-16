@@ -1,4 +1,7 @@
-2.0.1 (unreleased)
+2.0.2 (unreleased)
+------------------
+
+2.0.1 (2026-10-16)
 ------------------
 * Read the redirect config and LDIF files as UTF-8 [dumitval]
 * Fix the CIRCA files and folders import failing with bytes/str errors when
