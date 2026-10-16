@@ -1,4 +1,7 @@
-2.0.2 (unreleased)
+2.0.3 (unreleased)
+------------------
+
+2.0.2 (2026-10-16)
 ------------------
 * Fix adding a photo failing on manage_delObjects([]) and on str data
   [dumitval]
