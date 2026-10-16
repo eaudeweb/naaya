@@ -29,13 +29,12 @@ def patch_sys_path(buildout_part_name):
 
     # Extract the sys.path list from the script.
     # The script contains: sys.path[0:0] = [ ... ]
+    # A pip instance script has no sys.path list; the venv already has the eggs.
     m = re.search(r'sys\.path\[0:0\]\s*=\s*\[([^\]]+)\]', script_text, re.DOTALL)
     if m:
         paths_text = '[' + m.group(1) + ']'
         paths = ast.literal_eval(paths_text)
         sys.path[0:0] = paths
-    else:
-        raise RuntimeError("Cannot find sys.path setup in %s" % part_script)
 
     # Apply the namespace package fix and the __provides__ monkey-patches
     # that are defined in the generated instance script.

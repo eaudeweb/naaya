@@ -5,7 +5,7 @@ from zope.component import providedBy
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 from Products.Naaya.constants import DEFAULT_PORTAL_LANGUAGE_CODE
-from nose.plugins.skip import SkipTest
+from unittest import SkipTest
 
 from naaya.i18n.constants import (ID_NAAYAI18N, TITLE_NAAYAI18N,
                                   METATYPE_NAAYAI18N)

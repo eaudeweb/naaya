@@ -1,5 +1,8 @@
 2.0.2 (unreleased)
 ------------------
+* Leave Products.NaayaContent out of the packages so naaya.content-compat
+  provides it; editable installs made it a namespace package without __file__
+  [dumitval]
 
 2.0.1 (2026-10-16)
 ------------------

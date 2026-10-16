@@ -6,7 +6,9 @@ setup(name='naaya.content.talkback',
       author='Eau de Web',
       author_email='office@eaudeweb.ro',
       url='http://naaya.eaudeweb.ro',
-      packages=find_namespace_packages(include=['naaya.*', 'Products.*']),
+      # Not Products.NaayaContent itself: naaya.content-compat provides it with __file__
+      packages=find_namespace_packages(
+          include=['naaya.content.talkback*', 'Products.NaayaContent.*']),
       include_package_data=True,
       zip_safe=False,
       install_requires=[
