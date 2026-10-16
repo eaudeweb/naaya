@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 NAME = 'Products.NaayaNetRepository'
 
 setup(name=NAME,
-      version='2.0.0.dev0',
+      version='2.0.1.dev0',
       description="",
       long_description=open("README.txt").read().strip(),
       # Get more strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
