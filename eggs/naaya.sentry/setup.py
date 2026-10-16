@@ -1,7 +1,7 @@
 from setuptools import setup, find_namespace_packages
 
 setup(name='naaya.sentry',
-      version='1.0.0.dev0',
+      version='1.0.1.dev0',
       description='Sentry integration for Naaya/Zope',
       long_description=(open('README.rst').read() + '\n' +
                         open('CHANGELOG.rst').read()),
