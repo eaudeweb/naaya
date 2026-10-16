@@ -1,8 +1,6 @@
-1.0.7 (unreleased)
+2.0.0 (unreleased)
 ------------------
-
-1.0.6 (2026-10-16)
-------------------
+* Port to Python 3 and Zope 5 [dumitval]
 * Replace the deprecated PersistentDict with PersistentMapping [dumitval]
 
 1.0.5 (2013-07-10)

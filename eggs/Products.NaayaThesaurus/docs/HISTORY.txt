@@ -1,8 +1,9 @@
 Changelog
 =========
 
-1.1.5 (unreleased)
+2.0.0 (unreleased)
 ------------------
+* Port to Python 3 and Zope 5 [dumitval]
 * Fix sorting and uncataloging terms [dumitval]
 * Fix importing the product [dumitval]
 

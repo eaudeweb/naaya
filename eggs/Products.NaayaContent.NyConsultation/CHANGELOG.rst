@@ -1,8 +1,6 @@
-1.1.5 (unreleased)
+2.0.0 (unreleased)
 ------------------
-
-1.1.4 (2026-10-16)
-------------------
+* Port to Python 3 and Zope 5 [dumitval]
 * Fix the question list and deleting ratings [dumitval]
 * Fix sorting reviews by rating [dumitval]
 * Fix the question edit page [dumitval]

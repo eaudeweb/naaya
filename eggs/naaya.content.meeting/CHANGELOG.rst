@@ -1,8 +1,6 @@
-1.3.09 (unreleased)
--------------------
-
-1.3.08 (2026-10-16)
--------------------
+2.0.0 (unreleased)
+------------------
+* Port to Python 3 and Zope 5 [dumitval]
 * Use the standard library json instead of simplejson [dumitval]
 
 1.3.07 (2022-04-08)

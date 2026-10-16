@@ -1,8 +1,6 @@
-1.1.5 (unreleased)
+2.0.0 (unreleased)
 ------------------
-
-1.1.4 (2026-10-16)
-------------------
+* Port to Python 3 and Zope 5 [dumitval]
 * Fix the simple consultation page [dumitval]
 
 1.1.3 (2011-11-14)
