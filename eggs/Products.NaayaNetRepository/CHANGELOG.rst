@@ -1,4 +1,7 @@
-1.0.6 (unreleased)
+1.0.7 (unreleased)
+==================
+
+1.0.6 (2026-10-16)
 ==================
 * Fix importing the product [dumitval]
 
