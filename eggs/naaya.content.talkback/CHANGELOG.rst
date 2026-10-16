@@ -1,4 +1,7 @@
-2.0.1 (unreleased)
+2.0.2 (unreleased)
+------------------
+
+2.0.1 (2026-10-16)
 ------------------
 * Use PEP 420 namespace packages [dumitval]
 
