@@ -2,7 +2,7 @@ from setuptools import setup, find_namespace_packages
 
 setup(
     name='Products.NaayaGlossary',
-    version='2.0.2.dev0',
+    version='2.0.3.dev0',
     description="Naaya Glossary",
     long_description=open("README.txt").read() + "\n" +
     open("CHANGELOG.rst").read(),
