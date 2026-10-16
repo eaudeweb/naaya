@@ -1,7 +1,10 @@
 Changelog
 =========
 
-1.2 (unreleased)
+1.3 (unreleased)
+----------------
+
+1.2 (2026-10-16)
 ----------------
 * Add MANIFEST.in; the 1.1 release lacked version.txt and configure.zcml
   [dumitval]
