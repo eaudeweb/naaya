@@ -27,3 +27,10 @@ class WatermarkTest(unittest.TestCase):
         self.assertEqual(img.format, 'JPEG')
         self.assertEqual(img.size, (200, 120))
         self.assertNotEqual(img.getextrema(), ((0, 0),) * 3)
+
+    def test_image_smaller_than_text(self):
+        original = BytesIO()
+        Image.new('RGB', (1, 1), 'black').save(original, 'PNG')
+        original.seek(0)
+        result = FakePhoto('Naaya')._apply_watermark(original)
+        self.assertEqual(Image.open(result).size, (1, 1))

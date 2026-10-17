@@ -40,7 +40,7 @@ from Products.NaayaBase.constants import EXCEPTION_NOTAUTHORIZED_MSG
 from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
 from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS
 from Products.NaayaCore.SchemaTool.widgets.geo import Geo
-from Products.NaayaCore.managers.utils import make_id
+from Products.NaayaCore.managers.utils import make_id, toAscii
 from Products.NaayaPhotoArchive.constants import DEFAULT_QUALITY
 from Products.NaayaPhotoArchive.constants import LISTING_DISPLAYS
 from Products.NaayaPhotoArchive.constants import METATYPE_NYPHOTO
@@ -83,6 +83,7 @@ def clean_display_id(id):
     """
     assert id, "Thumbnail ID may not be blank"
 
+    id = toAscii(id)  # "photo ț.png" -> "photo t.png"
     strip_chars_pat = re.compile(r'[^-_\.A-Z0-9]', re.I)
     to_single_dashes = re.compile(r'-+')
     id = strip_chars_pat.sub('-', id)
@@ -385,6 +386,7 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
         watermark = Image.new("RGBA", (img.size[0], img.size[1]))
         draw = ImageDraw.ImageDraw(watermark, "RGBA")
         size = 0
+        font = None
         while True:
             size += 1
             nextfont = ImageFont.truetype(FONT, size)
@@ -394,6 +396,10 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
                 break
             font = nextfont
             textwidth, textheight = nexttextwidth, nexttextheight
+        if font is None:
+            # image narrower than the text at font size 1
+            datafile.seek(0)
+            return datafile
         draw.text(((watermark.size[0]-textwidth)/2,
                    (watermark.size[1]-textheight)/2), text, font=font)
         watermark = watermark.rotate(degrees(atan(float(img.size[1])/img.size[0])),

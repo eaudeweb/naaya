@@ -1,5 +1,10 @@
 2.0.3 (unreleased)
 ------------------
+* Fix the watermarked photo display failing with UnboundLocalError when the
+  image is narrower than the watermark text [dumitval]
+* Fix photo ids from uploaded file names dropping non-ASCII letters
+  ("photo ț.png" gave "photo-.png"): transliterate with unidecode in
+  clean_display_id [dumitval]
 
 2.0.2 (2026-10-16)
 ------------------
