@@ -68,5 +68,6 @@ setup(name='Naaya',
       },
       entry_points={'console_scripts': [
           'heartbeat = Products.Naaya.views:heartbeat',
+          'naaya-testrunner = Products.Naaya.tests.runner:main',
       ]},
       )

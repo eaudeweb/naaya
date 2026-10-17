@@ -445,8 +445,6 @@ class NaayaFunctionalTestCase(NaayaTestCase.NaayaTestCase, TwillMixin):
     Functional test case for Naaya - uses twill for client-side tests.
     """
 
-    _naaya_plugin = 'NaayaPortalTestPlugin'
-
     def setUp(self):
         self.install_twill()
         #This is needed for absolute_url

@@ -1,5 +1,8 @@
 6.0.3 (unreleased)
 ------------------
+* Add the naaya-testrunner script, which starts Zope from NAAYA_ZOPE_CONF
+  and runs zope.testrunner; it replaces naaya-nose [dumitval]
+* Remove the nose plugin and SeleniumTestCase from the tests [dumitval]
 
 6.0.2 (2026-10-16)
 ------------------
