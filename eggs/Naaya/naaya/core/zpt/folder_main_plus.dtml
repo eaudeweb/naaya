@@ -195,7 +195,7 @@ function toggleSelect() {
 
   <td>
   <div class="list-item">
-  <dtml-var expr="modification_time()" fmt="%Y-%m-%d %H:%M">
+  <dtml-var expr="last_modified(this())">
   </div>
   </td>
   </dtml-with>

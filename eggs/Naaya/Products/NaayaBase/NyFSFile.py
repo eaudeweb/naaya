@@ -104,8 +104,16 @@ class NyFSFile(File):
         self_id = getattr(self, '__name__', 'data.fs')
         self._bfile = NyBlobFile(id=self_id, title=self.title_or_id())
 
+    def __bytes__(self):
+        data = self.get_data()
+        return data.encode('utf-8') if isinstance(data, str) else bytes(data)
+
     def __str__(self):
-        return self.get_data()
+        data = self.get_data()
+        if isinstance(data, bytes):
+            # the ZMI fileEdit.dtml handles UnicodeDecodeError
+            data = data.decode(self._get_encoding())
+        return data
 
     def update_data(self, data, content_type=None, size=None, filename=''):
         if content_type is not None:

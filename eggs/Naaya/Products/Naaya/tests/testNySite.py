@@ -114,6 +114,27 @@ class NoPermissionsForAnonymous(NaayaFunctionalTestCase):
         self.assertNotEqual(self.portal.absolute_url(), self.browser.get_url())
 
 
+class TraversalErrorPageTest(NaayaFunctionalTestCase):
+    """ NotFound raised during traversal, before the user is validated """
+
+    def test_not_found_under_manage_add_product(self):
+        self.browser.go(self.portal.absolute_url() +
+                        '/manage_addProduct/Naaya/no_such_thing')
+        self.assertEqual(self.browser.get_code(), 404)
+        html = self.browser.get_html()
+        self.assertNotIn('Error displaying the error page', html)
+        self.assertIn('Naaya Test Site', html)
+
+    def test_missing_authenticated_user(self):
+        from AccessControl.SpecialUsers import nobody
+        request = self.portal.REQUEST
+        request.other.pop('AUTHENTICATED_USER', None)
+        html = self.portal.standard_error_message(error_type='NotFound',
+                                                  error_value='no_such_thing')
+        self.assertNotIn('Error displaying the error page', html)
+        self.assertIs(request['AUTHENTICATED_USER'], nobody)
+
+
 class TestNySiteListing(NaayaFunctionalTestCase):
     """ """
     def afterSetUp(self):

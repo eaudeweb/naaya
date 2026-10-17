@@ -554,7 +554,7 @@ class NyEvent(event_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
         RESPONSE.setHeader('Content-Type', 'text/calendar')
         RESPONSE.setHeader('Content-Disposition',
                            'attachment;filename=%s.ics' % self.getId())
-        RESPONSE.write(ics_data)
+        RESPONSE.write(ics_data.encode('utf-8'))
 
 InitializeClass(NyEvent)
 

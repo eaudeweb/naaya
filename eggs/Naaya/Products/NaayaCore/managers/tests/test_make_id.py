@@ -91,6 +91,13 @@ class SlugifyTestCase(ZopeTestCase.TestCase):
     def test_latin_1(self):
         self.assert_slug(u'ab\xe9c\xfc\xe7\xe8de', 'abecucede')
 
+    def test_file_names(self):
+        self.assert_slug('photo.png', 'photo.png')
+        self.assert_slug('photo ț.png', 'photo-t.png')
+        self.assert_slug('Bruxelles – éèà', 'bruxelles-eea')
+        self.assert_slug('șțăîâ ȘȚĂÎÂ.pdf', 'staia-staia.pdf')
+        self.assert_slug('Фото дом.jpg', 'foto-dom.jpg')
+
     def test_utf8(self):
         # In Python 3, \xc3\xa9 etc. are real Unicode codepoints (not UTF-8
         # bytes misinterpreted as latin-1). Transliteration differs slightly.

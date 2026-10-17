@@ -1,5 +1,26 @@
 6.0.4 (unreleased)
 ------------------
+* Fix Interval values (meeting dates) failing to load after a save with the
+  Python 3 pickle protocol [dumitval]
+* Fix the event iCalendar export failing on Python 3 [dumitval]
+* Add a test that every content type loads again from the storage
+  [dumitval]
+* Fix the member search and the LDAP group member listing failing with
+  NameError (filter_format moved out of Products.LDAPUserFolder.LDAPDelegate)
+  [dumitval]
+* Fix the LDAP group members page (admin_sources_html) failing with TypeError:
+  get_group_members returned a map [dumitval]
+* Fix the ZMI manage_main of surveys and Naaya tools (folder_main_plus.dtml)
+  failing with TypeError for children with a modification_time attribute; use
+  ObjectManager.last_modified as in Zope 5 [dumitval]
+* Fix the ZMI edit form of geopoints (manage_edit_html) failing with
+  AttributeError latitude; the ZMI add and edit forms use the geo_location
+  fields [dumitval]
+* Fix the ZMI Edit tab (manage_main) of Naaya files failing with TypeError:
+  NyFSFile.__str__ returned bytes [dumitval]
+* Fix the error page of a NotFound under manage_addProduct failing: set
+  AUTHENTICATED_USER to Anonymous when traversal failed before validation,
+  default error_log_url, skip crumbs without title_or_id [dumitval]
 
 6.0.3 (2026-10-17)
 ------------------

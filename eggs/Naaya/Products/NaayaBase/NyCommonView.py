@@ -6,6 +6,7 @@ import traceback
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view
 from AccessControl.class_init import InitializeClass
+from AccessControl.SpecialUsers import nobody
 
 from naaya.core.zope2util import RestrictedToolkit
 from naaya.core.paginator import NaayaPaginator
@@ -80,6 +81,11 @@ class NyCommonView(object):
 
     def standard_error_message(self, client=None, **kwargs):
         """ """
+        # OFS StandardErrorMessageView does not pass error_log_url
+        kwargs.setdefault('error_log_url', '')
+        if self.REQUEST.get('AUTHENTICATED_USER') is None:
+            # Traversal errors happen before the user is validated
+            self.REQUEST.set('AUTHENTICATED_USER', nobody)
         try:
             error_log_properties = self.error_log.getProperties()
             ignored_exceptions = error_log_properties['ignored_exceptions']

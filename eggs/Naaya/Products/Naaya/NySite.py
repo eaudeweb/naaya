@@ -1481,6 +1481,9 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             PARENTS = PARENTS[len(root)-1:]
         PARENTS.reverse()
         for crumb in PARENTS:
+            # e.g. manage_addProduct dispatchers in a traversal error page
+            if not hasattr(getattr(crumb, 'aq_base', crumb), 'title_or_id'):
+                continue
             breadcrumbs.append(crumb)
             if getattr(crumb, 'meta_type', None) == self.meta_type:
                 break

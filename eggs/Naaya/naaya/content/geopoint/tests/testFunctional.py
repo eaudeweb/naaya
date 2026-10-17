@@ -144,6 +144,15 @@ class NyGeoPointFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser_do_logout()
 
+    def test_zmi_edit(self):
+        self.browser_do_login('admin', '')
+        self.browser.go('http://localhost/portal/myfolder/mygeopoint/'
+                        'manage_edit_html')
+        form = self.browser.get_form('frmEdit')
+        self.assertEqual(form['geo_location.lat:utf8:string'], '13')
+        self.assertEqual(form['geo_location.lon:utf8:string'], '13')
+        self.browser_do_logout()
+
 class NyGeoPointVersioningFunctionalTestCase(NaayaFunctionalTestCase):
     """ TestCase for NaayaContent object """
     def afterSetUp(self):

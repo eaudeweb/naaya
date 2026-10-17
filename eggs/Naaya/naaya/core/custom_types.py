@@ -20,6 +20,10 @@ class Interval(tuple):
             end_date = datetime(end_date.year, end_date.month, end_date.day)
         return tuple.__new__(cls, (start_date, end_date, all_day))
 
+    def __getnewargs__(self):
+        # Pickle protocol 2+ would pass the whole tuple to __new__ as start_date
+        return tuple(self)
+
 
     security.declarePublic('start_date')
     @property

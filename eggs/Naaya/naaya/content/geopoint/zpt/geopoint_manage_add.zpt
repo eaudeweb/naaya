@@ -7,13 +7,13 @@
 <tr>
 	<td class="form-label">Latitude</td>
 	<td>
-		<input type="text" name="latitude:utf8:string" id="latitude" size="20" maxlength="20" />
+		<input type="text" name="geo_location.lat:utf8:string" id="latitude" size="20" maxlength="20" />
 	</td>
 </tr>
 <tr>
 	<td class="form-label">Longitude</td>
 	<td>
-		<input type="text" name="longitude:utf8:string" id="longitude" size="20" maxlength="20" />
+		<input type="text" name="geo_location.lon:utf8:string" id="longitude" size="20" maxlength="20" />
 	</td>
 </tr>
 <tr>

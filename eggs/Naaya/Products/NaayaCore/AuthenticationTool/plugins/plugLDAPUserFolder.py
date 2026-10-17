@@ -14,7 +14,7 @@ from zope.interface import implementer
 
 try:
     import ldap
-    from Products.LDAPUserFolder.LDAPDelegate import filter_format
+    from ldap.filter import filter_format
 except ImportError:
     pass
 
@@ -592,7 +592,7 @@ class plugLDAPUserFolder(PlugBase):
                 'user_name': name,
             }
 
-        return map(user_data, member_ids)
+        return [user_data(user_id) for user_id in member_ids]
 
     def _get_zope_user(self, user_id):
         acl_folder = self.getUserFolder()

@@ -74,6 +74,11 @@ class NyEventFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser_do_logout()
 
+    def test_get_ics(self):
+        self.browser.go('http://localhost/portal/myfolder/myevent/get_ics')
+        self.assertTrue('BEGIN:VCALENDAR' in self.browser.get_html())
+        self.assertTrue('SUMMARY:My event' in self.browser.get_html())
+
     def test_add_error(self):
         self.browser_do_login('contributor', 'contributor')
         self.browser.go('http://localhost/portal/myfolder/event_add_html')

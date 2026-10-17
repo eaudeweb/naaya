@@ -157,6 +157,18 @@ class NyFileFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser_do_logout()
 
+    def test_zmi_main(self):
+        myfile = self.portal.myfolder.myfile
+        myfile.update_data('café ș'.encode('utf-8'), 'text/plain')
+        import transaction; transaction.commit()
+        self.assertEqual(str(myfile), 'café ș')
+        self.assertEqual(bytes(myfile), 'café ș'.encode('utf-8'))
+
+        self.browser_do_login('admin', '')
+        self.browser.go('http://localhost/portal/myfolder/myfile/manage_main')
+        self.assertIn('café ș', self.browser.get_html())
+        self.browser_do_logout()
+
     def test_view_in_folder(self):
         self.browser_do_login('admin', '')
 

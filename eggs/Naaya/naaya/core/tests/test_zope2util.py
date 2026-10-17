@@ -56,3 +56,31 @@ class TestThreadJob(NaayaTestCase):
 
         transaction.abort()
         self.assertEqual(folder.hello, "world")
+
+class FolderManageMainPlusTest(NaayaTestCase):
+
+    def test_child_with_modification_time_attribute(self):
+        from DateTime import DateTime
+        from OFS.Folder import Folder
+        from OFS.SimpleItem import SimpleItem
+        from naaya.core.zope2util import folder_manage_main_plus
+
+        class PlusFolder(Folder):
+            manage_main = folder_manage_main_plus
+
+        class Answer(SimpleItem):
+            meta_type = 'Test Answer'
+
+            def __init__(self, id):
+                self.id = id
+                # as in NaayaSurvey SurveyAnswer
+                self.modification_time = DateTime()
+
+        self.portal._setObject('plus', PlusFolder('plus'))
+        plus = self.portal.plus
+        plus._setObject('answer', Answer('answer'))
+        request = self.portal.REQUEST
+        for name in ('URL', 'URL1', 'URL2', 'BASEPATH1'):
+            request.set(name, plus.absolute_url())
+        html = plus.manage_main(plus, request)
+        self.assertIn('answer', html)

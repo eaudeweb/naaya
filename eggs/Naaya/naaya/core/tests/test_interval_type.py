@@ -40,3 +40,10 @@ class IntervalTestCase(unittest.TestCase):
         self.assertEqual(repr(i), ("Interval:[22/03/2011, 10:00 - "
                                    "24/03/2011, 10:30; All day: False]"))
 
+
+    def test_pickle_round_trip(self):
+        import pickle
+        i = Interval(datetime(2011, 3, 23, 10, 0), datetime(2011, 3, 24, 19, 30), True)
+        for protocol in range(1, pickle.HIGHEST_PROTOCOL + 1):
+            self.assertEqual(pickle.loads(pickle.dumps(i, protocol)), i)
+        self.assertEqual(pickle.loads(pickle.dumps(Interval(), 3)), Interval())
