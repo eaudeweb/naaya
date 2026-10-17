@@ -1,4 +1,7 @@
-6.0.4 (unreleased)
+6.0.5 (unreleased)
+------------------
+
+6.0.4 (2026-10-18)
 ------------------
 * Fix Interval values (meeting dates) failing to load after a save with the
   Python 3 pickle protocol [dumitval]
