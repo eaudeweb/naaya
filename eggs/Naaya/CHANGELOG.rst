@@ -1,4 +1,7 @@
-6.0.3 (unreleased)
+6.0.4 (unreleased)
+------------------
+
+6.0.3 (2026-10-17)
 ------------------
 * Add the naaya-testrunner script, which starts Zope from NAAYA_ZOPE_CONF
   and runs zope.testrunner; it replaces naaya-nose [dumitval]
