@@ -1,4 +1,7 @@
-2.0.3 (unreleased)
+2.0.4 (unreleased)
+------------------
+
+2.0.3 (2026-10-18)
 ------------------
 * Fix the watermarked photo display failing with UnboundLocalError when the
   image is narrower than the watermark text [dumitval]
