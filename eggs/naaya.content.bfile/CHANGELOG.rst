@@ -1,5 +1,7 @@
 2.0.2 (unreleased)
 ------------------
+* Fix ConnectionStateError when waitress closes a streamed blob after the
+  request: BlobStreamIterator opens the blob file as a plain file [dumitval]
 
 2.0.1 (2026-10-16)
 ------------------

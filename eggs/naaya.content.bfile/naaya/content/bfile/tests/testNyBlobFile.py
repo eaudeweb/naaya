@@ -1,3 +1,4 @@
+import unittest
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from io import BytesIO
 from Testing import ZopeTestCase
@@ -163,3 +164,59 @@ class NyBlobFileTransactionsTestCase(NaayaTestCase):
         self.assertEqual(bf.filename, 'a.txt')
         self.assertEqual(bf.content_type, 'application/octet-stream')
 
+
+
+class BlobStreamIteratorTest(unittest.TestCase):
+
+    def test_close_after_connection_closed(self):
+        import shutil
+        import tempfile
+        import ZODB
+        from ZODB.MappingStorage import MappingStorage
+        from ZODB.blob import Blob, BlobStorage
+        from naaya.content.bfile.NyBlobFile import BlobStreamIterator
+        blob_dir = tempfile.mkdtemp()
+        self.addCleanup(shutil.rmtree, blob_dir)
+        db = ZODB.DB(BlobStorage(blob_dir, MappingStorage()))
+        self.addCleanup(db.close)
+        tm = transaction.TransactionManager()
+        conn = db.open(tm)
+        conn.root()['blob'] = blob = Blob()
+        with blob.open('w') as f:
+            f.write(b'data')
+        tm.commit()
+        conn.close()
+        conn = db.open(tm)
+        blob = conn.root()['blob']
+        it = BlobStreamIterator(blob)
+        # index_html drops the readers so the blob can be ghosted
+        del blob.readers[:]
+        blob._p_deactivate()
+        conn.close()
+        self.assertEqual(b''.join(it), b'data')
+        it.close()
+
+    def test_close_uncommitted_after_connection_closed(self):
+        import shutil
+        import tempfile
+        import ZODB
+        from ZODB.MappingStorage import MappingStorage
+        from ZODB.blob import Blob, BlobStorage
+        from naaya.content.bfile.NyBlobFile import BlobStreamIterator
+        blob_dir = tempfile.mkdtemp()
+        self.addCleanup(shutil.rmtree, blob_dir)
+        db = ZODB.DB(BlobStorage(blob_dir, MappingStorage()))
+        self.addCleanup(db.close)
+        tm = transaction.TransactionManager()
+        conn = db.open(tm)
+        conn.root()['blob'] = blob = Blob()
+        with blob.open('w') as f:
+            f.write(b'data')
+        # served in the request that wrote the blob
+        it = BlobStreamIterator(blob)
+        del blob.readers[:]
+        tm.commit()
+        blob._p_deactivate()
+        conn.close()
+        self.assertEqual(b''.join(it), b'data')
+        it.close()

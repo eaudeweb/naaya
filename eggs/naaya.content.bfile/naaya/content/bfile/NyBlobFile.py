@@ -156,7 +156,14 @@ class BlobStreamIterator(object):
     # Interface registration handled by @implementer decorator above
 
     def __init__(self, blob, mode='r', streamsize=1 << 16, start=0, end=None):
-        self.blob = openBlob(blob, mode)
+        # a plain file can be closed after the ZODB connection is closed
+        try:
+            self.blob = blob.open('c')
+        except BlobError:
+            if blob._p_blob_uncommitted:
+                self.blob = open(blob._p_blob_uncommitted, 'rb')
+            else:
+                self.blob = openBlob(blob, mode)
         self.streamsize = streamsize
         self.start = start
         self.end = end
