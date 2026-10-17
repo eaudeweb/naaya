@@ -1,4 +1,7 @@
-2.0.1 (unreleased)
+2.0.2 (unreleased)
+------------------
+
+2.0.1 (2026-10-18)
 ------------------
 * Fix the latest uploads RSS feed failing on Python 3 when it lists a
   meeting [dumitval]
