@@ -1,5 +1,7 @@
 2.0.3 (unreleased)
 ------------------
+* Fix portal_i18n/admin_messages_html failing with TypeError when the
+  trans_lang parameter is missing: use the site default language [dumitval]
 
 2.0.2 (2026-10-16)
 ------------------

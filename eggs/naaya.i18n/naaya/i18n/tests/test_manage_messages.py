@@ -83,3 +83,32 @@ class TestManageMessagesInZmi(NaayaFunctionalTestCase):
                 found = result
                 break
         self.assertTrue(found is None)
+
+
+class TestAdminMessagesHtml(NaayaFunctionalTestCase):
+
+    def afterSetUp(self):
+        self.browser_do_login('admin', '')
+        self.portal.getPortalI18n().add_language('de')
+        import transaction; transaction.commit()
+
+    def get_page(self, query):
+        from urllib.parse import quote
+        from naaya.i18n.admin_i18n import message_encode
+        url = ('http://localhost/portal/portal_i18n/admin_messages_html'
+               '?msg=%s%s' % (quote(message_encode('${cnt} cats')), query))
+        self.browser.go(url)
+        return self.browser.get_html()
+
+    def test_without_trans_lang(self):
+        html = self.get_page('')
+        self.assertIn('name="translate_en"', html)
+
+    def test_empty_trans_lang(self):
+        html = self.get_page('&trans_lang=')
+        self.assertIn('name="translate_en"', html)
+
+    def test_with_trans_lang(self):
+        html = self.get_page('&trans_lang=de&saved=True')
+        self.assertIn('name="translate_de"', html)
+
