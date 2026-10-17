@@ -1,5 +1,10 @@
 2.0.2 (unreleased)
 ------------------
+* Fix member_search failing with 500 when the LDAP server does not answer:
+  log the error, list only the local users and show a message [dumitval]
+* Fix pages of browser views that use the root gw_macro (e.g. /applications)
+  failing with NameError: replace test() in zope_customisation/gw_macro.zpt;
+  the gw_macro object in the Zope root needs the same change [dumitval]
 
 2.0.1 (2026-10-16)
 ------------------

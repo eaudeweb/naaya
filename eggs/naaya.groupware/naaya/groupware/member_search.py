@@ -1,4 +1,7 @@
+import logging
 from operator import itemgetter
+
+import ldap
 
 from Acquisition import Implicit
 from OFS.SimpleItem import Item
@@ -18,6 +21,15 @@ try:
     from eea.usersdb.factories import agent_from_uf
 except ImportError:
     from be.ldapadmin.factories import agent_from_uf
+try:
+    from be.ldapadmin.factories import LDAPUnavailable
+except ImportError:
+    LDAPUnavailable = IndexError
+
+log = logging.getLogger(__name__)
+
+LDAP_UNAVAILABLE_MSG = ("The LDAP server is not available; "
+                        "only local users are listed.")
 
 
 class MemberSearch(Implicit, Item):
@@ -45,10 +57,12 @@ class MemberSearch(Implicit, Item):
             }
         return ret
 
-    def _search_users(self, search_string=u'', sort_by='', reverse_sort=False):
+    def _search_users(self, search_string=u'', sort_by='', reverse_sort=False,
+                      errors=None):
         search_string = search_string.lower()
         local_users_list = self.search_local_users(search_string)
-        external_users_list = self.search_external_users(search_string)
+        external_users_list = self.search_external_users(search_string,
+                                                         errors)
         user_list = local_users_list + external_users_list
         if sort_by:
             user_list.sort(key=itemgetter(sort_by), reverse=reverse_sort)
@@ -60,7 +74,9 @@ class MemberSearch(Implicit, Item):
                           reverse_sort='False', only_admins=False):
         """ """
         reverse_sort = reverse_sort != 'False'
-        user_list = self._search_users(search_string, sort_by, reverse_sort)
+        errors = []
+        user_list = self._search_users(search_string, sort_by, reverse_sort,
+                                       errors)
         if only_admins:
             user_list = [user for user in list(user_list)
                          if 'Administrator' in user['access_level'].split(', ')
@@ -68,7 +84,8 @@ class MemberSearch(Implicit, Item):
         return self.user_list_html(search_string=search_string,
                                    sorted_by=sort_by,
                                    reverse_sorted=reverse_sort,
-                                   user_list=user_list)
+                                   user_list=user_list,
+                                   errors=errors)
 
     security.declarePrivate('search_local_users')
 
@@ -87,7 +104,8 @@ class MemberSearch(Implicit, Item):
 
     security.declarePrivate('search_external_users')
 
-    def search_external_users(self, search_string=u''):
+    def search_external_users(self, search_string=u'', errors=None):
+        """ Users of the LDAP sources; LDAP errors are appended to errors """
         ret = []
         portal = self.getSite()
         acl_tool = portal.getAuthenticationTool()
@@ -106,14 +124,14 @@ class MemberSearch(Implicit, Item):
 
             if search_string.strip():
                 try:
-                    ldap_roles = self.restrictedTraverse('/ldap-roles')
-                    user_dn = ldap_roles._config.get('secondary_admin_dn')
-                    user_pw = ldap_roles._config.get('secondary_admin_pw')
-                    agent = agent_from_uf(source.getUserFolder(), bind=True,
-                                          user_dn=user_dn, user_pw=user_pw)
-                except KeyError:
-                    agent = agent_from_uf(source.getUserFolder())
-                users = agent.search_user(search_string)
+                    users = self._search_ldap(source, search_string)
+                except (LDAPUnavailable, ldap.LDAPError) as e:
+                    log.warning("Member search in %s failed: %r",
+                                source_id, e)
+                    if errors is not None and \
+                            LDAP_UNAVAILABLE_MSG not in errors:
+                        errors.append(LDAP_UNAVAILABLE_MSG)
+                    continue
                 users = [user for user in users if
                          user.get('uid', user.get('id', None)) and
                          user.get('uid', user.get('id')) in userids]
@@ -155,6 +173,19 @@ class MemberSearch(Implicit, Item):
             ret.extend(user_info)
 
         return ret
+
+    security.declarePrivate('_search_ldap')
+
+    def _search_ldap(self, source, search_string):
+        try:
+            ldap_roles = self.restrictedTraverse('/ldap-roles')
+            user_dn = ldap_roles._config.get('secondary_admin_dn')
+            user_pw = ldap_roles._config.get('secondary_admin_pw')
+            agent = agent_from_uf(source.getUserFolder(), bind=True,
+                                  user_dn=user_dn, user_pw=user_pw)
+        except KeyError:
+            agent = agent_from_uf(source.getUserFolder())
+        return agent.search_user(search_string)
 
     security.declarePrivate('get_user_info')
 
