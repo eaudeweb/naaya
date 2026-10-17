@@ -441,7 +441,7 @@ class UpdateMeetingTypes(UpdateScript):
             self.log.debug('Deleted old symbols for %s' % symbol_titles)
 
             for filename, symbol_name, sortorder in new_map_symbols:
-                file = open(filename, 'r')
+                file = open(filename, 'rb')
                 symbol = file.read()
                 file.close()
 

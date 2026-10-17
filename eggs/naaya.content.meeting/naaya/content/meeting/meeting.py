@@ -57,7 +57,7 @@ from .permissions import (PERMISSION_ADD_MEETING,
                          PERMISSION_PARTICIPATE_IN_MEETING,
                          PERMISSION_ADMIN_MEETING)
 from .participants import Participants
-from email import EmailSender, configureEmailNotifications
+from .email import EmailSender, configureEmailNotifications
 from .reports import MeetingReports
 from .subscriptions import SignupUsersTool
 
@@ -65,7 +65,7 @@ from lxml import etree
 from lxml.builder import ElementMaker
 
 from .countries import get_country_name, get_countries
-from eionet_survey.eionet_survey import EIONET_SURVEYS, EIONET_MEETINGS
+from .eionet_survey.eionet_survey import EIONET_SURVEYS, EIONET_MEETINGS
 
 # module constants
 NETWORK_NAME = get_zope_env('NETWORK_NAME', '')
@@ -220,7 +220,7 @@ def meeting_on_install(site):
                            if nms[1] not in map_symbols_titles]
 
         for filename, symbol_name, sortorder in new_map_symbols:
-            file = open(filename, 'r')
+            file = open(filename, 'rb')
             symbol = file.read()
             file.close()
 
@@ -478,7 +478,7 @@ class NyMeeting(NyContentData, NyFolder):
             Ev.type('Meeting')
         )
         item.extend(the_rest)
-        return etree.tostring(item, xml_declaration=False, encoding="utf-8")
+        return etree.tostring(item, xml_declaration=False, encoding="unicode")
 
     def _check_meeting_dates(self, form_errors):
         _startdate = getattr(self, 'interval.start_date', '')
@@ -815,7 +815,7 @@ class NyMeeting(NyContentData, NyFolder):
         REQUEST.RESPONSE.setHeader('Content-Type', 'text/calendar')
         REQUEST.RESPONSE.setHeader('Content-Disposition',
                                    'attachment;filename=%s.ics' % self.getId())
-        REQUEST.RESPONSE.write(ics_data)
+        REQUEST.RESPONSE.write(ics_data.encode('utf-8'))
 
     security.declareProtected(view, 'nfp_for_country')
 
@@ -989,7 +989,8 @@ def _create_eionet_survey(container):
             os.path.dirname(__file__), 'eionet_survey',
             'validation_onsubmit_NRC_meeting.txt')
         manage_addPythonScript(eionet_survey, 'validation_onsubmit')
-        script_content = open(validation_onsubmit, 'rb').read()
+        with open(validation_onsubmit, encoding='utf-8') as f:
+            script_content = f.read()
         params = 'datamodel, errors'
         script_title = 'Custom validation logic'
         eionet_survey._getOb('validation_onsubmit').ZPythonScript_edit(
@@ -1000,9 +1001,9 @@ def _create_eionet_survey(container):
                                        'eionet_survey',
                                        'validation_html_NRC_meeting.txt')
         validation_title = "Custom questionnaire HTML"
-        manage_addPageTemplate(eionet_survey, 'validation_html',
-                               validation_title,
-                               open(validation_html).read())
+        with open(validation_html, encoding='utf-8') as f:
+            manage_addPageTemplate(eionet_survey, 'validation_html',
+                                   validation_title, f.read())
 
 
 def _get_eionet_survey(container):

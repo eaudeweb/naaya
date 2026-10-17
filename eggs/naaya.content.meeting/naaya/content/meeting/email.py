@@ -6,6 +6,8 @@ import re
 from OFS.SimpleItem import SimpleItem
 from AccessControl import ClassSecurityInfo
 import logging
+from email.header import decode_header
+
 # Naaya imports
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplate
@@ -16,7 +18,6 @@ from Products.NaayaCore.EmailTool.EmailTool import (save_bulk_email,
                                                     check_cached_valid_emails,
                                                     export_email_list_xcel)
 import json
-from Products.NaayaCore.managers.utils import import_non_local
 
 # naaya.content.meeting imports
 from Products.NaayaCore.AuthenticationTool.utils import getUserEmail, findUsers
@@ -24,6 +25,9 @@ from naaya.core.utils import is_valid_email
 from naaya.content.meeting import WAITING_ROLE
 from naaya.core.zope2util import path_in_site
 from .permissions import PERMISSION_ADMIN_MEETING
+
+
+log = logging.getLogger('naaya.content.meeting.email')
 
 
 def configureEmailNotifications(site):
@@ -93,8 +97,7 @@ class EmailSender(SimpleItem):
                                         only_to=only_to,
                                         only_cc=only_cc)
         except Exception as e:
-            zLOG.LOG('naaya.content.meeting.email', zLOG.WARNING,
-                     'Email sending failed for template - %s' % str(e))
+            log.warning('Email sending failed for template - %s', e)
             return 0
 
     def _send_email_with_template(self, template_id, p_from, p_to, mail_opts):
@@ -114,9 +117,8 @@ class EmailSender(SimpleItem):
                                         p_from=p_from,
                                         p_subject=p_subject)
         except Exception as e:
-            zLOG.LOG('naaya.content.meeting.email', zLOG.WARNING,
-                     'Email sending failed for template %s - %s' %
-                     (template_id, str(e)))
+            log.warning('Email sending failed for template %s - %s',
+                        template_id, e)
             return 0
 
     security.declareProtected(PERMISSION_ADMIN_MEETING, 'send_email')
@@ -139,10 +141,10 @@ class EmailSender(SimpleItem):
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
         participants = self.getParticipants()
         subscriptions = participants.getSubscriptions()
-        signup_emails = [participants.getAttendeeInfo(uid)['email']
+        signup_emails = [participants._get_attendee_info(uid)['email']
                          for uid in to_uids if
                          subscriptions._is_signup(uid)]
-        account_emails = [participants.getAttendeeInfo(uid)['email']
+        account_emails = [participants._get_attendee_info(uid)['email']
                           for uid in to_uids if not
                           subscriptions._is_signup(uid)]
         to_emails = signup_emails + account_emails
@@ -157,7 +159,7 @@ class EmailSender(SimpleItem):
         # which the authentication keys is inserted into the link)
         for uid in to_uids:
             if subscriptions._is_signup(uid):
-                signup_email = participants.getAttendeeInfo(uid)['email']
+                signup_email = participants._get_attendee_info(uid)['email']
                 signup_body_text = self.insert_auth_link(body_text, uid)
                 result = self._send_email(
                     from_email, [signup_email], cc_emails, subject,
@@ -285,7 +287,7 @@ class EmailSender(SimpleItem):
         """ """
         meeting = self.getMeeting()
         uid = account_subscription.uid
-        account_info = meeting.getParticipants().getAttendeeInfo(uid)
+        account_info = meeting.getParticipants()._get_attendee_info(uid)
         from_email = meeting.contact_email
         to_email = account_subscription.email
 
@@ -322,15 +324,11 @@ class EmailSender(SimpleItem):
         """ Display all saved bulk emails """
         emails = get_bulk_emails(self.getSite(),
                                  where_to_read=path_in_site(self.getMeeting()))
-        import_non_local('email', 'std_email')
-        from std_email import email as standard_email
         for email in emails:
-            subject, encoding = standard_email.Header.decode_header(
-                email['subject'])[0]
-            if encoding:
-                email['subject'] = subject.decode(encoding)
-            else:
-                email['subject'] = subject
+            subject, encoding = decode_header(email['subject'])[0]
+            if isinstance(subject, bytes):
+                subject = subject.decode(encoding or 'ascii', 'replace')
+            email['subject'] = subject
             recipients = []
             if email['recipients'] is None:
                 email['recipients'] = []

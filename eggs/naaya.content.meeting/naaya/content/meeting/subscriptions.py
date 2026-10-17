@@ -31,7 +31,6 @@ class Subscriptions(SimpleItem):
 
     def __init__(self, id):
         """ """
-        super(SimpleItem, self).__init__(id)
         self.id = id
         self._signups = OOBTree()
         self._account_subscriptions = OOBTree()
@@ -487,6 +486,15 @@ class Subscriptions(SimpleItem):
         email_sender.send_account_subscription_rejected_email(
             account_subscription)
 
+    security.declareProtected(view, 'pickrole_html')
+
+    def pickrole_html(self, REQUEST):
+        """ Group picker for the public signup page """
+        sources = self.getAuthenticationTool().getSources()
+        return self.getFormsTool().getContent(
+            {'here': self, 'sources': sources},
+            'naaya.content.meeting.participants_pickrole')
+
     security.declareProtected(view, 'subscription_not_allowed')
 
     def subscription_not_allowed(self, REQUEST):
@@ -499,6 +507,8 @@ InitializeClass(Subscriptions)
 
 
 class SignUp(Persistent):
+    __allow_access_to_unprotected_subobjects__ = True
+
     def __init__(self, key, name, email, organization, phone):
         self.key = key
         self.name = name
@@ -509,6 +519,8 @@ class SignUp(Persistent):
 
 
 class AccountSubscription(Persistent):
+    __allow_access_to_unprotected_subobjects__ = True
+
     def __init__(self, uid, name, email, organization, phone):
         self.uid = uid
         self.name = name
@@ -559,4 +571,5 @@ NaayaPageTemplateFile('zpt/subscription_not_allowed', globals(),
 
 def random_key():
     """ generate a 120-bit random key, expressed as 20 base64 characters """
-    return urlsafe_b64encode(''.join(chr(randrange(256)) for i in range(15)))
+    return urlsafe_b64encode(
+        bytes(randrange(256) for i in range(15))).decode('ascii')

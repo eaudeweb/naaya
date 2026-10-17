@@ -1,19 +1,16 @@
-from setuptools import setup, find_packages
+from setuptools import setup, find_namespace_packages
 
 setup(name='naaya.content.meeting',
       version='2.0.1.dev0',
       author='Eau de Web',
       author_email='office@eaudeweb.ro',
       url='http://naaya.eaudeweb.ro',
-      packages=find_packages(),
+      packages=find_namespace_packages(include=['naaya.content.meeting*']),
       include_package_data=True,
       zip_safe=False,
       install_requires=[
-          'Naaya >= 4.1.0',
-          'BeautifulSoup >= 3.0.7a',
-          'scrubber >= 1.4.2',
-          'naaya-survey >= 1.2.46',
+          'Naaya >= 6.0.3',
+          'naaya-survey >= 2.0.0',
           'html2text',
-          'eea.ldapadmin >= 1.5.29',
       ],
       )

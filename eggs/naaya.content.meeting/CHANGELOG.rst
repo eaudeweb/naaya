@@ -1,5 +1,18 @@
 2.0.1 (unreleased)
 ------------------
+* Fix the latest uploads RSS feed failing on Python 3 when it lists a
+  meeting [dumitval]
+* Fix the subscriptions page failing on Python 3 [dumitval]
+* Fix the meeting signup failing on Python 3 [dumitval]
+* Fix the iCalendar export failing on Python 3 [dumitval]
+* Fix the saved emails page and the Eionet survey creation failing on
+  Python 3 [dumitval]
+* Protect participants/getAttendeeInfo with the Participate in the meeting
+  permission and participants/pickrole_html with the Administer meeting
+  permission [dumitval]
+* Add subscriptions/pickrole_html for the Pick Group button on the signup
+  page [dumitval]
+* Fix the remaining Python 3 incompatibilities [dumitval]
 
 2.0.0 (2026-10-16)
 ------------------

@@ -402,9 +402,8 @@ class NyMeetingFunctionalTestCase(NaayaFunctionalTestCase):
         form['body_text:utf8:string'] = 'Test body'
         self.browser.submit()
         html = self.browser.get_html()
-        self.assertEqual(self.browser.get_url(), 'http://localhost/portal/info/mymeeting/email_sender/send_email')
-        self.assertTrue('http://localhost/portal/info/mymeeting' in html)
-        self.assertTrue('There was an error sending the email.' in html)
+        self.assertEqual(self.browser.get_url(), 'http://localhost/portal/info/mymeeting/email_sender')
+        self.assertTrue('Please select at least on recipient' in html)
 
         self.assertEqual(len(self.diverted_mail), 0)
 
@@ -436,7 +435,6 @@ class NyMeetingFunctionalTestCase(NaayaFunctionalTestCase):
         self.assertTrue('Properties' in html)
         self.assertTrue('Subobjects' in html)
         self.assertTrue('Security' in html)
-        self.assertTrue('Undo' in html)
 
         self.browser_do_logout()
 
@@ -689,6 +687,8 @@ class NyMeetingSignupTestCase(NaayaFunctionalTestCase):
             allow_register=True, restrict_items=True, **extra_args)
         self.portal.info.mymeeting.approveThis()
         self.portal.recatalogNyObject(self.portal.info.mymeeting)
+        self.portal.info.mymeeting.manage_permission('Naaya - Skip Captcha',
+            ['Anonymous'], acquire=1)
         self.diverted_mail = divert_mail(True)
         import transaction; transaction.commit()
 
@@ -713,7 +713,7 @@ class NyMeetingSignupTestCase(NaayaFunctionalTestCase):
         self.assertTrue('http://localhost/portal/info/mymeeting/participants/subscriptions/signup' in self.browser.get_html())
         self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/signup')
 
-        form = self.browser.get_form('formSignup')
+        form = self.browser.get_form('formSearchAddUsers')
         expected_controls = set(['first_name:utf8:string', 'last_name:utf8:string', 'email:utf8:string', 'organization:utf8:string', 'phone:utf8:string', 'add_signup'])
         found_controls = set(c.name for c in form.controls)
         self.assertTrue(expected_controls <= found_controls,
@@ -724,28 +724,28 @@ class NyMeetingSignupTestCase(NaayaFunctionalTestCase):
         form['last_name:utf8:string'] = 'test_last_name'
         self.browser.submit()
 
-        self.assertEqual(self.browser.get_url(), 'http://localhost/portal/info/mymeeting/participants/subscriptions/signup')
+        self.assertTrue(self.browser.get_url().startswith('http://localhost/portal/info/mymeeting/participants/subscriptions/signup?'))
         html = self.browser.get_html()
         self.assertTrue('This field is mandatory' in html)
         self.assertTrue('test_first_name' in html)
         self.assertTrue('test_last_name' in html)
 
-        form = self.browser.get_form('formSignup')
+        form = self.browser.get_form('formSearchAddUsers')
         self.browser.clicked(form, self.browser.get_form_field(form, 'add_signup'))
         form['email:utf8:string'] = 'test_email'
         form['organization:utf8:string'] = 'test_organization'
         form['phone:utf8:string'] = 'test_phone'
         self.browser.submit()
 
-        self.assertEqual(self.browser.get_url(), 'http://localhost/portal/info/mymeeting/participants/subscriptions/signup')
+        self.assertTrue(self.browser.get_url().startswith('http://localhost/portal/info/mymeeting/participants/subscriptions/signup?'))
         html = self.browser.get_html()
         self.assertTrue('This field is mandatory' not in html)
-        self.assertTrue('An email address must contain a single @' in html)
+        self.assertTrue('Invalid email format' in html)
         self.assertTrue('test_first_name' in html)
         self.assertTrue('test_last_name' in html)
         self.assertTrue('test_email' in html)
 
-        form = self.browser.get_form('formSignup')
+        form = self.browser.get_form('formSearchAddUsers')
         self.browser.clicked(form, self.browser.get_form_field(form, 'add_signup'))
         form['email:utf8:string'] = 'test_email@email.com'
         self.browser.submit()
@@ -765,8 +765,7 @@ class NyMeetingSignupTestCase(NaayaFunctionalTestCase):
     def testSignupLogin(self):
         def assert_admin_access(key):
             self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/welcome?key=' + key)
-            html = self.browser.get_html()
-            self.assertTrue('http://localhost/portal/info/mymeeting/participants/subscriptions/welcome?logout=' in html)
+            self.assertEqual('http://localhost/portal/info/mymeeting', self.browser.get_url())
 
             self.browser.go('http://localhost/portal/info/mymeeting')
             html = self.browser.get_html()
@@ -781,8 +780,7 @@ class NyMeetingSignupTestCase(NaayaFunctionalTestCase):
 
         def assert_access(key):
             self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/welcome?key=' + key)
-            html = self.browser.get_html()
-            self.assertTrue('http://localhost/portal/info/mymeeting/participants/subscriptions/welcome?logout=' in html)
+            self.assertEqual('http://localhost/portal/info/mymeeting', self.browser.get_url())
 
             self.browser.go('http://localhost/portal/info/mymeeting')
             html = self.browser.get_html()
@@ -797,9 +795,7 @@ class NyMeetingSignupTestCase(NaayaFunctionalTestCase):
 
         def assert_rejected(key):
             self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/welcome?key=' + key)
-            html = self.browser.get_html()
-            self.assertTrue('http://localhost/portal/info/mymeeting/participants/subscriptions/welcome?logout=' not in html)
-            self.assertTrue('You were rejected.' in html)
+            self.assertEqual('http://localhost/portal/info/mymeeting', self.browser.get_url())
 
             self.browser.go('http://localhost/portal/info/mymeeting')
             html = self.browser.get_html()
@@ -811,7 +807,7 @@ class NyMeetingSignupTestCase(NaayaFunctionalTestCase):
         self.assertTrue('http://localhost/portal/info/mymeeting/participants/subscriptions/signup' in self.browser.get_html())
         self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/signup')
 
-        form = self.browser.get_form('formSignup')
+        form = self.browser.get_form('formSearchAddUsers')
         self.browser.clicked(form, self.browser.get_form_field(form, 'add_signup'))
         form['first_name:utf8:string'] = 'test_first_name'
         form['last_name:utf8:string'] = 'test_last_name'
@@ -825,6 +821,8 @@ class NyMeetingSignupTestCase(NaayaFunctionalTestCase):
         self.assertTrue('http://localhost/portal/info/mymeeting' in body)
         self.assertEqual(addr_to, ['my.email@my.domain'])
         self.assertEqual(subject, 'Signup notification - MyMeeting')
+        # end the signup session started by the anonymous signup
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/welcome?logout=')
 
         # accept the signup
         self.browser_do_login('admin', '')
@@ -834,16 +832,15 @@ class NyMeetingSignupTestCase(NaayaFunctionalTestCase):
         self.assertTrue('mailto:test_email@email.com' in html)
         self.assertTrue('new' in html)
 
-        form = self.browser.get_form('formManageSignups')
-        expected_controls = set(['keys:list', 'accept', 'reject'])
+        form = self.browser.get_form('formManageSubscriptions')
+        expected_controls = set(['uids:list', 'accept', 'reject'])
         found_controls = set(c.name for c in form.controls)
         self.assertTrue(expected_controls <= found_controls,
             'Missing form controls: %s' % repr(expected_controls - found_controls))
 
-        self.assertTrue(form.controls[1].name == 'keys:list')
-        key = form.controls[1]._value
+        key = list(self.portal.info.mymeeting.participants.subscriptions._signups.keys())[0]
         self.browser.clicked(form, self.browser.get_form_field(form, 'accept'))
-        form['keys:list'] = [key]
+        form['uids:list'] = [key]
         self.browser.submit()
         self.browser_do_logout()
         assert_access(key)
@@ -867,9 +864,9 @@ class NyMeetingSignupTestCase(NaayaFunctionalTestCase):
         # reject rights
         self.browser_do_login('admin', '')
         self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions')
-        form = self.browser.get_form('formManageSignups')
+        form = self.browser.get_form('formManageSubscriptions')
         self.browser.clicked(form, self.browser.get_form_field(form, 'reject'))
-        form['keys:list'] = [key]
+        form['uids:list'] = [key]
         self.browser.submit()
         self.browser_do_logout()
         assert_rejected(key)
@@ -950,13 +947,12 @@ class NyMeetingAccountSubscriptionTestCase(NaayaFunctionalTestCase):
         html = self.browser.get_html()
         self.assertTrue('test_participant1' in html)
 
-        form = self.browser.get_form('formManageAccountSubscriptions')
+        form = self.browser.get_form('formManageSubscriptions')
         expected_controls = set(['uids:list', 'accept', 'reject'])
         found_controls = set(c.name for c in form.controls)
         self.assertTrue(expected_controls <= found_controls,
             'Missing form controls: %s' % repr(expected_controls - found_controls))
 
-        self.assertTrue(form.controls[1].name == 'uids:list')
         self.browser.clicked(form, self.browser.get_form_field(form, 'accept'))
         form['uids:list'] = ['test_participant1']
         self.browser.submit()

@@ -310,11 +310,11 @@ class Participants(SimpleItem):
         attendees = self._get_attendees()
 
         if sort_on == 'o':
-            key = lambda x: self.getAttendeeInfo(x)['organization'].lower()
+            key = lambda x: self._get_attendee_info(x)['organization'].lower()
         elif sort_on == 'name':
-            key = lambda x: self.getAttendeeInfo(x)['name'].lower()
+            key = lambda x: self._get_attendee_info(x)['name'].lower()
         elif sort_on == 'email':
-            key = lambda x: self.getAttendeeInfo(x)['email'].lower()
+            key = lambda x: self._get_attendee_info(x)['email'].lower()
         elif sort_on == 'uid':
             key = lambda x: x.lower()
         elif sort_on == 'role':
@@ -324,11 +324,11 @@ class Participants(SimpleItem):
         elif sort_on == 'reimbursed':
             key = lambda x: attendees[x]['reimbursed']
         elif sort_on == 'survey_answered':
-            key = lambda x: self.check_survey_response(x)
+            key = lambda x: bool(self.check_survey_response(x))
         else:
             key = None
 
-        attendee_uids = attendees.keys()
+        attendee_uids = list(attendees.keys())
 
         if key is not None:
             attendee_uids.sort(key=key)
@@ -351,6 +351,12 @@ class Participants(SimpleItem):
     security.declareProtected(view, 'getAttendeeInfo')
 
     def getAttendeeInfo(self, uid):
+        """ """
+        if not self.checkPermissionParticipateInMeeting():
+            raise Unauthorized
+        return self._get_attendee_info(uid)
+
+    def _get_attendee_info(self, uid):
         """ """
         subscriptions = self.getSubscriptions()
         if subscriptions._is_signup(uid):
@@ -377,7 +383,7 @@ class Participants(SimpleItem):
         role = attendee['role']
         country = attendee['country']
         reimbursed = attendee['reimbursed']
-        saved_by = attendee['saved_by'].encode('utf-8')
+        saved_by = attendee['saved_by']
         justification = attendee['justification']
         ret = {'uid': uid, 'name': name, 'email': email,
                'organization': organization, 'phone': phone, 'role': role,
@@ -413,7 +419,7 @@ class Participants(SimpleItem):
             {'here': self},
             'naaya.content.meeting.participants_index')
 
-    security.declareProtected(view, 'pickrole_html')
+    security.declareProtected(PERMISSION_ADMIN_MEETING, 'pickrole_html')
 
     def pickrole_html(self, REQUEST):
         """ """
@@ -456,7 +462,7 @@ class Participants(SimpleItem):
         rows = []
         participants = self.getAttendees()
         for participant in participants:
-            part_info = self.getAttendeeInfo(participant)
+            part_info = self._get_attendee_info(participant)
             participant_info = [
                 part_info['name'], part_info['uid'], part_info['email'],
                 part_info['organization'],

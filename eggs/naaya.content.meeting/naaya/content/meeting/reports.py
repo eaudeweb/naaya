@@ -10,7 +10,7 @@ from AccessControl.Permissions import view
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
 # naaya.content.meeting imports
-import meeting as meeting_module
+from . import meeting as meeting_module
 from Products.NaayaCore.AuthenticationTool.utils import (
     getUserFullName, getUserEmail, getUserOrganization)
 
