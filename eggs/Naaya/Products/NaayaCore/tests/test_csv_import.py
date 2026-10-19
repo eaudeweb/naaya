@@ -234,6 +234,23 @@ class NyExcelImportTest(NaayaTestCase):
             self.assertEqual(ob.title, 'Forschungsinstitut f\xfcr Freizeit')
             self.portal.imported.manage_delObjects([ob.getId()])
 
+    def test_import_truncated_cells(self):
+        from Products.NaayaCore.managers.import_export import CSVImportTool
+        mark = ('[TRUNCATED: the original text had 500 characters; '
+                'Excel cells hold at most 100]')
+        rows = [['ID', 'Title', 'URL', 'Description'],
+                ['u1', 'T1', 'http://example.com', 'text ' + mark],
+                ['u2', 'T2', 'http://example.com', 'full text']]
+        self.login()
+        with patch.object(type(self.portal.aq_base), 'setSessionErrorsTrans') as errors, \
+                patch.object(CSVImportTool, 'index_html'):
+            self.do_import(make_xlsx(rows), REQUEST=self.portal.REQUEST)
+        [(message, mapping)] = errors.call_args[0][0]
+        self.assertIn('imported with text truncated', message)
+        self.assertEqual(mapping, {'count': 1, 'rows': 'u1 (Description)'})
+        self.assertEqual(self.portal.imported.u1.description, 'text ' + mark)
+        self.assertEqual(sorted(self.portal.imported.objectIds()), ['u1', 'u2'])
+
     def test_invalid_file(self):
         self.assertRaises(ValueError, self.do_import, b'not an excel file')
         self.assertRaises(ValueError, self.do_import, b'PKnot a zip')

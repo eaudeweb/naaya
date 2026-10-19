@@ -1,5 +1,5 @@
-Google geocoding
-================
+Geocoding (Nominatim)
+=====================
 
 :mod:`naaya.core.ggeocoding` module
 -----------------------------------

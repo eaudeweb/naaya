@@ -1,5 +1,7 @@
 1.0.1 (unreleased)
 ------------------
+* Show the topic id when a saved topic is no longer in the Topics list,
+  instead of failing with IndexError [dumitval]
 
 1.0.0 (2026-10-12)
 ------------------

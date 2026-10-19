@@ -289,7 +289,7 @@
                 map_only python:request.get('map_only', 0);
                 map_override python:{};
                 ">
-        <script tal:content="structure python:'var address = \'%s\';' % address"></script>
+        <script tal:content="structure python:'var address = %s;' % here.rstk['json_dumps'](address)"></script>
         <tal:address condition="address">
           <tal:block define="dummy python:map_override.setdefault('initial_address', address)" />
         </tal:address>
@@ -303,14 +303,14 @@
             'lon_center': str((float(lon_min) + float(lon_max)) / 2),
           })" />
         </tal:bounds>
-        <script tal:content="structure python:'var administrative_level = %s;' % administrative_level"></script>
-        <script tal:content="structure python:'var category = %s;' % category"></script>
-        <script tal:content="structure python:'var certificate_services = %s;' % certificate_services"></script>
-        <script tal:content="structure python:'var credibility = %s;' % credibility"></script>
-        <script tal:content="structure python:'var geo_query = \'%s\';' % geo_query"></script>
-        <script tal:content="structure python:'var geo_types = %s;' % geo_types"></script>
-        <script tal:content="structure python:'var selected_country = %s;' % country"></script>
-        <script tal:content="structure python:'var sustainability = %s;' % sustainability"></script>
+        <script tal:content="structure python:'var administrative_level = %s;' % here.rstk['json_dumps'](administrative_level)"></script>
+        <script tal:content="structure python:'var category = %s;' % here.rstk['json_dumps'](category)"></script>
+        <script tal:content="structure python:'var certificate_services = %s;' % here.rstk['json_dumps'](certificate_services)"></script>
+        <script tal:content="structure python:'var credibility = %s;' % here.rstk['json_dumps'](credibility)"></script>
+        <script tal:content="structure python:'var geo_query = %s;' % here.rstk['json_dumps'](geo_query)"></script>
+        <script tal:content="structure python:'var geo_types = %s;' % here.rstk['json_dumps'](geo_types)"></script>
+        <script tal:content="structure python:'var selected_country = %s;' % here.rstk['json_dumps'](country)"></script>
+        <script tal:content="structure python:'var sustainability = %s;' % here.rstk['json_dumps'](sustainability)"></script>
         <tal:block content="structure python:portal_map.setup_map_engine_html(request, **map_override)" />
         <script type="text/javascript" tal:attributes="src string:${portal_map/absolute_url}/map_i18n_js"></script>
         <script type="text/javascript" tal:attributes="src string:${portal_map/absolute_url}/geomaptool.js"></script>

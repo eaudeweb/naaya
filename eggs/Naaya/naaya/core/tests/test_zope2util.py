@@ -84,3 +84,15 @@ class FolderManageMainPlusTest(NaayaTestCase):
             request.set(name, plus.absolute_url())
         html = plus.manage_main(plus, request)
         self.assertIn('answer', html)
+
+
+class JsonDumpsTest(NaayaTestCase):
+
+    def test_script_safe(self):
+        import json
+        from naaya.core.zope2util import json_dumps
+        text = json_dumps({'address': '";</script><b>&', 'country': None})
+        for char in '<>&':
+            self.assertNotIn(char, text)
+        self.assertEqual(json.loads(text),
+                         {'address': '";</script><b>&', 'country': None})

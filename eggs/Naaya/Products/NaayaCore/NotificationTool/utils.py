@@ -1,8 +1,9 @@
+from Acquisition import aq_base
 from DateTime import DateTime
 from Products.NaayaCore.EmailTool.EmailSender import build_email
 from .containers import AccountSubscription, AnonymousSubscription
 from datetime import timedelta
-from .interfaces import ISubscriptionContainer
+from .interfaces import ISubscriptionContainer, ISubscriptionTarget
 from . import constants
 import logging
 import warnings
@@ -76,6 +77,9 @@ def walk_subscriptions(obj, cutoff_level=None):
         yield (obj, n, subscription)
 
     for child_obj in obj.objectValues():
+        # checks the class, so items that cannot hold subscriptions are not loaded
+        if not ISubscriptionTarget.implementedBy(type(aq_base(child_obj))):
+            continue
         for item in walk_subscriptions(child_obj, cutoff_level):
             yield item
 

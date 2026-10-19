@@ -1,5 +1,16 @@
 2.0.3 - (unreleased)
 ====================
+* get_content: default length, start and draw when the DataTables
+  parameters are missing, instead of failing with TypeError [dumitval]
+* Signup: log in and grant Contributor only when the account was created;
+  a failed signup with an existing username granted Contributor to that user
+  and a failed signup ended in KeyError [dumitval]
+* Write the map filter values into JavaScript as JSON in the listing
+  templates (request values were inserted unescaped, None as Python)
+  [dumitval]
+* Remove the zmi folders (copies of portal_map/geomaptool.js,
+  portal_map/custom_filter and gsearch_html); the copies are kept in
+  NaayaBundles-DESTINET [dumitval]
 
 2.0.2 - (2026-10-16)
 ====================

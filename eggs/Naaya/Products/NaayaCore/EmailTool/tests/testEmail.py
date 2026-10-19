@@ -34,6 +34,19 @@ class EmailTestCase(FunctionalTestCase):
         self.assertTrue('Content-Type: text/plain;' in
                         smtp_log[1][1]['message'])
 
+    def test_mail_semicolon_recipients(self):
+        self.portal.getEmailTool().sendEmail('test_content',
+            'a@example.com; b@example.com,c@example.com', 'test_from@example.com',
+            'test_subject')
+        self.assertEqual(self.mail_log[1][1]['to'],
+                         ['a@example.com', 'b@example.com', 'c@example.com'])
+
+    def test_maintainers_emails_semicolons(self):
+        self.portal.administrator_email = 'a@example.com; b@example.com'
+        self.portal.info.maintainer_email = 'c@example.com;a@example.com'
+        self.assertEqual(self.portal.getMaintainersEmails(self.portal.info),
+                         ['c@example.com', 'a@example.com', 'b@example.com'])
+
     def test_mail_from(self):
         self.portal.getEmailTool().sendEmail('test_content',
             'test_to_1@example.com, test_to_2@example.com',
@@ -136,3 +149,19 @@ class EmailToolTestCase(unittest.TestCase):
         self.assertTrue(ws['A1'].font.b)
         self.assertEqual([c.value for c in ws[2]],
                          ['bla', 'bla@bla.com, blaxxx@bla.com', None])
+
+
+class MailDataManagerAbortTest(unittest.TestCase):
+
+    def test_abort_during_commit(self):
+        import transaction
+        import Products.NaayaCore.EmailTool.EmailTool  # noqa: F401 applies the patch
+        from repoze.sendmail.delivery import MailDataManager
+        aborted = []
+        manager = MailDataManager(lambda: None, onAbort=lambda: aborted.append(1))
+        txn = transaction.Transaction()
+        manager.join_transaction(txn)
+        manager.tpc_begin(txn)
+        manager.abort(txn)  # a failed commit calls abort() before tpc_abort()
+        self.assertEqual(aborted, [1])
+        manager.tpc_abort(txn)

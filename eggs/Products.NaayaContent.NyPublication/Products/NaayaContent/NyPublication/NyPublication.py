@@ -368,13 +368,13 @@ class NyPublication(publication_item, NyAttributes, NyItem, NyCheckControl,
 
     def commitVersion(self, REQUEST=None):
         """ """
-        raise EXCEPTION_NOTIMPLEMENTED('commitVersion')
+        raise NotImplementedError('commitVersion')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'startVersion')
 
     def startVersion(self, REQUEST=None):
         """ """
-        raise EXCEPTION_NOTIMPLEMENTED('startVersion')
+        raise NotImplementedError('startVersion')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
 

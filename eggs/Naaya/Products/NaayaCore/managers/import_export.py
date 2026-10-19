@@ -19,6 +19,7 @@ from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
 from Products.NaayaCore.GeoMapTool.managers import geocoding
 from Products.NaayaCore.SchemaTool.widgets.GeoWidget import GeoWidget
+from Products.NaayaCore.SchemaTool.widgets.SelectMultipleWidget import SelectMultipleWidget
 from Products.NaayaCore.SchemaTool.widgets.geo import Geo
 from Products.NaayaCore.events import CSVImportEvent
 from Products.NaayaCore.interfaces import ICSVImportExtraColumns
@@ -29,7 +30,9 @@ from naaya.core.zope2util import new_xlsx_workbook
 from naaya.core.zope2util import read_excel_rows
 from naaya.core.zope2util import XLSX_CONTENT_TYPE
 import json
+import re
 import transaction
+import lxml.html
 
 logger = logging.getLogger(__name__)
 
@@ -202,6 +205,7 @@ class CSVImportTool(Implicit, Item):
         edited_number = 0
         skipped_number = 0
         obj_ids = []
+        truncated_rows = []
 
         count = 0
         try:
@@ -222,6 +226,9 @@ class CSVImportTool(Implicit, Item):
                     for column, value in zip(header, row):
                         if value == '':
                             continue
+                        if isinstance(value, str) and TRUNCATED_RE.search(value):
+                            truncated_rows.append('%s (%s)' % (
+                                row[0] if id_present else count + 1, column))
                         if column == 'ID' and value:
                             ob_id = value.strip()
                         if column not in prop_map:
@@ -318,6 +325,12 @@ class CSVImportTool(Implicit, Item):
                 transaction.abort()
                 self.setSessionErrorsTrans(errors)
             else:
+                if truncated_rows:
+                    warnings.append((
+                        '${count} rows were imported with text truncated by '
+                        'the Excel export: ${rows}.',
+                        {'count': len(set(r.split(' (')[0] for r in truncated_rows)),
+                         'rows': ', '.join(truncated_rows)}))
                 if warnings:
                     self.setSessionErrorsTrans(warnings)
                 if skipped_number:
@@ -347,6 +360,15 @@ class CSVImportTool(Implicit, Item):
 
 
 InitializeClass(CSVImportTool)
+
+
+def _list_converter(widget):
+    """convert_to_user_string of a SelectMultipleWidget, reading the selection list once."""
+    titles = dict((node.id, node.title) for node in widget.get_list_nodes(widget.list_id))
+
+    def convert(values):
+        return ';'.join([titles.get(value, value) for value in values])
+    return convert
 
 
 class ExportTool(Implicit, Item):
@@ -426,6 +448,8 @@ class ExportTool(Implicit, Item):
             else:
                 dump_header.append(widget.title)
                 convert = widget.convert_to_user_string
+                if isinstance(widget, SelectMultipleWidget):
+                    convert = _list_converter(widget)
                 getter = getter_factory(prop_name, None, convert)
                 prop_getters.append(getter)
 
@@ -460,34 +484,16 @@ class ExportTool(Implicit, Item):
         :param objects:
         """
         dump_header, dump_items = self._dump_objects(meta_type, objects)
-
-        def validate_column_size(header, rows_generator):
-            """validate_column_size.
-
-            :param header:
-            :param rows_generator:
-            """
-            from itertools import tee
-            rows, rows_backup = tee(rows_generator)
-            try:
-                for item in rows:
-                    for col in range(len(item)):
-                        if len(item[col]) >= self.CELL_CHAR_LIMIT:
-                            org = item[0]
-                            object_type = meta_type.replace('Naaya ', '', 1)
-                            oversized_col = header[col]
-                            error_msg = ("Unable to export to Excel file."
-                                         "There is a %s (%s) with "
-                                         "a column (%s) exceeding the Excel "
-                                         "cell size limit"
-                                         % (object_type, org, oversized_col))
-                            raise ValueError(error_msg)
-            except Exception as error:
-                return error
-            else:
-                return generate_excel(header, rows_backup)
-
-        return validate_column_size(dump_header, dump_items)
+        title_col = dump_header.index('Title') if 'Title' in dump_header else None
+        rows, truncated = [], []
+        for item in dump_items:
+            for col, value in enumerate(item):
+                if len(value) > self.CELL_CHAR_LIMIT:
+                    item[col] = truncate_cell(value, self.CELL_CHAR_LIMIT)
+                    title = item[title_col] if title_col is not None else ''
+                    truncated.append([item[0], title, dump_header[col], len(value)])
+            rows.append(item)
+        return generate_excel(dump_header, rows, truncated)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'export')
 
@@ -520,10 +526,6 @@ class ExportTool(Implicit, Item):
 
         else:
             raise ValueError('unknown file format %r' % file_type)
-
-        if isinstance(ret, ValueError):
-            self.setSessionErrors(ret)
-            return self.REQUEST.RESPONSE.redirect(self.REQUEST.HTTP_REFERER)
 
         if as_attachment and REQUEST is not None:
             filesize = len(ret)
@@ -694,8 +696,48 @@ def generate_csv(header, rows):
     return output.getvalue()
 
 
-def generate_excel(header, rows):
-    """Return the bytes of an .xlsx file with a bold header and the rows."""
+DATE_RE = re.compile(r'^\d{1,2}/\d{1,2}/\d{4}$')
+TRUNCATED_MARK = ('[TRUNCATED: the original text had %d characters; '
+                  'Excel cells hold at most %d]')
+TRUNCATED_RE = re.compile(r'\[TRUNCATED: the original text had \d+ characters; '
+                          r'Excel cells hold at most \d+\]')
+TRUNCATED_NOTE = ('These cells were cut to fit the Excel cell size limit. '
+                  'If you import this file back, the text of these fields '
+                  'is imported truncated.')
+HTML_TAG_RE = re.compile(r'<[a-zA-Z/!][^>]*>')
+
+
+def _repair_html(text):
+    """Drop a tag cut in half at the end and close the open tags."""
+    if text.rfind('<') > text.rfind('>'):
+        text = text[:text.rfind('<')]
+    if not text.strip():
+        return ''
+    div = lxml.html.fragment_fromstring(text, create_parent='div')
+    html = lxml.html.tostring(div, encoding='unicode')
+    return html[len('<div>'):-len('</div>')]
+
+
+def truncate_cell(text, limit):
+    """Cut text to at most limit characters, keeping HTML well formed, and add TRUNCATED_MARK."""
+    is_html = bool(HTML_TAG_RE.search(text))
+    mark = TRUNCATED_MARK % (len(text), limit)
+    if is_html:
+        mark = '\n<p>%s</p>' % mark
+    else:
+        mark = ' ' + mark
+    size = limit - len(mark)
+    while True:
+        cut = _repair_html(text[:size]) if is_html else text[:size]
+        overflow = len(cut) + len(mark) - limit
+        if overflow <= 0:
+            return cut + mark
+        size -= overflow
+
+
+def generate_excel(header, rows, truncated=None):
+    """Return .xlsx bytes with a bold header and the rows.
+    truncated lists [id, title, column, original length] for a 'Truncated cells' sheet."""
     output, wb = new_xlsx_workbook()
     header_format = wb.add_format({'bold': True})
     date_format = wb.add_format({'num_format': 'dd/mm/yyyy'})
@@ -706,10 +748,22 @@ def generate_excel(header, rows):
     for item in rows:
         row += 1
         for col in range(0, len(item)):
-            try:
-                col_date = datetime.strptime(item[col], '%d/%m/%Y')
-                ws.write_datetime(row, col, col_date, date_format)
-            except (ValueError, TypeError):
-                ws.write(row, col, item[col])
+            value = item[col]
+            if isinstance(value, str) and DATE_RE.match(value):
+                try:
+                    ws.write_datetime(row, col, datetime.strptime(value, '%d/%m/%Y'),
+                                      date_format)
+                    continue
+                except ValueError:
+                    pass
+            ws.write(row, col, value)
+    if truncated:
+        ws = wb.add_worksheet('Truncated cells')
+        ws.write(0, 0, TRUNCATED_NOTE)
+        for col, title in enumerate(['ID', 'Title', 'Column', 'Original length']):
+            ws.write(2, col, title, header_format)
+        for row, item in enumerate(truncated, 3):
+            for col, value in enumerate(item):
+                ws.write(row, col, value)
     wb.close()
     return output.getvalue()

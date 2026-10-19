@@ -226,7 +226,7 @@ def meeting_on_install(site):
 
             portal_map.adminAddSymbol(title=symbol_name, picture=symbol,
                                       sortorder=sortorder,
-                                      id=filename.replace('.png', ''))
+                                      id=os.path.basename(filename)[:-4])
 
     configureEmailNotifications(site)
 

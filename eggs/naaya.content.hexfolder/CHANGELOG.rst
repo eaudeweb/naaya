@@ -1,5 +1,7 @@
 1.0.1 (unreleased)
 ------------------
+* Show an Unknown layout validation error for a layout_type that is not one
+  of the four layouts, instead of failing with UnboundLocalError [dumitval]
 
 1.0.0 (2026-10-12)
 ------------------

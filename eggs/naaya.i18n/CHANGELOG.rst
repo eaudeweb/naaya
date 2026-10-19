@@ -1,5 +1,7 @@
 2.0.4 (unreleased)
 ------------------
+* Use & instead of &amp; in the redirects after editing or deleting a
+  message, so the messages list keeps its page and language [dumitval]
 
 2.0.3 (2026-10-18)
 ------------------

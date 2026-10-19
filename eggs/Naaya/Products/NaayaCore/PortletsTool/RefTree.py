@@ -247,7 +247,10 @@ class RefTree(LocalPropertyManager, Folder):
             out_nodes[ob.parent]['children'].append(out_nodes[ob.getId()])
 
         # pass three: sort the nodes on each branch
-        get_weight = lambda n: getattr(n['ob'], 'weight', None)
+        # Nodes never reordered have no weight; they sort first, as on Python 2
+        def get_weight(n):
+            weight = getattr(n['ob'], 'weight', None)
+            return (weight is not None, weight or 0)
         for node in out_nodes.values():
             node['children'].sort(key=get_weight)
 

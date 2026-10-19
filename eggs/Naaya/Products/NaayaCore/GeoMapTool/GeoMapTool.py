@@ -1,4 +1,4 @@
-"""This tool is used to manage map engines (google, yahoo, bing, etc.)
+"""This tool is used to manage map engines (openlayers, google)
 in a Naaya Site. This tool is related to naaya.content.geopoint and
 SchemaTool's GeoWidget that can be used to display points on a map for
 different content types. Other features include map clustering, kml exports,
@@ -76,6 +76,10 @@ def err_info():
     import sys
     import traceback
     return traceback.format_exception_only(*sys.exc_info()[:2])[-1].strip()
+
+
+# Degrees; a cluster this small stays one cluster at the maximum zoom
+CO_LOCATED_SPAN = 0.0005
 
 
 @implementer(IGeoMapTool)
@@ -159,7 +163,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         self.objmap_height_px = 400
         self.objmap_width_px = 400
         self.objmap_zoom = 14
-        self.set_map_engine('google')
+        self.set_map_engine('openlayers')
 
     def _create_map_engine_if_needed(self):
         name = self.current_engine
@@ -405,6 +409,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         # call the improved cluster_catalog function for getting the clusters
         centers, groups = clusters_catalog.getClusters(catalog_tool, filters)
 
+        bounds = [c.bounds for c in centers]
         # transform centers to Geo
         centers = list(map(lambda c: Geo(str(c.lat), str(c.lon)), centers))
 
@@ -431,7 +436,8 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                             clusters_catalog.getObjectPathFromCatalog(
                                 catalog_tool, rid)
                             for rid in groups[i]]
-                        cluster_obs.append((centers[i], group_paths))
+                        cluster_obs.append((centers[i], group_paths,
+                                            bounds[i]))
 
         return cluster_obs, single_obs
 
@@ -580,7 +586,11 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             points = []
             cluster_obs, single_obs = self.search_geo_clusters(REQUEST)
 
-            for center, grouped_ids in cluster_obs:
+            for center, grouped_ids, bounds in cluster_obs:
+                # ids are needed only where zooming cannot split the cluster
+                lat_min, lat_max, lon_min, lon_max = bounds
+                co_located = (lat_max - lat_min < CO_LOCATED_SPAN and
+                              lon_max - lon_min < CO_LOCATED_SPAN)
                 points.append({
                     'lat': center.lat,
                     'lon': center.lon,
@@ -590,7 +600,8 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                                   self._pick_cluster(len(grouped_ids))),
                     'tooltip': '',
                     'num_records': len(grouped_ids),
-                    'point_ids': grouped_ids,
+                    'point_ids': grouped_ids if co_located else [],
+                    'bounds': bounds,
                 })
 
             for res in single_obs:
@@ -1306,9 +1317,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         return engine.html_setup(request, global_config)
 
     def get_object_map_zoom_level(self):
-        if self.current_engine == 'yahoo':
-            return 18 - self.objmap_zoom
-        elif self.current_engine in ['google', 'bing', 'openlayers']:
+        if self.current_engine in ['google', 'openlayers']:
             return self.objmap_zoom
         else:
             return None
@@ -1377,18 +1386,18 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         kml = kml_generator()
         return kml.close_style()
 
-    def _google_geocode(self, address):
+    def _geocode(self, address):
         try:
             result = ggeocoding.geocode2(address)
         except ggeocoding.GeocoderServiceError as e:
-            return {'error': e.message}
+            return {'error': str(e)}
         else:
             # allow for returning multiple results
             return [result]
 
     def geocode(self, REQUEST):
-        """ geocode using the google service """
-        result = self._google_geocode(REQUEST.form['address'])
+        """ geocode using the Nominatim service """
+        result = self._geocode(REQUEST.form['address'])
         REQUEST.RESPONSE.setHeader('Content-type', 'application/json')
         return json.dumps(result)
 

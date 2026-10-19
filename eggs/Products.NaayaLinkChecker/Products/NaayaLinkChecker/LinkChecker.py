@@ -45,11 +45,12 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
           ({'label' : 'Properties', 'action' : 'manage_properties'},
           {'label' : 'Logs', 'action' : 'log_html'},) + SimpleItem.manage_options
 
-    def __init__(self, id, title='',objectMetaType={}, proxy='', batch_size=10):
+    def __init__(self, id, title='', objectMetaType=None, proxy='', batch_size=10):
         "initialize a new instance of LinkChecker"
         self.id = id
         self.title = title
-        self.objectMetaType = objectMetaType
+        # a {} default would be one dict shared by every new LinkChecker
+        self.objectMetaType = {} if objectMetaType is None else objectMetaType
         self.proxy = proxy
         self.batch_size = int(batch_size)
         self.use_catalog = 0

@@ -133,6 +133,7 @@ from naaya.core.StaticServe import StaticServeFromZip, StaticServeFromFolder
 from naaya.core.exceptions import ValidationError
 from naaya.core.exceptions import i18n_exception
 from naaya.core.utils import call_method, cooldown, is_ajax, cleanup_message
+from naaya.core.utils import split_emails
 from naaya.core.zope2util import path_in_site, ofs_path, relative_object_path
 from naaya.core.zope2util import permission_add_role, permission_del_role
 from naaya.core.zope2util import redirect_to
@@ -1512,13 +1513,13 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         else:
             while 1:
                 if node == self:
-                    for email in node.administrator_email.split(','):
-                        if (email != '' and email not in l_emails):
+                    for email in split_emails(node.administrator_email):
+                        if email not in l_emails:
                             l_emails.append(email)
                     break
                 if hasattr(node, 'maintainer_email'):
-                    for email in node.maintainer_email.split(','):
-                        if (email != '' and email not in l_emails):
+                    for email in split_emails(node.maintainer_email):
+                        if email not in l_emails:
                             l_emails.append(email)
                 node = node.getParentNode()
         return l_emails
@@ -2873,6 +2874,9 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         # reload skel, make sure we use child class
         product_path = os.path.dirname(sys.modules[self.__module__].__file__)
         skel_handler = self.get_skel_handler(product_path)
+        if skel_handler.root.security is None:
+            # e.g. EnviroWindows: the default roles come from the Naaya skel
+            skel_handler = self.get_skel_handler(NAAYA_PRODUCT_PATH)
         role_in_skel = False
         sk_permissions = []
         for sk_role in skel_handler.root.security.roles:
@@ -3822,8 +3826,12 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
                               'admin_edituser_html')
 
-    def admin_edituser_html(self, **kwargs):
+    def admin_edituser_html(self, REQUEST=None, **kwargs):
         """ """
+        name = REQUEST.get('name', '') if REQUEST is not None else ''
+        if REQUEST is not None and self.getAuthenticationTool().getUser(name) is None:
+            self.setSessionErrorsTrans('User ${name} not found', name=name)
+            return REQUEST.RESPONSE.redirect('%s/admin_users_html' % self.absolute_url())
         kwargs['here'] = self
         return self.getFormsTool().getContent(kwargs, 'site_admin_edituser')
 

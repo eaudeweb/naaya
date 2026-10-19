@@ -70,8 +70,11 @@ def process_create_account(context, request):
         if not real_comment:
             request.form['comments'] = " "
         form = request.form
+        username = form.get('username', '')
+        auth_tool = site.getAuthenticationTool()
+        existed = auth_tool.getUser(username) is not None
         site.processRequestRoleForm(
-            username=form.get('username', ''),
+            username=username,
             password=form.get('password', ''),
             confirm=form.get('confirm', ''),
             firstname=form.get('firstname', ''),
@@ -81,7 +84,13 @@ def process_create_account(context, request):
             location=form.get('location', ''),
             comments=form.get('comments', ''),
             REQUEST=request)
-        request.form[context.name_cookie] = request.form.get('username')
+        if existed or auth_tool.getUser(username) is None:
+            # not created: processRequestRoleForm set the error; back to the form
+            prepare_error_response(context, register_schema,
+                                   form_errors, request.form)
+            request.RESPONSE.redirect(referer)
+            return
+        request.form[context.name_cookie] = username
         request.form[context.pw_cookie] = request.form.get('password')
         request.SESSION.set(
             'title', '%s %s' %
@@ -90,26 +99,7 @@ def process_create_account(context, request):
         CookieCrumbler().modifyRequest(request, request.RESPONSE)
         came_from = request.SESSION.get('came_from')
         if came_from:
-            redirect = request.RESPONSE.redirect(came_from)
+            request.RESPONSE.redirect(came_from)
         else:
-            redirect = request.RESPONSE.redirect(
-                context.absolute_url() + '/login_html')
-        if redirect != referer:
-            # redirects to referer only when something is wrong in
-            # the register form
-            username = request.form['username']
-            site.admin_addroles([username], ['Contributor'], '',
-                                send_mail=True)
-        else:
-            # also call this to prefill values in form for contact
-            prepare_error_response(context, register_schema,
-                                   form_errors, request.form)
-            # NOTE: disabled because the comments field is now optional
-            # ugly hack as a conseq of renaming Comments field
-            # if isinstance(request.SESSION.get('site_errors'), (tuple, list)):
-            #     if 'Required field: Comments' in request.SESSION[
-            #             'site_errors']:
-            #         request.SESSION['site_errors'].remove(
-            #             'Required field: Comments')
-            #         request.SESSION['site_errors'].append(
-            #             'Required field: About Me')
+            request.RESPONSE.redirect(context.absolute_url() + '/login_html')
+        site.admin_addroles([username], ['Contributor'], '', send_mail=True)

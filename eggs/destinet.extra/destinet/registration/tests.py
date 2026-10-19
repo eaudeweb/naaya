@@ -106,6 +106,24 @@ class RegistrationTestCase(DestinetTestCase):
         user = acl.getUser('doejohn')
         self.assertTrue(user.email, 'jdoe@eea.europa.eu')
 
+    def test_existing_username_gets_no_role(self):
+        self.portal.getAuthenticationTool().manage_addUser(
+            name='doejohn', password='other', confirm='other', roles=[],
+            domains=[], firstname='Other', lastname='User',
+            email='other@example.com', strict=0)
+        self.portal.REQUEST.form.update(self.initial_data)
+        with mock.patch.object(self.portal, 'admin_addroles') as addroles:
+            process_create_account(self.context, self.portal.REQUEST)
+        addroles.assert_not_called()
+
+    def test_failed_signup_gets_no_role(self):
+        self.portal.manage_permission('Naaya - Create user', [], acquire=0)
+        self.portal.REQUEST.form.update(self.initial_data)
+        with mock.patch.object(self.portal, 'admin_addroles') as addroles:
+            process_create_account(self.context, self.portal.REQUEST)
+        addroles.assert_not_called()
+        self.assertIsNone(self.portal.getAuthenticationTool().getUser('doejohn'))
+
     def test_form(self):
         from unittest import SkipTest
         raise SkipTest('bundles not loaded for test portal')

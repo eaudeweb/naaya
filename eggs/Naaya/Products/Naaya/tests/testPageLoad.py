@@ -87,6 +87,14 @@ class PageLoadTests(NaayaFunctionalTestCase):
         self.assert_page_ok('/portal/admin_edituser_html?name=contributor',
                             'admin')
 
+    def test_edituser_unknown_user(self):
+        request = Request.blank('/portal/admin_edituser_html?name=nobody')
+        request.environ['HTTP_HOST'] = 'localhost'
+        request.authorization = 'Basic %s' % base64.b64encode(b'admin:').decode('ascii')
+        response = request.get_response(self.wsgi_request)
+        self.assertEqual(response.status_int, 302)
+        self.assertTrue(response.location.endswith('/portal/admin_users_html'))
+
     def test_folder_page_load(self):
         """ Try to render some basic pages """
 

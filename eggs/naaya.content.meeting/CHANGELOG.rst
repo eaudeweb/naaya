@@ -1,5 +1,7 @@
 2.0.2 (unreleased)
 ------------------
+* Use the file name, not the file path, as id of the map symbols added on
+  install [dumitval]
 
 2.0.1 (2026-10-18)
 ------------------

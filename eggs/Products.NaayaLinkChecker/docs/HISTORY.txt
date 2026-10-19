@@ -3,6 +3,8 @@ Changelog
 
 2.0.1 (unreleased)
 ------------------
+* Give each new LinkChecker its own meta type dict; the {} default was one
+  dict shared by all LinkCheckers created in the same process [dumitval]
 
 2.0.0 (2026-10-12)
 ------------------

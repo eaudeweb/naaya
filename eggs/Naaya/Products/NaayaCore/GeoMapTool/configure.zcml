@@ -8,20 +8,10 @@
         permission="zope.Public"
         />
   <naaya:call factory=".engine_google.register" />
-  <naaya:call factory=".engine_yahoo.register" />
-  <naaya:call factory=".engine_bing.register" />
   <naaya:call factory=".engine_openlayers.register" />
 
   <subscriber
     handler=".managers.symbols_tool.handle_skel_event"
     for="Products.Naaya.interfaces.ISkelLoad"
     />
-
-   <configure zcml:condition="installed Products.naayaUpdater">
-      <utility
-         name="UpdateGoogleMapsAPIKey.update"
-         provides="Products.naayaUpdater.interfaces.IUpdateScript"
-         component=".updates.UpdateGoogleMapsAPIKey"
-         permission="zope2.ViewManagementScreens" />
-   </configure>
 </configure>

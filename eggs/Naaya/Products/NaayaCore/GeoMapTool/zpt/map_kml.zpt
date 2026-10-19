@@ -24,7 +24,7 @@
 			item_href_tag string:&lt;a href=&quot;${point/absolute_url}&quot;&gt;${point/title_or_id}&lt;/a&gt;;
 			address string:&lt;strong&gt;${point/geo_location/address}&lt;/strong&gt;;
 			br string:&lt;br/&gt;;
-			point_url point/url}|nothing"
+			point_url point/url|nothing"
 		tal:content="string:${icon_tag}${item_href_tag}${br}${br}${point/description}${br}${br}${address}${br}Category: ${point/geo_type}${br}Details: ${point_url}" />
 	<visibility>1</visibility>
 	<styleUrl tal:content="string:#${point/getId}"/>

@@ -1,3 +1,4 @@
+import unittest
 
 from zope.i18n.interfaces import INegotiator, ILanguageAvailability
 from zope.component import providedBy
@@ -125,3 +126,14 @@ class NySiteFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/info/contact/gl_changeLanguage?old_lang=fr')
         self.assertEqual(self.browser.get_url(),
                          'http://localhost/portal/info/contact')
+
+
+class GetUrlTest(unittest.TestCase):
+
+    def test_separators(self):
+        from naaya.i18n.portal_tool import get_url
+        html = get_url('http://x/manage_messages', 0, 15, '', 'ro', 0)
+        self.assertIn('batch_start:int=0&amp;batch_size:int=15', html)
+        redirect = get_url('http://x/manage_messages', 0, 15, '', 'ro', 0, sep='&')
+        self.assertEqual(redirect, 'http://x/manage_messages?batch_start:int=0'
+                         '&batch_size:int=15&regex=&empty=&lang=ro')

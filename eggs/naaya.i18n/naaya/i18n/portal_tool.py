@@ -35,7 +35,8 @@ from naaya.core.zope2util import physical_path
 log = logging.getLogger('naaya.i18n')
 
 
-def get_url(url, batch_start, batch_size, regex, lang, empty, **kw):
+def get_url(url, batch_start, batch_size, regex, lang, empty, sep='&amp;', **kw):
+    """URL of the messages list; sep is '&amp;' for HTML links, '&' for redirects."""
     params = []
     for key, value in kw.items():
         if value is not None:
@@ -49,7 +50,7 @@ def get_url(url, batch_start, batch_size, regex, lang, empty, **kw):
     if lang:
         params.append('lang=%s' % lang)
 
-    return url + '?' + '&amp;'.join(params)
+    return url + '?' + sep.join(params)
 
 
 def manage_addNaayaI18n(self, languages=[('en', 'English')],
@@ -392,7 +393,7 @@ class NaayaI18n(SimpleItem):
         url = get_url(REQUEST.URL1 + '/manage_messages',
                       REQUEST['batch_start'], REQUEST['batch_size'],
                       REQUEST['regex'], REQUEST.get('lang', ''),
-                      REQUEST.get('empty', 0),
+                      REQUEST.get('empty', 0), sep='&',
                       msg=message_encoded,
                       manage_tabs_message=self.get_translation(u'Saved changes.'))
         RESPONSE.redirect(url)
@@ -406,7 +407,7 @@ class NaayaI18n(SimpleItem):
         url = get_url(REQUEST.URL1 + '/manage_messages',
                       REQUEST['batch_start'], REQUEST['batch_size'],
                       REQUEST['regex'], REQUEST.get('lang', ''),
-                      REQUEST.get('empty', 0),
+                      REQUEST.get('empty', 0), sep='&',
                       manage_tabs_message=self.get_translation(u'Saved changes.'))
         RESPONSE.redirect(url)
 

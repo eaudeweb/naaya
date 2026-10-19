@@ -283,3 +283,10 @@ class GeoFilterTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase):
         self.assertTrue(objects[0].geo_location.lat == Decimal('23.3'))
         self.assertTrue(objects[0].geo_location.lon == Decimal('29.0'))
         self.assertTrue(objects[0].geo_location.address == 'Testing file')
+
+    def test_download_kml(self):
+        request = self.portal.REQUEST
+        request.form['geo_types'] = 'Event_type'
+        kml = self.portal.portal_map.downloadLocationsKml(request)
+        self.assertIn('<Placemark', kml)
+        self.assertIn('Testing event', kml)

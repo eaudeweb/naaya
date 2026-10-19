@@ -1,52 +1,44 @@
 (function() {
 
-    window.NaayaOpenLayers = {
-
-        osm_layer: function() {
-            // OpenLayers 2.12 defaults to http tiles, blocked on https pages
-            return new OpenLayers.Layer.OSM("OpenStreetMap",
-                "https://tile.openstreetmap.org/${z}/${x}/${y}.png");
-        },
-
-        google_layer: function(layer_info) {
-            return new OpenLayers.Layer.Google(
-                layer_info['label'],
-                {type: layer_info['google_map_type']});
-        },
-
-        bing_layer: function(layer_info) {
-            return new OpenLayers.Layer.Bing({
-                name: layer_info['label'],
-                key: ("AlKaIe5F9S8XxrUxhKHFClkoL6hTuPSTF-"+
-                      "kcfqg47zP4A7pvna-FhyyzEc8IVkBw"),
-                type: layer_info['bing_map_type']
-            });
-        }
-
-    };
-
-
-    OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {
-        mapClicked: function() {},
-
-        initialize: function(mapClicked, options) {
-            OpenLayers.Control.prototype.initialize.apply(this, [options]);
-            if(mapClicked) this.mapClicked = mapClicked;
-            this.handler = new OpenLayers.Handler.Click(
-                this, {'click': this.trigger});
-        },
-
-        trigger: function(e) {
-            this.mapClicked(e.xy);
-        }
-    });
-
-
     var engine = window.naaya_map_engine = {name: 'openlayers'};
 
     engine.config = naaya_openlayers_map_api_config;
 
-    engine.wgs84 = new OpenLayers.Projection("EPSG:4326");
+    engine.base_layers = {
+        osm_layer: function(layer_info) {
+            return new ol.layer.Tile({source: new ol.source.OSM()});
+        },
+
+        esri_imagery_layer: function(layer_info) {
+            return new ol.layer.Tile({source: new ol.source.XYZ({
+                url: 'https://server.arcgisonline.com/ArcGIS/rest/services/' +
+                     'World_Imagery/MapServer/tile/{z}/{y}/{x}',
+                maxZoom: 19,
+                attributions: 'Tiles &copy; Esri &mdash; Source: Esri, Maxar, ' +
+                              'Earthstar Geographics, and the GIS User Community'
+            })});
+        },
+
+        google_layer: function(layer_info) {
+            var options = {key: engine.config['google_key'],
+                           mapType: layer_info['google_map_type'],
+                           scale: 'scaleFactor2x', highDpi: true};
+            if(layer_info['google_layer_types']) {
+                options.layerTypes = layer_info['google_layer_types'];
+            }
+            return new ol.layer.Tile({source: new ol.source.Google(options)});
+        }
+    };
+
+    // Google Map Tiles terms require the Google logo on the map
+    function google_logo_control() {
+        var element = document.createElement('img');
+        element.className = 'naaya-openlayers-google-logo';
+        element.src = ('https://developers.google.com/static/maps/' +
+                       'documentation/images/google_on_white.png');
+        element.alt = 'Google';
+        return new ol.control.Control({element: element});
+    }
 
     engine.geotype_icons = {};
     $.each(engine.config['icons'], function(i, icon_data) {
@@ -61,9 +53,29 @@
     });
 
     engine.new_icon = function(path, width, height, offset_x, offset_y) {
-        var size = new OpenLayers.Size(width, height);
-        var offset = new OpenLayers.Pixel(offset_x, offset_y);
-        return new OpenLayers.Icon(path, size, offset);
+        return {url: path, width: width, height: height,
+                offset_x: offset_x, offset_y: offset_y};
+    };
+
+    engine.default_icon = engine.new_icon(
+        engine.config['server_url'] + '/marker_png', 21, 25, -10.5, -25);
+
+    var style_cache = {};
+    engine.icon_style = function(icon, z_index) {
+        var key = [icon.url, icon.width, icon.height, z_index || 0].join('|');
+        if(!style_cache[key]) {
+            style_cache[key] = new ol.style.Style({
+                zIndex: z_index || 0,
+                image: new ol.style.Icon({
+                    src: icon.url,
+                    width: icon.width,
+                    height: icon.height,
+                    anchor: [-icon.offset_x / icon.width,
+                             -icon.offset_y / icon.height]
+                })
+            });
+        }
+        return style_cache[key];
     };
 
     engine.geocode_nominatim = function(address, callback) {
@@ -87,10 +99,17 @@
         });
     };
 
+    engine.address_override = function() {
+        // initial_address differs from the one the saved bounding box is for
+        function norm(a) { return $.trim(a || '').toLowerCase(); }
+        var address = norm(engine.config['initial_address']);
+        return address && address != norm(engine.config['saved_address']);
+    };
+
     engine.bounds_btlr = function(box) {
-        // construct a Bounds object from [bottom, top, left, right] values
+        // WGS84 extent [left, bottom, right, top] from [bottom, top, left, right]
         var b = box[0], t = box[1], l = box[2], r = box[3];
-        return new OpenLayers.Bounds(l, b, r, t);
+        return [l, b, r, t];
     };
 
     engine.config['initial_bounds'] = engine.bounds_btlr(
@@ -104,136 +123,160 @@
             .text(is_mac ? 'Use ⌘ + scroll to zoom the map'
                          : 'Use ctrl + scroll to zoom the map')
             .hide().appendTo(div);
-        var hint_timer, last_zoom = 0;
+        var hint_timer;
 
         div[0].addEventListener('wheel', function(e) {
-            if(!(e.ctrlKey || e.metaKey)) {
-                hint.stop(true, true).fadeIn(150);
-                clearTimeout(hint_timer);
-                hint_timer = setTimeout(function() { hint.fadeOut(300); }, 1500);
-                return;
+            if(e.ctrlKey || e.metaKey) return;
+            hint.stop(true, true).fadeIn(150);
+            clearTimeout(hint_timer);
+            hint_timer = setTimeout(function() { hint.fadeOut(300); }, 1500);
+        });
+
+        olmap.addInteraction(new ol.interaction.MouseWheelZoom({
+            condition: function(e) {
+                return e.originalEvent.ctrlKey || e.originalEvent.metaKey;
             }
-            e.preventDefault();
-            var now = Date.now();
-            if(now - last_zoom < 200) return;  // trackpads fire many events
-            last_zoom = now;
-            var zoom = olmap.getZoom() + (e.deltaY < 0 ? 1 : -1);
-            if(!olmap.isValidZoomLevel(zoom)) return;
-            // keep the point under the cursor fixed while zooming
-            var xy = olmap.events.getMousePosition(e);
-            var at = olmap.getLonLatFromViewPortPx(xy);
-            var c = olmap.getCenter();
-            var k = olmap.getResolutionForZoom(zoom) / olmap.getResolution();
-            olmap.setCenter(new OpenLayers.LonLat(at.lon + (c.lon - at.lon) * k,
-                                                  at.lat + (c.lat - at.lat) * k),
-                            zoom);
-        }, {passive: false});
+        }));
     }
 
     engine.create_olmap = function(div_id) {
         $('#' + div_id).addClass('naaya-openlayers');
-        var nav_control = new OpenLayers.Control.Navigation();
-        nav_control.zoomWheelEnabled = false;
-        var olmap = new OpenLayers.Map({
-            'div': div_id,
+        var layer_info = engine.config['base_layer'];
+        var layer_factory = engine.base_layers[layer_info['factory']] ||
+                            engine.base_layers.osm_layer;
+        var olmap = new ol.Map({
+            target: div_id,
+            layers: [layer_factory(layer_info)],
             controls: [
-                nav_control,
-                new OpenLayers.Control.ZoomPanel(),
-                new OpenLayers.Control.Attribution()
-            ]
+                new ol.control.Zoom(),
+                new ol.control.Attribution({collapsible: false})
+            ],
+            interactions: ol.interaction.defaults.defaults({
+                mouseWheelZoom: false,
+                altShiftDragRotate: false,
+                pinchRotate: false
+            }),
+            view: new ol.View({
+                center: [0, 0],
+                zoom: 2,
+                maxZoom: 19,
+                constrainResolution: true,
+                enableRotation: false
+            })
         });
-        var layer_factory = eval(engine.config['base_layer']['factory']);
-        var layer = layer_factory(engine.config['base_layer']);
-        olmap.addLayer(layer);
         if(engine.config['mouse_wheel_zoom']) {
             setup_ctrl_wheel_zoom(olmap, div_id);
+        }
+        if(layer_info['factory'] == 'google_layer') {
+            olmap.addControl(google_logo_control());
         }
         return olmap;
     };
 
     engine.new_map = function(div_id) {
-        var map = {_move_handlers: []};
+        var map = {_move_handlers: [], _div_id: div_id};
         map.olmap = engine.create_olmap(div_id);
-        map.projection = map.olmap.getProjectionObject();
+        map.view = map.olmap.getView();
 
-        map.from_wgs84 = function(point, name) {
-            return point.clone().transform(engine.wgs84, map.projection);
+        map.from_wgs84 = function(point) {
+            return ol.proj.fromLonLat([parseFloat(point.lon),
+                                       parseFloat(point.lat)]);
         };
 
-        map.to_wgs84 = function(point, name) {
-            return point.clone().transform(map.projection, engine.wgs84);
+        map.to_wgs84 = function(coordinate) {
+            var lonlat = ol.proj.toLonLat(coordinate);
+            return {lon: lonlat[0], lat: lonlat[1]};
+        };
+
+        map.get_size = function() {
+            // the size is unknown until the map div has been laid out
+            var size = map.olmap.getSize();
+            if(size && size[0] && size[1]) return size;
+            var div = $('#' + div_id);
+            return [div.width() || 256, div.height() || 256];
         };
 
         map.get_center_and_zoom = function() {
-            var center = map.olmap.center;
-            var lat_lon = map.to_wgs84(new OpenLayers.LonLat(center.lon, center.lat));
+            var lat_lon = map.to_wgs84(map.view.getCenter());
             return {lat_center: lat_lon.lat,
                     lon_center: lat_lon.lon,
-                    map_zoom: map.olmap.zoom};
+                    map_zoom: map.view.getZoom()};
         };
 
         map.set_zoom_and_center = function(position) {
-            var lonlat = new OpenLayers.LonLat(position.lon, position.lat);
-            var center = map.from_wgs84(lonlat);
-            map.olmap.setCenter(center, position.zoom);
+            if(position.lat == null || position.lon == null) return;
+            map.view.setCenter(map.from_wgs84(position));
+            if(position.zoom != null && position.zoom !== '') {
+                map.view.setZoom(parseInt(position.zoom, 10));
+            }
         };
 
         map.add_click_callback = function(callback) {
-            var add_point = new OpenLayers.Control.Click(map_clicked);
-            map.olmap.addControl(add_point);
-            add_point.activate();
-            function map_clicked(xy) {
-                var map_coord = map.olmap.getLonLatFromViewPortPx(xy);
-                callback(map.to_wgs84(map_coord));
-            };
+            map.olmap.on('singleclick', function(e) {
+                callback(map.to_wgs84(e.coordinate));
+            });
         };
 
         map.get_bounds = function() {
-            var extent = map.olmap.getExtent();
-            var tl = map.to_wgs84(new OpenLayers.LonLat(
-                        extent.left, extent.top));
-            var br = map.to_wgs84(new OpenLayers.LonLat(
-                        extent.right, extent.bottom));
-            return {
-                'lat_min': br.lat,
-                'lat_max': tl.lat,
-                'lon_min': tl.lon,
-                'lon_max': br.lon
+            var extent = ol.proj.transformExtent(
+                map.view.calculateExtent(map.get_size()),
+                'EPSG:3857', 'EPSG:4326');
+            var bounds = {
+                'lat_min': Math.max(extent[1], -90),
+                'lat_max': Math.min(extent[3], 90),
+                'lon_min': extent[0],
+                'lon_max': extent[2]
             };
+            if(extent[2] - extent[0] >= 360) {
+                // the whole world is visible
+                bounds['lon_min'] = -180;
+                bounds['lon_max'] = 180;
+            }
+            return bounds;
         };
 
         map.get_resolution = function() {
-            var p_1_0 = new OpenLayers.LonLat(1, 0);
-            var one_degree = map.from_wgs84(p_1_0).lon;
-            return one_degree / map.olmap.getResolution();
+            // pixels per degree of longitude
+            var one_degree = ol.proj.fromLonLat([1, 0])[0];
+            return one_degree / map.view.getResolution();
         };
 
         map.coord_to_page_xy = function(coord) {
-            var lonlat = new OpenLayers.LonLat(coord.lon, coord.lat);
-            var xy = map.olmap.getViewPortPxFromLonLat(
-                map.from_wgs84(lonlat));
-            return xy;
+            // pixel offset in the map div; picks the world copy nearest the center
+            var c = map.from_wgs84(coord);
+            var center = map.view.getCenter();
+            var res = map.view.getResolution();
+            var size = map.get_size();
+            var world = ol.proj.get('EPSG:3857').getExtent();
+            var world_width = world[2] - world[0];
+            var dx = c[0] - center[0];
+            dx -= Math.round(dx / world_width) * world_width;
+            return {x: dx / res + size[0] / 2,
+                    y: (center[1] - c[1]) / res + size[1] / 2};
+        };
+
+        map.map_coords = function(x, y) {
+            return map.to_wgs84(map.olmap.getCoordinateFromPixel([x, y]));
         };
 
         map.zoom_to_extent = function(extent, fill_ratio, max_zoom) {
-            // `fill_ratio` means how much of the map viewport we can
-            // fill up. Defaults to `1.0`.
+            // `extent` is a WGS84 [left, bottom, right, top] array;
+            // `fill_ratio` is how much of the viewport it may fill (default 1).
             if(fill_ratio == null) fill_ratio = 1.0;
             if(max_zoom == null) max_zoom = 14;
 
-            var map_extent = extent.transform(engine.wgs84, map.projection);
-            map_extent = map_extent.scale(1/fill_ratio);
-            var zoom = Math.min(map.olmap.getZoomForExtent(map_extent), max_zoom);
-            map.olmap.setCenter(map_extent.getCenterLonLat(), zoom);
+            var map_extent = ol.proj.transformExtent(
+                extent, 'EPSG:4326', 'EPSG:3857');
+            ol.extent.scaleFromCenter(map_extent, 1 / fill_ratio);
+            map.view.fit(map_extent, {size: map.get_size(),
+                                      maxZoom: max_zoom});
         };
 
         map.go_to_address = function(address) {
             engine.geocode(address, function(results) {
-                var result = results[0];
-                var bb = result['boundingbox'];
-                var btlr = [bb['bottom'], bb['top'], bb['left'], bb['right']];
-                var bounds = engine.bounds_btlr(btlr);
-                map.zoom_to_extent(bounds);
+                var bb = results[0]['boundingbox'];
+                map.zoom_to_extent(engine.bounds_btlr(
+                    [bb['bottom'], bb['top'], bb['left'], bb['right']]));
             });
         };
 
@@ -242,40 +285,88 @@
         };
 
         map.show_mouse_coordinates = function() {
-            var mouse_position = new OpenLayers.Control.MousePosition(
-                {displayProjection: engine.wgs84});
-            map.olmap.addControl(mouse_position);
-            mouse_position.activate();
+            map.olmap.addControl(new ol.control.MousePosition({
+                projection: 'EPSG:4326',
+                coordinateFormat: ol.coordinate.createStringXY(5)
+            }));
         };
 
         map.on_move = function(handler) {
             map._move_handlers.push(handler);
         };
 
-        map.olmap.events.register("moveend", null, function() {
-            var zoom = map.olmap.getZoom();
-            var center = map.to_wgs84(map.olmap.getCenter());
+        map.olmap.on('moveend', function() {
+            var zoom = map.view.getZoom();
+            var center = map.to_wgs84(map.view.getCenter());
             $.each(map._move_handlers, function(i, handler) {
                 handler(center.lon, center.lat, zoom);
             });
         });
 
         map.add_scale_line_control = function() {
-            var scale_line_control = new OpenLayers.Control.ScaleLine(
-                {geodesic: true});
-            map.olmap.addControl(scale_line_control);
-            scale_line_control.activate();
+            map.olmap.addControl(new ol.control.ScaleLine());
         };
 
         map.get_map_layer = function() {
-            return map.olmap.baseLayer.type;
+            return engine.config['base_layer']['id'];
         };
+
+        setup_marker_events(map);
 
         return map;
     };
 
+    function setup_marker_events(map) {
+        // click, hover and tooltip handling for markers that define handlers
+        var viewport = map.olmap.getViewport();
+        var hovered = null;
+
+        function marker_at(pixel) {
+            var found = null;
+            map.olmap.forEachFeatureAtPixel(pixel, function(feature) {
+                if(feature.get('naaya_marker')) {
+                    found = feature.get('naaya_marker');
+                    return true;
+                }
+            }, {hitTolerance: 2});
+            return found;
+        }
+
+        map.olmap.on('click', function(e) {
+            var marker = marker_at(e.pixel);
+            if(marker && marker.on_click) marker.on_click();
+        });
+
+        map.olmap.on('pointermove', function(e) {
+            if(e.dragging) return;
+            var marker = marker_at(e.pixel);
+            if(marker === hovered) return;
+            if(hovered && hovered.on_mouseout) hovered.on_mouseout();
+            hovered = marker;
+            if(marker && marker.on_mouseover) marker.on_mouseover();
+            viewport.title = (marker && marker.label) || '';
+            viewport.style.cursor = (marker && marker.on_click) ? 'pointer' : '';
+        });
+
+        $(viewport).on('mouseleave', function() {
+            if(hovered && hovered.on_mouseout) hovered.on_mouseout();
+            hovered = null;
+            viewport.title = '';
+            viewport.style.cursor = '';
+        });
+    }
+
     engine.new_marker = function(place_info) {
-        var marker = {};
+        // place_info: {lonlat: {lon, lat}, icon: engine.new_icon(...), label}
+        var marker = {label: place_info['label']};
+        marker.icon = place_info['icon'] || engine.default_icon;
+
+        marker.set_icon = function(icon, z_index) {
+            marker.icon = icon;
+            if(marker._feature) {
+                marker._feature.setStyle(engine.icon_style(icon, z_index));
+            }
+        };
 
         marker.collection = function(collection) {
             /* get or set the current collection for this marker */
@@ -284,19 +375,21 @@
             }
             marker._collection = collection;
             var map_coord = collection.map().from_wgs84(place_info['lonlat']);
-            marker._ol_marker = new OpenLayers.Marker(map_coord,
-                                                      place_info['icon']);
-            collection._ol_layer.addMarker(marker._ol_marker);
-            var img = $('img', marker._ol_marker.icon.imageDiv);
-            img.attr('title', place_info['label']);
+            marker._feature = new ol.Feature({
+                geometry: new ol.geom.Point(map_coord),
+                naaya_marker: marker
+            });
+            marker._feature.setStyle(engine.icon_style(marker.icon));
+            collection._source.addFeature(marker._feature);
         };
 
         return marker;
     };
 
     engine.new_markers_collection = function(name) {
-        var collection = {};
-        collection._ol_layer = new OpenLayers.Layer.Markers(name);
+        var collection = {name: name};
+        collection._source = new ol.source.Vector();
+        collection._ol_layer = new ol.layer.Vector({source: collection._source});
 
         collection.add = function(something) {
             if (typeof something == 'undefined'){
@@ -306,7 +399,7 @@
         };
 
         collection.empty = function() {
-            collection._ol_layer.clearMarkers();
+            collection._source.clear();
         };
 
         collection.map = function(map) {
@@ -321,71 +414,56 @@
         return collection;
     };
 
-    engine.new_portal_map_marker = function(place, collection) {
-        var lonlat = new OpenLayers.LonLat(place.lon, place.lat);
+    engine.new_portal_map_marker = function(place) {
         var i = engine.geotype_icons[place.icon_name];
+        var icon;
         if(i['color']) {
-            var icon = engine.new_icon(i['url'] + '&size=12', 12, 12, -6, -6);
+            icon = engine.new_icon(i['url'] + '&size=12', 12, 12, -6, -6);
         }
         else {
-            var icon = engine.new_icon(i['url'],
-                                       i['width'], i['height'],
-                                       i['offset_x'], i['offset_y']);
+            icon = engine.new_icon(i['url'], i['width'], i['height'],
+                                   i['offset_x'], i['offset_y']);
         }
 
         var marker = engine.new_marker({
-            lonlat: lonlat,
+            lonlat: {lon: place.lon, lat: place.lat},
             icon: icon,
             label: place.label
         });
 
-        var _super_collection = marker.collection;
-        marker.collection = function (collection) {
-            _super_collection(collection);
-            if(collection) {
-                setup_event_handlers();
-            }
+        marker.on_click = function() {
+            if(typeof map_marker_clicked !== 'function') return;
+            var balloon = map_marker_clicked(place);
+            if(!balloon) return;  // cluster click zoomed in instead
+            marker._has_balloon = true;
+            update_icon();
+            balloon.destroy(function() {
+                marker._has_balloon = false;
+                update_icon();
+            });
         };
 
-        return marker;
-        // unused code?
-
-        function setup_event_handlers() {
-            marker._ol_marker.events.register("click", null, function() {
-                var balloon = map_marker_clicked(place);
-                if(!balloon) return;  // cluster click zoomed in instead
-                marker._has_balloon = true;
+        if(i['color']) {
+            marker.on_mouseover = function() {
+                marker._mouse_over = true;
                 update_icon();
-                balloon.destroy(function() {
-                    marker._has_balloon = false;
-                    update_icon();
-                });
-            });
-
-            if(i['color']) {
-                marker._ol_marker.events.register("mouseover", null, function() {
-                    marker._mouse_over = true;
-                    update_icon();
-                });
-
-                marker._ol_marker.events.register("mouseout", null, function() {
-                    marker._mouse_over = false;
-                    update_icon();
-                });
+            };
+            marker.on_mouseout = function() {
+                marker._mouse_over = false;
+                update_icon();
             };
         }
 
         function update_icon() {
+            if(!i['color']) return;
             var large = (marker._mouse_over || marker._has_balloon);
             var size = (large ? 16 : 12);
             var url = i['url'] + (large ? '&size=16&halo=on' : '&size=12');
-            var offset = new OpenLayers.Pixel(-size/2, -size/2);
-            var icon = marker._ol_marker.icon
-            icon.offset = offset;
-            icon.setSize(new OpenLayers.Size(size, size));
-            icon.setUrl(url);
-            icon.moveTo(icon.px); // force offset calculation
+            marker.set_icon(engine.new_icon(url, size, size, -size/2, -size/2),
+                            large ? 1 : 0);
         }
+
+        return marker;
     };
 
     engine.portal_map = function(div_id) {
@@ -393,9 +471,33 @@
         map.add_scale_line_control();
         var points = map.points = engine.new_markers_collection('points');
         map.add(points);
-        map.zoom_to_extent(engine.config['initial_bounds']);
-        if(engine.config['initial_zoom']) {
-            map.olmap.zoomTo(engine.config['initial_zoom']);
+
+        var config = engine.config;
+        if(config['lat_center'] && config['lon_center']) {
+            // position passed in the URL, e.g. by the "embed map" link
+            map.set_zoom_and_center({
+                lat: config['lat_center'],
+                lon: config['lon_center'],
+                zoom: config['map_zoom'] || config['initial_zoom']
+            });
+        }
+        else {
+            map.zoom_to_extent(config['initial_bounds']);
+            var zoom = config['map_zoom'] || config['initial_zoom'];
+            if(zoom) {
+                map.view.setZoom(parseInt(zoom, 10));
+            }
+            if(engine.address_override()) {
+                // ?address= in the URL, e.g. in embedded maps
+                engine.geocode(config['initial_address'], function(results) {
+                    var bb = results[0]['boundingbox'];
+                    map.zoom_to_extent(engine.bounds_btlr(
+                        [bb['bottom'], bb['top'], bb['left'], bb['right']]));
+                    if(config['map_zoom']) {
+                        map.view.setZoom(parseInt(config['map_zoom'], 10));
+                    }
+                });
+            }
         }
 
         map.display_points = function(places) {
@@ -419,7 +521,7 @@
         };
 
         map.refresh_points();
-        map.olmap.events.register("moveend", null, map.refresh_points);
+        map.olmap.on('moveend', function() { map.refresh_points(); });
 
         map.get_current_places = function() {
             return current_places;
@@ -431,8 +533,31 @@
         };
 
         map.set_center_and_zoom_in = function(lat, lon) {
-            var zoom = map.olmap.getZoom();
+            var zoom = map.view.getZoom();
             map.set_zoom_and_center({'lat': lat, 'lon': lon, 'zoom': zoom+1});
+        };
+
+        map.zoom_to_cluster = function(cluster) {
+            // Fit the cluster's points, at least one level in; false at max zoom
+            var zoom = map.view.getZoom();
+            var max_zoom = map.view.getMaxZoom();
+            if(zoom >= max_zoom) return false;
+            var b = cluster.bounds;
+            if(!b) {
+                map.set_center_and_zoom_in(cluster.lat, cluster.lon);
+                return true;
+            }
+            var extent = ol.proj.transformExtent(
+                [b[2], b[0], b[3], b[1]], 'EPSG:4326', 'EPSG:3857');
+            var resolution = map.view.getResolutionForExtent(
+                ol.extent.buffer(extent, 1), map.get_size());
+            var fit_zoom = Math.floor(map.view.getZoomForResolution(resolution / 0.8));
+            map.view.animate({
+                center: ol.extent.getCenter(extent),
+                zoom: Math.min(Math.max(fit_zoom, zoom + 1), max_zoom),
+                duration: 300
+            });
+            return true;
         };
 
         return map;
@@ -443,8 +568,8 @@
         map.set_zoom_and_center(engine.object_map_position(coord));
         var points = engine.new_markers_collection('points');
         map.add(points);
-        var lonlat = new OpenLayers.LonLat(coord.lon, coord.lat);
-        points.add(engine.new_marker({lonlat: lonlat, icon: null}));
+        points.add(engine.new_marker({lonlat: coord, icon: null}));
+        return map;
     };
 
     engine.object_map_position = function(coord) {
@@ -483,9 +608,8 @@
         };
 
         function show_marker(coord) {
-            var lonlat = new OpenLayers.LonLat(coord.lon, coord.lat);
             current_point.empty();
-            current_point.add(engine.new_marker({lonlat: lonlat, icon: null}));
+            current_point.add(engine.new_marker({lonlat: coord, icon: null}));
         }
 
         function update_location(coord) {
@@ -512,14 +636,19 @@
         var places = engine.new_markers_collection('places');
         map.add(places);
 
-        var bounds = new OpenLayers.Bounds();
+        var bounds = ol.extent.createEmpty();
         $.each(list_of_places, function(i, place) {
-            var lonlat = new OpenLayers.LonLat(place.lon, place.lat);
+            var lonlat = {lon: parseFloat(place.lon), lat: parseFloat(place.lat)};
             places.add(engine.new_marker({lonlat: lonlat, icon: null}));
-            bounds.extend(lonlat);
+            ol.extent.extendCoordinate(bounds, [lonlat.lon, lonlat.lat]);
         });
 
-        map.zoom_to_extent(bounds, 0.6);
+        if(ol.extent.isEmpty(bounds)) {
+            map.zoom_to_extent(engine.config['initial_bounds']);
+        }
+        else {
+            map.zoom_to_extent(bounds, 0.6);
+        }
 
         return map;
     };

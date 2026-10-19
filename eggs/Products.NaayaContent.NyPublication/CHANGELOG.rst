@@ -1,5 +1,7 @@
 2.0.1 (unreleased)
 ------------------
+* Remove the Checkout link from the publication index; publications have
+  no versioning and startVersion failed with TypeError [dumitval]
 
 2.0.0 (2026-10-12)
 ------------------

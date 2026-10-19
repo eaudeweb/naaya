@@ -74,7 +74,11 @@ def calc_centers(lat_min, lat_max, lon_min, lon_max, size_x,
     for group in final_groups:
         lat = sum(p.lat for p in group) / len(group)
         lon = sum(p.lon for p in group) / len(group)
-        centers.append(Point(-1, lat, lon))
+        center = Point(-1, lat, lon)
+        # lat_min, lat_max, lon_min, lon_max of the group, for zooming in
+        center.bounds = (min(p.lat for p in group), max(p.lat for p in group),
+                         min(p.lon for p in group), max(p.lon for p in group))
+        centers.append(center)
     return centers, final_groups
 
 

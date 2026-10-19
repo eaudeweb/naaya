@@ -61,6 +61,14 @@ class ListingTest(DestinetFunctionalTestCase):
         self.assertEqual(row['coverage'], 'France')
         self.assertNotIn('target-groups', row)
 
+    def test_get_content_without_datatables_params(self):
+        self.browser.go(SITE_URL + '/get_content')
+        self.assertEqual(self.browser.get_code(), 200)
+        data = json.loads(self.browser.result.text)
+        self.assertEqual(data['draw'], 0)
+        self.assertEqual(data['recordsTotal'], 3)
+        self.assertEqual(len(data['data']), 3)
+
     def test_get_content_order_asc_reverses(self):
         data = self.get_json('start=0&order[0][dir]=asc')
         self.assertEqual(self.titles(data),

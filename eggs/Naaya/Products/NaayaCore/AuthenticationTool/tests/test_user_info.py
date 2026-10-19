@@ -82,3 +82,17 @@ class UserInfoTest(NaayaTestCase):
         self.assertEqual(info.email, 'anne@example.com')
         self.assertEqual(info.organisation, 'K\xf8benhavn club')
         self.assertEqual(info.dn, dn)
+
+
+class UserEmailTest(NaayaTestCase):
+
+    def test_user_email(self):
+        from AccessControl.users import User
+        auth_tool = self.portal.getAuthenticationTool()
+        user = User('root', 'pw', ['Manager'], [])
+        # Zope root users have no email
+        self.assertEqual(auth_tool.getUserEmail(user), '')
+        user.mail = 'root@example.com'
+        self.assertEqual(auth_tool.getUserEmail(user), 'root@example.com')
+        user.email = 'other@example.com'
+        self.assertEqual(auth_tool.getUserEmail(user), 'other@example.com')

@@ -478,7 +478,10 @@ function map_marker_clicked(point) {
     var resolution = map_engine.get_resolution();
     var point_id_list = [];
     if (point.id == '') {
-        if(point.point_ids.length < 5 ||
+        if(map_engine.zoom_to_cluster) {
+            if(map_engine.zoom_to_cluster(point)) return;
+            point_id_list = point.point_ids;
+        } else if(point.num_records < 5 ||
            resolution > MAP_CLUSTER_ZOOM_RESOLUTION_THRESHOLD) {
             point_id_list = point.point_ids;
         } else {

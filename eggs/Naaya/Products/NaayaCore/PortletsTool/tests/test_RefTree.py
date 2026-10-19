@@ -42,6 +42,19 @@ class RefTreeFunctionalTestCase(NaayaFunctionalTestCase):
         manage_addRefTreeNode(self.tree, 'node9', 'Node 9', 'node5', lang='en')
         manage_addRefTreeNode(self.tree, 'node10', 'Node 10', 'node8', lang='en')
         transaction.commit()
+    def test_tree_nodes_without_weight(self):
+        # nodes added before weights existed sort first, as on Python 2
+        for node_id in ('node2', 'node3', 'node6'):
+            del self.tree._getOb(node_id).weight
+        self.tree.node4.weight = 2
+        self.tree.node5.weight = 1
+        tree = self.tree.get_nodes_as_tree()
+        node1 = tree['children'][0]
+        self.assertEqual([n['ob'].getId() for n in node1['children']],
+                         ['node2', 'node3'])
+        self.assertEqual([n['ob'].getId() for n in node1['children'][0]['children']],
+                         ['node6', 'node5', 'node4'])
+
     def test_moveRefTreeNode(self):
         """
             1. Move 8 after 4

@@ -1,23 +1,15 @@
-.olLayerGoogleCopyright {
-    right: 3px;
-    bottom: 2px;
-    left: auto;
-}
-.olLayerGoogleV3.olLayerGoogleCopyright {
-    bottom: 0px;
-    right: 0px !important;
-}
-.olLayerGooglePoweredBy {
-    left: 2px;
-    bottom: 2px;
-}
-.olLayerGoogleV3.olLayerGooglePoweredBy {
-    bottom: 0px !important;
+.naaya-openlayers {
+    position: relative;
 }
 
-.olControlScaleLine {
+.naaya-openlayers .ol-scale-line {
     background-color: rgba(255, 255, 255, 0.5);
     padding: 2px 5px;
+}
+
+.naaya-openlayers .ol-scale-line-inner {
+    border-color: #333;
+    color: #333;
 }
 
 .naaya-openlayers-wheel-hint {
@@ -36,6 +28,10 @@
     pointer-events: none;
 }
 
-.naaya-openlayers {
-    position: relative;
+.naaya-openlayers .naaya-openlayers-google-logo {
+    position: absolute;
+    left: 8px;
+    bottom: 32px;
+    height: 18px;
+    pointer-events: none;
 }

@@ -70,8 +70,9 @@ def get_content(context, request):
     else:
         reversed = False
 
-    length = int(form.get('length'))
-    start = int(form.get('start'))
+    # DataTables sends these; a direct call without them gets the first 10 rows
+    length = int(form.get('length') or 10)
+    start = int(form.get('start') or 0)
     search = form.get('search[value]', '').strip()
     topics = form.get('topic')
     if isinstance(topics, str):
@@ -140,7 +141,7 @@ def get_content(context, request):
 
     return context.rstk['json_dumps']({
         'data': data,
-        'draw': int(form.get('draw')),
+        'draw': int(form.get('draw') or 0),
         'recordsTotal': len(all_objects),
         'recordsFiltered': len(objects),
     })

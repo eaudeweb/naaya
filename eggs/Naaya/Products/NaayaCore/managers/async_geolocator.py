@@ -4,6 +4,7 @@ import transaction
 from Products.NaayaCore.GeoMapTool.managers import geocoding
 from datetime import datetime, timedelta
 from Products.NaayaCore.SchemaTool.widgets.geo import Geo
+from naaya.core.ggeocoding import GeocoderOverQuotaLimit
 from naaya.core.ggeocoding import GeocoderServiceError
 LOG = logging.getLogger(__name__)
 
@@ -12,8 +13,7 @@ def _cron_geolocate(site, heartbeat):
 
     if not getattr(site, 'geolocation_queue', None):
         return
-    # Google restricts geolocation to 2500 requests per site
-    # per day so when reached we need to wait a day
+    # After a quota or rate-limit error, wait an hour before the next run
     when = heartbeat.when
     previous = getattr(site, 'previous_geolocation', None)
     if not previous or when > previous + timedelta(hours=1):
@@ -36,8 +36,7 @@ def geolocate_queue(site):
         address = obj.geo_location.address.replace(u'\x81', '')
         if address and not (lat and lon):
             try:
-                # Google also restricts requests per second, so we need
-                # to be careful for this, too
+                # The geocoding provider limits requests per second
                 time.sleep(2)
                 lat, lon = geocoding.location_geocode(address)
                 if lat and lon:
@@ -48,6 +47,11 @@ def geolocate_queue(site):
                 LOG.info('coodrdinates %s and %s found for %s' %
                          (lat, lon, address))
                 transaction.commit()
+            except GeocoderOverQuotaLimit as e:
+                LOG.info(e)
+                site.previous_geolocation = datetime.now()
+                site._p_changed = True
+                break
             except GeocoderServiceError as e:
                 if 'ZERO_RESULTS' in e.args[0]:
                     LOG.info('coodrdinates not found for %s' % address)

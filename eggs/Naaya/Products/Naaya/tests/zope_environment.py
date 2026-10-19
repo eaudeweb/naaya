@@ -1,6 +1,7 @@
 """Boot Zope for the tests from an instance zope.conf, without HTTP servers."""
 import os
-from tempfile import mkstemp
+import re
+from tempfile import mkdtemp, mkstemp
 
 import ZODB.DB
 from ZODB.DemoStorage import DemoStorage
@@ -20,6 +21,13 @@ def conf_for_test(zope_conf_path):
     end = conf.index('</zodb_db>\n', start)
     conf = (conf[:start] + '    <mappingstorage>\n    </mappingstorage>\n'
             '    mount-point /\n' + conf[end:])
+    # An empty instance home, so an emergency user in its access file stays out of the tests
+    home = re.search(r'^%define INSTANCEHOME (.+)$', conf, re.M)
+    if home:
+        test_home = mkdtemp()
+        # site.zcml and package-includes are read from INSTANCEHOME/etc
+        os.symlink(os.path.join(home.group(1).strip(), 'etc'), os.path.join(test_home, 'etc'))
+        conf = conf.replace(home.group(0), '%define INSTANCEHOME ' + test_home, 1)
     fd, path = mkstemp(suffix='.conf')
     with os.fdopen(fd, 'w', encoding='utf-8') as f:
         f.write(conf)

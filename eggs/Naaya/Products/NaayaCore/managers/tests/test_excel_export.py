@@ -37,6 +37,26 @@ class ExcelExportTestCase(NaayaFunctionalTestCase):
         self.assertEqual(row[0], 'mynews')
         self.assertEqual(row[1], 'The News')
 
+    def test_excel_export_truncated_cell(self):
+        from unittest import mock
+        from Products.NaayaCore.managers.import_export import ExportTool
+        exporter = self.portal.myfolder.csv_export
+        with mock.patch.object(ExportTool, "CELL_CHAR_LIMIT", 100):
+            self.portal.myfolder.mynews.description = '<p>%s</p>' % ('x' * 300)
+            data = exporter.export("Naaya News", "Excel")
+        wb = openpyxl.load_workbook(BytesIO(data))
+        ws = wb.worksheets[0]
+        header = [c.value for c in ws[1]]
+        cell = ws.cell(2, header.index('Description') + 1).value
+        self.assertLessEqual(len(cell), 100)
+        self.assertTrue(cell.startswith('<p>xxx'))
+        self.assertTrue(cell.endswith(
+            '<p>[TRUNCATED: the original text had 307 characters; '
+            'Excel cells hold at most 100]</p>'))
+        notes = wb['Truncated cells']
+        self.assertEqual([c.value for c in notes[4]],
+                         ['mynews', 'The News', 'Description', 307])
+
 
 class GenerateExcelTestCase(unittest.TestCase):
     """ generate_excel writes a bold header, the rows and dd/mm/yyyy dates """
@@ -63,3 +83,26 @@ class GenerateExcelTestCase(unittest.TestCase):
         data = generate_excel(['ID', 'Title'], [[]])
         ws = openpyxl.load_workbook(BytesIO(data)).worksheets[0]
         self.assertEqual([c.value for c in ws[1]], ['ID', 'Title'])
+
+
+class TruncateCellTestCase(unittest.TestCase):
+
+    def test_plain_text(self):
+        from Products.NaayaCore.managers.import_export import truncate_cell
+        cell = truncate_cell('a' * 200, 120)
+        self.assertEqual(len(cell), 120)
+        self.assertTrue(cell.endswith(' [TRUNCATED: the original text had 200 '
+                                      'characters; Excel cells hold at most 120]'))
+
+    def test_html_stays_well_formed(self):
+        import lxml.html
+        from Products.NaayaCore.managers.import_export import truncate_cell
+        text = '<table><tr><td>' + 'cell</td><td>' * 50 + '</td></tr></table>'
+        for limit in range(110, 140):
+            cell = truncate_cell(text, limit)
+            self.assertLessEqual(len(cell), limit)
+            body = cell[:cell.rindex('\n<p>[TRUNCATED')]
+            self.assertTrue(body.startswith('<table>'))
+            self.assertTrue(body.endswith('</table>'))
+            self.assertNotIn('<td', body[-6:])
+            lxml.html.fragment_fromstring(cell, create_parent='div')

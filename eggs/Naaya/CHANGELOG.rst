@@ -1,5 +1,63 @@
 6.0.5 (unreleased)
 ------------------
+* Use Nominatim (OpenStreetMap) for geocoding instead of Google [dumitval]
+* Remove the Yahoo and Bing map engines [dumitval]
+* Use the OpenLayers map engine for new sites instead of Google [dumitval]
+* Remove the Update Google Maps API Key update script [dumitval]
+* Upgrade the OpenLayers map engine to OpenLayers 10.11.0 [dumitval]
+* Add the Esri World Imagery base layer to the OpenLayers map engine
+  [dumitval]
+* Use the Google Map Tiles API for the Google base layers of the OpenLayers
+  map engine, offered only when GOOGLE_MAPS_API_KEY is set; without it they
+  fall back to OpenStreetMap or Esri World Imagery [dumitval]
+* Remove the Bing base layers of the OpenLayers map engine; sites set to
+  them use OpenStreetMap or Esri World Imagery [dumitval]
+* Zoom to the extent of a map cluster when it is clicked; list its points
+  only at the maximum zoom [dumitval]
+* Center OpenLayers portal maps on the ``address`` request parameter
+  (embedded maps, destinet listings), as the Google engine did [dumitval]
+* Send the OpenLayers ``geocode_nominatim`` requests through
+  naaya.core.ggeocoding (cache, 1 request/second) [dumitval]
+* Add GEOCODING_PROVIDER=google to geocode with the Google Geocoding API and
+  GOOGLE_GEOLOCATION_API_KEY; the default is Nominatim [dumitval]
+* Fix AuthenticationTool.getUserEmail failing with AttributeError for Zope
+  root users, which have no email [dumitval]
+* Fix the Reference lists admin page (admin_reflists_html) failing with
+  TypeError for reference tree nodes without a weight [dumitval]
+* Fix the KML export (downloadLocationsKml) failing with a Chameleon
+  ExpressionError: stray ``}`` in map_kml.zpt [dumitval]
+* Folder Excel export: cut cells longer than the Excel limit instead of
+  refusing the export (it failed with TypeError on Python 3); HTML stays well
+  formed, a [TRUNCATED: ...] note ends the cell and a "Truncated cells" sheet
+  lists them. The import reports rows that contain such cells [dumitval]
+* Escape <, > and & in rstk json_dumps so the output is safe inside <script>
+  [dumitval]
+* admin_edituser_html: redirect to the users list with "User ... not found"
+  for a name that is not a site user, instead of failing with AttributeError
+  [dumitval]
+* admin_resetrole_html: take the default roles from the Naaya skel when the
+  site product skel has no <security> (EnviroWindows sites failed with
+  AttributeError) [dumitval]
+* Deleting users ignores names that are not users of the site, instead of
+  failing with KeyError [dumitval]
+* Accept semicolons and spaces between addresses in administrator_email,
+  maintainer_email and the recipients of sendEmail; destinet notifications
+  were queued with an empty To [dumitval]
+* Patch repoze.sendmail MailDataManager.abort for aborts during the two phase
+  commit (after a ConflictError): discard the queued message instead of
+  raising TPC_InProgress, which logged an error and left the file in the
+  queue tmp directory [dumitval]
+* Excel export: read each selection list once per export instead of once per
+  cell, and parse dates only for dd/mm/yyyy values (destinet contacts export:
+  39 s to 22 s) [dumitval]
+* Map clusters (xrjs_getGeoClusters): send point_ids only for clusters whose
+  points share one location (destinet world map response: 843 KB to 77 KB);
+  the Google engine checks num_records instead of point_ids [dumitval]
+* Notifications: walk only folders and sites when listing a user's
+  subscriptions, without loading the other items (destinet
+  my_subscriptions_html: 10 s to 2.4 s) [dumitval]
+* Fix the OpenLayers engine ``geocode_nominatim`` failing with TypeError
+  on Python 3 [dumitval]
 
 6.0.4 (2026-10-18)
 ------------------

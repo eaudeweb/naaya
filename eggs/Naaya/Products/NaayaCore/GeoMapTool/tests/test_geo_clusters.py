@@ -106,6 +106,11 @@ class GeoClustersTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase):
         # some random points may fall into our cluster
         # greaterequal is best to evaluate for assertion
         self.assertTrue(len(cluster_obs[0][1])>=self.cluster_count)
+        # bounds: lat_min, lat_max, lon_min, lon_max of the cluster points
+        lat_min, lat_max, lon_min, lon_max = cluster_obs[0][2]
+        self.assertTrue(lat_min <= self.cluster_pos[0] <= lat_max)
+        self.assertTrue(lon_min <= self.cluster_pos[1] <= lon_max)
+        self.assertTrue(lat_max - lat_min < 0.01)
 
 
     def test_margin(self):

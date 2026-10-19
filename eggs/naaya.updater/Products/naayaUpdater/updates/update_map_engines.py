@@ -67,9 +67,7 @@ class UpdateMapEngines(UpdateScript):
         google_keys = portal_map.__dict__.pop('googleApiKey', '')
         if isinstance(google_keys, list):
             google_keys = '\n'.join(google_keys)
-        yahoo_keys = portal_map.__dict__.pop('mapsapikey', '')
-        if isinstance(yahoo_keys, list):
-            yahoo_keys = '\n'.join(yahoo_keys)
+        portal_map.__dict__.pop('mapsapikey', None)
 
         base_layer = {
                 'YAHOO_MAP_SAT': 'satellite',
@@ -79,9 +77,10 @@ class UpdateMapEngines(UpdateScript):
 
         selected_engine = portal_map.__dict__.pop('map_engine', None)
         assert selected_engine in ('yahoo', 'google', None)
+        if selected_engine == 'yahoo':  # the Yahoo engine was removed
+            selected_engine = 'openlayers'
 
         has_google = ('engine_google' in portal_map.objectIds())
-        has_yahoo = ('engine_yahoo' in portal_map.objectIds())
 
         if (selected_engine == 'google' or google_keys) and not has_google:
             portal_map.set_map_engine('google')
@@ -94,16 +93,7 @@ class UpdateMapEngines(UpdateScript):
                           'keys=%r, base_layer=%r, allow_mouse_scroll=%r' %
                           (google_keys, base_layer, allow_mouse_scroll))
 
-        if (selected_engine == 'yahoo' or yahoo_keys) and not has_yahoo:
-            portal_map.set_map_engine('yahoo')
-            ye = portal_map.get_map_engine()
-            if yahoo_keys:
-                ye.api_keys = yahoo_keys
-            ye.base_layer = base_layer
-            self.log.info('configured yahoo engine: keys=%r, base_layer=%r' %
-                          (yahoo_keys, base_layer))
-
-        if not (has_google or has_yahoo) and selected_engine is None:
+        if not has_google and selected_engine is None:
             selected_engine = 'google'
 
         if selected_engine is not None:

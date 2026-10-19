@@ -543,6 +543,9 @@ class NyHexfolder(hexfolder_item, NyFolder):
             # fist picture description is mandatory
             mandatory_fields = [
                 'picture_0', 'picture_0_long_description']
+        else:
+            form_errors.setdefault('layout_type', []).append('Unknown layout')
+            return
         for field in mandatory_fields:
             if not REQUEST_form.get(field):
                 try:

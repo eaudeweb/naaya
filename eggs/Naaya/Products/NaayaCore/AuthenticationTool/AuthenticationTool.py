@@ -326,7 +326,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                     location.manage_delLocalRoles([user])
 
         for name in names:
-            del self.data[name]
+            self.data.pop(name, None)
 
         self._p_changed = True
 
@@ -1477,7 +1477,8 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             # This can happen when the LDAP user folder maps the LDAP
             # attribute to the "mail" Python attribute, because other
             # Zope products depend on the "mail"  attribute.
-            return user_obj.mail
+            # Zope root users have neither attribute.
+            return getattr(user_obj, 'mail', '')
 
     def getUserHistory(self, user_obj):
         """ Given a user object, returns its `history` property """

@@ -23,6 +23,7 @@ from email.utils import make_msgid
 from naaya.core.permissions import naaya_admin
 from naaya.core.site_logging import get_log_dir
 from naaya.core.utils import force_to_unicode
+from naaya.core.utils import split_emails
 from urllib.parse import urlparse
 from zope.component import queryUtility, getGlobalSiteManager
 from zope.deprecation import deprecate
@@ -187,12 +188,12 @@ class EmailTool(Folder):
                 )
 
         if not isinstance(p_to, list):
-            p_to = [e.strip() for e in p_to.split(',')]
+            p_to = split_emails(p_to)
 
         p_to = list(filter(None, p_to))  # filter out blank recipients
 
         if not isinstance(p_cc, list):
-            p_cc = [e.strip() for e in p_cc.split(',')]
+            p_cc = split_emails(p_cc)
 
         p_cc = list(filter(None, p_cc))  # filter out blank recipients
 
@@ -723,3 +724,26 @@ def _mail_in_queue(site, filename, check_values):
 def _strip_code(text_str):
     return text_str.replace('\n', '').replace('</p><p>', '').replace(
         '<br/>', '')
+
+
+def _patch_mail_data_manager_abort():
+    """A failed commit calls abort() during TPC; repoze.sendmail raised TPC_InProgress and kept the queued file."""
+    try:
+        from repoze.sendmail.delivery import MailDataManager
+    except ImportError:
+        return
+    original = MailDataManager.abort
+    if getattr(original, '_naaya_patched', False):
+        return
+
+    def abort(self, trans):
+        if self.tpc_phase != 0:
+            if self.onAbort:
+                self.onAbort()
+            return
+        return original(self, trans)
+    abort._naaya_patched = True
+    MailDataManager.abort = abort
+
+
+_patch_mail_data_manager_abort()
