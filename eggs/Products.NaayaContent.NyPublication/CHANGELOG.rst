@@ -1,4 +1,7 @@
-2.0.1 (unreleased)
+2.0.2 (unreleased)
+------------------
+
+2.0.1 (2026-10-20)
 ------------------
 * Remove the Checkout link from the publication index; publications have
   no versioning and startVersion failed with TypeError [dumitval]
