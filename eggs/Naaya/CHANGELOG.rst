@@ -1,5 +1,10 @@
 5.0.37 (unreleased)
 -------------------
+* map clusters: check the latitude and longitude range on the index values
+  of the records matching the other filters, instead of the range over the
+  coordinate indexes, which loaded one persistent set per distinct
+  coordinate (destinet Green Travel Maps: 76,000 to 10,600 objects loaded
+  per map request) [dumitval]
 
 5.0.36 (2026-10-20)
 -------------------
