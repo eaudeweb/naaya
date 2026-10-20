@@ -1,5 +1,9 @@
 6.0.6 (unreleased)
 ------------------
+* Map clusters: check the latitude and longitude range on the index values of
+  the records matching the other filters, instead of a range over the
+  coordinate indexes, which loaded one persistent set per distinct coordinate
+  (destinet xrjs_getGeoClusters: 0.65 s to 0.05 s, same response) [dumitval]
 
 6.0.5 (2026-10-20)
 ------------------

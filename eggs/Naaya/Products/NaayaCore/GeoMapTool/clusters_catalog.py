@@ -6,8 +6,7 @@ from BTrees.IIBTree import intersection
 
 from Products.NaayaCore.GeoMapTool import clusters
 
-# this is much more time consuming than without the dict
-# because you can have many objects with the same k (key in the index)
+# used by naaya.observatory
 def _apply_index_with_range_dict_results(index, low_value=None, high_value=None):
     """ return an IISet of the rids matching the range in the index
         also return a dict matching each rid to the value of the index for that rid
@@ -58,40 +57,22 @@ def getClusters(catalog_tool, filters):
 
     catalog = catalog_tool._catalog
 
-    # getting the inner indexes for lat and lon
-    lat_index = catalog.getIndex('geo_latitude')._index
-    lon_index = catalog.getIndex('geo_longitude')._index
+    # rid -> coordinate; a range over the _index loads one set per distinct coordinate
+    lat_values = catalog.getIndex('geo_latitude')._unindex
+    lon_values = catalog.getIndex('geo_longitude')._unindex
 
-    # define decimal values
     d_tlat_min = Decimal(str(tlat_min))
     d_tlat_max = Decimal(str(tlat_max))
-
     d_tlon_min = Decimal(str(tlon_min))
     d_tlon_max = Decimal(str(tlon_max))
 
-    # adjust to cover results outside frame, but very close to margins
-    # trying to fix cluster flickering near margins
-
-    # applying the lat and lon indexes to get the rids
-    rs = None
-    lat_set, lat_dict = _apply_index_with_range_dict_results(lat_index, d_tlat_min, d_tlat_max)
-    rs = intersection(rs, lat_set)
-
-    lon_set, lon_dict = _apply_index_with_range_dict_results(lon_index, d_tlon_min, d_tlon_max)
-    rs = intersection(rs, lon_set)
-
+    # OR the filters, each one the intersection of its other indexes
     rs_final = []
-    # OR the filters and apply the index for each one
-
     for f in filters:
-        rs_f = rs
-
-        #adjust geo limits in filters to be consistent with discretized tile limits
-        f['geo_longitude']['query'] = (d_tlon_min, d_tlon_max)
-        f['geo_latitude']['query'] = (d_tlat_min, d_tlat_max)
-
-        #this code is from the search function in the catalog implementation in Zope
+        rs_f = None
         for idx_name in f:
+            if idx_name in ('geo_latitude', 'geo_longitude'):
+                continue
             index = catalog.getIndex(idx_name)
             if not hasattr(index, '_apply_index'):
                 # Skip broken indexes (e.g. TextIndex removed in Zope 5)
@@ -100,15 +81,21 @@ def getClusters(catalog_tool, filters):
             if r is not None:
                 r, _ = r
                 rs_f = intersection(rs_f, r)
-
+        if rs_f is None:
+            rs_f = IISet(lat_values.keys())
         rs_final.append(rs_f)
 
-    r_list = list(multiunion(rs_final))
-
-    # transform objects to points
+    # points inside the discretized tile limits
+    r_list = []
     points = []
-    for i in range(len(r_list)):
-        points.append(clusters.Point(i, float(lat_dict[r_list[i]]), float(lon_dict[r_list[i]])))
+    for rid in multiunion(rs_final):
+        lat = lat_values.get(rid)
+        lon = lon_values.get(rid)
+        if lat is None or lon is None:
+            continue
+        if d_tlat_min <= lat <= d_tlat_max and d_tlon_min <= lon <= d_tlon_max:
+            points.append(clusters.Point(len(r_list), float(lat), float(lon)))
+            r_list.append(rid)
 
     centers, groups = clusters.kmeans(tlat_min, tlat_max, tlon_min, tlon_max, points, grid_size)
 
