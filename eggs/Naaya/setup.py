@@ -2,7 +2,7 @@
 from setuptools import setup, find_namespace_packages
 
 setup(name='Naaya',
-      version='6.0.5.dev0',
+      version='6.0.6.dev0',
       author='Eau de Web',
       author_email='office@eaudeweb.ro',
       url='http://naaya.eaudeweb.ro',
