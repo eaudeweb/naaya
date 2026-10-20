@@ -3,6 +3,8 @@ Changelog
 
 1.2.7 (unreleased)
 ------------------
+* remove tag_build from setup.cfg; the 1.2.6 release was uploaded as
+  1.2.6.dev0 [dumitval]
 
 1.2.6 (2026-10-20)
 ------------------
