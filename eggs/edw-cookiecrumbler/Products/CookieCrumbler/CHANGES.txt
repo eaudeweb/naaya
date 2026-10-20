@@ -1,5 +1,7 @@
 
-Version 2.3 (unreleased)
+Version 2.4 (unreleased)
+
+Version 2.3 (2026-10-20)
 
 - Ignore __ac cookies that do not decode to user:password, instead of
   failing every request with BadRequest "Invalid authentication token"
