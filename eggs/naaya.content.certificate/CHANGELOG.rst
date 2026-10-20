@@ -1,4 +1,7 @@
-1.0.1 (unreleased)
+1.0.2 (unreleased)
+------------------
+
+1.0.1 (2026-10-20)
 ------------------
 * Show the topic id when a saved topic is no longer in the Topics list,
   instead of failing with IndexError [dumitval]
