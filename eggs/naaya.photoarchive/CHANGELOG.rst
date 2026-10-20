@@ -1,4 +1,7 @@
-1.5.4 (unreleased)
+1.5.5 (unreleased)
+------------------
+
+1.5.4 (2026-10-20)
 ------------------
 * return the image without a watermark when it is narrower than the
   watermark text, instead of failing with UnboundLocalError [dumitval]
