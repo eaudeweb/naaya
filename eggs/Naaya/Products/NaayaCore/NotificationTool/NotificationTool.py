@@ -739,12 +739,16 @@ class NotificationTool(Folder):
                                                         False):
             raise Unauthorized  # to force login
 
+        # the subscriptions page asks for them more than once per request
+        cached = REQUEST.other.get('_naaya_my_subscriptions')
+        if cached is not None:
+            return [dict(subscription) for subscription in cached]
         subscriptions = self.user_subscriptions(user)
         for subscription in subscriptions:
             subscription['location'] = path_in_site(subscription['object'])
             del subscription['object']
-
-        return subscriptions
+        REQUEST.other['_naaya_my_subscriptions'] = subscriptions
+        return [dict(subscription) for subscription in subscriptions]
 
     security.declareProtected(view, 'get_location_subscription')
 

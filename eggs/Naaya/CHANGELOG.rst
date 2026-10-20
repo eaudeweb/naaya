@@ -56,6 +56,20 @@
 * Notifications: walk only folders and sites when listing a user's
   subscriptions, without loading the other items (destinet
   my_subscriptions_html: 10 s to 2.4 s) [dumitval]
+* search_geo_objects returns the objects lazily and sorts by title,
+  latitude and longitude from catalog data, so paged lists load only the
+  shown objects (destinet admin_maplocations_html: 8.6 s to 1.8 s,
+  list_locations under 1 s) [dumitval]
+* getDuplicateLocations compares catalog data first and loads objects only
+  for the address of candidate duplicates (destinet: 9.7 s to 2.9 s)
+  [dumitval]
+* export_geo_rss: build the entries without minidom and escape the feed
+  title [dumitval]
+* list_my_subscriptions: compute the subscriptions once per request
+  [dumitval]
+* CookieCrumbler: ignore an __ac cookie that does not decode to
+  user:password; Zope answered every request with BadRequest "Invalid
+  authentication token" [dumitval]
 * Fix the OpenLayers engine ``geocode_nominatim`` failing with TypeError
   on Python 3 [dumitval]
 

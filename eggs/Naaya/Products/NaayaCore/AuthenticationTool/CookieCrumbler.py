@@ -144,8 +144,10 @@ class CookieCrumbler:
                 ac = unquote(req[self.auth_cookie])
                 if ac and ac != 'deleted':
                     try:
-                        decodestring(ac.encode())
-                    except:
+                        # the same checks as Zope's identify(), which raises
+                        # BadRequest for every page on a foreign __ac cookie
+                        decodestring(ac.encode()).decode('utf-8').split(':', 1)[1]
+                    except Exception:
                         # Not a valid auth header.
                         pass
                     else:

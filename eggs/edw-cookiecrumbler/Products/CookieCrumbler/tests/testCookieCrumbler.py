@@ -128,6 +128,15 @@ class CookieCrumblerTests (unittest.TestCase):
                          'abraham')
 
 
+    def testForeignCookieIgnored(self):
+        # a base64 __ac cookie that is not user:password (e.g. a Plone ticket
+        # from another site on the same host) leaves the request anonymous
+        from base64 import encodebytes
+        self.req.cookies['__ac'] = encodebytes(b'\x93ticket-without-colon').decode().strip()
+        self.req.traverse('/')
+        self.assertEqual(self.req['AUTHENTICATED_USER'].getUserName(),
+                         'Anonymous User')
+
     def testPasswordShredding(self):
         # verify the password is shredded before the app gets the request
         self.req.cookies['__ac_name'] = 'abraham'

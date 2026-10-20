@@ -290,3 +290,44 @@ class GeoFilterTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase):
         kml = self.portal.portal_map.downloadLocationsKml(request)
         self.assertIn('<Placemark', kml)
         self.assertIn('Testing event', kml)
+
+    def test_search_sorted_from_catalog(self):
+        portal_map = self.portal.portal_map
+        by_title = [ob.title for ob in portal_map.search_geo_objects(sort_on='title')]
+        self.assertEqual(by_title, sorted(by_title))
+        self.assertTrue(len(by_title) >= 2)
+        reverse = [ob.title for ob in portal_map.search_geo_objects(
+            sort_on='title', sort_order='reverse')]
+        self.assertEqual(reverse, sorted(by_title, reverse=True))
+        lats = [ob.geo_location.lat for ob in portal_map.search_geo_objects(
+            sort_on='geo_latitude')]
+        self.assertEqual(lats, sorted(lats))
+
+    def test_duplicate_locations(self):
+        folder = self.portal.geo_location_test
+        ob_id = folder.addNyGeoPoint(**{
+            'id': 'sofia2', 'title': 'Sofia', 'geo_location.lat': '42.7',
+            'geo_location.lon': '23.333333', 'geo_location.address': 'Other address',
+            'geo_type': ''})
+        ob = folder._getOb(ob_id)
+        ob.approveThis()
+        self.portal.portal_map.recatalogNyObject(ob)
+        try:
+            portal_map = self.portal.portal_map
+            ids = lambda criteria: sorted(ob.getId() for ob in
+                                          portal_map.getDuplicateLocations(criteria))
+            self.assertEqual(ids(['latlon']), ['sofia', 'sofia2'])
+            self.assertEqual(ids(['title', 'latlon']), ['sofia', 'sofia2'])
+            self.assertEqual(ids(['address']), [])
+        finally:
+            folder.manage_delObjects([ob_id])
+
+    def test_export_geo_rss(self):
+        from xml.etree import ElementTree
+        self.portal.geo_location_test.sofia.title = 'Sofia <&> "center"'
+        feed = ElementTree.fromstring(self.portal.portal_map.export_geo_rss())
+        atom = '{http://www.w3.org/2005/Atom}'
+        titles = [e.find(atom + 'title').text for e in feed.findall(atom + 'entry')]
+        self.assertIn('Sofia <&> "center"', titles)
+        point = feed.find(atom + 'entry/{http://www.georss.org/georss}point')
+        self.assertEqual(len(point.text.split()), 2)

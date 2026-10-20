@@ -9,8 +9,9 @@ and searching.
 from decimal import Decimal
 from datetime import datetime
 import time
-from xml.dom import minidom
 import json
+from ZTUtils.Lazy import LazyMap
+from xml.sax.saxutils import escape as xml_escape, quoteattr as xml_quoteattr
 import operator
 from warnings import warn
 
@@ -299,13 +300,10 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         results = self._search_geo_objects(filters)
         return results
 
-    security.declarePrivate('_search_geo_objects')
+    security.declarePrivate('_search_geo_rids')
 
-    def _search_geo_objects(self, filters):
-        """
-        Returns all the objects that match the specified criteria.
-        This does not check for the 180/-180 meridian in the map
-        """
+    def _search_geo_rids(self, filters):
+        """Catalog record ids of the objects that match the filters."""
         catalog_tool = self.getCatalogTool()
 
         brains = []
@@ -313,8 +311,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             for f in filters:
                 brains.extend(catalog_tool(f))
         except QueryParserError as e:
-            self.setSessionErrorsTrans(e)
-            pass
+            self.setSessionErrorsTrans(str(e))
 
         # getting the unique data record ids
         dict_rids = {}
@@ -324,26 +321,40 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             if rid not in dict_rids:
                 dict_rids[rid] = 1
                 rids.append(rid)
+        return rids
 
-        return list(map(lambda rid: catalog_tool.getobject(rid), rids))
+    def _search_geo_objects(self, filters):
+        """
+        Returns all the objects that match the specified criteria.
+        This does not check for the 180/-180 meridian in the map
+        """
+        catalog_tool = self.getCatalogTool()
+        return [catalog_tool.getobject(rid)
+                for rid in self._search_geo_rids(filters)]
 
-    def _sort_geo_objects(self, objects, sort_on, sort_order):
-        key_func = None
+    def _sort_geo_rids(self, rids, sort_on, sort_order):
+        """Sort catalog record ids, from catalog data where possible."""
+        catalog_tool = self.getCatalogTool()
+        catalog = catalog_tool._catalog
         if sort_on == 'title':
-            key_func = lambda x: x.title
-        elif sort_on == 'geo_address':
-            key_func = lambda x: x.geo_location.address
-        elif sort_on == 'geo_latitude':
-            key_func = lambda x: x.geo_location.lat
-        elif sort_on == 'geo_longitude':
-            key_func = lambda x: x.geo_location.lon
-        elif sort_on == 'coverage':
-            key_func = lambda x: x.coverage
+            column = catalog.schema['title']
 
-        reverse = (sort_order == 'reverse')
+            def key_func(rid):
+                return catalog.data[rid][column] or ''
+        elif sort_on in ('geo_latitude', 'geo_longitude'):
+            values = catalog.getIndex(sort_on)._unindex
 
-        if key_func is not None:
-            objects.sort(key=key_func, reverse=reverse)
+            def key_func(rid):
+                return values.get(rid, 0)
+        elif sort_on in ('geo_address', 'coverage'):
+            object_key = {'geo_address': lambda x: x.geo_location.address,
+                          'coverage': lambda x: x.coverage}[sort_on]
+
+            def key_func(rid):
+                return object_key(catalog_tool.getobject(rid))
+        else:
+            return
+        rids.sort(key=key_func, reverse=(sort_order == 'reverse'))
 
     security.declareProtected(view, 'search_geo_objects')
 
@@ -368,23 +379,25 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                                       if 'reverse' then reversed order
         """
 
+        rids = self._search_sorted_geo_rids(sort_on, sort_order, REQUEST, kwargs)
+        # objects are loaded when used, pages show only a slice of them
+        return LazyMap(self.getCatalogTool().getobject, rids)
+
+    def _search_sorted_geo_rids(self, sort_on, sort_order, REQUEST, kwargs):
         criteria = self._parse_search_terms(REQUEST, kwargs)
 
         if criteria['lon_min'] < criteria['lon_max']:
             filters = self.build_geo_filters(**criteria)
-            results = self._search_geo_objects(filters)
+            rids = self._search_geo_rids(filters)
 
         else:
             filters1 = self.build_geo_filters(**dict(criteria, lon_max=180.0))
-            results1 = self._search_geo_objects(filters1)
-
             filters2 = self.build_geo_filters(**dict(criteria, lon_min=-180.0))
-            results2 = self._search_geo_objects(filters2)
+            rids = (self._search_geo_rids(filters1) +
+                    self._search_geo_rids(filters2))
 
-            results = results1 + results2
-
-        self._sort_geo_objects(results, sort_on, sort_order)
-        return results
+        self._sort_geo_rids(rids, sort_on, sort_order)
+        return rids
 
     security.declarePrivate('_search_geo_clusters')
 
@@ -705,34 +718,43 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
 
             It accepts the same parameters as :meth:`getLocations`.
         """
-        all_items = {}
-        objects = self.search_geo_objects(sort_on=sort_on,
-                                          sort_order=sort_order)
+        catalog_tool = self.getCatalogTool()
+        catalog = catalog_tool._catalog
+        rids = self._search_sorted_geo_rids(sort_on, sort_order, None, {})
+        geo_type = catalog.getIndex('geo_type')._unindex
+        lat = catalog.getIndex('geo_latitude')._unindex
+        lon = catalog.getIndex('geo_longitude')._unindex
+        title, ob_id = catalog.schema['title'], catalog.schema['id']
 
-        for i in range(len(objects)):
-            item = objects[i]
-            marker = []
+        def catalog_marker(rid):
+            values = []
             if 'type' in criteria:
-                marker.append(item.geo_type)
+                values.append(geo_type.get(rid))
             if 'latlon' in criteria:
-                marker.append(item.geo_location.lat)
-                marker.append(item.geo_location.lon)
-            if 'address' in criteria:
-                marker.append(item.geo_location.address)
+                values.extend([lat.get(rid), lon.get(rid)])
             if 'title' in criteria:
-                marker.append(item.title_or_id())
-            all_items.setdefault(tuple(marker), []).append((item, i))
+                data = catalog.data[rid]
+                values.append(data[title] or data[ob_id])
+            return tuple(values)
 
-        ret = []
-        for items in all_items.values():
-            if len(items) < 2:
-                continue
-            for item in items:
-                ret.append(item)
+        def duplicate_groups(rids, marker):
+            groups = {}
+            for rid in rids:
+                groups.setdefault(marker(rid), []).append(rid)
+            return [group for group in groups.values() if len(group) > 1]
 
-        ret.sort(key=lambda x: x[1])
-        ret = [x[0] for x in ret]
-        return ret
+        # catalog data first; the address needs the object, loaded only for candidates
+        if criteria and set(criteria) != {'address'}:
+            groups = duplicate_groups(rids, catalog_marker)
+        else:
+            groups = [rids]
+        if 'address' in criteria:
+            address = lambda rid: catalog_tool.getobject(rid).geo_location.address
+            groups = [subgroup for group in groups
+                      for subgroup in duplicate_groups(group, address)]
+        duplicates = set(rid for group in groups for rid in group)
+        return LazyMap(catalog_tool.getobject,
+                       [rid for rid in rids if rid in duplicates])
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
                               'getNoCoordinatesObjects')
@@ -1101,69 +1123,40 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
               <link rel="self" href="%s" />
               <author><name>European Environment Agency</name></author>
               <updated>%s</updated>
-              """ % (self.title, self.absolute_url(), self.absolute_url(),
+              """ % (xml_escape(self.title), self.absolute_url(), self.absolute_url(),
                      timestamp)]
         items = self.search_geo_objects(REQUEST=REQUEST, sort_on=sort_on,
                                         sort_order=sort_order, **kwargs)
 
+        # plain string formatting: minidom was a quarter of the time on large maps
+        symbol_titles = {}
         for item in items:
-            doc = minidom.Document()
-            entry = doc.createElement("entry")
-
-            id_node = doc.createElement("id")
-            id_node.appendChild(doc.createTextNode("%s" %
-                                                   (item.absolute_url(1))))
-            entry.appendChild(id_node)
-
-            link_node = doc.createElement("link")
-            link_node.setAttribute("href", item.absolute_url())
-            entry.appendChild(link_node)
-
-            title_node = doc.createElement("title")
-            if item.title:
-                title = doc.createTextNode(item.title)
-            else:
-                title = doc.createTextNode(str(item.getId()))
-            title_node.appendChild(title)
-            entry.appendChild(title_node)
-            summary_node = doc.createElement("summary")
-            summary_node.setAttribute("type", "html")
-            description = [item.description]
-            description.append(
-                "<b>Address</b>: %s" %
-                item.geo_location.address)
+            url = item.absolute_url()
+            description = [item.description,
+                           "<b>Address</b>: %s" % item.geo_location.address]
             if hasattr(item.aq_self, 'webpage'):
-                description.append(
-                    "<b>Webpage:</b>: %s" %
-                    item.webpage)
+                description.append("<b>Webpage:</b>: %s" % item.webpage)
             if hasattr(item.aq_self, 'contact'):
-                description.append(
-                    "<b>Contact:</b>: %s" %
-                    item.contact)
+                description.append("<b>Contact:</b>: %s" % item.contact)
             if hasattr(item.aq_self, 'source') and item.source:
-                description.append(
-                    "<b>Source:</b>: %s" %
-                    item.source)
-            summary_node.appendChild(doc.createTextNode(
-                "%s" % ("<br />".join(description))))
-            entry.appendChild(summary_node)
-
-            type_node = doc.createElement("georss:featuretypetag")
-            coords = doc.createTextNode(
-                getattr(self.getSymbol(item.geo_type), 'title', ''))
-            type_node.appendChild(coords)
-            entry.appendChild(type_node)
-
-            geo_node = doc.createElement("georss:point")
-            coords = doc.createTextNode("%s %s" % (item.geo_location.lat,
-                                                   item.geo_location.lon))
-            geo_node.appendChild(coords)
-            entry.appendChild(geo_node)
-
-            try:
-                rss.append(entry.toprettyxml())
-            except UnicodeDecodeError:
-                print(entry)
+                description.append("<b>Source:</b>: %s" % item.source)
+            if item.geo_type not in symbol_titles:
+                symbol_titles[item.geo_type] = getattr(
+                    self.getSymbol(item.geo_type), 'title', '')
+            rss.append(
+                '<entry>\n'
+                '\t<id>%s</id>\n'
+                '\t<link href=%s/>\n'
+                '\t<title>%s</title>\n'
+                '\t<summary type="html">%s</summary>\n'
+                '\t<georss:featuretypetag>%s</georss:featuretypetag>\n'
+                '\t<georss:point>%s %s</georss:point>\n'
+                '</entry>\n' % (
+                    xml_escape(item.absolute_url(1)), xml_quoteattr(url),
+                    xml_escape(item.title or str(item.getId())),
+                    xml_escape("<br />".join(str(d) for d in description)),
+                    xml_escape(symbol_titles[item.geo_type]),
+                    item.geo_location.lat, item.geo_location.lon))
         if REQUEST:
             REQUEST.RESPONSE.setHeader('Content-Type', 'application/atom+xml')
             REQUEST.RESPONSE.setHeader('Content-Disposition',
