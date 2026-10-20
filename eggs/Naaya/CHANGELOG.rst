@@ -1,4 +1,7 @@
-5.0.36 (unreleased)
+5.0.37 (unreleased)
+-------------------
+
+5.0.36 (2026-10-20)
 -------------------
 * search_geo_objects returns the objects lazily and sorts by title,
   latitude and longitude from catalog data, so paged lists load only the
