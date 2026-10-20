@@ -1,5 +1,8 @@
 1.3.59 - (unreleased)
 =====================
+* remove the zmi folders (copies of portal_map/geomaptool.js,
+  portal_map/custom_filter and gsearch_html); the copies of the ZMI objects
+  are kept in NaayaBundles-DESTINET [dumitval]
 
 1.3.58 - (2026-10-20)
 =====================
