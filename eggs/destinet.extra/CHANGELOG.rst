@@ -1,4 +1,7 @@
-2.0.3 - (unreleased)
+2.0.4 - (unreleased)
+====================
+
+2.0.3 - (2026-10-20)
 ====================
 * get_content: default length, start and draw when the DataTables
   parameters are missing, instead of failing with TypeError [dumitval]
