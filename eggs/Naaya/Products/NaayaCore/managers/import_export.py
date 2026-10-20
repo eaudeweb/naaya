@@ -18,6 +18,8 @@ from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
 from Products.NaayaCore.GeoMapTool.managers import geocoding
 from Products.NaayaCore.SchemaTool.widgets.GeoWidget import GeoWidget
+from Products.NaayaCore.SchemaTool.widgets.SelectMultipleWidget import \
+    SelectMultipleWidget
 from Products.NaayaCore.SchemaTool.widgets.geo import Geo
 from Products.NaayaCore.events import CSVImportEvent
 from Products.NaayaCore.interfaces import ICSVImportExtraColumns
@@ -25,6 +27,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from naaya.core.zope2util import path_in_site
 import simplejson as json
+import re
 import transaction
 import xlrd
 import xlwt
@@ -343,6 +346,19 @@ class CSVImportTool(Implicit, Item):
 InitializeClass(CSVImportTool)
 
 
+def _list_converter(widget):
+    """
+    convert_to_user_string of a SelectMultipleWidget, reading the selection
+    list once per export instead of once per cell
+    """
+    titles = dict((node.id, node.title)
+                  for node in widget.get_list_nodes(widget.list_id))
+
+    def convert(values):
+        return ';'.join([titles.get(value, value) for value in values])
+    return convert
+
+
 class ExportTool(Implicit, Item):
     """ExportTool."""
 
@@ -420,6 +436,8 @@ class ExportTool(Implicit, Item):
             else:
                 dump_header.append(widget.title)
                 convert = widget.convert_to_user_string
+                if isinstance(widget, SelectMultipleWidget):
+                    convert = _list_converter(widget)
                 getter = getter_factory(prop_name, None, convert)
                 prop_getters.append(getter)
 
@@ -688,6 +706,10 @@ def generate_csv(header, rows):
     return output.getvalue()
 
 
+DATE_RE = re.compile(r'^\d{1,2}/\d{1,2}/\d{4}$')
+EXCEL_1900 = datetime(1900, 1, 1)
+
+
 def generate_excel(header, rows):
     """generate_excel.
 
@@ -710,13 +732,19 @@ def generate_excel(header, rows):
         row += 1
         for col in range(0, len(item)):
             style.num_format_str = 'general'
-            try:
-                col_date = datetime.strptime(item[col], '%d/%m/%Y')
-                excel_1900 = datetime.strptime('01/01/1900', '%d/%m/%Y')
-                style.num_format_str = 'dd/MM/yyyy'
-                ws.write(row, col, (col_date - excel_1900).days + 2, style)
-            except ValueError:
-                ws.write(row, col, item[col], style)
+            value = item[col]
+            # strptime only on values that look like dates; it was most of
+            # the export time when tried on every cell
+            if isinstance(value, basestring) and DATE_RE.match(value):
+                try:
+                    col_date = datetime.strptime(value, '%d/%m/%Y')
+                except ValueError:
+                    pass
+                else:
+                    style.num_format_str = 'dd/MM/yyyy'
+                    ws.write(row, col, (col_date - EXCEL_1900).days + 2, style)
+                    continue
+            ws.write(row, col, value, style)
     output = StringIO()
 
     wb.save(output)

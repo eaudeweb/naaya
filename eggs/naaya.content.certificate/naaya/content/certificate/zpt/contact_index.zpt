@@ -142,7 +142,7 @@
             <th i18n:translate="">Topics</th>
             <td>
               <tal:block repeat="the_topic here/topics">
-                <span i18n:translate="" tal:replace="python: [x.title for x in sel_list2 if x.id == the_topic][0]" />
+                <span i18n:translate="" tal:replace="python: ([x.title for x in sel_list2 if x.id == the_topic] or [the_topic])[0]" />
                 <span tal:condition="not:repeat/the_topic/end">,</span>
                 </tal:block>
             </td>

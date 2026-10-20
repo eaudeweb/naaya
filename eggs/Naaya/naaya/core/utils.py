@@ -193,6 +193,14 @@ VALID_EMAIL_PATTERN = re.compile("(?:^|\s)[-a-z0-9_.]+@"
                                  re.IGNORECASE)
 
 
+def split_emails(value):
+    """
+    List of the addresses in a comma, semicolon or whitespace separated
+    string
+    """
+    return [e for e in re.split(r'[,;\s]+', value or '') if e]
+
+
 def is_valid_email(email):
     """
     Validate e-mail address against regular expression

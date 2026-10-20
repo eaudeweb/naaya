@@ -1,5 +1,7 @@
 1.4.71 (unreleased)
 -------------------
+* fix member_search failing with 500 when the LDAP server does not answer:
+  log the error, list only the local users and show a message [dumitval]
 
 1.4.70 (2026-10-15)
 -------------------

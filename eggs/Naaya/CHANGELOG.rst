@@ -1,5 +1,34 @@
 5.0.36 (unreleased)
 -------------------
+* search_geo_objects returns the objects lazily and sorts by title,
+  latitude and longitude from catalog data, so paged lists load only the
+  shown objects (destinet admin_maplocations_html: 8.6 s to 1.9 s)
+  [dumitval]
+* getDuplicateLocations compares catalog data first and loads objects only
+  for the address of candidate duplicates (destinet: 9.7 s to 2.8 s)
+  [dumitval]
+* xrjs_getGeoClusters sends the point ids only for clusters whose points
+  share one location, the only ones zooming cannot split (world map
+  response 843 KB to 77 KB); geomaptool.js zooms in on the other clusters
+  [dumitval]
+* export_geo_rss: build the entries without minidom and escape the feed
+  title [dumitval]
+* Excel export: read the selection list of SelectMultipleWidget once per
+  export and try strptime only on dd/mm/yyyy values (destinet contacts:
+  39 s to 19 s) [dumitval]
+* notifications: walk only folders and sites when listing a user's
+  subscriptions, and compute them once per request (destinet
+  my_subscriptions_html: 10 s to 1.1 s) [dumitval]
+* rstk json_dumps: escape <, > and & so the result can be written inside
+  <script> [dumitval]
+* getMaintainersEmails and EmailTool.sendEmail: split the addresses on
+  commas, semicolons and whitespace (naaya.core.utils.split_emails); a ";"
+  in administrator_email gave an invalid To [dumitval]
+* admin_resetrole_html: use the Naaya skel roles on sites whose skel has no
+  security section (EnviroWindows) [dumitval]
+* geopoint ZMI add and edit pages: use the geo_location latitude and
+  longitude; the edit page failed with AttributeError: latitude. Geo values
+  can now be read in page templates [dumitval]
 
 5.0.35 (2026-10-15)
 -------------------

@@ -9,12 +9,13 @@ and searching.
 from decimal import Decimal
 from datetime import datetime
 import time
-from xml.dom import minidom
 import simplejson as json
+from xml.sax.saxutils import escape as xml_escape, quoteattr as xml_quoteattr
 import operator
 from warnings import warn
 
 from Globals import InitializeClass
+from Products.ZCatalog.Lazy import LazyMap
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from OFS.Folder import Folder
@@ -70,6 +71,19 @@ def err_info():
     import sys
     import traceback
     return traceback.format_exception_only(*sys.exc_info()[:2])[-1].strip()
+
+
+# Degrees; a cluster this small stays one cluster at the maximum zoom
+CO_LOCATED_SPAN = 0.0005
+
+
+def _to_unicode(value):
+    """ Text of a property value, for the GeoRSS export """
+    if isinstance(value, unicode):
+        return value
+    if isinstance(value, str):
+        return value.decode('utf-8', 'replace')
+    return unicode(value)
 
 
 class GeoMapTool(Folder, utils, session_manager, symbols_tool):
@@ -288,13 +302,10 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         results = self._search_geo_objects(filters)
         return results
 
-    security.declarePrivate('_search_geo_objects')
+    security.declarePrivate('_search_geo_rids')
 
-    def _search_geo_objects(self, filters):
-        """
-        Returns all the objects that match the specified criteria.
-        This does not check for the 180/-180 meridian in the map
-        """
+    def _search_geo_rids(self, filters):
+        """ Catalog record ids of the objects that match the filters """
         catalog_tool = self.getCatalogTool()
 
         brains = []
@@ -313,26 +324,42 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             if rid not in dict_rids:
                 dict_rids[rid] = 1
                 rids.append(rid)
+        return rids
 
-        return map(lambda rid: catalog_tool.getobject(rid), rids)
+    security.declarePrivate('_search_geo_objects')
 
-    def _sort_geo_objects(self, objects, sort_on, sort_order):
-        key_func = None
+    def _search_geo_objects(self, filters):
+        """
+        Returns all the objects that match the specified criteria.
+        This does not check for the 180/-180 meridian in the map
+        """
+        catalog_tool = self.getCatalogTool()
+        return [catalog_tool.getobject(rid)
+                for rid in self._search_geo_rids(filters)]
+
+    def _sort_geo_rids(self, rids, sort_on, sort_order):
+        """ Sort catalog record ids, from catalog data where possible """
+        catalog_tool = self.getCatalogTool()
+        catalog = catalog_tool._catalog
         if sort_on == 'title':
-            key_func = lambda x: x.title
-        elif sort_on == 'geo_address':
-            key_func = lambda x: x.geo_location.address
-        elif sort_on == 'geo_latitude':
-            key_func = lambda x: x.geo_location.lat
-        elif sort_on == 'geo_longitude':
-            key_func = lambda x: x.geo_location.lon
-        elif sort_on == 'coverage':
-            key_func = lambda x: x.coverage
+            column = catalog.schema['title']
 
-        reverse = (sort_order == 'reverse')
+            def key_func(rid):
+                return catalog.data[rid][column] or ''
+        elif sort_on in ('geo_latitude', 'geo_longitude'):
+            values = catalog.getIndex(sort_on)._unindex
 
-        if key_func is not None:
-            objects.sort(key=key_func, reverse=reverse)
+            def key_func(rid):
+                return values.get(rid, 0)
+        elif sort_on in ('geo_address', 'coverage'):
+            object_key = {'geo_address': lambda x: x.geo_location.address,
+                          'coverage': lambda x: x.coverage}[sort_on]
+
+            def key_func(rid):
+                return object_key(catalog_tool.getobject(rid))
+        else:
+            return
+        rids.sort(key=key_func, reverse=(sort_order == 'reverse'))
 
     security.declareProtected(view, 'search_geo_objects')
 
@@ -357,23 +384,26 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                                       if 'reverse' then reversed order
         """
 
+        rids = self._search_sorted_geo_rids(sort_on, sort_order, REQUEST,
+                                            kwargs)
+        # objects are loaded when used, pages show only a slice of them
+        return LazyMap(self.getCatalogTool().getobject, rids)
+
+    def _search_sorted_geo_rids(self, sort_on, sort_order, REQUEST, kwargs):
         criteria = self._parse_search_terms(REQUEST, kwargs)
 
         if criteria['lon_min'] < criteria['lon_max']:
             filters = self.build_geo_filters(**criteria)
-            results = self._search_geo_objects(filters)
+            rids = self._search_geo_rids(filters)
 
         else:
             filters1 = self.build_geo_filters(**dict(criteria, lon_max=180.0))
-            results1 = self._search_geo_objects(filters1)
-
             filters2 = self.build_geo_filters(**dict(criteria, lon_min=-180.0))
-            results2 = self._search_geo_objects(filters2)
+            rids = (self._search_geo_rids(filters1) +
+                    self._search_geo_rids(filters2))
 
-            results = results1 + results2
-
-        self._sort_geo_objects(results, sort_on, sort_order)
-        return results
+        self._sort_geo_rids(rids, sort_on, sort_order)
+        return rids
 
     security.declarePrivate('_search_geo_clusters')
 
@@ -398,6 +428,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         # call the improved cluster_catalog function for getting the clusters
         centers, groups = clusters_catalog.getClusters(catalog_tool, filters)
 
+        bounds = [c.bounds for c in centers]
         # transform centers to Geo
         centers = map(lambda c: Geo(str(c.lat), str(c.lon)), centers)
 
@@ -424,7 +455,8 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                             clusters_catalog.getObjectPathFromCatalog(
                                 catalog_tool, rid)
                             for rid in groups[i]]
-                        cluster_obs.append((centers[i], group_paths))
+                        cluster_obs.append((centers[i], group_paths,
+                                            bounds[i]))
 
         return cluster_obs, single_obs
 
@@ -570,7 +602,11 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             points = []
             cluster_obs, single_obs = self.search_geo_clusters(REQUEST)
 
-            for center, grouped_ids in cluster_obs:
+            for center, grouped_ids, bounds in cluster_obs:
+                # ids are needed only where zooming cannot split the cluster
+                lat_min, lat_max, lon_min, lon_max = bounds
+                co_located = (lat_max - lat_min < CO_LOCATED_SPAN and
+                              lon_max - lon_min < CO_LOCATED_SPAN)
                 points.append({
                     'lat': center.lat,
                     'lon': center.lon,
@@ -580,7 +616,8 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                                   self._pick_cluster(len(grouped_ids))),
                     'tooltip': '',
                     'num_records': len(grouped_ids),
-                    'point_ids': grouped_ids,
+                    'point_ids': grouped_ids if co_located else [],
+                    'bounds': bounds,
                 })
 
             for res in single_obs:
@@ -684,34 +721,45 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
 
             It accepts the same parameters as :meth:`getLocations`.
         """
-        all_items = {}
-        objects = self.search_geo_objects(sort_on=sort_on,
-                                          sort_order=sort_order)
+        catalog_tool = self.getCatalogTool()
+        catalog = catalog_tool._catalog
+        rids = self._search_sorted_geo_rids(sort_on, sort_order, None, {})
+        geo_type = catalog.getIndex('geo_type')._unindex
+        lat = catalog.getIndex('geo_latitude')._unindex
+        lon = catalog.getIndex('geo_longitude')._unindex
+        title, ob_id = catalog.schema['title'], catalog.schema['id']
 
-        for i in range(len(objects)):
-            item = objects[i]
-            marker = []
+        def catalog_marker(rid):
+            values = []
             if 'type' in criteria:
-                marker.append(item.geo_type)
+                values.append(geo_type.get(rid))
             if 'latlon' in criteria:
-                marker.append(item.geo_location.lat)
-                marker.append(item.geo_location.lon)
-            if 'address' in criteria:
-                marker.append(item.geo_location.address)
+                values.extend([lat.get(rid), lon.get(rid)])
             if 'title' in criteria:
-                marker.append(item.title_or_id())
-            all_items.setdefault(tuple(marker), []).append((item, i))
+                data = catalog.data[rid]
+                values.append(data[title] or data[ob_id])
+            return tuple(values)
 
-        ret = []
-        for items in all_items.values():
-            if len(items) < 2:
-                continue
-            for item in items:
-                ret.append(item)
+        def duplicate_groups(rids, marker):
+            groups = {}
+            for rid in rids:
+                groups.setdefault(marker(rid), []).append(rid)
+            return [group for group in groups.values() if len(group) > 1]
 
-        ret.sort(key=lambda x: x[1])
-        ret = [x[0] for x in ret]
-        return ret
+        # catalog data first; the address needs the object, so it is loaded
+        # only for the candidates
+        if criteria and set(criteria) != set(['address']):
+            groups = duplicate_groups(rids, catalog_marker)
+        else:
+            groups = [rids]
+        if 'address' in criteria:
+            def address(rid):
+                return catalog_tool.getobject(rid).geo_location.address
+            groups = [subgroup for group in groups
+                      for subgroup in duplicate_groups(group, address)]
+        duplicates = set(rid for group in groups for rid in group)
+        return LazyMap(catalog_tool.getobject,
+                       [rid for rid in rids if rid in duplicates])
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
                               'getNoCoordinatesObjects')
@@ -1080,70 +1128,47 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
               <link rel="self" href="%s" />
               <author><name>European Environment Agency</name></author>
               <updated>%s</updated>
-              """ % (self.title, self.absolute_url(), self.absolute_url(),
-                     timestamp)]
+              """ % (xml_escape(_to_unicode(self.title)), self.absolute_url(),
+                     self.absolute_url(), timestamp)]
         items = self.search_geo_objects(REQUEST=REQUEST, sort_on=sort_on,
                                         sort_order=sort_order, **kwargs)
 
+        # plain string formatting: minidom was a quarter of the time on
+        # large maps
+        symbol_titles = {}
         for item in items:
-            doc = minidom.Document()
-            entry = doc.createElement("entry")
-
-            id_node = doc.createElement("id")
-            id_node.appendChild(doc.createTextNode("%s" %
-                                                   (item.absolute_url(1))))
-            entry.appendChild(id_node)
-
-            link_node = doc.createElement("link")
-            link_node.setAttribute("href", item.absolute_url())
-            entry.appendChild(link_node)
-
-            title_node = doc.createElement("title")
-            if item.title:
-                title = doc.createTextNode(
-                    item.title.encode('utf-8').decode('utf-8'))
-            else:
-                title = doc.createTextNode(str(item.getId()))
-            title_node.appendChild(title)
-            entry.appendChild(title_node)
-            summary_node = doc.createElement("summary")
-            summary_node.setAttribute("type", "html")
-            description = [item.description.encode('utf-8').decode('utf-8')]
-            description.append(
-                "<b>Address</b>: %s" %
-                item.geo_location.address.encode('utf-8').decode('utf-8'))
+            url = item.absolute_url()
+            description = [item.description,
+                           u"<b>Address</b>: %s" %
+                           _to_unicode(item.geo_location.address)]
             if hasattr(item.aq_self, 'webpage'):
-                description.append(
-                    "<b>Webpage:</b>: %s" %
-                    item.webpage.encode('utf-8').decode('utf-8'))
+                description.append(u"<b>Webpage:</b>: %s" %
+                                   _to_unicode(item.webpage))
             if hasattr(item.aq_self, 'contact'):
-                description.append(
-                    "<b>Contact:</b>: %s" %
-                    item.contact.encode('utf-8').decode('utf-8'))
+                description.append(u"<b>Contact:</b>: %s" %
+                                   _to_unicode(item.contact))
             if hasattr(item.aq_self, 'source') and item.source:
-                description.append(
-                    "<b>Source:</b>: %s" %
-                    item.source.encode('utf-8').decode('utf-8'))
-            summary_node.appendChild(doc.createTextNode(
-                "%s" % ("<br />".join(description))))
-            entry.appendChild(summary_node)
-
-            type_node = doc.createElement("georss:featuretypetag")
-            coords = doc.createTextNode(
-                getattr(self.getSymbol(item.geo_type), 'title', ''))
-            type_node.appendChild(coords)
-            entry.appendChild(type_node)
-
-            geo_node = doc.createElement("georss:point")
-            coords = doc.createTextNode("%s %s" % (item.geo_location.lat,
-                                                   item.geo_location.lon))
-            geo_node.appendChild(coords)
-            entry.appendChild(geo_node)
-
-            try:
-                rss.append(entry.toprettyxml())
-            except UnicodeDecodeError:
-                print entry
+                description.append(u"<b>Source:</b>: %s" %
+                                   _to_unicode(item.source))
+            if item.geo_type not in symbol_titles:
+                symbol_titles[item.geo_type] = getattr(
+                    self.getSymbol(item.geo_type), 'title', '')
+            rss.append(
+                u'<entry>\n'
+                u'\t<id>%s</id>\n'
+                u'\t<link href=%s/>\n'
+                u'\t<title>%s</title>\n'
+                u'\t<summary type="html">%s</summary>\n'
+                u'\t<georss:featuretypetag>%s</georss:featuretypetag>\n'
+                u'\t<georss:point>%s %s</georss:point>\n'
+                u'</entry>\n' % (
+                    xml_escape(_to_unicode(item.absolute_url(1))),
+                    xml_quoteattr(_to_unicode(url)),
+                    xml_escape(_to_unicode(item.title or item.getId())),
+                    xml_escape(u"<br />".join(_to_unicode(d)
+                                              for d in description)),
+                    xml_escape(_to_unicode(symbol_titles[item.geo_type])),
+                    item.geo_location.lat, item.geo_location.lon))
         if REQUEST:
             REQUEST.RESPONSE.setHeader('Content-Type', 'application/atom+xml')
             REQUEST.RESPONSE.setHeader('Content-Disposition',

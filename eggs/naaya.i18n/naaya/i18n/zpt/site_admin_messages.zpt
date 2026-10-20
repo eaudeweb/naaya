@@ -11,7 +11,7 @@
                     skey python:request.get('skey', 'msg');
                     rkey python:request.get('rkey', '');
                     sort_qs python:'start=%s&amp;skey=%s&amp;rkey=%s&amp;query=%s' % (start, skey, rkey, query);
-                    trans_lang request/trans_lang|nothing;
+                    trans_lang python:request.get('trans_lang') or portal_i18n.get_default_language();
                     languages admin_i18n/get_languages_mapping;
                     msg_encoded python:request.get('msg', '');
                     message python:admin_i18n.message_decode(msg_encoded);

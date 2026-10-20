@@ -3,6 +3,9 @@
                        reverse_sorted options/reverse_sorted;
                        userlist options/user_list|nothing;
                        is_member here/is_member">
+<div class="message-error" tal:repeat="error options/errors|nothing">
+    <p tal:content="error">Error</p>
+</div>
 <tal:block tal:condition="userlist">
 <p i18n:translate="">
     Found <tal:block tal:content="python:len(userlist)"

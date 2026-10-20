@@ -24,6 +24,7 @@ from email.utils import make_msgid
 from naaya.core.permissions import naaya_admin
 from naaya.core.site_logging import get_log_dir
 from naaya.core.utils import force_to_unicode
+from naaya.core.utils import split_emails
 from urlparse import urlparse
 from zope.component import queryUtility, getGlobalSiteManager
 from zope.deprecation import deprecate
@@ -189,12 +190,12 @@ class EmailTool(Folder):
                 )
 
         if not isinstance(p_to, list):
-            p_to = [e.strip() for e in p_to.split(',')]
+            p_to = split_emails(p_to)
 
         p_to = filter(None, p_to)  # filter out blank recipients
 
         if not isinstance(p_cc, list):
-            p_cc = [e.strip() for e in p_cc.split(',')]
+            p_cc = split_emails(p_cc)
 
         p_cc = filter(None, p_cc)  # filter out blank recipients
 

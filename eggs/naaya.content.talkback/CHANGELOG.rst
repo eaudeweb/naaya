@@ -1,6 +1,16 @@
 1.5.8 (unreleased)
 -----------------
 * allow skipping sections that are marked as header [dumitval]
+* protect bulk_create with the invite permission and allow inviting on
+  behalf of another user only for Managers [dumitval]
+* generate the invitation keys with SystemRandom [dumitval]
+* fix the custom Excel export of the comments [dumitval]
+* link the contributors in the Excel export to their user id, not their
+  full name [dumitval]
+* fix the comment ZMI page, delete_sections without a selected section and
+  the cleanup of stale paragraph ids [dumitval]
+* fix the set_reviewer_permission and migrate_to_contributor updates for
+  non-acquired permissions and names with ":" [dumitval]
 
 1.5.7 (2020-11-20)
 -----------------

@@ -1,5 +1,15 @@
 1.3.58 - (unreleased)
 =====================
+* zmi/geomaptool.js: zoom in on clusters without point ids; the server
+  sends them only for co-located points [dumitval]
+* signup: log in and grant Contributor only when the account was created;
+  a signup with an existing username granted Contributor to that user
+  [dumitval]
+* write the map filter values into JavaScript as JSON in the listing
+  templates; request values were inserted unescaped (reflected XSS)
+  [dumitval]
+* get_content: default length, start and draw when the DataTables
+  parameters are missing, instead of failing with TypeError [dumitval]
 
 1.3.57 - (2026-10-15)
 =====================

@@ -18,8 +18,11 @@ class SetReviewerPermission(UpdateScript):
         for role in ['Administrator', 'Owner', 'Reviewer']:
             roles = review_perm.getRoles()
             if role not in roles:
-                roles.append(role)
-                review_perm.setRoles(roles)
+                # a tuple means the permission is not acquired; keep that
+                new_roles = list(roles) + [role]
+                if isinstance(roles, tuple):
+                    new_roles = tuple(new_roles)
+                review_perm.setRoles(new_roles)
                 self.log.info("Review Permission set for %s on %s" %
                               (role, portal.absolute_url()))
         return True
