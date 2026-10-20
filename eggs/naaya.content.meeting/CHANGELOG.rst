@@ -1,4 +1,7 @@
-2.0.2 (unreleased)
+2.0.3 (unreleased)
+------------------
+
+2.0.2 (2026-10-20)
 ------------------
 * Use the file name, not the file path, as id of the map symbols added on
   install [dumitval]
