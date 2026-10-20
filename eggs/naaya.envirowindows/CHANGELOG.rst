@@ -1,4 +1,7 @@
-2.0.3 (unreleased)
+2.0.4 (unreleased)
+------------------
+
+2.0.3 (2026-10-20)
 ------------------
 * Remove the portlet_ymap (Yahoo map) portlet from the skel [dumitval]
 
