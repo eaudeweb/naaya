@@ -1,4 +1,7 @@
-1.0.1 (unreleased)
+1.0.2 (unreleased)
+------------------
+
+1.0.1 (2026-10-20)
 ------------------
 * Show an Unknown layout validation error for a layout_type that is not one
   of the four layouts, instead of failing with UnboundLocalError [dumitval]
