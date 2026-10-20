@@ -1,4 +1,7 @@
-2.0.4 (unreleased)
+2.0.5 (unreleased)
+------------------
+
+2.0.4 (2026-10-20)
 ------------------
 * Use & instead of &amp; in the redirects after editing or deleting a
   message, so the messages list keeps its page and language [dumitval]
