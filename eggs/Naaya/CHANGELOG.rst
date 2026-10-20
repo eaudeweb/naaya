@@ -1,4 +1,7 @@
-6.0.6 (unreleased)
+6.0.7 (unreleased)
+------------------
+
+6.0.6 (2026-10-20)
 ------------------
 * Map clusters: check the latitude and longitude range on the index values of
   the records matching the other filters, instead of a range over the
