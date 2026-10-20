@@ -1,5 +1,8 @@
-1.5.8 (unreleased)
------------------
+1.5.9 (unreleased)
+------------------
+
+1.5.8 (2026-10-20)
+------------------
 * allow skipping sections that are marked as header [dumitval]
 * protect bulk_create with the invite permission and allow inviting on
   behalf of another user only for Managers [dumitval]
