@@ -1,4 +1,7 @@
-2.0.3 (unreleased)
+2.0.4 (unreleased)
+------------------
+
+2.0.3 (2026-10-20)
 ------------------
 * Use the OpenLayers map engine in the Update properties of portal_map
   script for sites set to Yahoo [dumitval]
