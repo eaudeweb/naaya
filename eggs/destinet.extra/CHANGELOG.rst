@@ -1,4 +1,7 @@
-1.3.58 - (unreleased)
+1.3.59 - (unreleased)
+=====================
+
+1.3.58 - (2026-10-20)
 =====================
 * zmi/geomaptool.js: zoom in on clusters without point ids; the server
   sends them only for co-located points [dumitval]
