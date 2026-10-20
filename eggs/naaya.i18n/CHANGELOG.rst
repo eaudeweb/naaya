@@ -1,4 +1,7 @@
-1.1.11 (unreleased)
+1.1.12 (unreleased)
+-------------------
+
+1.1.11 (2026-10-20)
 -------------------
 * fix portal_i18n/admin_messages_html failing with TypeError when the
   trans_lang parameter is missing: use the site default language [dumitval]
