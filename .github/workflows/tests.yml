@@ -1,0 +1,64 @@
+# Tests of the Naaya packages, installed with pip as on the circa and destinet servers
+name: tests
+
+on:
+  push:
+    branches: [python3]
+  pull_request:
+    branches: [python3]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - site: circa
+            repo: eaudeweb/naaya.buildout.circabe
+          - site: destinet
+            repo: eaudeweb/naaya.buildout.destinet
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: naaya
+
+      # .gitmodules uses SSH URLs; only the DESTINET bundle is installed
+      - name: Check out the DESTINET bundle
+        run: |
+          git config --global url."https://github.com/".insteadOf git@github.com:
+          git -C naaya submodule update --init bundles/NaayaBundles-DESTINET
+
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ matrix.repo }}
+          ref: pip
+          path: site
+
+      - uses: actions/checkout@v4
+        with:
+          repository: eaudeweb/naaya.buildout.naaya
+          ref: pip
+          path: site/src/naaya.buildout.naaya
+
+      - name: Install the python-ldap build dependencies
+        run: sudo apt-get update && sudo apt-get install -y libldap2-dev libsasl2-dev
+
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: pip-${{ matrix.site }}-${{ hashFiles('site/versions.cfg', 'site/src/naaya.buildout.naaya/zope6-versions.cfg') }}
+          restore-keys: pip-${{ matrix.site }}-
+
+      - name: Point the site at this checkout
+        run: python3.12 naaya/.github/ci/prepare.py site naaya
+
+      - name: Install
+        working-directory: site
+        run: make requirements packages config
+
+      - name: Test
+        working-directory: site
+        run: make test INSTANCE=ci TEST_ARGS=-v
