@@ -1,5 +1,9 @@
 # Naaya CMS
 
+[![tests](https://github.com/eaudeweb/naaya/actions/workflows/tests.yml/badge.svg?branch=python3)](https://github.com/eaudeweb/naaya/actions/workflows/tests.yml?query=branch%3Apython3)
+![Python 3.12](https://img.shields.io/badge/python-3.12-blue)
+![Zope 6.2](https://img.shields.io/badge/zope-6.2-blue)
+
 ## Working with git submodules
 
 This repository contains links to other git repositories, as described in `.gitmodules`.
