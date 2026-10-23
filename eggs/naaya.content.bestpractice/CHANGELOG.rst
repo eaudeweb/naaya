@@ -1,4 +1,7 @@
-1.0.1 (unreleased)
+1.0.2 (unreleased)
+------------------
+
+1.0.1 (2026-10-23)
 ------------------
 * Fix adding with a file storing the file under the contributor name
   instead of the language [dumitval]
