@@ -17,11 +17,11 @@ MAX_TEXT_LENGTH = 1024 * 1024
 COMMAND_TIMEOUT = 60
 
 PDF_COMMAND = ['pdftotext', '-q', '-enc', 'UTF-8', '{path}', '-']
-# legacy Office formats, used only when the binary is installed
+# legacy Office formats via catdoc, used only when installed; -s is the 8-bit codepage
 LEGACY_COMMANDS = {
-    '.doc': ['antiword', '{path}'],
-    '.xls': ['xls2csv', '{path}'],
-    '.ppt': ['catppt', '{path}'],
+    '.doc': ['catdoc', '-s', 'cp1252', '-d', 'utf-8', '{path}'],
+    '.xls': ['xls2csv', '-s', 'cp1252', '-d', 'utf-8', '{path}'],
+    '.ppt': ['catppt', '-s', 'cp1252', '-d', 'utf-8', '{path}'],
 }
 _missing_binaries = set()
 
