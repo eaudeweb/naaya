@@ -1,4 +1,7 @@
-2.0.2 (unreleased)
+2.0.3 (unreleased)
+------------------
+
+2.0.2 (2026-10-23)
 ------------------
 * Fix the PDF export failing [dumitval]
 * Fix and extend the tests [dumitval]
