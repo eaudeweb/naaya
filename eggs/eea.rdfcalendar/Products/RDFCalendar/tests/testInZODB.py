@@ -20,9 +20,9 @@ class RDFCalendarInZopeTestCase(ZopeTestCase.ZopeTestCase):
         self.assertEqual(12, self.app.mycal.getMonth())
 
 def test_suite():
-    from unittest import TestSuite, makeSuite
+    from unittest import TestSuite, TestLoader
     suite = TestSuite()
-    suite.addTest(makeSuite(RDFCalendarInZopeTestCase))
+    suite.addTest(TestLoader().loadTestsFromTestCase(RDFCalendarInZopeTestCase))
     return suite
 
 if __name__ == '__main__':

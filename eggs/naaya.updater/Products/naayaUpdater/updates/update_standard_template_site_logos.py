@@ -127,18 +127,18 @@ class UpdateSiteLogos(UpdateScript):
         if left_logo and right_logo:
             return
         if left_logo and not right_logo:
-            self.log.warn("!!! No right logo after update")
+            self.log.warning("!!! No right logo after update")
         if not left_logo and right_logo:
-            self.log.warn("!!! No left logo after update")
+            self.log.warning("!!! No left logo after update")
         if not left_logo and not right_logo:
-            self.log.warn("!!! No left and no right logo after update")
+            self.log.warning("!!! No left and no right logo after update")
 
         images = portal_layout.objectValues('Image')
         gifs_in_portal_layout = [ob.getId() for ob in images
                                         if '.gif' in ob.getId() and ob.data]
         if gifs_in_portal_layout:
-            self.log.warn('The following not empty gifs are found in %s: %s',
+            self.log.warning('The following not empty gifs are found in %s: %s',
                            portal_layout.absolute_url() + '/manage_workspace',
                            gifs_in_portal_layout)
         else:
-            self.log.warn('No gifs in the portal_layout')
+            self.log.warning('No gifs in the portal_layout')

@@ -199,7 +199,7 @@ class Import(object):
         # XXX Dynamic properties
         properties = value.pop('_NyProperties__dynamic_properties', {})
         if properties:
-            self.logger.warn('\t DEPRECATED: '
+            self.logger.warning('\t DEPRECATED: '
                              'Dynamic properties are deprecated. '
                              'Please update portal_schemas for NyBFile '
                              'with the following widgets: %s',
@@ -326,7 +326,7 @@ class UpdateNyFile2NyBlobFile(UpdateScript):
             try:
                 portal.manage_uninstall_pluggableitem('Naaya File')
             except Exception as err:
-                self.log.warn('You need to manually uninstall Naaya File '
+                self.log.warning('You need to manually uninstall Naaya File '
                               'in Control Panel')
                 self.log.error(err)
             else:
@@ -337,7 +337,7 @@ class UpdateNyFile2NyBlobFile(UpdateScript):
             try:
                 portal.manage_install_pluggableitem('Naaya Blob File')
             except Exception as err:
-                self.log.warn('You need to manually install Naaya Blob File '
+                self.log.warning('You need to manually install Naaya Blob File '
                               'in Control Panel')
                 self.log.error(err)
             else:
@@ -375,7 +375,7 @@ class UpdateNyFile2NyBlobFile(UpdateScript):
         templates = set(['file_add', 'file_edit', 'file_index'])
         customized = templates.intersection(ftool.objectIds())
         if customized:
-            self.log.warn('Check customized templates in %s/portal_forms: %s',
+            self.log.warning('Check customized templates in %s/portal_forms: %s',
                           portal.absolute_url(1), ', '.join(customized))
 
         ctool = portal.portal_catalog

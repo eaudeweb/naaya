@@ -22,9 +22,9 @@ class RDFSummaryInZopeTestCase(ZopeTestCase.ZopeTestCase):
         self.assertEqual("http://ec.europa.eu/idabc/en/document/7542", items[0]['link'])
 
 def test_suite():
-    from unittest import TestSuite, makeSuite
+    from unittest import TestSuite, TestLoader
     suite = TestSuite()
-    suite.addTest(makeSuite(RDFSummaryInZopeTestCase))
+    suite.addTest(TestLoader().loadTestsFromTestCase(RDFSummaryInZopeTestCase))
     return suite
 
 if __name__ == '__main__':

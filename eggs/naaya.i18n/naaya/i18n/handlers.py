@@ -34,5 +34,5 @@ def debug_messages(event):
             if portal_i18n.message_debug_exception:
                 raise ValueError(msg)
             stack = ''.join(traceback.format_stack())
-            log.warn("%r - %s.\n\nstack:\n%s", msg, portal_i18n, stack)
+            log.warning("%r - %s.\n\nstack:\n%s", msg, portal_i18n, stack)
         break

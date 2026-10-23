@@ -1,5 +1,6 @@
 2.0.3 (unreleased)
 ------------------
+* Remove the Python deprecation warnings [dumitval]
 
 2.0.2 (2026-10-18)
 ------------------

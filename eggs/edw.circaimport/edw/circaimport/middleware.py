@@ -239,7 +239,7 @@ def add_acls_from_circa_export(site, filepath):
     if not acls:
         logger.info('No matched acls')
         if not_matched:
-            logger.warn('Not matched rows (from the exported file): %s',
+            logger.warning('Not matched rows (from the exported file): %s',
                         not_matched)
         return
 
@@ -269,7 +269,7 @@ def add_acls_from_circa_export(site, filepath):
                 logger.error('User not found: %s', user_id)
                 continue
             # set_acl_for_user(ob, user)
-            logger.warn('(Deactivated) Granted view on path %s for user %s',
+            logger.warning('(Deactivated) Granted view on path %s for user %s',
                         path, user_id)
 
         # add roles acls
@@ -277,16 +277,16 @@ def add_acls_from_circa_export(site, filepath):
         roles = list(set(map(get_role, roles)))
         if roles:
             # set_acl_for_roles(ob, roles)
-            logger.warn('(Deactivated) Granted view on path %s for roles %s',
+            logger.warning('(Deactivated) Granted view on path %s for roles %s',
                         path, roles)
 
         # not matched values
         nonvals = [val for val in non_userids if not val.startswith('__')]
         if nonvals:
-            logger.warn('Not matched user or profile for %s' % nonvals)
+            logger.warning('Not matched user or profile for %s' % nonvals)
 
     if not_matched:
-        logger.warn('Not matched rows (from the exported file): %s' %
+        logger.warning('Not matched rows (from the exported file): %s' %
                     not_matched)
 
     logger.debug('done importing acls')

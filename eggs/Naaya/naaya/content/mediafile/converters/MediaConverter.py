@@ -140,7 +140,7 @@ CONVERSION_TOOL = None
 try:
     CONVERSION_TOOL = _get_convertor_tool()
 except MediaConverterError:
-    logger.warn("ffmpeg or avconv are not available")
+    logger.warning("ffmpeg or avconv are not available")
 
 
 #

@@ -128,10 +128,10 @@ class NyDocumentFunctionalTestCase(NaayaFunctionalTestCase):
         html = self.browser.get_html()
         soup = BeautifulSoup(html, "lxml")
 
-        tables = soup.findAll('table', id='folderfile_list')
+        tables = soup.find_all('table', id='folderfile_list')
         self.assertTrue(len(tables) == 1)
 
-        links_to_document = tables[0].findAll('a', attrs={'href': 'http://localhost/portal/myfolder/mydoc'})
+        links_to_document = tables[0].find_all('a', attrs={'href': 'http://localhost/portal/myfolder/mydoc'})
         self.assertTrue(len(links_to_document) == 1)
         self.assertTrue(links_to_document[0].string == 'My document')
 

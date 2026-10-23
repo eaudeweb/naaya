@@ -58,7 +58,7 @@ class Export(object):
                     continue
 
                 if version.is_broken():
-                    self.logger.warn('\t BROKEN VERSION: %s (%s)',
+                    self.logger.warning('\t BROKEN VERSION: %s (%s)',
                                      version.getId(), filename)
                     continue
 
@@ -74,7 +74,7 @@ class Export(object):
                 continue
 
             if extfile.is_broken():
-                self.logger.warn('\t BROKEN EXTFILE: %s (%s)', language,
+                self.logger.warning('\t BROKEN EXTFILE: %s (%s)', language,
                                  filename)
                 continue
 
@@ -237,7 +237,7 @@ class Import(object):
         # XXX Dynamic properties
         properties = value.pop('_NyProperties__dynamic_properties', {})
         if properties:
-            self.logger.warn('\t DEPRECATED: '
+            self.logger.warning('\t DEPRECATED: '
                              'Dynamic properties are deprecated. '
                              'Please update portal_schemas for NyBFile '
                              'with the following widgets: %s',
@@ -399,7 +399,7 @@ class UpdateNyExFile2NyBlobFile(UpdateScript):
             try:
                 portal.manage_uninstall_pluggableitem('Naaya Extended File')
             except Exception as err:
-                self.log.warn('You need to manually uninstall '
+                self.log.warning('You need to manually uninstall '
                               'Naaya Extended File in Control Panel')
                 self.log.error(err)
             else:
@@ -411,7 +411,7 @@ class UpdateNyExFile2NyBlobFile(UpdateScript):
             try:
                 portal.manage_install_pluggableitem('Naaya Blob File')
             except Exception as err:
-                self.log.warn('You need to manually install '
+                self.log.warning('You need to manually install '
                               'Naaya Blob File in Control Panel')
                 self.log.error(err)
             else:
@@ -471,7 +471,7 @@ class UpdateNyExFile2NyBlobFile(UpdateScript):
         templates = set(['exfile_add', 'exfile_edit', 'exfile_index'])
         customized = templates.intersection(ftool.objectIds())
         if customized:
-            self.log.warn('Check customized templates in %s/portal_forms: %s',
+            self.log.warning('Check customized templates in %s/portal_forms: %s',
                           portal.absolute_url(1), ', '.join(customized))
 
         ctool = portal.portal_catalog

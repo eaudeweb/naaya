@@ -171,10 +171,10 @@ class NyExFileFunctionalTestCase(NaayaFunctionalTestCase):
         html = self.browser.get_html()
         soup = BeautifulSoup(html, "lxml")
 
-        tables = soup.findAll('table', id='folderfile_list')
+        tables = soup.find_all('table', id='folderfile_list')
         self.assertTrue(len(tables) == 1)
 
-        links_to_extfile = tables[0].findAll('a', attrs={'href': 'http://localhost/portal/myfolder/myexfile'})
+        links_to_extfile = tables[0].find_all('a', attrs={'href': 'http://localhost/portal/myfolder/myexfile'})
         self.assertTrue(len(links_to_extfile) == 1)
         self.assertTrue(links_to_extfile[0].string == 'My file')
 

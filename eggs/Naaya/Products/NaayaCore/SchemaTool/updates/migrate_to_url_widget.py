@@ -28,7 +28,7 @@ class MigrateToURLWidget(UpdateScript):
                                 |
                                 (current_prop_names - default_prop_names))
             if other_prop_names:
-                self.log.warn('%s did not match properties: %r',
+                self.log.warning('%s did not match properties: %r',
                               meta_type, list(other_prop_names))
 
             prop_names = (default_prop_names & current_prop_names)

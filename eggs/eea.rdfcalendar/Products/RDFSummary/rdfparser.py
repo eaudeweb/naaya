@@ -133,15 +133,14 @@ class RDFParser:
 
     def open_url(self, url, proxy_support):
         import base64
-        from urllib.parse import splittype, splithost, splituser
+        from urllib.parse import urlsplit, urlunsplit
 
         auth = None
-        urltype, rest = splittype(url)
-        realhost, rest = splithost(rest)
-        if realhost:
-            user_passwd, realhost = splituser(realhost)
+        parts = urlsplit(url)
+        if '@' in parts.netloc:
+            user_passwd, realhost = parts.netloc.rsplit('@', 1)
             if user_passwd:
-                url = "%s://%s%s" % (urltype, realhost, rest)
+                url = urlunsplit(parts._replace(netloc=realhost))
                 auth = base64.encodebytes(user_passwd.encode()).decode().strip()
 
         # try to open with urllib.request (to use optional headers)

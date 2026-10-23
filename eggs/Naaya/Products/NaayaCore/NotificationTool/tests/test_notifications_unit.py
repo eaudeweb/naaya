@@ -123,7 +123,7 @@ class NotificationsUnitTest(BaseNotificationsTest):
         assert diverted_mail[0][1] == ['some@email.com']
         assert diverted_mail[0][3] == 'from.zope@example.com'
         assert diverted_mail[0][0].find('confirm?key=') != -1
-        confirm_key = re.search('confirm\?key=(\w+)',
+        confirm_key = re.search(r'confirm\?key=(\w+)',
                                 diverted_mail[0][0]).group(1)
         notif_tool.confirm(key=confirm_key)
         for obj, n, sub in walk_subscriptions(self.portal):

@@ -41,5 +41,5 @@ class GoogleDataToolFunctionalTestCase(NaayaFunctionalTestCase):
 
         # check if the GoogleAnalytics javascript is corectly placed in the
         # <head> section, before the closing </head> tag.
-        script = head.findAll('script')[-2]
+        script = head.find_all('script')[-2]
         self.assertTrue(script.text.find('UA-12345-67') > -1)

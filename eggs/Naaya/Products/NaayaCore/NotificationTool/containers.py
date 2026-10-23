@@ -100,7 +100,7 @@ class AccountSubscription(object):
                     return (force_to_unicode(full_name), email)
 
         # Didn't find the user anywhere; return a placeholder
-        notif_logger.warn('Could not find email for user %r (context: %r)',
+        notif_logger.warning('Could not find email for user %r (context: %r)',
                           self.user_id, obj)
         return (u'[not found]', None)
 

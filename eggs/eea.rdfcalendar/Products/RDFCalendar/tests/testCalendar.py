@@ -18,9 +18,9 @@ class RDFCalendarTestCase(ZopeTestCase.ZopeTestCase):
         self.assertEqual(0, c.first_day_week)
 
 def test_suite():
-    from unittest import TestSuite, makeSuite
+    from unittest import TestSuite, TestLoader
     suite = TestSuite()
-    suite.addTest(makeSuite(RDFCalendarTestCase))
+    suite.addTest(TestLoader().loadTestsFromTestCase(RDFCalendarTestCase))
     return suite
 
 if __name__ == '__main__':

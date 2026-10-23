@@ -164,7 +164,7 @@ class OpenLayersMapEngine(SimpleItem):
                     break
 
                 else:
-                    log.warn("Could not determine bounding box for "
+                    log.warning("Could not determine bounding box for "
                              "initial address %r", initial_address)
 
             self._initial_address = initial_address

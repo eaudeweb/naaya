@@ -21,7 +21,7 @@ class IntervalWidgetTestCase(NaayaTestCase.NaayaTestCase):
         start_date = datetime(2011, 3, 25, 8, 0)
         end_date = datetime(2011, 3, 26, 8, 30)
         html = self.widget.render_html(Interval(start_date, end_date, False))
-        dom = fromstring(re.sub('\s+', ' ', html))
+        dom = fromstring(re.sub(r'\s+', ' ', html))
         val = lambda xp: dom.xpath(xp)[0].attrib['value']
         self.assertEqual('08:30', val('//input[@name="interval.end_time"]'))
         self.assertEqual('25/03/2011',

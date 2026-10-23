@@ -30,7 +30,8 @@ def load_file(filename):
     from io import BytesIO
     pass  # package_home import removed (unused)
     filename = os.path.sep.join([os.path.dirname(os.path.abspath(__file__)), filename])
-    data = BytesIO(open(filename, 'rb').read())
+    with open(filename, 'rb') as f:
+        data = BytesIO(f.read())
     data.filename = os.path.basename(filename)
     return data
 

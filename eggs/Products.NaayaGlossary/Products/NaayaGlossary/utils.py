@@ -78,7 +78,7 @@ class utils:
 
     def ut_makeId(self, p_name):
         """ generate the ID """
-        transtab = str.maketrans('/ +@', '____', '?&!;()<=>*#[]{}^~:|\/???$?%?')
+        transtab = str.maketrans('/ +@', '____', r'?&!;()<=>*#[]{}^~:|\/???$?%?')
         p_name = str(p_name, 'latin-1')
         p_name = p_name.encode('ascii', 'replace').decode('ascii').lower()
         return p_name.translate(transtab)
@@ -341,7 +341,7 @@ class catalog_utils:
 
     def StrEscapeForSearch(self, p_string):
         """ escape some characters"""
-        return re.sub('[(\"{})\[\]]', '', p_string)
+        return re.sub(r'[(\"{})\[\]]', '', p_string)
 
     def cookCatalogIndex(self, index_name):
         """ cook catalog index name """

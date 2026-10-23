@@ -94,9 +94,9 @@ class ZopeActor(object):
         if orig_path in self.rename:
             ob_path = self.rename.get(orig_path)
             the_file = self.context.restrictedTraverse(ob_path)
-            logger.warn('new document version for %r' % orig_path)
+            logger.warning('new document version for %r' % orig_path)
             if keywords or description:
-                logger.warn('ignoring keywords=%r, description=%r' %
+                logger.warning('ignoring keywords=%r, description=%r' %
                             (keywords, description))
 
         else:
@@ -149,7 +149,7 @@ class ZopeActor(object):
         self.count['urls'] += 1
 
     def warn(self, msg):
-        logger.warn(msg)
+        logger.warning(msg)
 
     def finished(self):
         logger.debug('done: %s', repr(self.count))

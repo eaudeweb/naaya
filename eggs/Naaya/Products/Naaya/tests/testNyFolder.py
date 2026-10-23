@@ -312,7 +312,7 @@ class TestNyFolderListing(NaayaFunctionalTestCase):
         self.browser.go(self.parent.absolute_url(1))
         html = self.browser.get_html()
         soup = BeautifulSoup(html, "lxml")
-        checkboxes = soup.findAll('input',
+        checkboxes = soup.find_all('input',
                 attrs = {'type': 'checkbox', 'value': self.folder_name})
         self.assertEqual(len(checkboxes), 1)
 
@@ -348,7 +348,7 @@ class TestNyFolderListing(NaayaFunctionalTestCase):
         self.browser.go(self.parent.absolute_url(1))
         html = self.browser.get_html()
         soup = BeautifulSoup(html, "lxml")
-        checkboxes = soup.findAll('input',
+        checkboxes = soup.find_all('input',
                 attrs = {'type': 'checkbox', 'value': self.folder_name})
         self.assertEqual(len(checkboxes), 1)
 
@@ -391,7 +391,7 @@ class TestNyFolderListing(NaayaFunctionalTestCase):
         self.browser.go(self.parent.absolute_url(1))
         html = self.browser.get_html()
         soup = BeautifulSoup(html, "lxml")
-        checkboxes = soup.findAll('input',
+        checkboxes = soup.find_all('input',
                 attrs = {'type': 'checkbox', 'value': self.folder_name})
         self.assertEqual(len(checkboxes), 1)
 
@@ -446,7 +446,7 @@ class TestNyFolderListing(NaayaFunctionalTestCase):
         self.browser.go(self.portal.info.absolute_url(1))
         html = self.browser.get_html()
         soup = BeautifulSoup(html, "lxml")
-        checkboxes = soup.findAll('input', attrs = {'type': 'checkbox',
+        checkboxes = soup.find_all('input', attrs = {'type': 'checkbox',
                                                     'value': 'test_folder'})
         self.assertEqual(len(checkboxes), 1)
 
@@ -493,7 +493,7 @@ class TestNyFolderListing(NaayaFunctionalTestCase):
         self.browser.go(self.portal.info.absolute_url(1))
         html = self.browser.get_html()
         soup = BeautifulSoup(html, "lxml")
-        checkboxes = soup.findAll('input', attrs = {'type': 'checkbox',
+        checkboxes = soup.find_all('input', attrs = {'type': 'checkbox',
                                                     'value': 'test_folder'})
         self.assertEqual(len(checkboxes), 1)
 

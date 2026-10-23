@@ -170,7 +170,7 @@ def create_site_logger(site):
             # if not os.access(log_filename, os.F_OK):
             #     open(log_filename, 'a').close()
             # if not os.access(log_filename, os.W_OK):
-            #     log.warn(("Could not add file handler for site logger %r"
+            #     log.warning(("Could not add file handler for site logger %r"
             #                " (log file write permissions)"), site)
             #     return logger
             prefix = os.path.join(abs_path, LOG_PREFIX)

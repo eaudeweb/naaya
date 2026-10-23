@@ -254,7 +254,7 @@ def html2text(html, trim_length=512, ellipsis=False):
     boundary to the left, trim there, and insert an ellipsis ("...").
     """
     soup = BeautifulSoup(html, "lxml")
-    text = unescape_html_entities(''.join(soup.findAll(string=True))).strip()
+    text = unescape_html_entities(''.join(soup.find_all(string=True))).strip()
     if trim_length and trim_length < len(text):
         text = text[:trim_length]
         if ellipsis:
@@ -673,7 +673,7 @@ class utils:
 
     def utStrEscapeForSearch(self, p_string):
         """ escape some characters"""
-        return re.sub('[(\"{})\[\]]', '', p_string)
+        return re.sub(r'[(\"{})\[\]]', '', p_string)
 
     def utStripHtmlTags(self, s, all_tags, single_tags):
         # removes the html tags that are not allowed from a string

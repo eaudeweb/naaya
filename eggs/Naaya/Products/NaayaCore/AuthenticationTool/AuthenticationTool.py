@@ -1251,7 +1251,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         try:
             user_info = self.get_user_info(cuser_id)
         except KeyError as ke:
-            log.warn(str(ke))
+            log.warning(str(ke))
             return
 
         if hasattr(user_info, 'jpegPhoto') and user_info.jpegPhoto:
@@ -1275,7 +1275,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         try:
             user_info = self.get_user_info(user_id)
         except KeyError as ke:
-            log.warn(str(ke))
+            log.warning(str(ke))
             return
 
         if hasattr(user_info, 'jpegPhoto') and user_info.jpegPhoto:

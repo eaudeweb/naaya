@@ -39,10 +39,10 @@ def _get_absolute_url_regex():
     # No other symbols or punctuation characters are permitted, nor is
     # blank space.  If the hyphen is used, it is not permitted to appear at
     # either the beginning or end of a label.
-    reg_name = '(?:[a-zA-Z0-9\-.]+)'
+    reg_name = r'(?:[a-zA-Z0-9\-.]+)'
 
     # IPv4 address
-    dec_octet = '(?:\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])'
+    dec_octet = r'(?:\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])'
     ipv4_address = '(?:%s)' % '.'.join((dec_octet, dec_octet, dec_octet, dec_octet))
 
 

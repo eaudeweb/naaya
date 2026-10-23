@@ -1069,11 +1069,11 @@ class EnviroWindowsSite(NySite):
                 # if is_valid_email(email_address):
                 addresses.add(email_address)
                 # else:
-                #    log.warn(
+                #    log.warning(
                 # '%s is not a valid email address for contact %s at %s'
                 # % (contact.email, contact.id, contact.absolute_url()))
             except UnicodeEncodeError:
-                log.warn('UnicodeEncodeError in email address %s for contact '
+                log.warning('UnicodeEncodeError in email address %s for contact '
                          '%s at %s' % (contact.email, contact.id,
                                        contact.absolute_url()))
 

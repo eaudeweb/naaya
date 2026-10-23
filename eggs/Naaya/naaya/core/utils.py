@@ -154,7 +154,7 @@ def unescape_html_entities(text):
             except KeyError:
                 pass
         return text  # leave as is
-    return re.sub("&#?\w+;", fixup, text)
+    return re.sub(r"&#?\w+;", fixup, text)
 
 
 def is_ajax(request):
@@ -186,8 +186,8 @@ def pretty_size(n_bytes):
         return '%d GB' % (n_bytes / 1024**3)
 
 
-VALID_EMAIL_PATTERN = re.compile("(?:^|\s)[-a-z0-9_.]+@"
-                                 "(?:[-a-z0-9]+\.)+[a-z]{2,24}(?:\s|$)",
+VALID_EMAIL_PATTERN = re.compile(r"(?:^|\s)[-a-z0-9_.]+@"
+                                 r"(?:[-a-z0-9]+\.)+[a-z]{2,24}(?:\s|$)",
                                  re.IGNORECASE)
 
 

@@ -1,5 +1,6 @@
 6.0.7 (unreleased)
 ------------------
+* Remove the Python deprecation warnings [dumitval]
 
 6.0.6 (2026-10-20)
 ------------------
