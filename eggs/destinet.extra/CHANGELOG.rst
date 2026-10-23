@@ -1,5 +1,8 @@
 2.0.6 - (unreleased)
 ====================
+* Add an end-to-end test: cookie login, add and edit a folder, news, blob
+  file and geopoint through the web forms, search, map clusters, delete
+  [dumitval]
 
 2.0.5 - (2026-10-23)
 ====================
