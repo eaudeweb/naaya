@@ -1,4 +1,7 @@
-2.0.3 (unreleased)
+2.0.4 (unreleased)
+------------------
+
+2.0.3 (2026-10-23)
 ------------------
 * Close the sqlite connection after saving and after reading a dump
   [dumitval]
