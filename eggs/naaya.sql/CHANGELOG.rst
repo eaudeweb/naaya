@@ -1,4 +1,7 @@
-2.1 (unreleased)
+2.2 (unreleased)
+----------------
+
+2.1 (2026-10-23)
 ----------------
 * Fix and extend the tests [dumitval]
 
