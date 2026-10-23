@@ -1,7 +1,10 @@
 Changelog
 =========
 
-2.0.2 (unreleased)
+2.0.3 (unreleased)
+------------------
+
+2.0.2 (2026-10-23)
 ------------------
 * Check the deprecation warnings in the tests [dumitval]
 
