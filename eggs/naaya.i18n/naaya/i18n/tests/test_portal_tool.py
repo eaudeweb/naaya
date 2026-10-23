@@ -128,6 +128,47 @@ class NySiteFunctionalTestCase(NaayaFunctionalTestCase):
                          'http://localhost/portal/info/contact')
 
 
+class MessageRedirectTest(NaayaTestCase):
+    """ manage_editMessage and manage_delMessage redirect with plain & """
+
+    def call(self, method, **kw):
+        from unittest.mock import Mock
+        request = {'batch_start': 10, 'batch_size': 15, 'regex': 'cat',
+                   'lang': 'de', 'empty': 0}
+        REQUEST = Mock()
+        REQUEST.URL1 = 'http://x/portal/portal_i18n'
+        REQUEST.__getitem__ = lambda self, key: request[key]
+        REQUEST.get.side_effect = request.get
+        RESPONSE = Mock()
+        method(REQUEST=REQUEST, RESPONSE=RESPONSE, **kw)
+        return RESPONSE.redirect.call_args[0][0]
+
+    def test_edit_message_redirect(self):
+        from naaya.i18n.admin_i18n import message_encode
+        tool = self.portal.getPortalI18n()
+        tool.add_language('de')
+        url = self.call(tool.manage_editMessage,
+                        message=message_encode('cat'), language='de',
+                        translation='Katze')
+        self.assertEqual(tool.get_message_catalog().gettext('cat', 'de'),
+                         'Katze')
+        self.assertNotIn('&amp;', url)
+        self.assertTrue(url.startswith(
+            'http://x/portal/portal_i18n/manage_messages?'), url)
+        self.assertIn('&batch_start:int=10&batch_size:int=15&regex=cat'
+                      '&empty=&lang=de', url)
+
+    def test_del_message_redirect(self):
+        from naaya.i18n.admin_i18n import message_encode
+        tool = self.portal.getPortalI18n()
+        tool.get_message_catalog().edit_message('cat', 'en', 'cat')
+        url = self.call(tool.manage_delMessage, message=message_encode('cat'))
+        self.assertNotIn('cat', [m for m, t in
+                                 tool.get_message_catalog().messages()])
+        self.assertNotIn('&amp;', url)
+        self.assertIn('&lang=de', url)
+
+
 class GetUrlTest(unittest.TestCase):
 
     def test_separators(self):

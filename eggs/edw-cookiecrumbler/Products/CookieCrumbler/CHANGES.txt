@@ -1,6 +1,8 @@
 
 Version 2.4 (unreleased)
 
+- Fix and extend the tests [dumitval]
+
 Version 2.3 (2026-10-20)
 
 - Ignore __ac cookies that do not decode to user:password, instead of

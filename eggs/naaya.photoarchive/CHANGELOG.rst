@@ -1,6 +1,9 @@
 2.0.4 (unreleased)
 ------------------
 * Remove the Python deprecation warnings from the tests [dumitval]
+* Fix and extend the tests [dumitval]
+* Refresh the map view restrictions when a photo folder or gallery is
+  restricted [dumitval]
 
 2.0.3 (2026-10-18)
 ------------------

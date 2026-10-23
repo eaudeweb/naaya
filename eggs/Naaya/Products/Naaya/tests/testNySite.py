@@ -164,13 +164,13 @@ class TestNySiteListing(NaayaFunctionalTestCase):
 
 
 class SearchPageFunctionalTest(NaayaFunctionalTestCase):
-    def test_pagination(self):
+    def test_search_results(self):
         self.browser.go('http://localhost/portal/search_html?'
                         'query:utf8:string=accessibility&Naaya_Document=on')
         html = self.browser.get_html()
-        # Search uses client-side DataTables pagination (not server-side).
-        # Just verify the search page loads successfully.
-        self.assertIn('Search Results', html)
+        table = BeautifulSoup(html, 'lxml').find('table', class_='sortable')
+        links = [a['href'] for a in table.find('tbody').find_all('a')]
+        self.assertEqual(links, ['http://localhost/portal/info/accessibility'])
 
 
 class SiteIndexInLayoutTest(NaayaFunctionalTestCase):
@@ -241,10 +241,14 @@ class TestNySiteOFS(NaayaFunctionalTestCase):
 
     def test_cutpaste(self):
         """ `Cut` & `Paste` """
+        from OFS.Folder import manage_addFolder
         root = self.portal.aq_parent
+        manage_addFolder(root, 'target')
         cp = root.manage_cutObjects(['portal'])
-        root.manage_pasteObjects(cp)
-        self.assertIn('portal', root.objectIds())
+        root.target.manage_pasteObjects(cp)
+        self.assertNotIn('portal', root.objectIds())
+        self.assertEqual(root.target.portal.getSite().absolute_url(1),
+                         'target/portal')
 
     def test_delete(self):
         """ `Delete` """

@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from zope.publisher.http import HTTPCharsets, HTTPRequest
+from zope.publisher.http import HTTPRequest
 from zope.i18n.interfaces import IUserPreferredCharsets
 
 from naaya.i18n.utilities import NyHTTPCharsets
@@ -32,14 +32,17 @@ class HTTPCharsetsTestSuite(TestCase):
     def test_specific_header(self):
         """ test explicit charset header keeps zope publisher's behaviour """
         req = create_request('ISO-8859-1,utf-8;q=0.7,*;q=0.3')
-        zope_publisher = HTTPCharsets(req).getPreferredCharsets()
-        self._validate(req, zope_publisher)
+        self._validate(req, ['utf-8', 'iso-8859-1', '*'])
 
     def test_star_header(self):
         """ test star charset header keeps zope publisher's behaviour """
         req = create_request('*')
-        zope_publisher = HTTPCharsets(req).getPreferredCharsets()
-        self._validate(req, zope_publisher)
+        self._validate(req, ['utf-8', '*'])
+
+    def test_header_without_utf8(self):
+        """ an explicit header is not replaced by the defaults """
+        req = create_request('iso-8859-2')
+        self._validate(req, ['iso-8859-2', 'iso-8859-1'])
 
     def test_adapter_registered(self):
         """ test naaya.i18n's IPreferredCharset adapter is registered """

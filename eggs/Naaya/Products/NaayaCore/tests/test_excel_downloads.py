@@ -45,15 +45,32 @@ class ExcelDownloadsTestCase(NaayaFunctionalTestCase):
         self.assertEqual([c.value for c in ws[1]], ['Subject', 'Recipients'])
 
     def test_map_export(self):
+        from naaya.content.document.document_item import addNyDocument
         addNyFolder(self.portal, 'mapfolder', contributor='contributor',
                     submitted=1)
+        for doc_id, lat in [('located', '45'), ('unlocated', '')]:
+            addNyDocument(self.portal.mapfolder, id=doc_id, title=doc_id,
+                          contributor='admin', submitted=1,
+                          **{'geo_location.lat': lat,
+                             'geo_location.lon': lat and '25'})
+            doc = self.portal.mapfolder[doc_id]
+            doc.approveThis()
+            self.portal.portal_map.recatalogNyObject(doc)
+        portal_map = self.portal.portal_map
+        old_types = [t['id'] for t in portal_map.list_geotaggable_types()
+                     if t['geo_enabled']]
+        portal_map.admin_set_contenttypes(
+            [s.id for s in self.portal.portal_schemas.objectValues()])
         import transaction
         transaction.commit()
         try:
             ws = self.check_download(
                 'http://localhost/portal/portal_map/export_csv'
-                '?meta_type=Naaya%20Folder&file_type=excel')
+                '?meta_type=Naaya%20Document&file_type=excel')
             self.assertEqual(ws['A1'].value, 'ID')
+            ids = [row[0].value for row in ws.iter_rows(min_row=2)]
+            self.assertEqual(ids, ['located'])
         finally:
+            portal_map.admin_set_contenttypes(old_types)
             self.portal.manage_delObjects(['mapfolder'])
             transaction.commit()

@@ -185,4 +185,9 @@ class NyStoryVersioningFunctionalTestCase(NaayaFunctionalTestCase):
         form = self.browser.get_form('frmEdit')
         self.assertEqual(form['title:utf8:string'], 'ver_story_version')
 
+        self.browser.go('http://localhost/portal/info/ver_story/commitVersion')
+        ob = self.portal.info.ver_story
+        self.assertEqual(ob.title, 'ver_story_version')
+        self.assertEqual(ob.version, None)
+
         self.browser_do_logout()

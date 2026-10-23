@@ -1,6 +1,17 @@
+import email
 from unittest.mock import MagicMock as Mock, patch
 import transaction
-from naaya.groupware.tests import GWFunctionalTestCase
+from Products.Naaya.NyFolder import addNyFolder
+from naaya.groupware.tests import GWFunctionalTestCase, GWTestCase
+
+LDAP_ROLES = [
+    {'id': 'places', 'parent': 'top', 'children': ['places-atm'],
+     'description': 'Places'},
+    {'id': 'places-atm', 'parent': 'places', 'children': [],
+     'description': 'ATM'},
+    {'id': 'places-bank', 'parent': 'places', 'children': [],
+     'description': 'Bank'},
+]
 
 
 class MockedSource(Mock):
@@ -50,10 +61,19 @@ class IGRequestTestCase(SourceMixin, GWFunctionalTestCase):
 
         self.browser_do_login('admin', '')
         self.browser.go(self.portal.absolute_url() + '/request_ig_access_html')
+        self.assertEqual(self.browser.get_code(), 200)
         # Admin has every role, so only Meeting Observer can be requested
         html = self.browser.get_html()
+        self.assertIn('id="observer_role"', html)
         for role in ('Viewer', 'Reviewer', 'Contributor'):
             self.assertNotIn('value="%s"' % role, html)
+
+    def test_role_choices_for_norole(self):
+        self.browser_do_login('norole', 'norole')
+        self.browser.go(self.portal.absolute_url() + '/request_ig_access_html')
+        html = self.browser.get_html()
+        for role in ('Reviewer', 'Contributor'):
+            self.assertIn('value="%s"' % role, html)
 
     def test_send_request(self):
         """ Get the page with the request form and submit it with a normal
@@ -79,6 +99,62 @@ class IGRequestTestCase(SourceMixin, GWFunctionalTestCase):
 
         action_logger = self.portal.getActionLogger()
         self.assertEqual(action_logger[1].user, 'norole')
+        self.assertEqual(action_logger[1].role, 'Reviewer')
+        body = email.message_from_string(mail_outbox['message'])\
+            .get_payload(decode=True).decode('utf-8')
+        self.assertIn('review_ig_request?key=%s' % action_logger[1].key, body)
+
+
+class IGRequestUnitTestCase(SourceMixin, GWTestCase):
+    """ request_ig_access called directly """
+
+    def afterSetUp(self):
+        self.app.acl_users._doAddUser('norole', 'norole', [], '')
+        addNyFolder(self.portal, 'docs', title='Docs', submitted=1)
+        self.p = patch(
+            'Products.NaayaCore.AuthenticationTool.AuthenticationTool.'
+            'AuthenticationTool.getSources',
+            Mock(return_value=[self.mocked_source()]))
+        self.p.start()
+
+    def beforeTearDown(self):
+        self.p.stop()
+
+    def request(self, **form):
+        request = Mock()
+        request.form = form
+        request.AUTHENTICATED_USER.getId.return_value = 'norole'
+        return request
+
+    def test_archived(self):
+        from zExceptions import BadRequest
+        self.portal.portal_is_archived = True
+        self.assertRaises(BadRequest, self.portal.request_ig_access,
+                          self.request(role='Viewer'))
+
+    def test_no_role(self):
+        request = self.request(role='')
+        self.portal.request_ig_access(request)
+        request.RESPONSE.redirect.assert_called_once_with(
+            request.HTTP_REFERER)
+        self.assertEqual(len(self.portal.getActionLogger()), 0)
+
+    def test_location_in_subfolder(self):
+        request = self.request(role='Contributor',
+                               location_url=self.portal['docs'].absolute_url()
+                               + '/index_html')
+        self.portal.request_ig_access(request)
+        (_id, entry), = self.portal.getActionLogger().items()
+        # requests are made for the whole IG, unless inside a meeting
+        self.assertEqual(entry.location, '/%s/' % self.portal.getId())
+        self.assertEqual(entry.role, 'Contributor')
+        self.assertEqual(entry.location_url, self.portal.absolute_url())
+
+    def test_bytes_names_in_email(self):
+        from naaya.groupware.groupware_site import _to_text
+        self.assertEqual(_to_text(b'Ana-Maria \xc8\x98t'), 'Ana-Maria Șt')
+        self.assertEqual(_to_text(b'Fran\xe7ois'), 'Fran\xe7ois')
+        self.assertEqual(_to_text('Ion'), 'Ion')
 
 
 class IGReviewTestCase(SourceMixin, GWFunctionalTestCase):
@@ -111,7 +187,7 @@ class IGReviewTestCase(SourceMixin, GWFunctionalTestCase):
              'postal_address'), '')
         agent.user_info.return_value['uid'] = 'norole'
         client = Mock()
-        client.return_value.roles_list_in_ldap.return_value = []
+        client.return_value.roles_list_in_ldap.return_value = LDAP_ROLES
         self.patches = [
             patch('naaya.groupware.groupware_site.agent_from_site',
                   Mock(return_value=agent)),
@@ -139,22 +215,38 @@ class IGReviewTestCase(SourceMixin, GWFunctionalTestCase):
         key = action_logger[1].key
         self.browser.go(self.portal.absolute_url() +
                         '/review_ig_request?key=%s' % key)
-        self.assertTrue('Review IG access request' in self.browser.get_html())
+        html = self.browser.get_html()
+        self.assertTrue('Review IG access request' in html)
+        # the leaf LDAP roles, with alternating row classes
+        self.assertIn('class="even places" id="row_places-atm"', html)
+        self.assertIn('class="odd places" id="row_places-bank"', html)
+        self.assertNotIn('id="row_places"', html)
 
     def test_grant(self):
         """ Grant the role user has requested """
 
         action_logger = self.portal.getActionLogger()
         key = action_logger[1].key
+        self.browser_do_login('admin', '')
         self.browser.go(self.portal.absolute_url() +
                         '/review_ig_request?key=%s' % key)
         form = self.browser.get_form(2)
         field = self.browser.get_form_field(form, 'grant')
         self.browser.clicked(form, field)
-        self.browser.submit()
+        with patch('naaya.groupware.groupware_site.notify') as notify:
+            self.browser.submit()
         self.assertEqual(action_logger[2].action, 'Granted')
         auth_tool = self.portal.getAuthenticationTool()
-        self.assertTrue(auth_tool.getSources()[0].addUserRoles.called)
+        add_roles = auth_tool.getSources()[0].addUserRoles
+        add_roles.assert_called_once()
+        kwargs = add_roles.call_args.kwargs
+        self.assertEqual((kwargs['name'], kwargs['location'], kwargs['roles'],
+                          kwargs['send_mail']),
+                         ('norole', '', 'Contributor', False))
+        event, = notify.call_args.args
+        self.assertEqual((event.manager_id, event.user_id, event.assigned,
+                          event.unassigned),
+                         ('admin', 'norole', ['Contributor'], []))
         self.assertEqual(len(action_logger), 2)
 
     def test_reject(self):

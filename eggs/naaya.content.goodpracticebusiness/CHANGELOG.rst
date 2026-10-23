@@ -1,5 +1,8 @@
 1.1 (unreleased)
 ----------------
+* Fix adding with a file storing the file under the contributor name
+  instead of the language [dumitval]
+* Fix and extend the tests [dumitval]
 
 1.0 (2026-10-12)
 ----------------

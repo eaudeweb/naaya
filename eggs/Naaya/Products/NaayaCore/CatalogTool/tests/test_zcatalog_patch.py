@@ -104,6 +104,26 @@ class CatalogToolTestCase(NaayaTestCase):
         self.assertEqual((fi1.items()[0][0], fi2.items()[0][0]),
                          ('Adapted_value', 'Unadapted'))
 
+    def test_mixed_key_types_in_field_index(self):
+        index = FieldIndex('sortorder')
+        index.index_object(1, _MockObject(sortorder=10))
+        index.index_object(2, _MockObject(sortorder='20'))
+        index.index_object(3, _MockObject(sortorder='not a number'))
+        self.assertEqual(sorted(index.uniqueValues()), [10, 20])
+        self.assertEqual(list(index._apply_index({'sortorder': 20})[0]), [2])
+        index.unindex_object(2)
+        self.assertEqual(list(index.uniqueValues()), [10])
+
+    def test_rebuild(self):
+        cat_tool = self.portal.getCatalogTool()
+        paths = lambda: sorted(b.getPath() for b in cat_tool(path='/portal'))
+        before = paths()
+        self.assertIn('/portal/info/contact', before)
+        cat_tool.manage_catalogClear()
+        self.assertEqual(paths(), [])
+        cat_tool.manage_do_rebuild()
+        self.assertEqual(paths(), before)
+
     def test_catalogtool_index_no_adapter(self):
         mo = _MockObject(name='Unadapted', **{'testing_purposes': True})
         fi1 = FieldIndex('testing_purposes')

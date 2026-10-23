@@ -15,13 +15,16 @@ class MockResponse(object):
     def setHeader(self, key, value):
         self.headers[key] = value
 
+    def setStatus(self, status):
+        self.status = status
+
 
 class MockRequest(object):
     def __init__(self):
         self.headers={}
 
-    def get_header(self, name):
-        return self.headers.get(name)
+    def get_header(self, name, default=None):
+        return self.headers.get(name, default)
 
     def set_header(self, name, value):
         self.headers[name] = value
@@ -220,3 +223,52 @@ class BlobStreamIteratorTest(unittest.TestCase):
         conn.close()
         self.assertEqual(b''.join(it), b'data')
         it.close()
+
+
+class HTTPCacheHeadersTest(unittest.TestCase):
+    """ If-Modified-Since and Range handling for blob downloads """
+
+    mtime = 1300000000
+
+    def setUp(self):
+        from types import SimpleNamespace
+        self.instance = SimpleNamespace(_p_mtime=self.mtime + 0.5)
+        self.request = MockRequest()
+        self.response = MockResponse()
+
+    def http_date(self, timestamp):
+        from zope.datetime import rfc1123_date
+        return rfc1123_date(timestamp)
+
+    def test_not_modified(self):
+        from naaya.content.bfile.NyBlobFile import handleIfModifiedSince
+        self.request.set_header('If-Modified-Since',
+                                self.http_date(self.mtime + 60))
+        self.assertTrue(handleIfModifiedSince(self.instance, self.request,
+                                              self.response))
+        self.assertEqual(self.response.status, 304)
+
+    def test_modified(self):
+        from naaya.content.bfile.NyBlobFile import handleIfModifiedSince
+        self.request.set_header('If-Modified-Since',
+                                self.http_date(self.mtime - 60))
+        self.assertFalse(handleIfModifiedSince(self.instance, self.request,
+                                               self.response))
+        self.assertFalse(hasattr(self.response, 'status'))
+
+    def test_range(self):
+        from naaya.content.bfile.NyBlobFile import handleRequestRange
+        self.request.set_header('Range', 'bytes=2-5')
+        self.assertEqual(handleRequestRange(self.instance, 10, self.request,
+                                            self.response),
+                         {'start': 2, 'end': 6})
+        self.assertEqual(self.response.status, 206)
+        self.assertEqual(self.response.headers['Content-Range'], 'bytes 2-5/10')
+
+    def test_range_if_range_modified(self):
+        from naaya.content.bfile.NyBlobFile import handleRequestRange
+        self.request.set_header('Range', 'bytes=2-5')
+        self.request.set_header('If-Range', self.http_date(self.mtime - 60))
+        self.assertEqual(handleRequestRange(self.instance, 10, self.request,
+                                            self.response), {})
+        self.assertFalse(hasattr(self.response, 'status'))

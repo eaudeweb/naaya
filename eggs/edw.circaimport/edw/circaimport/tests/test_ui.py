@@ -241,6 +241,18 @@ class ZexpViewsTest(CircaImportTestCase):
     def test_import_form(self):
         options = self.call(ui.ZImportData)
         self.assertFalse(options['performed'])
+        self.assertEqual(options['igs'], [('portal', 'Naaya Test Site')])
+        ui.zexpcopy.send_action_completed_mail.assert_not_called()
+
+    def test_tree(self):
+        request = self.portal.REQUEST
+        request.form.clear()
+        request.form['ig'] = 'portal'
+        html = ui.ZExpcopyTree(self.app, request)()
+        self.assertIn('id="location"', html)
+        self.assertIn(self.portal.absolute_url() +
+                      '/getNavigationSiteMap/?only_folders=1&amp;subportals=1',
+                      html)
 
     def test_export(self):
         with mock.patch.object(ui.zexpcopy, 'write_zexp',

@@ -1,6 +1,7 @@
 2.0.2 (unreleased)
 ------------------
 * Remove the Python deprecation warnings [dumitval]
+* Fix and extend the tests [dumitval]
 
 2.0.1 (2026-10-16)
 ------------------

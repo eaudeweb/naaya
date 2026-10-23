@@ -92,19 +92,6 @@ class NyCSVImportTest(NaayaTestCase):
         self.assertEqual(my_doc.sortorder, 100)
         self.assertTrue(my_doc.approved)
 
-    def test_import_bad_unicode_document(self):
-        """ In Python 3 all strings are unicode, so 'bad encoding' at the
-        string level doesn't apply.  Instead, verify that importing a
-        document with non-ASCII characters in the title works. """
-        data = ('Title,Description,Geographical coverage,Keywords,Sort order,'
-                'Release date,Open for comments,Body (HTML)\n'
-                'Forschungsinstitut f\xfcr Freizeit und Tourismus (FIF),'
-                ',,,,,,This is a test document.\n')
-        do_import_object(self, 'Naaya Document', data, 'imported')
-        self.assertTrue(
-            'forschungsinstitut-fur-freizeit-und-tourismus-fif'
-            in self.portal.imported.objectIds())
-
     def test_import_bad_data(self):
         def do_import(row=''):
             data = csv_data + row

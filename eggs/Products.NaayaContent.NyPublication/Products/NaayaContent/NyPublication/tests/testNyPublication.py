@@ -19,15 +19,19 @@ class TestNyPublication(NaayaTestCase):
         """
         Test adding Publication without being logged in
         """
-        NyPublication.addNyPublication(self.app.portal.test_folder, title="testPublication")
-        self.assertFalse(hasattr(self.app.portal.test_folder, "testPublication"))
+        ob_id = NyPublication.addNyPublication(self.app.portal.test_folder, title="testPublication")
+        self.assertEqual(ob_id, 'testpublication')
+        pub = self.app.portal.test_folder[ob_id]
+        self.assertEqual(pub.title, 'testPublication')
+        self.assertEqual(pub.approved, 0)
         
 
 
     def test_addNyPublication_no_requiredattrs(self):
         self.login("contributor")
-        self.assertRaises(ValueError, lambda: NyPublication.addNyPublication(self.app.portal.test_folder))
-        self.assertFalse(hasattr(self.app.portal.test_folder, "testPublication"))
+        with self.assertRaises(ValueError) as cm:
+            NyPublication.addNyPublication(self.app.portal.test_folder)
+        self.assertIn('Title', str(cm.exception))
         self.logout()
 
 
@@ -108,8 +112,23 @@ class TestNyPublication(NaayaTestCase):
         id = "pub3"
         param = 0;
         
-        self.app.portal.test_folder.importNyPublication(param, id, attrs, '', {}, None, None)
-        self.assertTrue(hasattr(self.app.portal.test_folder, "pub3"), "Publication object pub3 was not found in folder 'test_folder'")
+        properties = {'title': {'en': 'Publicație', 'fr': ''},
+                      'locator': {'en': 'http://example.com/ț'},
+                      'description': {'en': '<p>Text</p>'}}
+        self.app.portal.test_folder.importNyPublication(param, id, attrs, '', properties, None, None)
+        pub = self.app.portal.test_folder.pub3
+        for prop, value in [('title', 'Publicație'),
+                            ('locator', 'http://example.com/ț'),
+                            ('description', '<p>Text</p>')]:
+            self.assertEqual(pub.getLocalProperty(prop, 'en'), value)
+            self.assertIsInstance(pub.getLocalProperty(prop, 'en'), str)
+        self.assertEqual(pub.getLocalProperty('title', 'fr'), '')
+        self.assertEqual(pub.contributor, 'contributor')
+        self.assertEqual(pub.approved, 1)
+        self.assertEqual(pub.discussion, 1)
+        self.assertEqual(pub.releasedate.year(), 2008)
+        found = self._portal().getCatalogTool()(meta_type='Naaya Publication')
+        self.assertIn('pub3', [brain.id for brain in found])
 
 
     def test_export_this_tag_custom(self):

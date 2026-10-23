@@ -1,5 +1,8 @@
 2.0.4 - (unreleased)
 ====================
+* Fix and extend the tests [dumitval]
+* Remove the unused get_countries function from the publishing subscribers
+  [dumitval]
 
 2.0.3 - (2026-10-20)
 ====================

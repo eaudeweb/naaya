@@ -35,6 +35,7 @@ from Products.NaayaBase.NyRoleManager import NyRoleManager
 from .constants import *
 from .permissions import PERMISSION_ADD_PHOTOFOLDER
 from Products.NaayaBase.constants import *
+from Products.NaayaCore.GeoMapTool import view_filter
 from .NyPhotoFolder import addNyPhotoFolder as m_addNyPhotoFolder
 from .NyPhotoFolder import photofolder_add_html
 from .photo_archive import photo_archive_base
@@ -236,6 +237,7 @@ class NyPhotoGallery(NyRoleManager, NyContentData, NyAttributes, photo_archive_b
                 err = error
             else:
                 success = True
+        view_filter.invalidate(self)
         if REQUEST:
             if err != '': self.setSessionErrorsTrans([err])
             if success: self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())

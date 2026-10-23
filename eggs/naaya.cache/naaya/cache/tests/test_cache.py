@@ -1,5 +1,5 @@
 import unittest
-import mock
+from unittest import mock
 from time import time
 
 import naaya.cache.cache as naaya_cache
@@ -9,6 +9,7 @@ class NaayaCacheTestCase(unittest.TestCase):
 
     def setUp(self):
         self._id = 'X'
+        naaya_cache.ram.global_cache.invalidateAll()
 
     def tearDown(self):
         del self._id
@@ -37,20 +38,21 @@ class NaayaCacheTestCase(unittest.TestCase):
     def test_timed_cache_timeout(self, time_mock):
         """ test values expire after given timeout in cache """
         time_mock.return_value = 1000.00
-        when = time() + 33.0
+        when = 1033.0
         first_call = self.gonna_blow(when, "Run for your life!")
         time_mock.return_value = 1001.00
+        self._id = 'Y'
         immediate_recall = self.gonna_blow(when, "Run for your life!")
         self.assertEqual(first_call, immediate_recall)
         time_mock.return_value = 1010.01
         later_recall = self.gonna_blow(when, "Run for your life!")
-        self.assertTrue(first_call != later_recall)
+        self.assertTrue(later_recall.startswith('Y:'))
 
     @mock.patch('time.time')
     def test_timed_cache_cleared(self, time_mock):
         """ Test old values in cache are cleared """
         time_mock.return_value = 1000.00
-        when = time() + 33.0
+        when = 1033.0
         a_hit = self.gonna_blow(when, "Run for your life!")
         time_mock.return_value = 46001.00 # 1h later
         self.gonna_blow(when, "Run for your life!")
@@ -58,3 +60,11 @@ class NaayaCacheTestCase(unittest.TestCase):
         self._id = 'C'
         with_same_old_key = self.gonna_blow(when, "Run for your life!")
         self.assertTrue(a_hit != with_same_old_key)
+        self.assertTrue(with_same_old_key.startswith('C:'))
+
+    def test_key_ignores_instance_state(self):
+        """ the key is built from the arguments only, not from self's state """
+        when = time() + 33.0
+        first_call = self.gonna_blow(when, "x")
+        self._id = 'Z'
+        self.assertEqual(self.gonna_blow(when, "x"), first_call)

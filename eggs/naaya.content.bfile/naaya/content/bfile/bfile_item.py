@@ -325,6 +325,22 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
             continue
         return cur
 
+    security.declareProtected(view, 'PrincipiaSearchSource')
+
+    def PrincipiaSearchSource(self):
+        """Text of the current file version in each language."""
+        texts, seen = [], set()
+        # a language missing from the store yields only the non-i18n versions
+        for language in list(self.versions_store) or ['__no_language__']:
+            current = None
+            for ver in self.all_versions(language):
+                if not ver.removed:
+                    current = ver
+            if current is not None and id(current) not in seen:
+                seen.add(id(current))
+                texts.append(current.get_search_text())
+        return '\n'.join(text for text in texts if text)
+
     security.declareProtected(view, 'current_version_download_url')
 
     def current_version_download_url(self):

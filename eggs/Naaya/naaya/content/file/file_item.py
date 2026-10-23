@@ -195,11 +195,14 @@ def importNyFile(self, param, id, attrs, content, properties, discussion, object
                 try: self.manage_delObjects([id])
                 except: pass
 
-            ob = _create_NyFile_object(self, id, '',
-                file=self.utBase64Decode(attrs['file']),
+            ob = _create_NyFile_object(self, id, '', file='',
                 precondition=attrs['precondition'],
                 contributor=self.utEmptyToNone(attrs['contributor'])
             )
+            data = self.utBase64Decode(attrs['file'])
+            if data:
+                ob.update_data(data, attrs['content_type'],
+                               filename=attrs.get('downloadfilename', ''))
 
             ob.sortorder = attrs['sortorder']
             ob.discussion = abs(int(attrs['discussion']))

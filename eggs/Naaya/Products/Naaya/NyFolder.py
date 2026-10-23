@@ -24,6 +24,7 @@ from Products.NaayaBase.constants import PERMISSION_VALIDATE_OBJECTS
 from Products.NaayaCore.managers.import_export import CSVImportTool, ExportTool
 from Products.NaayaCore.managers.utils import utils, batch_utils, make_id
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from Products.NaayaCore.GeoMapTool import view_filter
 from App.config import getConfiguration as _getConfiguration
 CLIENT_HOME = _getConfiguration().clienthome
 from .constants import DEFAULT_SORTORDER
@@ -210,7 +211,13 @@ def importNyFolder(
                     self.manage_delObjects([id])
                 except:
                     pass
-            publicinterface = abs(int(attrs['publicinterface']))
+            # older exports have publicinterface instead of custom_index
+            custom_index = attrs.get('custom_index')
+            if custom_index is None:
+                custom_index = ('local:index'
+                                if abs(int(attrs.get('publicinterface', 0)))
+                                else '')
+            publicinterface = int(custom_index == 'local:index')
             meta_types = attrs['folder_meta_types']
             if meta_types == '':
                 meta_types = ''
@@ -233,7 +240,9 @@ def importNyFolder(
                 approved_by=self.utEmptyToNone(attrs['approved_by']))
             if attrs['releasedate'] != '':
                 ob.setReleaseDate(attrs['releasedate'])
-            if publicinterface:
+            if custom_index and not publicinterface:
+                ob.custom_index = custom_index
+            if publicinterface and (content or '').strip():
                 l_index = ob._getOb('index', None)
                 if l_index is not None:
                     l_index.pt_edit(text=content, content_type='')
@@ -368,7 +377,7 @@ class NyFolder(
             'custom_index="%s" maintainer_email="%s" folder_meta_types="%s"' % \
             (self.utXmlEncode(self.compute_custom_index_value()),
              self.utXmlEncode(self.maintainer_email),
-             self.utXmlEncode(','.join(self.folder_meta_types)))
+             self.utXmlEncode(','.join(self.folder_meta_types or ())))
 
     security.declarePrivate('export_this_body_custom')
 
@@ -377,7 +386,7 @@ class NyFolder(
         ra = r.append
         for i in self.getUploadedImages():
             ra('<img param="0" id="%s" content="%s" />' %
-                (self.utXmlEncode(i.id()),
+                (self.utXmlEncode(i.getId()),
                  self.utXmlEncode(self.utBase64Encode(bytes(i.data)))))
         return ''.join(r)
 
@@ -1197,6 +1206,7 @@ class NyFolder(
                 err = error
             else:
                 success = True
+        view_filter.invalidate(self)
         if REQUEST:
             if err:
                 self.setSessionErrorsTrans(err)

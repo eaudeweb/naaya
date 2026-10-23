@@ -1,6 +1,9 @@
 2.0.4 (unreleased)
 ------------------
 * Remove the Python deprecation warnings [dumitval]
+* Fix update scripts adding a log handler on every run [dumitval]
+* Fix convertLinesToList keeping the empty lines of CRLF text [dumitval]
+* Fix and extend the tests [dumitval]
 
 2.0.3 (2026-10-20)
 ------------------

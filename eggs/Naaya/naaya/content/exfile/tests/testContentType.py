@@ -11,6 +11,20 @@ class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):
     def beforeTearDown(self):
         self.logout()
 
+    def test_search_text(self):
+        from naaya.core.tests.text_fixtures import make_docx, make_odf
+        addNyExFile(self._portal().info, id='exf', title='exf', lang='en')
+        ob = self._portal().info.exf
+        ob.getFileItem('en').update_data(make_docx('englishword'), '',
+                                         filename='a.docx')
+        ob.getFileItem('fr').update_data(make_odf('frenchword'), '',
+                                         filename='a.odt')
+        self._portal().recatalogNyObject(ob)
+        catalog = self._portal().getCatalogTool()
+        for word in ('englishword', 'frenchword'):
+            self.assertEqual([b.getPath().split('/')[-1] for b in
+                              catalog(PrincipiaSearchSource=word)], ['exf'])
+
     def test_main(self):
         """ Add, Find, Edit and Delete Naaya Extended Files """
         #add NyExFile

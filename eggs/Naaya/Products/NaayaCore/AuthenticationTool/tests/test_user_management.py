@@ -122,17 +122,21 @@ class UserWithRolesTestSetup(UserAuthTestSetup):
         super(UserWithRolesTestSetup, self).tearDown()
 
 class UserWithRolesTests(UserWithRolesTestSetup):
-    def test_user_cant_view_site(self):
+    def test_user_can_view_site(self):
         portal_url = 'http://localhost/portal'
 
         self.browser.go(portal_url)
         self.assertEqual(portal_url, self.browser.get_url())
+        self.assertEqual(self.browser.get_code(), 200)
+        self.assertIn('Naaya Test Site', self.browser.get_html())
 
     def test_user_can_view_folder(self):
         folder_url = 'http://localhost/portal/info'
 
         self.browser.go(folder_url)
         self.assertEqual(folder_url, self.browser.get_url())
+        self.assertEqual(self.browser.get_code(), 200)
+        self.assertIn('Information', self.browser.get_html())
 
 
 class UserWithRolesOnlyOnFolderTestSetup(UserAuthTestSetup):
@@ -142,7 +146,7 @@ class UserWithRolesOnlyOnFolderTestSetup(UserAuthTestSetup):
         # get&save roles with view
         view_perm = Permission(view, (), self.portal)
         self.site_roles_with_view = view_perm.getRoles()
-        view_perm.setRoles(('Manager'))
+        view_perm.setRoles(('Manager',))
 
         roles = ['Administrator', 'Manager', 'Contributor']
         self.auth_tool.manage_addUsersRoles(name=self.user_obj.name,
@@ -169,18 +173,16 @@ class UserWithRolesOnlyOnFolderTestSetup(UserAuthTestSetup):
 
 class UserWithRolesOnlyOnFolderTests(UserWithRolesOnlyOnFolderTestSetup):
     def test_user_cant_view_site(self):
-        # In Zope 5, users are not redirected away from portal root even
-        # when they only have roles on a subfolder.
-        portal_url = 'http://localhost/portal'
-
-        self.browser.go(portal_url)
-        self.assertEqual(portal_url, self.browser.get_url())
+        self.browser.go('http://localhost/portal')
+        self.assertAccessDenied()
 
     def test_user_can_view_folder(self):
         folder_url = 'http://localhost/portal/info'
 
         self.browser.go(folder_url)
         self.assertEqual(folder_url, self.browser.get_url())
+        self.assertEqual(self.browser.get_code(), 200)
+        self.assertIn('Information', self.browser.get_html())
 
 class UserManagementLoggingTestSuite(UserWithRolesOnlyOnFolderTestSetup):
 

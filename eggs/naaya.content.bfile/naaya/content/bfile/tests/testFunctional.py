@@ -36,6 +36,7 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BrowserFileTestingMixin
         def get_selected_language(self):
             form = getattr(self.REQUEST, 'form', {'lang':'en'})
             return form.get('lang', 'en')
+        self._old_get_selected_language = NyBFile.get_selected_language
         NyBFile.get_selected_language = get_selected_language
 
         self.portal.manage_install_pluggableitem('Naaya Blob File')
@@ -46,6 +47,8 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BrowserFileTestingMixin
         transaction.commit()
 
     def beforeTearDown(self):
+        from naaya.content.bfile.bfile_item import NyBFile
+        NyBFile.get_selected_language = self._old_get_selected_language
         self.portal.manage_delObjects(['myfolder'])
         self.portal.manage_uninstall_pluggableitem('Naaya Blob File')
         transaction.commit()

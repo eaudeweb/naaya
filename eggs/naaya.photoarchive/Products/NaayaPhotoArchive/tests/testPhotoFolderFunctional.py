@@ -212,21 +212,6 @@ class NyPhotoFolderFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser_do_logout()
 
-    def test_manage(self):
-        return #TODO: photo gallery has no saveProperties method
-        self.browser_do_login('admin', '')
-
-        self.browser.go('http://localhost/portal/myfolder/mygallery/myalbum/manage_edit_html')
-        form = self.browser.get_form('frmEdit')
-        self.assertEqual(form['title:utf8:string'], 'My photo album')
-        form['title:utf8:string'] = 'new_album_title'
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
-        self.browser.submit()
-
-        self.assertEqual(self.portal.myfolder.mygallery.title, 'new_album_title')
-
-        self.browser_do_logout()
-
     def test_download_zip_all(self):
         myphoto1 = load_file('data/pink.png')
         self.portal.myfolder.mygallery.myalbum.myphoto1.update_data(myphoto1)
@@ -265,7 +250,6 @@ class NyPhotoFolderFunctionalTestCase(NaayaFunctionalTestCase):
         self.assertEqual(photo_zip.read('myalbum.zip/myphoto2'), myphoto2.getvalue())
 
     def test_cut_paste(self):
-        return #TODO: cannot paste from the test; some photos are not correctly pasted (d and d, e-34, and pasting when id exists)
         photos_zip = load_file('data/test.zip')
         addNyPhotoGallery(self.portal.myfolder, id='mygallery2', title='My second photo gallery', submitted=1, contributor='contributor')
         addNyPhotoFolder(self.portal.myfolder.mygallery2, id='myalbum', title='My photo album')
@@ -278,20 +262,23 @@ class NyPhotoFolderFunctionalTestCase(NaayaFunctionalTestCase):
             {'zip': 'a.gif' , 'portal': 'a.gif'},
             {'zip': 'b.gif' , 'portal': 'b.gif'},
             {'zip': 'c-d.gif' , 'portal': 'c-d.gif'},
-            {'zip': 'd and d.gif' , 'portal': 'd_and_d.gif'},
+            {'zip': 'd and d.gif' , 'portal': 'd-and-d.gif'},
             {'zip': 'e-34.gif' , 'portal': 'e-34.gif'},
             {'zip': 'k.gif' , 'portal': 'k.gif'},
         ]
 
         photos_zip = zipfile.ZipFile(photos_zip)
 
+        self.login()
         paste_data = album_source.cutObjects(ids=[pic['portal'] for pic in pics])
         album_destination.pasteObjects(cp_data=paste_data)
+        transaction.commit()
 
+        self.assertEqual(album_source.objectIds(), [])
         for pic in pics:
-            self.assertFalse(pic['portal'] not in album_destination.objectIds(), '%s not in destination.' % pic['portal'])
-            self.browser.go('http://localhost/%s/%s/view?display=Original' % (album_destination.absolute_url(1), pic['portal']))
-            self.assertEqual(photos_zip.read(pic['zip']), self.browser.get_html(), '%s contents doesn\'t match original.' % pic['portal'])
+            self.assertIn(pic['portal'], album_destination.objectIds())
+            self.browser.go('%s/%s/view?display=Original' % (album_destination.absolute_url(), pic['portal']))
+            self.assertEqual(photos_zip.read(pic['zip']), self.browser.result.content, '%s contents doesn\'t match original.' % pic['portal'])
 
     def test_delete(self):
         self.browser_do_login('admin', '')

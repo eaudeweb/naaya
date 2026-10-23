@@ -1,3 +1,4 @@
+import unittest
 from unittest import TestSuite, TestLoader
 from decimal import Decimal
 
@@ -5,6 +6,7 @@ from Products.Naaya.tests import NaayaTestCase
 from Products.Naaya.tests import NaayaFunctionalTestCase
 
 from Products.NaayaCore.GeoMapTool import GeoMapTool
+from Products.NaayaCore.SchemaTool.widgets.geo import Geo
 from Products.Naaya.NyFolder import addNyFolder
 from .test_kml_parser import load_file
 
@@ -188,10 +190,15 @@ class GeoFilterTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase):
                 self.portal.portal_catalog.getIndexObjects()))
         self.assertTrue(len(indexes) == 1)
 
-    def test_objects_in_folder(self):
+    def test_objects_geo_data(self):
         for ob_dict in self.objects:
-            ob = self.portal.geo_location_test._getOb(ob_dict['data']['id'])
-            self.assertFalse(ob == None)
+            data = ob_dict['data']
+            ob = self.portal.geo_location_test._getOb(data['id'])
+            self.assertEqual(ob.geo_location.lat,
+                             Decimal(data['geo_location.lat']))
+            self.assertEqual(ob.geo_location.lon,
+                             Decimal(data['geo_location.lon']))
+            self.assertEqual(ob.geo_type, data['geo_type'])
 
     def test_geo_index(self):
         catalog_tool = self.portal.getCatalogTool()
@@ -288,8 +295,12 @@ class GeoFilterTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase):
         request = self.portal.REQUEST
         request.form['geo_types'] = 'Event_type'
         kml = self.portal.portal_map.downloadLocationsKml(request)
-        self.assertIn('<Placemark', kml)
+        from xml.etree import ElementTree
+        tree = ElementTree.fromstring(kml.encode('utf-8'))
+        placemarks = tree.findall('.//{*}Placemark')
+        self.assertEqual(len(placemarks), 1)
         self.assertIn('Testing event', kml)
+        self.assertNotIn('Testing news', kml)
 
     def test_search_sorted_from_catalog(self):
         portal_map = self.portal.portal_map
@@ -319,8 +330,117 @@ class GeoFilterTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase):
             self.assertEqual(ids(['latlon']), ['sofia', 'sofia2'])
             self.assertEqual(ids(['title', 'latlon']), ['sofia', 'sofia2'])
             self.assertEqual(ids(['address']), [])
+            self.assertEqual(ids(['type', 'latlon']), ['sofia', 'sofia2'])
+            ob.geo_type = 'Capital'
+            self.portal.portal_map.recatalogNyObject(ob)
+            self.assertEqual(ids(['type', 'latlon']), [])
+            sofia = folder.sofia
+            sofia.geo_location = Geo(sofia.geo_location.lat,
+                                     sofia.geo_location.lon, 'Other address')
+            self.assertEqual(ids(['address']), ['sofia', 'sofia2'])
+            self.assertEqual(ids(['address', 'title']), ['sofia', 'sofia2'])
+            self.assertEqual(ids(['address', 'type']), [])
         finally:
             folder.manage_delObjects([ob_id])
+
+    def test_xrjs_geo_points(self):
+        import json
+        request = self.portal.REQUEST
+        request.form.update({'geo_types': 'Capital,City', 'lat_min': '40',
+                             'lat_max': '50', 'lon_min': '20',
+                             'lon_max': '30'})
+        data = json.loads(self.portal.portal_map.xrjs_getGeoPoints(request))
+        self.assertEqual(sorted(p['id'] for p in data['points']),
+                         ['geo_location_test/bucharest',
+                          'geo_location_test/contanta'])
+        self.assertEqual(set(p['icon_name'] for p in data['points']),
+                         {'mk_Capital', 'mk_City'})
+
+    def test_xrjs_geo_points_restricted(self):
+        import json
+        request = self.portal.REQUEST
+        request.form.update({'geo_types': 'Capital,City'})
+        self.portal.geo_location_test.bucharest._View_Permission = (
+            'Administrator',)
+        self.logout()
+        data = json.loads(self.portal.portal_map.xrjs_getGeoPoints(request))
+        self.assertEqual([p['id'] for p in data['points']],
+                         ['geo_location_test/contanta'])
+
+    def add_restricted_folder(self):
+        folder = self.portal.geo_location_test
+        addNyFolder(folder, 'secret', contributor='contributor', submitted=1)
+        secret = folder.secret
+        ob_id = secret.addNyGeoPoint(**{
+            'id': 'hidden', 'title': 'Hidden', 'geo_type': 'Capital',
+            'geo_location.lat': '44.5', 'geo_location.lon': '26.5',
+            'geo_location.address': 'Hidden place'})
+        secret._getOb(ob_id).approveThis()
+        self.portal.portal_map.recatalogNyObject(secret._getOb(ob_id))
+        secret.setRestrictions(access='other', roles=['Reviewer'])
+        secret.manage_setLocalRoles('user1', ['Reviewer'])
+
+    def visible(self):
+        import json
+        portal_map = self.portal.portal_map
+        request = self.portal.REQUEST
+        request.form.clear()
+        request.form['geo_types'] = 'Capital'
+        listing = [ob.getId() for ob in portal_map.search_geo_objects(
+            geo_types=['Capital'])]
+        points = [p['id'].split('/')[-1] for p in json.loads(
+            portal_map.xrjs_getGeoPoints(request))['points']]
+        kml = portal_map.downloadLocationsKml(request)
+        rss = portal_map.export_geo_rss(geo_types=['Capital'])
+        near = [ob.getId() for ob in portal_map.get_geo_objects(
+            '44.5', '26.5', geo_types=['Capital'])]
+        return (sorted(listing), sorted(points), 'Hidden place' in kml,
+                'Hidden' in rss, near)
+
+    def test_restricted_folder(self):
+        self.add_restricted_folder()
+        self.logout()
+        self.assertEqual(self.visible(),
+                         (['bucharest'], ['bucharest'], False, False, []))
+        self.login('user2')
+        self.assertEqual(self.visible()[0], ['bucharest'])
+        self.login('user1')
+        self.assertEqual(self.visible(),
+                         (['bucharest', 'hidden'], ['bucharest', 'hidden'],
+                          True, True, ['hidden']))
+        self.logout()
+        self.portal.geo_location_test.secret.setRestrictions(access='all')
+        self.assertEqual(self.visible()[0], ['bucharest', 'hidden'])
+
+    def test_point_balloon(self):
+        portal_map = self.portal.portal_map
+        self.assertIn('Bucharest', portal_map.xrjs_getPointBalloon(
+            'geo_location_test/bucharest'))
+        self.portal.geo_location_test.bucharest._View_Permission = (
+            'Administrator',)
+        self.logout()
+        self.assertIn('RESTRICTED ACCESS', portal_map.xrjs_getPointBalloon(
+            'geo_location_test/bucharest'))
+        both = portal_map.xrjs_getPointBalloon(
+            ['geo_location_test/bucharest', 'geo_location_test/contanta',
+             'geo_location_test/missing'])
+        self.assertIn('(RESTRICTED ACCESS)', both)
+        self.assertIn('Constanta', both)
+
+    def test_geocode(self):
+        import json
+        from unittest.mock import patch
+        from naaya.core import ggeocoding
+        request = self.portal.REQUEST
+        request.form['address'] = 'Sofia'
+        result = {'location': {'lat': 42.7, 'lon': 23.3}}
+        with patch('naaya.core.ggeocoding.geocode2', return_value=result):
+            self.assertEqual(
+                json.loads(self.portal.portal_map.geocode(request)), [result])
+        error = ggeocoding.GeocoderServiceError('ZERO_RESULTS')
+        with patch('naaya.core.ggeocoding.geocode2', side_effect=error):
+            self.assertEqual(json.loads(self.portal.portal_map.geocode(request)),
+                             {'error': 'ZERO_RESULTS'})
 
     def test_export_geo_rss(self):
         from xml.etree import ElementTree

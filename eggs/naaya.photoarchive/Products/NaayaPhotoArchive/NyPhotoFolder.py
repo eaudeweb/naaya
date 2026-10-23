@@ -43,6 +43,7 @@ from Products.NaayaBase.constants import PERMISSION_ZIP_EXPORT
 from Products.NaayaCore.SchemaTool.widgets.geo import Geo
 from Products.NaayaCore.managers.utils import batch_utils, ZZipFile, make_id
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from Products.NaayaCore.GeoMapTool import view_filter
 from io import BytesIO
 from .constants import DEFAULT_DISPLAYS
 from .constants import DEFAULT_QUALITY
@@ -708,6 +709,7 @@ class NyPhotoFolder(NyRoleManager, NyContentData, NyAttributes, photo_archive_ba
                 err = error
             else:
                 success = True
+        view_filter.invalidate(self)
         if REQUEST:
             if err != '': self.setSessionErrorsTrans([err])
             if success: self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())

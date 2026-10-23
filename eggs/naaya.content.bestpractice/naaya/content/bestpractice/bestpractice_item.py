@@ -221,7 +221,7 @@ def addNyBestPractice(self, id='', REQUEST=None, contributor=None, **kwargs):
             return
 
     if file_has_content(_uploaded_file):
-        ob._save_file(_uploaded_file, contributor)
+        ob._save_file(_uploaded_file, language=_lang, contributor=contributor)
 
     # process parameters
     if self.checkPermissionSkipApproval():

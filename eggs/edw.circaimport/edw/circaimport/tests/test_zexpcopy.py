@@ -16,6 +16,16 @@ class ZexpCopyTestSuite(unittest.TestCase):
         self.assertEqual(zexpcopy.manage_main_catch_path('', '', message, ''),
                          path)
 
+    def test_catch_zexp_path_zope5(self):
+        path = '/var/local/forum/zope-instance/feedback-report.zexp'
+        message = '"some-id" successfully exported to "%s"' % path
+        self.assertEqual(zexpcopy.manage_main_catch_path('', '', message, ''),
+                         path)
+
+    def test_catch_zexp_path_unknown_message(self):
+        self.assertRaises(ValueError, zexpcopy.manage_main_catch_path,
+                          '', '', 'Export failed', '')
+
 
 class ZexpCopyNaayaTestSuite(NaayaTestCase):
 

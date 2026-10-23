@@ -15,6 +15,7 @@ from Products.NaayaSurvey.MegaSurvey import manage_addMegaSurvey
 from Products.NaayaSurvey.SurveyQuestionnaire import SurveyQuestionnaire, SurveyQuestionnaireException
 from Products.NaayaSurvey.SurveyReport import SurveyReport
 from Products.NaayaWidgets.widgets import AVAILABLE_WIDGETS
+from Products.NaayaWidgets.Widget import WidgetError
 
 # stub imports
 from . import stubs
@@ -56,12 +57,25 @@ class MegaSurveyTestCase(NaayaTestCase):
     def testGenerateFullReport(self):
         """Generate full report"""
         title = 'Full report'
+        empty = self.survey._getOb(self.survey.generateFullReport(title='E'))
+        self.assertEqual(len(empty.getStatistics()), 0)
+        self.survey.addWidget(title='Q1', meta_type='Naaya Radio Widget',
+                              choices=['a', 'b'])
+        self.survey.addWidget(title='Q2', meta_type='Naaya String Widget')
+        self.survey.addWidget(title='Q3', meta_type='Naaya Label Widget')
         id = self.survey.generateFullReport(title=title)
         report = self.survey._getOb(id, None)
-        self.assertNotEqual(report, None)
         self.assertTrue(isinstance(report, SurveyReport))
         self.assertEqual(report.getLocalAttribute('title', self.portal.gl_get_selected_language()), title)
-        self.assertEqual(len(report.getStatistics()), 0) # 0 questions -> 0 statistics
+        stats = [(s.question.title, s.__class__.__name__)
+                 for s in report.getSortedStatistics()]
+        self.assertEqual(stats, [
+            ('Q1', 'MultipleChoiceTabularStatistic'),
+            ('Q1', 'MultipleChoiceCssBarChartStatistic'),
+            ('Q1', 'MultipleChoiceGoogleBarChartStatistic'),
+            ('Q1', 'MultipleChoicePieChartStatistic'),
+            ('Q2', 'TextAnswerListing'),
+        ])
 
     def test_NyRoleManager_wrappers(self):
         self.assertTrue(SurveyQuestionnaire.manage_addLocalRoles == NyRoleManager.manage_addLocalRoles)
@@ -96,14 +110,24 @@ class MegaSurveyTestCaseNoLogin(NaayaTestCase):
 
     def testTakingSurvey(self):
         """Test taking a survey"""
-        answer = self.survey.getMyAnswer()
-        self.assertEqual(answer, None)
+        survey = self.survey
+        question = survey.addWidget(title='Q', meta_type='Naaya String Widget')
+        survey._getOb(question).required = True
+        self.assertEqual(survey.getMyAnswer(), None)
 
-        self.survey.expirationdate = DateTime() + 5
-        self.survey.addSurveyAnswer(notify_respondent=False)
+        survey.expirationdate = DateTime() + 5
+        self.assertRaises(WidgetError, survey.addSurveyAnswer,
+                          notify_respondent=False)
+        answer_id = survey.addSurveyAnswer(notify_respondent=False,
+                                           **{question: 'my answer'})
+        answer = survey._getOb(answer_id)
+        self.assertEqual(answer.get(question), 'my answer')
+        self.assertEqual([a.getId() for a in survey.getAnswers()], [answer_id])
 
-        self.survey.expirationdate = DateTime() - 5
-        self.assertRaises(SurveyQuestionnaireException, self.survey.addSurveyAnswer, notify_respondent=False)
+        survey.expirationdate = DateTime() - 5
+        self.assertRaises(SurveyQuestionnaireException, survey.addSurveyAnswer,
+                          notify_respondent=False, **{question: 'late'})
+        self.assertEqual(len(survey.getAnswers()), 1)
 
 class SavePropertiesTestCase(unittest.TestCase):
     def setUp(self):
@@ -121,6 +145,9 @@ class SavePropertiesTestCase(unittest.TestCase):
         for value in [0, 1]:
             survey.saveProperties(allow_drafts=value)
             self.assertEqual(survey.__dict__['allow_drafts'], value)
+        self.assertEqual(survey.__dict__['releasedate'], DateTime('1/1/2010'))
+        survey.updatePropertiesFromGlossary.assert_called_with('en')
+        survey.recatalogNyObject.assert_called_with(survey)
 
     def test_allow_anonymous(self):
         survey = self.survey

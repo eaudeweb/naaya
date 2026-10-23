@@ -14,32 +14,6 @@ else:
     with_naaya = True
 
 
-class DemoActor(object):
-    def __init__(self):
-        self.count = {'files': 0, 'folders': 0, 'urls': 0}
-
-    def folder_entry(self, parent_path, folder_id,
-                     title, description, date, userid):
-        pass  # print 'folder %r (%r, %s)' % (folder_id, userid, date)
-        self.count['folders'] += 1
-
-    def document_entry(self, parent_path, ob_id, filename, data_file,
-                       title, description, keywords, date, userid, lang='en'):
-        pass  # print ('document %r (%r, %s)' % (title, userid, date))
-        self.count['files'] += 1
-
-    def url_entry(self, parent_path, ob_id, filename, url,
-                  title, description, keywords, date, userid):
-        pass  # print ('url %r (%r, %s)' % (title, userid, date))
-        self.count['urls'] += 1
-
-    def warn(self, msg):
-        print("WARNING: %s" % msg)
-
-    def finished(self):
-        print('done:', repr(self.count))
-
-
 def nydateformat(date):
     return date.strftime('%d/%m/%Y')
 

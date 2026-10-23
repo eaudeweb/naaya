@@ -5,7 +5,7 @@ import unittest
 from Products.Naaya.NyFolder import addNyFolder
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from edw.circaimport import backupdata
-from edw.circaimport.actors import DemoActor
+from edw.circaimport.fixes import fix_exceptions
 
 INDEX_HEADER = ['FILENAME', 'TITLE', 'ABSTRACT', 'OWNER', 'CREATED',
                 'UPLOADDATE', 'KEYWORDS', 'REFERENCE', 'STATUS', 'RANKING']
@@ -33,9 +33,8 @@ INDEX_ROWS = [
 URL_DATA = b'[InternetShortcut]\r\nURL=http://example.com/page\r\n'
 
 
-class RecordingActor(DemoActor):
+class RecordingActor(object):
     def __init__(self, context):
-        super(RecordingActor, self).__init__()
         self.context = context
         self.calls = []
         self.warnings = []
@@ -173,3 +172,102 @@ class WalkBackupTest(NaayaTestCase):
             backupdata.walk_backup(make_index(rows),
                                    lambda name: io.BytesIO(b'not a url'),
                                    None, actor)
+
+
+FIX_NAMES = ['FILENAME', 'TITLE', 'ABSTRACT', 'OWNER', 'CREATED', 'UPLOADDATE',
+             'ISSUEDATE', 'KEYWORDS', 'REFERENCE', 'STATUS', 'RANKING']
+
+
+class FixExceptionsTest(unittest.TestCase):
+    """ fix_exceptions repairs malformed CIRCA index lines in place """
+
+    def fix(self, line, names=FIX_NAMES):
+        warnings = []
+        result = fix_exceptions(names, line, warnings.append)
+        return result, warnings
+
+    def row(self, **values):
+        line = ['f.txt', 'Title', 'Abstract', 'bob@circa', '01/01/2009',
+                '02/02/2009', '', 'kw', 'ref', 'Draft', 'Public']
+        for name, value in values.items():
+            line[FIX_NAMES.index(name)] = value
+        return line
+
+    def test_well_formed(self):
+        line = self.row()
+        self.assertEqual(self.fix(line), (None, []))
+        self.assertEqual(line, self.row())
+
+    def test_short_line(self):
+        names = FIX_NAMES + ['OVERWRITE'] + ['X%d' % i for i in range(7)]
+        line = ['lib/a/report.pdf', ''] + ['v'] * 12
+        result, warnings = self.fix(line, names)
+        self.assertEqual(len(line), 19)
+        self.assertEqual(line[1], 'report.pdf')
+        self.assertEqual(line[11:16], [''] * 5)
+        self.assertEqual(len(warnings), 1)
+        self.assertTrue(warnings[0].startswith('Very short line'))
+
+    def test_shifted_circa_owner(self):
+        # the issue date column is duplicated, which shifts the next columns
+        line = self.row(UPLOADDATE='@circa', KEYWORDS='00/00/0000',
+                        CREATED='00/00/0000')
+        line.insert(FIX_NAMES.index('ISSUEDATE'), 'extra')
+        result, warnings = self.fix(line)
+        self.assertEqual(len(line), len(FIX_NAMES))
+        values = dict(zip(FIX_NAMES, line))
+        self.assertEqual((values['ISSUEDATE'], values['UPLOADDATE'],
+                          values['OWNER'], values['RANKING']),
+                         ('', '', '', 'Public'))
+        self.assertEqual(warnings, [])
+
+    def test_missing_owner_and_date(self):
+        folder = self.row(FILENAME='lib/docs/', OWNER='', UPLOADDATE='') + ['x']
+        self.assertEqual(self.fix(folder), (None, []))
+        document = self.row(OWNER='', UPLOADDATE='') + ['x']
+        result, warnings = self.fix(document)
+        self.assertEqual(len(warnings), 1)
+        self.assertTrue(warnings[0].startswith('WEIRD LINE'))
+
+    def test_empty_title(self):
+        line = ['f.txt', ' ', 'Public'] + self.row()[2:]
+        self.assertEqual(self.fix(line), (True, []))
+        self.assertEqual(line, ['f.txt', 'Public'] + self.row()[2:])
+
+    def test_extra_column_before_owner(self):
+        line = self.row(CREATED='bob@circa')
+        line.insert(1, 'extra')
+        self.assertEqual(self.fix(line), (True, []))
+        self.assertEqual(len(line), len(FIX_NAMES))
+        self.assertEqual(line[1], 'Title')
+
+    def test_tabs_in_abstract(self):
+        line = self.row()
+        line[2:3] = ['part 1', 'part 2', 'part 3']
+        self.assertEqual(self.fix(line), (None, []))
+        self.assertEqual(line, self.row(ABSTRACT='part 1\tpart 2\tpart 3'))
+
+    def test_busted_line(self):
+        names = ['FILENAME', 'TITLE', 'OWNER', 'UPLOADDATE']
+        self.assertRaises(AssertionError, fix_exceptions, names,
+                          ['a', 'b', 'c', 'd', 'e'], None)
+
+
+class ConsoleScriptsTest(unittest.TestCase):
+    """ the tsv2csv console script reads bytes from stdin """
+
+    def run_script(self, func, argv, data):
+        from unittest import mock
+        stdin = io.TextIOWrapper(io.BytesIO(data))
+        stdout = io.StringIO()
+        with mock.patch('sys.argv', ['script'] + argv), \
+                mock.patch('sys.stdin', stdin), \
+                mock.patch('sys.stdout', stdout):
+            func()
+        return stdout.getvalue()
+
+    def test_tsv2csv(self):
+        import edw.circaimport
+        out = self.run_script(edw.circaimport.tsv2csv, [],
+                              b'A\tB\r\nx\tcaf\xe9\r\n')
+        self.assertEqual(out, 'A,B\r\nx,caf\xe9\r\n')

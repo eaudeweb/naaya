@@ -39,6 +39,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.NaayaCore.SchemaTool.widgets.geo import Geo, geo_as_json
 from Products.NaayaCore.SchemaTool.widgets.geo import json_encode_helper
 from Products.NaayaCore.GeoMapTool import clusters_catalog
+from Products.NaayaCore.GeoMapTool import view_filter
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from naaya.core.zope2util import path_in_site, get_template_source
 from naaya.core.zope2util import XLSX_CONTENT_TYPE
@@ -321,7 +322,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             if rid not in dict_rids:
                 dict_rids[rid] = 1
                 rids.append(rid)
-        return rids
+        return view_filter.filter_rids(self, catalog_tool._catalog, rids)
 
     def _search_geo_objects(self, filters):
         """
@@ -329,8 +330,9 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         This does not check for the 180/-180 meridian in the map
         """
         catalog_tool = self.getCatalogTool()
-        return [catalog_tool.getobject(rid)
-                for rid in self._search_geo_rids(filters)]
+        obs = [catalog_tool.getobject(rid)
+               for rid in self._search_geo_rids(filters)]
+        return [ob for ob in obs if view_filter.can_view(ob)]
 
     def _sort_geo_rids(self, rids, sort_on, sort_order):
         """Sort catalog record ids, from catalog data where possible."""
@@ -420,7 +422,9 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         catalog_tool = self.getCatalogTool()
 
         # call the improved cluster_catalog function for getting the clusters
-        centers, groups = clusters_catalog.getClusters(catalog_tool, filters)
+        exclude = view_filter.denied_rids(self, catalog_tool._catalog)
+        centers, groups = clusters_catalog.getClusters(catalog_tool, filters,
+                                                       exclude=exclude)
 
         bounds = [c.bounds for c in centers]
         # transform centers to Geo
@@ -433,6 +437,8 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                 for so in groups[i]:
                     sobject = clusters_catalog.getObjectFromCatalog(
                         catalog_tool, so)
+                    if not view_filter.can_view(sobject):
+                        continue
 
                     # do not display it if it is not in the actual map
                     if (Decimal(str(lat_min)) < sobject.geo_location.lat <
@@ -555,7 +561,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
 
         points = []
         for loc in self.search_geo_objects(REQUEST=REQUEST):
-            if loc.geo_location is not None:
+            if loc.geo_location is not None and view_filter.can_view(loc):
                 points.append(loc)
         REQUEST.RESPONSE.setHeader('Content-Type',
                                    'application/vnd.google-earth.kml+xml')
@@ -570,7 +576,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         try:
             points = []
             for res in self.search_geo_objects(REQUEST=REQUEST):
-                if res.geo_location is None:
+                if res.geo_location is None or not view_filter.can_view(res):
                     continue
                 points.append({
                     'lat': res.geo_location.lat,
@@ -777,6 +783,8 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                 pass
 
         for item in objects:
+            if not view_filter.can_view(item):
+                continue
             if isinstance(item,
                           Products.NaayaBase.NyContentType.NyContentType):
                 schema = schema_tool.getSchemaForMetatype(item.meta_type)
@@ -1131,6 +1139,8 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         # plain string formatting: minidom was a quarter of the time on large maps
         symbol_titles = {}
         for item in items:
+            if not view_filter.can_view(item):
+                continue
             url = item.absolute_url()
             description = [item.description,
                            "<b>Address</b>: %s" % item.geo_location.address]

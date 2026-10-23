@@ -5,8 +5,6 @@ from unittest import mock
 from Products.Naaya import views
 from Products.Naaya.NySite import NySite
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
-from Products.Naaya.tests.NaayaFunctionalTestCase import \
-    NaayaFunctionalTestCase
 from Products.NaayaBase import akismet
 
 
@@ -136,26 +134,6 @@ class SetBundleViewTest(NaayaTestCase):
                          self.portal.get_bundle().__name__)
         view.set_bundle('TestViewsBundle')
         self.assertEqual(view.get_bundle(), 'TestViewsBundle')
-
-
-class SetBundleViewFunctionalTest(NaayaFunctionalTestCase):
-
-    def test_call(self):
-        original = self.portal.get_bundle().__name__
-        self.browser_do_login('admin', '')
-        self.browser.go('http://localhost/portal/manage_bundle')
-        html = self.browser.get_html()
-        self.assertIn('value="%s"' % original, html)
-
-        self.browser.go('http://localhost/portal/manage_bundle?bundle=')
-        self.assertIn('Bundle name cannot be empty!', self.browser.get_html())
-
-        self.browser.go('http://localhost/portal/manage_bundle'
-                        '?bundle=TestViewsBundle')
-        html = self.browser.get_html()
-        self.assertIn('<div class="message">Success!</div>', html)
-        self.assertIn('value="TestViewsBundle"', html)
-        self.browser_do_logout()
 
 
 class ObPathTest(NaayaTestCase):

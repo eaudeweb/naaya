@@ -16,6 +16,7 @@ $Id: testCookieCrumbler.py,v 1.7 2004/02/05 15:35:16 shane Exp $
 """
 
 import base64
+import types
 from io import BytesIO, StringIO
 import sys
 import unittest
@@ -55,7 +56,8 @@ class CookieCrumblerTests (unittest.TestCase):
         root = Folder()
         self.root = root
         root.isTopLevelPrincipiaApplicationObject = 1  # User folder needs this
-        root.getPhysicalPath = lambda: ()  # hack
+        # a bound method, since Traversable.getPhysicalPath reads __func__
+        root.getPhysicalPath = types.MethodType(lambda self: (), root)
         root._View_Permission = ('Anonymous',)
 
         users = UserFolder()
@@ -307,6 +309,81 @@ class CookieCrumblerTests (unittest.TestCase):
                          'isaac')
 
 
+    def testNonAsciiCookieLogin(self):
+        # non-ASCII credentials are sent as UTF-8 in the __ac cookie
+        self.root.acl_users._doAddUser('ştefan', 'parolă', ('Son',),
+                                       ())
+        self.req.cookies['__ac_name'] = 'ştefan'
+        self.req.cookies['__ac_password'] = 'parolă'
+        self.req.traverse('/')
+        self.assertEqual(self.req['AUTHENTICATED_USER'].getUserName(),
+                         'ştefan')
+        ac = urllib.parse.unquote(self.req.response.cookies['__ac']['value'])
+        self.assertEqual(base64.decodebytes(ac.encode()),
+                         'ştefan:parolă'.encode('utf-8'))
+
+    def testNonAsciiCookieResume(self):
+        self.root.acl_users._doAddUser('ştefan', 'parolă', ('Son',),
+                                       ())
+        self.req.cookies['__ac'] = urllib.parse.quote(base64.encodebytes(
+            'ştefan:parolă'.encode('utf-8')).rstrip().decode())
+        self.req.traverse('/')
+        self.assertEqual(self.req['AUTHENTICATED_USER'].getUserName(),
+                         'ştefan')
+
+    def testPersistentNameCookie(self):
+        # __ac_persistent keeps the user name for a year
+        self.req.cookies['__ac_name'] = 'abraham'
+        self.req.cookies['__ac_password'] = 'pass-w'
+        self.req.form['__ac_persistent'] = '1'
+        self.req.traverse('/')
+        cookie = self.req.response.cookies['__ac_name']
+        self.assertEqual(cookie['value'], 'abraham')
+        self.assertGreater(int(cookie['Expires'].split()[3]), 2025)
+
+    def testNameCookieExpiredWithoutPersistence(self):
+        self.req.cookies['__ac_name'] = 'abraham'
+        self.req.cookies['__ac_password'] = 'pass-w'
+        self.req.traverse('/')
+        cookie = self.req.response.cookies['__ac_name']
+        self.assertEqual(cookie['value'], 'deleted')
+
+    def testLogout(self):
+        logged_out = DTMLMethod()
+        logged_out.munge('Logged out')
+        logged_out._setId('logged_out')
+        self.root._setObject(logged_out.getId(), logged_out)
+        self.root.REQUEST = self.req
+        self.req.cookies['__ac'] = self.credentials
+        self.req.traverse('/')
+        self.assertEqual(self.req._logout_path,
+                         ('cookie_authentication', 'logout'))
+        self.assertEqual(self.cc.logout(), '')
+        resp = self.req.response
+        self.assertEqual(resp.cookies['__ac']['value'], 'deleted')
+        self.assertEqual(resp.status, 302)
+        self.assertTrue(resp.getHeader('Location').endswith(
+            '/logged_out?disable_cookie_login__=1'))
+
+    def testLogoutWithoutPage(self):
+        self.root.REQUEST = self.req
+        self.cc.logout_page = ''
+        self.assertEqual(self.cc.logout(), 'Logged out.')
+        self.assertEqual(self.req.response.cookies['__ac']['value'],
+                         'deleted')
+
+    def testCredentialsChanged(self):
+        # a password change sets a new __ac cookie
+        self.root.REQUEST = self.req
+        self.req.cookies['__ac'] = self.credentials
+        self.req.traverse('/')
+        self.assertEqual(self.req._credentials_changed_path,
+                         ('cookie_authentication', 'credentialsChanged'))
+        self.cc.credentialsChanged(None, 'abraham', 'néw')
+        ac = urllib.parse.unquote(self.req.response.cookies['__ac']['value'])
+        self.assertEqual(base64.decodebytes(ac.encode()),
+                         'abraham:néw'.encode('utf-8'))
+
     def testCreateForms(self):
         # Verify the factory creates the login forms.
         if 'CMFCore' in CookieCrumbler.__module__:
@@ -319,6 +396,12 @@ class CookieCrumblerTests (unittest.TestCase):
         self.assertEqual(tuple(ids), (
             'index_html', 'logged_in', 'logged_out', 'login_form',
             'standard_login_footer', 'standard_login_header'))
+        login_form = self.root.login.login_form.read()
+        self.assertIn('__ac_name', login_form)
+        self.assertIn('__ac_password', login_form)
+        source = self.root.login.login_form.read()
+        self.assertIn('__ac_name', source)
+        self.assertIn('__ac_password', source)
 
 def test_suite():
     return unittest.TestLoader().loadTestsFromTestCase(CookieCrumblerTests)

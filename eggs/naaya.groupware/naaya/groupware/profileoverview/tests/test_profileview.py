@@ -171,10 +171,28 @@ class ProfileViewTest(ProfileTestBase):
         page = fromstring(ProfileView(self.app, request))
         self.assertIn('Admin access', page.text_content())
 
+    def test_ajax_memberships_admin_compared_by_value(self):
+        # a string built at runtime is equal to 'admin' but not identical
+        admin = ''.join(['ad', 'min'])
+        request = self.request({'ajax': 'memberships',
+                                'ig_id': self.portal.getId()})
+        with patch.object(ProfileClient, 'access_in_ig',
+                          Mock(return_value=admin)):
+            page = fromstring(ProfileView(self.app, request))
+        self.assertIn('Admin access', page.text_content())
+
     def test_ajax_memberships_viewer(self):
         request = self.request({'ajax': 'memberships',
                                 'ig_id': self.portal.getId()})
+        self.assertEqual(self.client().access_in_ig(self.portal), 'viewer')
         self.assertEqual(ProfileView(self.app, request).strip(), '')
+        # the same viewer with a local role gets the membership list
+        self.folder.manage_setLocalRoles('anne', ['Contributor'])
+        self.folder.recatalogNyObject(self.folder)
+        page = fromstring(ProfileView(self.app, request))
+        self.assertEqual([' '.join(li.text_content().split())
+                          for li in page.xpath('//li')],
+                         ['Contributor in Documents - local role'])
 
     def test_ajax_subscriptions(self):
         notif_tool = self.portal.getNotificationTool()

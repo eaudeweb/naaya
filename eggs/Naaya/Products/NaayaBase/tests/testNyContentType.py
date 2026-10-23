@@ -106,7 +106,7 @@ class NyContentTypeTestCase(ZopeTestCase.TestCase):
                              'my_local_str_fr_val')
         self.assertEqual(obj2.my_int, 13)
 
-    def test_change_schema_properties(self):
+    def test_change_schema_properties_int(self):
         obj = NyDummy()
         obj._change_schema_properties(my_int="12")
         self.assertEqual(obj.my_int, 12)

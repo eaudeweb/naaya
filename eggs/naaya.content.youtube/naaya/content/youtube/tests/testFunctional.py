@@ -2,8 +2,9 @@ import re
 from bs4 import BeautifulSoup
 
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
+from naaya.content.youtube.tests.mock_youtube import YoutubeMockMixin
 
-class NyYoutubeFunctionalTestCase(NaayaFunctionalTestCase):
+class NyYoutubeFunctionalTestCase(YoutubeMockMixin, NaayaFunctionalTestCase):
     """ TestCase for NaayaContent object """
 
     def afterSetUp(self):

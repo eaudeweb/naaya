@@ -12,7 +12,6 @@ import re
 
 import transaction
 from webob import Request
-from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from Products.Naaya.NyFolder import addNyFolder
 from naaya.core.testutils import parse_html, css
 
@@ -36,21 +35,14 @@ def _normalize_host(url):
     return url.replace('://nohost/', '://localhost/')
 
 
-class _IconTests(NaayaTestCase):
-    """
-    Common tests for Naaya content objects
-
-    `ob`
-        Object under test. Created by `setUp`.
-    """
+class IconTestsMixin(object):
+    """ Icon tests; combine with NaayaTestCase and define `add_object` """
 
     def add_object(self, parent):
         """ Create and return an instance of the class to be tested. """
         raise NotImplementedError
 
     def setUp(self):
-        if type(self) is _IconTests:
-            self.skipTest('Abstract base class')
         addNyFolder(self.portal, 'box', contributor='contributor', submitted=1)
         self.ob = self.add_object(self.portal['box'])
         transaction.commit()

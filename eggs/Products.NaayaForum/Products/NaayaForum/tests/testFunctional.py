@@ -169,12 +169,81 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
         html = self.browser.get_html()
         self.assertTrue('The attachment is larger than permitted' in html)
-        #Check that the filled values are saved
+        self.assertEqual(len(self.portal.forum_id.objectIds(['Naaya Forum Topic'])), 1)
+        #Check that the filled values are saved in the re-rendered form
+        form = self.browser.get_form('frmAdd')
         self.assertEqual(form['title:utf8:string'], 'Test subject (Large file)')
         self.assertEqual(form['category:utf8:string'], 'Test category')
-        self.assertEqual(form['description:utf8:string'], 'Test Description (Large file)')
+        self.assertEqual(form['description:utf8:string'].strip(),
+                         'Test Description (Large file)')
 
         self.browser_do_logout()
+
+    def message_positions(self, html):
+        import re
+        return [(int(margin), msg_id) for margin, msg_id in re.findall(
+            r'margin-left:(\d+)px;[^>]*>\s*<a name="([^"]+)"', html)]
+
+    def test_thread_view(self):
+        topic = self.portal.forum_id.topic_id
+        [reply_id] = [m.id for m in topic.objectValues('Naaya Forum Message')
+                      if m.inreplyto == 'message_id']
+        topic[reply_id].replyMessage(title='Second reply',
+                                     description='Deep reply')
+        transaction.commit()
+        [deep_id] = [m.id for m in topic.objectValues('Naaya Forum Message')
+                     if m.inreplyto == reply_id]
+
+        self.browser.go('http://localhost/portal/forum_id/topic_id')
+        html = self.browser.get_html()
+        self.assertEqual(self.message_positions(html), [
+            (20, 'message_id'), (40, reply_id), (60, deep_id)])
+        for title in ('Message title', 'Reply to message_id', 'Second reply'):
+            self.assertEqual(html.count('>%s<' % title), 1, title)
+
+    def test_reply_via_form(self):
+        self.browser_do_login('admin', '')
+        self.browser.go('http://localhost/portal/forum_id/topic_id/message_id/reply_html')
+        form = self.browser.get_form(2)
+        form['title:utf8:string'] = 'Web reply'
+        form['description:utf8:string'] = 'Posted from the form'
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
+        self.browser.submit()
+        topic = self.portal.forum_id.topic_id
+        [reply] = [m for m in topic.objectValues('Naaya Forum Message')
+                   if m.title == 'Web reply']
+        self.assertEqual(reply.inreplyto, 'message_id')
+        self.assertEqual(reply.description, 'Posted from the form')
+        self.assertTrue(self.browser.get_url().startswith(
+            'http://localhost/portal/forum_id/topic_id'))
+        self.assertIn('Posted from the form', self.browser.get_html())
+        self.browser_do_logout()
+
+    def test_restrict_topic(self):
+        topic_url = 'http://localhost/portal/forum_id/topic_id'
+        self.browser_do_login('admin', '')
+        self.browser.go(topic_url + '/restrict_html')
+        form = self.browser.get_form(2)
+        roles = [item.name for item in form.find_control('roles').items]
+        self.assertIn('Contributor', roles)
+        for role in ('Manager', 'Anonymous', 'Owner', 'Administrator'):
+            self.assertNotIn(role, roles)
+        form['access'] = ['other']
+        form['roles'] = ['Contributor']
+        self.browser.clicked(form, self.browser.get_form_field(form, 'access'))
+        self.browser.submit()
+        self.assertEqual(self.portal.forum_id.topic_id.get_roles_with_access(),
+                         ['Contributor'])
+        self.browser_do_logout()
+
+        self.browser.go(topic_url)
+        self.assertAccessDenied()
+
+        self.portal.forum_id.topic_id.setRestrictions(access='all')
+        transaction.commit()
+        self.browser.go(topic_url)
+        self.assertAccessDenied(False)
+        self.assertIn('topic title', self.browser.get_html())
 
     def test_topic_edit(self):
         #Check that an unidentified user cannot edit a topic

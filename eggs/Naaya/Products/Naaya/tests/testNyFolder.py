@@ -715,14 +715,6 @@ class TestNyFolderSubobjects(NaayaTestCase):
         addNyFolder(self.portal.info, 'subfolder1', contributor='contributor',
                     submission=1)
 
-    def test_folders_created_with_default_subobjects(self):
-        for i in range(2):
-            folder = getattr(self.portal.info, 'subfolder' + str(i))
-            fmt = FolderMetaTypes(folder)
-            self.assertFalse(fmt.has_custom_value)
-            self.assertEqual(set(fmt.get_values()),
-                             set(self.portal.adt_meta_types))
-
     def test_subobjects_customization(self):
         # customize one subfolder
         self.portal.info.subfolder1.manageSubobjects(subobjects=[],

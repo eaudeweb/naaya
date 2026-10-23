@@ -12,7 +12,6 @@ setup(name='edw.circaimport',
           'naaya.groupware >= 2.0.0',
       ],
       entry_points={'console_scripts':
-                    ['circaimport = edw.circaimport:demo',
-                     'tsv2csv = edw.circaimport:tsv2csv',
+                    ['tsv2csv = edw.circaimport:tsv2csv',
                      'zip_export = edw.circaimport:do_export']},
       )

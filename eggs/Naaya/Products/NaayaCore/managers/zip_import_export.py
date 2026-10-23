@@ -312,6 +312,7 @@ class RecursiveZipBuilder(object):
         self.index_txt = StringIO()
         self.index_txt.write('\t'.join(['Title', 'Type', 'Path']) + '\n')
         self.sm = sm
+        self._used_paths = set()
 
     def recurse(self, obj, parent_path=''):
         for sub_obj in obj.objectValues():
@@ -326,6 +327,25 @@ class RecursiveZipBuilder(object):
     def write_index(self, filename='index.txt'):
         self.zip_file.writestr(filename, self.index_txt.getvalue())
 
+    def _unique_path(self, parent_path, filename):
+        """Path in the zip, with " (n)" added when the name is taken."""
+        used = self._used_paths
+        is_folder = filename.endswith('/')
+        name = filename.rstrip('/')
+        base, dot, ext = name.rpartition('.')
+        if is_folder or not dot or not base:
+            base, ext = name, ''
+        else:
+            ext = '.' + ext
+        path = parent_path + filename
+        counter = 0
+        while path in used:
+            counter += 1
+            path = '%s%s (%d)%s%s' % (parent_path, base, counter, ext,
+                                     '/' if is_folder else '')
+        used.add(path)
+        return path
+
     def add_object_to_zip(self, obj, parent_path):
         target = self.sm.queryAdapter(obj, IZipExportObject)
         if target is None:
@@ -338,10 +358,11 @@ class RecursiveZipBuilder(object):
         if not filename:
             # happens for file items without an uploaded file
             return
-        target_path = parent_path + filename
-
-        if isinstance(target_path, bytes):
-            target_path = target_path.decode('utf-8')
+        if isinstance(filename, bytes):
+            filename = filename.decode('utf-8')
+        if isinstance(parent_path, bytes):
+            parent_path = parent_path.decode('utf-8')
+        target_path = self._unique_path(parent_path, filename)
 
         data = target.data
         if isinstance(data, str):

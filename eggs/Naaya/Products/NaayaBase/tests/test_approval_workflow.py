@@ -35,7 +35,7 @@ class TestApproval(NaayaTestCase):
 
         self.assertEqual(ob.approved, 1)
         self.assertEqual(ob.submitted, 1)
-        self.assertTrue(self.notify_maintainer.call_count, 1)
+        self.assertEqual(self.notify_maintainer.call_count, 1)
 
     def test_submit_by_manager(self):
         self.login('site_admin')
@@ -44,7 +44,7 @@ class TestApproval(NaayaTestCase):
 
         self.assertEqual(ob.approved, 1)
         self.assertEqual(ob.submitted, 1)
-        self.assertTrue(self.notify_maintainer.call_count, 1)
+        self.assertEqual(self.notify_maintainer.call_count, 1)
 
 class TestApprovalForFolder(TestApproval):
     def _submit_obj(self):

@@ -161,7 +161,8 @@ class plugLDAPUserFolder(PlugBase):
         before = 'uid='
         after = ',%s' % users_base
 
-        assert dn.startswith(before) and dn.endswith(after)
+        if not (dn.startswith(before) and dn.endswith(after)):
+            return None
         return dn[len(before):-len(after)]
 
     def getGroupScope(self, acl_folder):
@@ -401,7 +402,7 @@ class plugLDAPUserFolder(PlugBase):
             return on_error('No roles selected')
 
         if location == '/':
-            location == ''
+            location = ''
         try:
             ob = self.getSite().unrestrictedTraverse(location)
         except KeyError:
@@ -446,7 +447,8 @@ class plugLDAPUserFolder(PlugBase):
         scope = self.getGroupScope(ldap_folder)
         delegate = self.get_ldap_delegate()
         result = delegate.search(
-            root_dn, scope, filter_format('cn=%s', (group,)), ['uniqueMember'])
+            root_dn, scope, filter_format('(cn=%s)', (group,)),
+            ['uniqueMember'])
         if result['size'] > 0:
             group_user_members = result['results'][result['size'] - 1].get(
                 'uniqueMember', [])
@@ -484,8 +486,10 @@ class plugLDAPUserFolder(PlugBase):
                 dn, scope, filter_format('(cn=%s)', (group_id,)),
                 ['uniqueMember', 'member'])
             for val in result['results']:
-                for dn in val['uniqueMember']:
+                for dn in val.get('uniqueMember', []) + val.get('member', []):
                     p_username = self._user_id_from_dn(dn)
+                    if p_username is None:
+                        continue  # empty placeholder or not a user entry
                     info = self.get_source_user_info(p_username)
                     res_append(info)
         return res

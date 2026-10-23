@@ -21,6 +21,7 @@ email_template = EmailPageTemplateFile('emailpt/recover_password.zpt',
                                        globals())
 
 TOKEN_SYMBOL = string.ascii_letters + string.digits
+TOKEN_LIFETIME = timedelta(hours=1)
 BAD_TOKEN_MSG = ("Your password change link is invalid - it probably expired."
                  " Please try again.")
 
@@ -58,18 +59,19 @@ class RecoverPassword(SimpleItem):
         """
         Retrieve a token. If it's valid, return `user_id`; otherwise None.
         """
-        token_map = self._get_token_map()
-        if token in token_map:
-            return token_map[token].user_id
-        else:
+        token_data = self._get_token_map().get(token)
+        if token_data is None:
             return None
+        if token_data.create_time < datetime.now() - TOKEN_LIFETIME:
+            return None
+        return token_data.user_id
 
     def _remove_token(self, token):
         """ Remove a token after it's used. """
         del self._get_token_map()[token]
 
     def _cleanup_expired_tokens(self):
-        cutoff_time = datetime.now() - timedelta(hours=1)
+        cutoff_time = datetime.now() - TOKEN_LIFETIME
         token_map = self._get_token_map()
         tokens_to_remove = set()
         for token, data in token_map.items():

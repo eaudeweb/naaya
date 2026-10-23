@@ -66,7 +66,8 @@ class StatsItem(SimpleItem):
 
     def __init__(self, id, title, stats):
         self.stats = stats
-        super(StatsItem, self).__init__(id, title)
+        self.id = id
+        self.title = title
 
     security.declareProtected(view_management_screens, 'manage_workspace')
 

@@ -35,7 +35,8 @@ def convertLinesToList(value):
     else:
         values = []
         for v in value.split('\n'):
-            if v != '': values.append(v.replace('\r', ''))
+            v = v.replace('\r', '')
+            if v != '': values.append(v)
     return values
 
 def readFile(p_path, p_flag='r'):
@@ -54,8 +55,7 @@ def create_signature(s):
 
 def html_decode(s):
     """Decode some special chars"""
-    if isinstance(s, str): buf = s.encode('utf-8')
-    else: buf = str(s)
+    buf = s if isinstance(s, str) else str(s)
     buf = buf.replace('&amp;', '&')
     buf = buf.replace('&lt;', '<')
     buf = buf.replace('&quot;', '"')

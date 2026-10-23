@@ -1,4 +1,6 @@
 """Every pluggable content type must load again from the storage after a commit."""
+from unittest import mock
+
 import transaction
 from persistent import Persistent
 
@@ -58,7 +60,9 @@ def load_tree(ob, seen):
 
 class PersistenceTest(NaayaTestCase):
 
-    def test_content_types_reload(self):
+    # the Youtube add function checks the video id on youtube.com
+    @mock.patch('urllib.request.urlopen')
+    def test_content_types_reload(self, urlopen):
         folder = self.portal.info
         added = {}
         not_added = []

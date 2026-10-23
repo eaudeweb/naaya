@@ -135,6 +135,7 @@ class TestNyRoleManager(NaayaFunctionalTestCase):
 
     def test_all_local_roles_info(self):
         self.browser_do_login('admin', '')
+        role_logger = IRoleLogger(self.portal.info)
         self.portal.info.manage_setLocalRoles(self.username, ['Manager'])
         from Products.NaayaBase.NyRoleManager import NyRoleManager
         super(NyRoleManager, self.portal.info).manage_addLocalRoles(self.username,
@@ -240,7 +241,7 @@ class TestNyRoleManager(NaayaFunctionalTestCase):
 
         self.browser_do_logout()
 
-    def test_all_local_roles_info(self):
+    def test_all_user_roles_info(self):
         self.browser_do_login('admin', '')
         auth_tool = self.portal.getAuthenticationTool()
         user = auth_tool.getUser(self.username)

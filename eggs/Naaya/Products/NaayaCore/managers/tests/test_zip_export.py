@@ -2,6 +2,7 @@
 from unittest import TestSuite, TestLoader
 from io import BytesIO, StringIO
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
+from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 from Products.Naaya.NyFolder import addNyFolder
 from naaya.content.document.document_item import addNyDocument
 from naaya.content.contact.contact_item import addNyContact
@@ -87,8 +88,10 @@ class NyZipExport(NaayaTestCase):
         zip = ZipFile(export_value, 'r')
 
         folder_datetime = self.test_folder._getOb(folder_id).releasedate
-        for zipinfo in zip.filelist:
-            if folder_id in zipinfo.filename:
+        folder_infos = [zipinfo for zipinfo in zip.filelist
+                        if zipinfo.filename == 'zip_export_folder/Some title/']
+        self.assertEqual(len(folder_infos), 1)
+        for zipinfo in folder_infos:
                 self.assertEqual(folder_datetime.year(), zipinfo.date_time[0])
                 self.assertEqual(folder_datetime.month(), zipinfo.date_time[1])
                 self.assertEqual(folder_datetime.day(), zipinfo.date_time[2])
@@ -362,7 +365,6 @@ class ZipExportFilenames(NaayaTestCase):
                          ['index.txt', 'my_folder/' + utf8_fs_name])
 
     def test_duplicate_file_names(self):
-        from unittest import SkipTest; raise SkipTest # TODO
         for c in range(3):
             test_file = _upload_file(self.my_folder, 'test_file.txt', "DATA")
             test_file._setLocalPropValue('title', 'en', "HI")
@@ -371,17 +373,48 @@ class ZipExportFilenames(NaayaTestCase):
         for c in range(1, 3):
             expected_names.append('my_folder/HI (%d).txt' % c)
 
-        self.assertEqual(_zip_export_filenames(self.my_folder), expected_names)
+        self.assertEqual(_zip_export_filenames(self.my_folder),
+                         sorted(expected_names))
 
     def test_duplicate_folder_names(self):
-        from unittest import SkipTest; raise SkipTest # TODO
         for c in range(3):
             folder_id = 'box_%d' % c
             folder =_create_folder(self.portal.my_folder, folder_id, "Ze Box")
             _upload_file(folder, 'test_file.txt', "DATA")
 
-        expected_names = ['index.txt', 'Ze Box/test_file.txt']
+        expected_names = ['index.txt', 'my_folder/Ze Box/',
+                          'my_folder/Ze Box/test_file.txt']
         for c in range(1, 3):
-            expected_names.append('Ze Box (%d)/test_file.txt' % c)
+            expected_names.append('my_folder/Ze Box (%d)/' % c)
+            expected_names.append('my_folder/Ze Box (%d)/test_file.txt' % c)
 
-        self.assertEqual(_zip_export_filenames(self.my_folder), expected_names)
+        self.assertEqual(_zip_export_filenames(self.my_folder),
+                         sorted(expected_names))
+
+
+class ZipExportDownloadTest(NaayaFunctionalTestCase):
+
+    def afterSetUp(self):
+        import transaction
+        self.portal.manage_install_pluggableitem('Naaya Blob File')
+        folder = _create_folder(self.portal, 'dl_folder')
+        _upload_file(folder, 'test_file.txt', "FILEDATA")
+        transaction.commit()
+
+    def test_download(self):
+        self.browser_do_login('admin', '')
+        self.browser.go('http://localhost/portal/dl_folder/zip_export/'
+                        'do_export')
+        response = self.browser.result
+        self.assertEqual(response.headers['content-type'], 'application/zip')
+        zip_file = ZipFile(BytesIO(response.content), 'r')
+        self.assertEqual(zip_file.read('dl_folder/test_file.txt'),
+                         b'FILEDATA')
+
+    def test_anonymous_denied(self):
+        self.portal.dl_folder._View_Permission = ('Administrator',)
+        import transaction
+        transaction.commit()
+        self.browser.go('http://localhost/portal/dl_folder/zip_export/'
+                        'do_export')
+        self.assertAccessDenied()

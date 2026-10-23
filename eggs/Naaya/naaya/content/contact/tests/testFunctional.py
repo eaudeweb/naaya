@@ -185,4 +185,9 @@ class NyContactVersioningFunctionalTestCase(NaayaFunctionalTestCase):
         form = self.browser.get_form('frmEdit')
         self.assertEqual(form['title:utf8:string'], 'ver_contact_version')
 
+        self.browser.go('http://localhost/portal/info/ver_contact/commitVersion')
+        ob = self.portal.info.ver_contact
+        self.assertEqual(ob.title, 'ver_contact_version')
+        self.assertEqual(ob.version, None)
+
         self.browser_do_logout()

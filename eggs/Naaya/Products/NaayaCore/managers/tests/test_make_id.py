@@ -43,6 +43,18 @@ class make_id_TestCase(NaayaFunctionalTestCase):
         self.parent = Parent('contact', 'contact-1', 'contact-3')
         id = make_id(self.parent, id='', title='', prefix='contact')
         self.assertEqual(id[:-5], 'contact')
+        self.assertTrue(id[-5:].isdigit())
+
+    def test_by_prefix_taken(self):
+        from unittest.mock import patch
+        self.parent = Parent('contact12345', 'contact12345-1')
+        with patch('Products.NaayaCore.managers.utils.genRandomId',
+                   return_value='12345'):
+            id = make_id(self.parent, prefix='contact')
+            self.assertEqual(id, 'contact12345-2')
+            id = make_id(self.parent, temp_parent=Parent('contact12345-2'),
+                         prefix='contact')
+            self.assertEqual(id, 'contact12345-3')
 
     def test_by_nothing(self):
         self.parent = Parent('contact', 'contact-1', 'contact-3')

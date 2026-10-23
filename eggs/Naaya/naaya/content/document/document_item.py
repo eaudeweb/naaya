@@ -264,6 +264,10 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl,
                 self.utXmlEncode(self.validation_by),
                 self.utXmlEncode(self.validation_comment))
 
+    def getUploadedImages(self):
+        """ Images stored in this document """
+        return self.objectValues(['Image'])
+
     security.declarePrivate('export_this_body_custom')
     def export_this_body_custom(self):
         r = []
@@ -273,7 +277,7 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl,
                 self.utToUtf8(self.getLocalProperty('body', l))))
         for i in self.getUploadedImages():
             ra('<img param="0" id="%s" content="%s" />' % \
-                (self.utXmlEncode(i.id()), self.utXmlEncode(
+                (self.utXmlEncode(i.getId()), self.utXmlEncode(
                 self.utBase64Encode(bytes(i.data)))))
         return ''.join(r)
 

@@ -33,7 +33,17 @@ class GroupMembersTest(unittest.TestCase):
         self.assertEqual(plugin.group_member_ids('grp-ids(x)'), ['jdoe'])
         # the group id is escaped in the LDAP filter
         self.assertEqual(self.delegate.search.call_args[0][2],
-                         r'cn=grp-ids\28x\29')
+                         r'(cn=grp-ids\28x\29)')
+
+    def test_users_by_role_member_attribute(self):
+        plugin = self.make_plugin([])
+        plugin._get_users_base = lambda: 'ou=Users,o=EIONET'
+        self.delegate.search.return_value = {'size': 1, 'results': [
+            {'member': ['uid=jdoe,ou=Users,o=EIONET', 'cn=nested,ou=Roles']}]}
+        users = plugin.getUsersByRole(None, [('grp(x)', 'cn=grp')])
+        self.assertEqual([u.full_name for u in users], ['Name of jdoe'])
+        self.assertEqual(self.delegate.search.call_args[0][2],
+                         r'(cn=grp\28x\29)')
 
     def test_get_group_members(self):
         plugin = self.make_plugin(['uid=jdoe,ou=Users,o=EIONET',

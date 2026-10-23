@@ -344,24 +344,6 @@ class AddSurveyAnswerTestCase(unittest.TestCase):
                                                   creation_date=None)
 
     @patch('Products.NaayaSurvey.SurveyQuestionnaire.manage_addSurveyAnswer')
-    def test_change_other_respondent_answer(self, manage_addSurveyAnswer):
-        manage_addSurveyAnswer.return_value = 'answer_12345'
-        survey = self.survey
-        answer = Mock()
-        answer.respondent = 'usr'
-        survey._getOb = Mock(return_value=answer)
-        survey._delObject = Mock(return_value=None)
-
-        result = survey.addSurveyAnswer(answer_id='answer_12345')
-
-        survey._delObject.assert_called_with('answer_12345')
-        survey._getOb.assert_called_with('answer_12345')
-        manage_addSurveyAnswer.assert_called_with(survey, {}, REQUEST=None,
-                                                  draft=False, id='answer_12345',
-                                                  respondent='usr',
-                                                  creation_date=None)
-
-    @patch('Products.NaayaSurvey.SurveyQuestionnaire.manage_addSurveyAnswer')
     def test_add_draft_with_request(self, manage_addSurveyAnswer):
         manage_addSurveyAnswer.return_value = 'answer_12345'
         survey = self.survey

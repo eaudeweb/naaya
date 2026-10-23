@@ -1734,14 +1734,13 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                 user_type,
             ])
 
+        ret = output.getvalue()
         RESPONSE.setHeader('Content-Type', 'text/x-csv')
-        RESPONSE.setHeader('Content-Length', output.len)
+        RESPONSE.setHeader('Content-Length', len(ret.encode('utf-8')))
         RESPONSE.setHeader('Pragma', 'public')
         RESPONSE.setHeader('Cache-Control', 'max-age=0')
         RESPONSE.setHeader('Content-Disposition',
                            'attachment; filename="users.csv"')
-
-        ret = output.getvalue()
 
         return ret
 
@@ -1878,7 +1877,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                             % record_number)
 
                     existing_usernames = set(
-                        username.lower for username in self.getUserNames())
+                        username.lower() for username in self.getUserNames())
                     if (self.get_user_with_userid(name) is not None or
                             name in existing_usernames):
                         record_errors.append(

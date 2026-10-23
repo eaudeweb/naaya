@@ -11,6 +11,7 @@ from .NyForumBase import NyForumBase
 from Products.NaayaBase.constants import *
 from .NyForumMessage import manage_addNyForumMessage_html, message_add_html, addNyForumMessage
 from Products.NaayaBase.NyRoleManager import NyRoleManager
+from Products.NaayaCore.GeoMapTool import view_filter
 from .interfaces import INyForumTopic
 from .feeds import messages_feed
 from naaya.core.zope2util import path_in_site
@@ -330,6 +331,7 @@ class NyForumTopic(NyRoleManager, NyForumBase, Folder):
                 err = error
             else:
                 success = True
+        view_filter.invalidate(self)
         if REQUEST:
             if err != '': self.setSessionErrorsTrans([err])
             if success: self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())

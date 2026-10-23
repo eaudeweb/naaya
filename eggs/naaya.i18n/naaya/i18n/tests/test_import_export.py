@@ -2,16 +2,30 @@
 
 # Python imports
 import time
+import types
 from datetime import datetime
 from io import StringIO
+from unittest import mock
 from lxml import etree
 
 # Naaya imports
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 
 # Project imports
+from naaya.i18n import ImportExport
 from naaya.i18n.ImportExport import TranslationsImportExport
 from naaya.i18n.NyMessageCatalog import NyMessageCatalog
+
+# the exports are stamped with the current time; tests freeze it here
+FIXED_TIME = 1700000000.0
+FIXED_NOW = datetime(2023, 11, 14, 22, 13, 20)
+
+
+class FixedDatetime(datetime):
+
+    @classmethod
+    def now(cls, tz=None):
+        return FIXED_NOW
 
 
 def xml_equal(xml1, xml2):
@@ -58,7 +72,7 @@ msgstr "${x} <b>\\"apples\\"</b>"
 
 msgid "Administration"
 msgstr "Administration"
-""" % {'cdate': time.strftime('%Y-%m-%d %H:%M+%Z', time.gmtime(time.time()))})
+""" % {'cdate': time.strftime('%Y-%m-%d %H:%M+%Z', time.gmtime(FIXED_TIME))})
 
 
 expected_po_de = lambda: ("""msgid ""
@@ -77,7 +91,7 @@ msgstr "${x} <b>\\"Äpfel\\"</b>"
 
 msgid "Administration"
 msgstr "Verwaltung"
-""" % {'cdate': time.strftime('%Y-%m-%d %H:%M+%Z', time.gmtime(time.time()))})
+""" % {'cdate': time.strftime('%Y-%m-%d %H:%M+%Z', time.gmtime(FIXED_TIME))})
 
 
 expected_xliff_de = lambda: ("""<?xml version='1.0' encoding='utf-8'?>
@@ -95,7 +109,7 @@ expected_xliff_de = lambda: ("""<?xml version='1.0' encoding='utf-8'?>
     </trans-unit>
   </body>
 </xliff>
-""" % {'cdate': datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ"),
+""" % {'cdate': FIXED_NOW.strftime("%Y-%m-%dT%H:%M:%SZ"),
                'id_apple': '2a498064a922f465264242a8f71d8f3d',
                'id_admin': '7258e7251413465e0a3eb58094430bde'})
 
@@ -121,7 +135,7 @@ expected_tmx = lambda: ("""<?xml version='1.0' encoding='UTF-8'?>
     </tu>
   </body>
 </tmx>
-""" % {'cdate': datetime.now().strftime("%Y%m%dT%H%M%SZ"),
+""" % {'cdate': FIXED_NOW.strftime("%Y%m%dT%H%M%SZ"),
        'id_apple': '2a498064a922f465264242a8f71d8f3d',
        'id_admin': '7258e7251413465e0a3eb58094430bde'})
 
@@ -133,6 +147,14 @@ class ImportExportTestSuite(NaayaTestCase):
         self.catalog.edit_message('Administration', 'de', 'Verwaltung')
         self.catalog.edit_message('${x} <b>"apples"</b>', 'de',
                                   u'${x} <b>"Äpfel"</b>')
+        fixed_time = types.SimpleNamespace(strftime=time.strftime,
+                                           gmtime=time.gmtime,
+                                           time=lambda: FIXED_TIME)
+        for name, value in [('time', fixed_time),
+                            ('datetime', FixedDatetime)]:
+            patcher = mock.patch.object(ImportExport, name, value)
+            patcher.start()
+            self.addCleanup(patcher.stop)
 
     def test_export_po(self):
         exported = self.tool.export_po('en')

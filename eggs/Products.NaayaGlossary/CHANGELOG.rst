@@ -1,6 +1,10 @@
 2.0.3 (unreleased)
 ------------------
 * Remove the Python deprecation warnings [dumitval]
+* Fix the TMX import failing [dumitval]
+* Fix and extend the tests [dumitval]
+* Fix the public glossary import always creating themes from the imported
+  folders [dumitval]
 
 2.0.2 (2026-10-16)
 ------------------

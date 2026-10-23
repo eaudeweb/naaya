@@ -1,8 +1,6 @@
 import sys
 import io
-from io import BytesIO
 from zipfile import ZipFile
-import datetime
 import Zope2
 from zExceptions import BadRequest, NotFound
 from naaya.core.zope2util import get_site_manager
@@ -10,37 +8,6 @@ from Products.NaayaCore.managers.zip_import_export import RecursiveZipBuilder
 from Products.NaayaCore.managers.interfaces import IZipExportObject
 
 from . import backupdata
-
-
-def demo():
-    from .actors import DemoActor
-    actor = DemoActor()
-
-    if len(sys.argv) > 1 and sys.argv[1] == '-i':
-        index_file = io.TextIOWrapper(sys.stdin.buffer, encoding='latin-1',
-                                      newline='')
-
-        def open_backup_file(name):
-            return BytesIO(b'http://in-case-this-is-a-url')
-
-        def get_date(name):
-            return datetime.date.today()
-
-    else:
-        zf = ZipFile(BytesIO(sys.stdin.buffer.read()))
-        index_file = io.StringIO(zf.read('index.txt').decode('latin-1'),
-                                 newline='')
-
-        def open_backup_file(name):
-            return BytesIO(zf.read(name))
-
-        def get_date(name):
-            info = zf.getinfo(name)
-            return datetime.date(*info.date_time[0:3])
-
-    backupdata.walk_backup(index_file, open_backup_file, get_date, actor)
-
-    actor.finished()
 
 
 def tsv2csv():

@@ -142,6 +142,8 @@ class LDAPPluginTest(NaayaTestCase):
         transaction.commit()
         self._cache = ldap_cache.Cache()
         self._cache.timestamp = datetime.now().isoformat()
+        # inside the update cooldown, so the test dump is kept
+        self._cache._last_update = time()
         self._orig_get = ldap_cache.get
         ldap_cache.get = self._cache.get
 
@@ -157,7 +159,7 @@ class LDAPPluginTest(NaayaTestCase):
         assert gigel_info.email == "mygigel@example.com"
         assert gigel_info.user_id == 'gigel'
         assert isinstance(gigel_info.user_id, str)
-        user_ob = gigel_info.zope_user is ldap_plugin._get_zope_user('gigel')
+        self.assertEqual(gigel_info._get_zope_user().getId(), 'gigel')
 
     def test_with_cache(self):
         # cached values have " C" appended so we can recognise them
@@ -178,4 +180,4 @@ class LDAPPluginTest(NaayaTestCase):
         assert gigel_info.email == "mygigel@example.com C"
         assert gigel_info.user_id == 'gigel'
         assert isinstance(gigel_info.user_id, str)
-        user_ob = gigel_info.zope_user is ldap_plugin._get_zope_user('gigel')
+        self.assertEqual(gigel_info._get_zope_user().getId(), 'gigel')

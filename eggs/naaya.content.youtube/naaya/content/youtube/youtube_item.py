@@ -1,4 +1,5 @@
 from copy import deepcopy
+import logging
 import os
 import sys
 import urllib.request
@@ -27,6 +28,8 @@ from Products.NaayaCore.managers.utils import make_id
 
 from .interfaces import INyYoutube
 from .permissions import PERMISSION_ADD_YOUTUBE
+
+log = logging.getLogger(__name__)
 
 DEFAULT_SCHEMA = {
     'youtube_id': dict(
@@ -396,9 +399,14 @@ def get_config():
 
 
 def checkExistingVideo(video_id):
+    """ False if YouTube says the video does not exist """
     try:
         urllib.request.urlopen('https://www.youtube.com/oembed?format=json&url='
-                        'https://www.youtube.com/watch?v=%s' % video_id)
+                               'https://www.youtube.com/watch?v=%s' % video_id,
+                               timeout=10).close()
     except urllib.error.HTTPError:
         return False
+    except OSError:
+        # YouTube unreachable: do not reject the video
+        log.warning("Could not check the YouTube video %s", video_id)
     return True

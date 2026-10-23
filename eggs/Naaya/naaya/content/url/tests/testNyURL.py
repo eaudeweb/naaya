@@ -16,18 +16,20 @@ class TestNyURL(NaayaTestCase):
 
 
     def test_addNyURL_nologin(self):
-        """
-        Test adding URL without being logged in
-        """
-        url_item.addNyURL(self.app.portal.test_folder, title="testURL")
-        self.assertFalse(hasattr(self.app.portal.test_folder, "testURL"))
+        """ Anonymous users cannot reach the add method """
+        from AccessControl import Unauthorized
+        self.logout()
+        self.assertRaises(Unauthorized, self.app.portal.test_folder.restrictedTraverse,
+                          'addNyURL')
+        self.login("contributor")
+        self.app.portal.test_folder.restrictedTraverse('addNyURL')
+        self.logout()
         
 
 
     def test_addNyURL_no_requiredattrs(self):
         self.login("contributor")
         self.assertRaises(ValueError, lambda: url_item.addNyURL(self.app.portal.test_folder))
-        self.assertFalse(hasattr(self.app.portal.test_folder, "testURL"))
         self.logout()
 
 

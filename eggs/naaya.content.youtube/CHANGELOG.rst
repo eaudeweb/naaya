@@ -1,6 +1,8 @@
 2.0.1 (unreleased)
 ------------------
 * Remove the Python deprecation warnings from the tests [dumitval]
+* Fix the video check failing when youtube.com cannot be reached [dumitval]
+* Fix and extend the tests [dumitval]
 
 2.0.0 (2026-10-12)
 ------------------

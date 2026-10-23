@@ -25,6 +25,7 @@ import urllib.parse
 import urllib.request
 
 from .utils import strip_leading_underscores
+from naaya.core import text_extraction
 
 COPY_BLOCK_SIZE = 65536  # 64KB
 
@@ -208,6 +209,7 @@ class NyBlobFile(Item, Persistent, Cacheable, Implicit):
 
     meta_type = "NyBlobFile"
     security = ClassSecurityInfo()
+    _search_text = None  # extracted text, reset when the data changes
 
     def __init__(self, **kwargs):
         super(NyBlobFile, self).__init__()
@@ -234,7 +236,27 @@ class NyBlobFile(Item, Persistent, Cacheable, Implicit):
         return filestream_iterator(self._blob.committed(), 'rb')
 
     def open_write(self):
+        self._search_text = None
         return self._blob.open('w')
+
+    security.declarePrivate('get_search_text')
+
+    def get_search_text(self, content_type=None, filename=None):
+        """Text of the file for the catalog, extracted once per upload."""
+        if self._search_text is not None:
+            return self._search_text
+        if getattr(self, 'removed', False) or getattr(self, 'size', 1) == 0:
+            return ''
+        path = self._current_filename()
+        if path is None:
+            return ''
+        text = text_extraction.try_extract_text(
+            content_type=content_type or self.content_type,
+            filename=filename or self.filename, path=path)
+        if text is None:  # converter missing, retry once it is installed
+            return ''
+        self._search_text = text
+        return text
 
     def send_data(self, RESPONSE, as_attachment=True, set_filename=True,
                   REQUEST=None):

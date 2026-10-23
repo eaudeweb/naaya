@@ -209,12 +209,13 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase):
             self.browser.submit()
 
             # see if the form contains errors, and the data we just entered.
+            html = self.browser.get_html()
             self.assertTrue('The form contains errors' in html)
             self.assertTrue('Value required for "Title"' in html
                 or 'The Title field must have a value.' in html)
             form = self.browser.get_form('frmEdit')
-            #self.assertEqual(form['keywords:utf8:string'], 'no save me',
-            #    'The "edit" form did not remember our data (%s)' % type_name)
+            self.assertEqual(form['keywords:utf8:string'], 'no save me',
+                'The "edit" form did not remember our data (%s)' % type_name)
 
             self.assertEqual(self.portal.xz_folder['test-form-title'].keywords, '',
                 'The object\'s "keywords" value should have been empty (%s)' % type_name)
@@ -413,7 +414,7 @@ class ContentTypesEventsTestCase(NaayaFunctionalTestCase):
 
         """
 
-        visited = False
+        self.visited = False
 
         @adapter(INyContentObjectApproveEvent)
         def event_handler(event):
@@ -480,6 +481,7 @@ class ContentTypesEventsTestCase(NaayaFunctionalTestCase):
         self.login() #We need this to perform the stuff bellow (Zope2)
         self.portal.info.manage_delObjects(['document'])
         self.logout()
+        self.assertNotIn('document', self.portal.info.objectIds())
         self.assertFalse(self.visited)
 
     def test_move_create(self):
@@ -489,12 +491,18 @@ class ContentTypesEventsTestCase(NaayaFunctionalTestCase):
 
         """
         events = []
+        created = []
         self.browser_do_login('admin', '')
 
         @adapter(INyContentObjectMovedEvent)
         def event_handler(event):
             events.append(event)
         self._register_handler(event_handler)
+
+        @adapter(INyContentObjectAddEvent)
+        def add_handler(event):
+            created.append(event.context.meta_type)
+        self._register_handler(add_handler)
 
         for content_type in content_types:
             type_name = content_type['module']
@@ -511,4 +519,5 @@ class ContentTypesEventsTestCase(NaayaFunctionalTestCase):
             self.browser.submit()
             transaction.commit()
 
+        self.assertEqual(len(created), len(SCHEMA_TESTABLES))
         self.assertEqual(events, [])

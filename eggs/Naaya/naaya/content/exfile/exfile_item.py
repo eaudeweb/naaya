@@ -282,6 +282,12 @@ class exfile_item(NyContentData, Folder):
     def getFileItems(self):
         return self.objectItems('File')
 
+    def PrincipiaSearchSource(self):
+        """Text of the file in each language."""
+        texts = [item.PrincipiaSearchSource() for lang, item in
+                 self.getFileItems()]
+        return '\n'.join(text for text in texts if text)
+
     def copyFileItems(self, source, target):
         """ """
         if target.objectIds('File'):

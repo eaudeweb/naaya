@@ -26,12 +26,13 @@ class TestLDAPCache(unittest.TestCase):
         fakeldap.setTreeItem(users_base)
         fakeldap.setTreeItem(groups_base)
 
+        # copies, since the tests change the entries
         fakeldap.setTreeItem(ldap_config.user_dn,
-                             ldap_config.user)
+                             dict(ldap_config.user))
         fakeldap.setTreeItem(ldap_config.manager_user_dn,
-                             ldap_config.manager_user)
+                             dict(ldap_config.manager_user))
         fakeldap.setTreeItem(ldap_config.user2_dn,
-                             ldap_config.user2)
+                             dict(ldap_config.user2))
 
         self.tmp_dir = tempfile.mkdtemp()
         shutil.copy(os.path.join(os.path.dirname(__file__), 'config.yaml'),
@@ -109,6 +110,63 @@ class TestLDAPCache(unittest.TestCase):
         record = values[ldap_config.user_dn]
         self.assertEqual(record['jpegPhoto'], photo)
         self.assertEqual(record['givenName'], u'G\xc3\xbcnther')
+
+    def write_config(self, encoding='utf-8', extra=''):
+        config_path = os.path.join(self.tmp_dir, 'config.yaml')
+        with open(config_path, 'w', encoding='utf-8') as f:
+            f.write('# Configuration for the démo dump\n'
+                    'ldap:\n'
+                    '    host: localhost\n'
+                    '    encoding: %s\n'
+                    '    root_DNs:\n'
+                    '        - ou=people,dc=naaya,dc=org\n'
+                    'sqlite:\n'
+                    '    path: ./naaya.test.db\n%s' % (encoding, extra))
+        return config_path
+
+    def test_utf8_config_and_values(self):
+        # only fails with a non UTF-8 locale (e.g. LANG=C) if the config is
+        # read without encoding='utf-8'
+        config_path = self.write_config(extra='# Grüße\n')
+        self.assertEqual(main.get_config(config_path)['ldap']['encoding'],
+                         'utf-8')
+        main.dump_ldap(config_path)
+        values = dict(main.get_reader(config_path).get_dump())
+        self.assertEqual(values[ldap_config.user_dn]['givenName'],
+                         'Günther')
+
+    def test_multivalued_cn(self):
+        fakeldap.getSubtree(ldap_config.user_dn)['cn'] = [b'Test', b'User']
+        config_path = self.write_config()
+        values = main.get_ldap_connection(main.get_config(config_path))\
+            .get_values('ou=people,dc=naaya,dc=org')
+        self.assertEqual(values[ldap_config.user_dn]['cn'],
+                         {'type': 'text', 'values': ['Test User']})
+
+    def test_multivalued_attribute(self):
+        fakeldap.getSubtree(ldap_config.user_dn)['mail'] = [b'a@x.org',
+                                                            b'b@x.org']
+        config_path = self.write_config()
+        main.dump_ldap(config_path)
+        values = dict(main.get_reader(config_path).get_dump())
+        self.assertEqual(values[ldap_config.user_dn]['mail'],
+                         ['a@x.org', 'b@x.org'])
+        self.assertEqual(values[ldap_config.user_dn]['dn'],
+                         ldap_config.user_dn)
+
+    def test_undecodable_value(self):
+        # values that do not decode are left out, the other attributes stay
+        fakeldap.getSubtree(ldap_config.user_dn)['sn'] = [b'\xff\xfe']
+        config_path = self.write_config()
+        values = main.get_ldap_connection(main.get_config(config_path))\
+            .get_values('ou=people,dc=naaya,dc=org')
+        record = values[ldap_config.user_dn]
+        self.assertNotIn('sn', record)
+        self.assertEqual(record['uid'], {'type': 'text', 'values': ['test']})
+
+    def test_missing_config(self):
+        config = main.get_config(os.path.join(self.tmp_dir, 'missing.yaml'))
+        self.assertEqual(config['sqlite'], {'path': ''})
 
     def test_no_db(self):
         db_path = os.path.join(self.tmp_dir, 'missing.test.db')

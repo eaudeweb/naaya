@@ -1,5 +1,6 @@
 1.0.2 (unreleased)
 ------------------
+* Fix and extend the tests [dumitval]
 
 1.0.1 (2026-10-20)
 ------------------

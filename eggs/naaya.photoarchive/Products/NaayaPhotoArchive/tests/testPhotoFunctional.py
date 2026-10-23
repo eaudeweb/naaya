@@ -107,20 +107,6 @@ class NyPhotoFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser_do_logout()
 
-    def test_add_error(self):
-        return # NyPhoto items can be created without setting a title
-        self.browser_do_login('contributor', 'contributor')
-        self.browser.go('http://localhost/portal/myfolder/g/f/photo_add_html')
-
-        form = self.browser.get_form('frmAdd')
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
-        # enter no values in the fields
-        self.browser.submit()
-
-        html = self.browser.get_html()
-        self.assertTrue('The form contains errors' in html)
-        self.assertTrue('Value required for "Title"' in html)
-
     def test_edit(self):
         self.browser_do_login('contributor', 'contributor')
 
@@ -165,20 +151,31 @@ class NyPhotoFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser_do_logout()
 
-    def test_manage(self):
-        return #TODO: photo has no manageProperties method
-        self.browser_do_login('admin', '')
+    def test_update_data_str(self):
+        photo = self.portal.myfolder.g.f.myphoto
+        photo.update_data('caf\xe9')
+        original = photo._getOb('myphoto')
+        self.assertEqual(original.size, 5)
+        self.assertEqual(original.open().read(), 'caf\xe9'.encode('utf-8'))
 
-        self.browser.go('http://localhost/portal/myfolder/g/f/myphoto/manage_edit_html')
-        form = self.browser.get_form('frmEdit')
-        self.assertEqual(form['title:utf8:string'], 'My photo')
-        form['title:utf8:string'] = 'new_photo_title'
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
-        self.browser.submit()
+    def test_watermark_display(self):
+        from io import BytesIO
+        from PIL import Image
+        photo = self.portal.myfolder.g.f.myphoto
+        photo.update_data(load_file('data/test.gif'))
+        import transaction; transaction.commit()
+        url = 'http://localhost/portal/myfolder/g/f/myphoto/view?display=Small'
+        self.browser.go(url)
+        plain = Image.open(BytesIO(self.browser.result.content))
 
-        self.assertEqual(self.portal.myfolder.g.f.myphoto.title, 'new_photo_title')
-
-        self.browser_do_logout()
+        self.portal.myfolder.g.f.watermark_text = 'Naaya'
+        transaction.commit()
+        self.browser.go(url)
+        marked = Image.open(BytesIO(self.browser.result.content))
+        self.assertEqual(marked.size, plain.size)
+        self.assertNotEqual(marked.convert('RGB').tobytes(),
+                            plain.convert('RGB').tobytes())
+        self.assertIn('watermark-Small-myphoto', photo.objectIds())
 
     def test_photo_thumbnails(self):
         from io import BytesIO

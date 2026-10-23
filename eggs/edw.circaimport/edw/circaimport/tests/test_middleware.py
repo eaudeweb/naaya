@@ -97,6 +97,23 @@ class ImportFilesTest(CircaImportTestCase):
         self.assertEqual(link.meta_type, 'Naaya URL')
         self.assertEqual(link.locator, 'http://example.com/page')
 
+    def test_import_member_name_mismatch(self):
+        # a member whose file name differs from the index is found by prefix
+        index = INDEX.split('\r\n')
+        with zipfile.ZipFile(os.path.join(self.tmp_dir, 'myig.zip'),
+                             'w') as zf:
+            zf.writestr('index.txt',
+                        '\r\n'.join(index[:2] + index[3:4] + ['']))
+            info = zipfile.ZipInfo('lib/docs/report.dpl/EN_1/report?.pdf',
+                                   date_time=(2007, 1, 2, 0, 0, 0))
+            zf.writestr(info, b'%PDF renamed')
+        addNyFolder(self.portal, 'importroot', title='Import root')
+        ctx = self.portal['importroot']
+        middleware.add_files_and_folders_from_circa_export(
+            ctx, 'myig.zip', self.tmp_dir)
+        ver = ctx['docs']['report'].current_version
+        self.assertEqual(ver.open().read(), b'%PDF renamed')
+
     def test_import_rejects_path(self):
         with self.assertRaises(AssertionError):
             middleware.add_files_and_folders_from_circa_export(

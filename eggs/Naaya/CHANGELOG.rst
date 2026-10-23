@@ -1,6 +1,28 @@
 6.0.7 (unreleased)
 ------------------
 * Remove the Python deprecation warnings [dumitval]
+* Fix password reset tokens staying valid after one hour [dumitval]
+* Fix the LDAP group member search returning no members [dumitval]
+* Fix LDAP group roles mapped on '/' being granted on the Zope root
+  [dumitval]
+* Fix users by role ignoring LDAP groups with 'member' attributes [dumitval]
+* Fix LDAP members outside the users base aborting the group member search
+  [dumitval]
+* Fix the users CSV download failing [dumitval]
+* Fix the users import accepting usernames that differ only in case
+  [dumitval]
+* Fix duplicate file and folder names in zip exports [dumitval]
+* Fix the XML export of folders with default subobjects and of folder,
+  document and story images [dumitval]
+* Fix and extend the tests [dumitval]
+* Fix the XML import of files storing no data and of folders failing
+  [dumitval]
+* Fix documents and stories exporting the images of their parent folder
+  [dumitval]
+* Fix the map, map listings and map exports showing objects the user
+  cannot view [dumitval]
+* Index the text of PDF, Office, OpenDocument, RTF, HTML and text files
+  in the full text index; PDF needs pdftotext (poppler-utils) [dumitval]
 
 6.0.6 (2026-10-20)
 ------------------

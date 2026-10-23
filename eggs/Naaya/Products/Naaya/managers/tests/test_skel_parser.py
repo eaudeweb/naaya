@@ -30,14 +30,14 @@ class SkelTestCase(NaayaTestCase):
         self.assertEqual(sk.root.syndication.remotechannels, [])
         self.assertFalse(isinstance(sk.root.others.images, list))
         self.assertNotEqual(sk.root.security, None)
-        for role in sk.root.security.roles:
+        roles = dict((role.name, role) for role in sk.root.security.roles)
+        for role in roles.values():
             self.assertNotEqual(role.name, None)
             self.assertNotEqual(role.name, '')
             for permission in role.permissions:
                 self.assertNotEqual(permission.name, None)
                 self.assertNotEqual(permission.name, '')
-            if role == 'Authenticated':
-                expected = ["Naaya - Add comments for content",
-                            "Naaya - Bulk download", "Naaya - Skip Captcha"]
-                self.assertEqual(set(map(role.permissions, lambda x: x.name)),
-                                 set(expected))
+        expected = ["Naaya - Add comments for content",
+                    "Naaya - Bulk download", "Naaya - Skip Captcha"]
+        self.assertEqual(set(p.name for p in roles['Authenticated'].permissions),
+                         set(expected))

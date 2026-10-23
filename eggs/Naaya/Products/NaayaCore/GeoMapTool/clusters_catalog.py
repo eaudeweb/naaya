@@ -3,6 +3,7 @@ from decimal import Decimal
 from BTrees.IIBTree import IISet
 from BTrees.IIBTree import multiunion
 from BTrees.IIBTree import intersection
+from BTrees.IIBTree import difference
 
 from Products.NaayaCore.GeoMapTool import clusters
 
@@ -39,7 +40,7 @@ def getObjectFromCatalog(catalog_tool, rid):
     object = catalog_tool._catalog.unrestrictedTraverse(obj_path)
     return object
 
-def getClusters(catalog_tool, filters):
+def getClusters(catalog_tool, filters, exclude=None):
     # the objects are searched for in the tile limits (to get the same clusters every time)
     grid_size = 16 # geopoints' and clusters' density on map / also depends on map frame size
 
@@ -88,7 +89,10 @@ def getClusters(catalog_tool, filters):
     # points inside the discretized tile limits
     r_list = []
     points = []
-    for rid in multiunion(rs_final):
+    found = multiunion(rs_final)
+    if exclude:
+        found = difference(found, exclude)
+    for rid in found:
         lat = lat_values.get(rid)
         lon = lon_values.get(rid)
         if lat is None or lon is None:

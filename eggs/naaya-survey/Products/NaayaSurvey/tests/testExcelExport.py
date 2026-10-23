@@ -1,4 +1,5 @@
-from io import BytesIO
+import csv
+from io import BytesIO, StringIO
 from unittest.mock import Mock, patch
 
 import openpyxl
@@ -86,7 +87,14 @@ class SurveyExcelExportTestCase(NaayaTestCase):
         data = self.survey.download(
             REQUEST={'file_type': 'CSV'}, RESPONSE=response)
         response.setHeader.assert_any_call('Content-Type', 'text/csv')
-        self.assertTrue(data.startswith('Respondent'))
+        rows = list(csv.reader(StringIO(data)))
+        self.assertEqual(rows[0][:4], ['Respondent', 'Radio q', 'Matrix q',
+                                       'Row A'])
+        self.assertEqual(len(rows), 3)
+        self.assertEqual(sorted(row[rows[0].index('Text q')]
+                                for row in rows[1:]),
+                         ['caf\xe9 answer', 'first answer'])
+        self.assertEqual({row[1] for row in rows[1:]}, {'Yes', 'No'})
 
     @patch('Products.NaayaSurvey.statistics.MultipleChoiceGoogleBarChart'
            'Statistic.urlopen')

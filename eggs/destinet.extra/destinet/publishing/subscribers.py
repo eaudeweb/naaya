@@ -1,37 +1,5 @@
 from Products.NaayaCore.SchemaTool.widgets.GeoTypeWidget import GeoTypeWidget
 from Products.NaayaCore.managers.utils import slugify
-from naaya.core.zope2util import ofs_path
-import logging
-
-logger = logging.getLogger(__name__)
-
-
-def get_countries(ob):
-    """
-    Extracts coverage from ob, iterates countries and returns
-    nyfolders of them in `countries` location (creates them if missing)
-
-    """
-    ret = []
-    site = ob.getSite()
-    cat = site.getCatalogTool()
-    filters = {'title': '', 'path': ofs_path(site.countries),
-               'meta_type': 'Naaya Folder'}
-    coverage = list(set(getattr(ob, 'coverage', u'').strip(',').split(',')))
-    for country_item in coverage:
-        country = country_item.strip()
-        if country:
-            country_folders = []
-            filters['title'] = country
-            bz = cat.search(filters)
-            for brain in bz:
-                if brain.title.strip().lower() == country.lower():
-                    country_folders.append(brain.getObject())
-            ret.extend(country_folders)
-            if not country_folders:
-                logger.info("Country '%s' not found in destinet countries",
-                            country)
-    return ret
 
 
 def get_category_location(site, geo_type):

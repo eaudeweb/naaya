@@ -248,7 +248,7 @@ class glossary_export:
 
         l_list = sorted(chandler.TMXContent.keys())
         for k in l_list:
-            folder_id = self.utf8_to_latin1(k[:1].upper())
+            folder_id = k[:1].upper()
             folder = self.unrestrictedTraverse(folder_id, None)
             if folder is None:
                 try:
@@ -261,11 +261,11 @@ class glossary_export:
             if elem_ob is not None:
                 for lang,trans in chandler.TMXContent[k].items():
                     if trans != '':
-                        elem_ob.set_translations_list(lang, trans.encode('utf-8'))
+                        elem_ob.set_translations_list(lang, trans)
                 elem_ob.cu_recatalog_object(elem_ob)
             else:
                 try:
-                    elem_name = self.utf8_to_latin1(chandler.TMXContent[k]['English'])
+                    elem_name = chandler.TMXContent[k]['English']
                     folder.manage_addGlossaryElement(elem_name, elem_name, '', [], '', 1)
                 except Exception:   #, error
                     #print error
@@ -273,5 +273,5 @@ class glossary_export:
                 elem_ob = folder._getOb(elem_name, None)
                 if elem_ob is not None:
                     for lang,trans in chandler.TMXContent[k].items():
-                        elem_ob.set_translations_list(lang, trans.encode('utf-8'))
+                        elem_ob.set_translations_list(lang, trans)
                     elem_ob.cu_recatalog_object(elem_ob)

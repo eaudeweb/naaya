@@ -1,9 +1,10 @@
-from naaya.content.base.tests.common import _IconTests
+from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
+from naaya.content.base.tests.common import IconTestsMixin
 from Products.NaayaPhotoArchive.NyPhotoGallery import addNyPhotoGallery
 from Products.NaayaPhotoArchive.NyPhotoFolder import addNyPhotoFolder
 
 
-class PhotoGalleryIconTests(_IconTests):
+class PhotoGalleryIconTests(IconTestsMixin, NaayaTestCase):
 
     def add_object(self, parent):
         kwargs = {
@@ -18,7 +19,7 @@ class PhotoGalleryIconTests(_IconTests):
         return ob
 
 
-class PhotoFolderIconTests(_IconTests):
+class PhotoFolderIconTests(IconTestsMixin, NaayaTestCase):
 
     def add_object(self, parent):
         kwargs = {

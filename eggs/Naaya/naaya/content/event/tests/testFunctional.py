@@ -211,4 +211,9 @@ class NyEventVersioningFunctionalTestCase(NaayaFunctionalTestCase):
         form = self.browser.get_form('frmEdit')
         self.assertEqual(form['title:utf8:string'], 'ver_event_version')
 
+        self.browser.go('http://localhost/portal/info/ver_event/commitVersion')
+        ob = self.portal.info.ver_event
+        self.assertEqual(ob.title, 'ver_event_version')
+        self.assertEqual(ob.version, None)
+
         self.browser_do_logout()

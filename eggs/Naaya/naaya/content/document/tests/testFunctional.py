@@ -184,4 +184,9 @@ class NyDocumentVersioningFunctionalTestCase(NaayaFunctionalTestCase):
         form = self.browser.get_form('frmEdit')
         self.assertEqual(form['title:utf8:string'], 'ver_doc_version')
 
+        self.browser.go('http://localhost/portal/info/ver_doc/commitVersion')
+        ob = self.portal.info.ver_doc
+        self.assertEqual(ob.title, 'ver_doc_version')
+        self.assertEqual(ob.version, None)
+
         self.browser_do_logout()

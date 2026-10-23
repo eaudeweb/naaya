@@ -491,30 +491,17 @@ class NotificationsUnapprovedUnitTest(BaseNotificationsTest):
             ]))
 
     def test_periodic(self):
-        notif_tool = self.portal.getNotificationTool()
-
-        self.add_account_subscription('contributor', 'fol1', 'instant', 'en')
-
+        """ Unapproved objects get no action log entry, so no digest """
+        action_logger = self.portal.getActionLogger()
+        before = set(dict(action_logger.items()))
+        new_paths = lambda: [entry.path for entry_id, entry
+                             in action_logger.items() if entry_id not in before]
         addNyDocument(self.portal['fol1'], id='doc_a', approved=0,
                       contributor='admin')
-        self.object_timestamps = [
-            ('fol1/doc_a', datetime(2009, 8, 3)),
-        ]
-
-        notif_tool._send_newsletter('weekly',
-                                    datetime(2009, 7, 30),
-                                    datetime(2009, 8, 5))
-
-        self.assertEqual(set(self._fetch_test_notifications()), set([
-            ('from.zope@example.com', 'site.admin@example.com',
-             u'Maintainer notification for object: fol1',
-             u'The item "fol1" has been created at http://nohost/portal/fol1 '
-             u'by "".'),
-            ('from.zope@example.com', 'site.admin@example.com',
-             u'Maintainer notification for object: fol2',
-             u'The item "fol2" has been created at http://nohost/portal/fol2 '
-             u'by "".')
-            ]))
+        self.assertFalse(self.portal.fol1.doc_a.approved)
+        self.assertNotIn('fol1/doc_a', new_paths())
+        self.portal.fol1.doc_a.approveThis(1, 'admin')
+        self.assertIn('fol1/doc_a', new_paths())
 
 
 class NotificationsCronUnitTest(BaseNotificationsTest):

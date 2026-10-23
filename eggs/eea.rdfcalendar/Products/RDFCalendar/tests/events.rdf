@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns="http://purl.org/rss/1.0/"
+         xmlns:ev="http://purl.org/rss/1.0/modules/event/">
+  <channel rdf:about="http://example.com/events">
+    <title>Events</title>
+    <link>http://example.com/events</link>
+    <description>Test events</description>
+    <items>
+      <rdf:Seq>
+        <rdf:li rdf:resource="http://example.com/events/fair"/>
+        <rdf:li rdf:resource="http://example.com/events/expo"/>
+      </rdf:Seq>
+    </items>
+  </channel>
+  <item rdf:about="http://example.com/events/fair">
+    <title>Green fair</title>
+    <link>http://example.com/events/fair</link>
+    <ev:startdate>2030-03-10</ev:startdate>
+    <ev:enddate>2030-03-12</ev:enddate>
+    <ev:location>Brașov</ev:location>
+  </item>
+  <item rdf:about="http://example.com/events/expo">
+    <title>Expo</title>
+    <link>http://example.com/events/expo</link>
+    <ev:startdate>2030-04-01</ev:startdate>
+  </item>
+</rdf:RDF>

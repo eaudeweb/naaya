@@ -69,19 +69,13 @@ class PortletArrangementUnitTestCase(ZopeTestCase.TestCase):
         pp = self.portal_portlets
         ids = pp.get_portlet_ids_for
 
-        try:
-            pp.assign_portlet('fol2', 'right', 'my_right_portlet')
-            self.fail('Should have raised ValueError')
-        except ValueError as e:
-            self.assertTrue('Portlet "my_right_portlet" already assigned '
-                'to "right" at "fol2"')
-
-        try:
-            pp.assign_portlet('fol2', 'right', 'my_right_portlet', inherit=False)
-            self.fail('Should have raised ValueError')
-        except ValueError as e:
-            self.assertTrue('Portlet "my_right_portlet" already assigned '
-                'to "right" at "fol2"')
+        for inherit in (True, False):
+            with self.assertRaises(ValueError) as cm:
+                pp.assign_portlet('fol2', 'right', 'my_right_portlet',
+                                  inherit=inherit)
+            self.assertIn('Portlet "my_right_portlet" already assigned '
+                          'to "right" at "fol2"', str(cm.exception))
+        self.assertEqual(ids('fol2', 'right'), ['my_right_portlet'])
 
     def test_homepage(self):
         pp = self.portal_portlets

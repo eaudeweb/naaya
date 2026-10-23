@@ -1,9 +1,31 @@
-from unittest import TestSuite, TestLoader
+import unittest
+import urllib.error
 from naaya.content.youtube.youtube_item import addNyYoutube as addNaayaContent
 from naaya.content.youtube.youtube_item import NyYoutube as NaayaContent
+from naaya.content.youtube.youtube_item import checkExistingVideo
+from naaya.content.youtube.tests.mock_youtube import YoutubeMockMixin
+from naaya.content.youtube.tests.mock_youtube import patch_youtube
 from Products.Naaya.tests import NaayaTestCase
 
-class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):
+
+class CheckExistingVideoTest(unittest.TestCase):
+
+    def test_existing(self):
+        with patch_youtube() as urlopen:
+            self.assertTrue(checkExistingVideo('uelHwf8o7_U'))
+        self.assertIn('watch?v=uelHwf8o7_U', urlopen.call_args[0][0])
+
+    def test_missing(self):
+        with patch_youtube():
+            self.assertFalse(checkExistingVideo('aaaaaaaaaaa'))
+
+    def test_youtube_unreachable(self):
+        with patch_youtube() as urlopen:
+            urlopen.side_effect = urllib.error.URLError('offline')
+            self.assertTrue(checkExistingVideo('aaaaaaaaaaa'))
+
+
+class NaayaContentTestCase(YoutubeMockMixin, NaayaTestCase.NaayaTestCase):
     """ TestCase for NaayaContent object
     """
     def afterSetUp(self):

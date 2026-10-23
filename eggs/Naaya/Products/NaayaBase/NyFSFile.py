@@ -12,6 +12,7 @@ from .interfaces import INyFSFile
 # from Products.ExtFile.ExtFile import ExtFile
 # from Products.ExtFile.ExtImage import ExtImage
 from naaya.content.bfile.NyBlobFile import NyBlobFile
+from naaya.core.text_extraction import extract_text
 
 logger = logging.getLogger('NyFSFile')
 
@@ -132,8 +133,12 @@ class NyFSFile(File):
     def PrincipiaSearchSource(self):
         """ Allow file objects to be searched."""
 
-        if self.content_type.startswith('text/'):
-            return self.get_data()
+        bfile = getattr(self, '_bfile', None)
+        filename = getattr(bfile, 'filename', None) or self.getId()
+        if getattr(bfile, 'size', 0):
+            return bfile.get_search_text(self.content_type, filename)
+        if hasattr(self, '_ext_file'):  # not migrated to blobs
+            return extract_text(self.get_data(), self.content_type, filename)
         return ''
 
     def PUT(self, REQUEST, RESPONSE):

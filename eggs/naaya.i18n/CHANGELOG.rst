@@ -1,6 +1,8 @@
 2.0.5 (unreleased)
 ------------------
 * Remove the Python deprecation warnings [dumitval]
+* Fix and extend the tests [dumitval]
+* Remove the unused LocalizerWrapper module [dumitval]
 
 2.0.4 (2026-10-20)
 ------------------

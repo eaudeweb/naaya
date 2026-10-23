@@ -24,9 +24,8 @@ Alternatively you may want to call the lower-level API functions direcly:
 """
 
 try:
-    import dataflake.ldapconnection
+    import dataflake.fakeldap
     import Products.LDAPUserFolder
-    import Products.LDAPUserFolder # import twice? why?
 except ImportError as e:
     is_available = False
 else:
@@ -58,20 +57,20 @@ def add_ldap_user_folder(app):
                     implicit_mapping = dg('implicit_mapping'),
                     encryption = dg('encryption'),
                     read_only = dg('read_only'))
-    luf.manage_deleteLDAPSchemaItems(luf._ldapschema.keys()) # clear the schema
+    luf.manage_deleteLDAPSchemaItems(list(luf._ldapschema.keys()))
 
 def setup_fakeldap(app):
-    from dataflake.ldapconnection.tests import fakeldap
+    from dataflake.fakeldap import FakeLDAPConnection, TREE
     from Products.LDAPUserFolder import LDAPDelegate
 
-    LDAPDelegate.c_factory = fakeldap.ldapobject.ReconnectLDAPObject
-    fakeldap.clearTree()
+    LDAPDelegate.c_factory = FakeLDAPConnection
+    TREE.clear()
     app.manage_delObjects(['acl_users'])
     add_ldap_user_folder(app)
 
     dg = ldap_config.defaults.get
-    fakeldap.addTreeItems(dg('users_base'))
-    fakeldap.addTreeItems(dg('groups_base'))
+    TREE.addTreeItems(dg('users_base'))
+    TREE.addTreeItems(dg('groups_base'))
 
 def add_ldap_schema(app):
     schema = ldap_config.schema
@@ -91,6 +90,11 @@ def add_user(app, user_dict):
         if group not in get_group_names():
             app.acl_users.manage_addGroup(group)
     app.acl_users.manage_addUser(REQUEST=None, kwargs=user_dict)
+    if user_dict.get('ldap_groups'):
+        user_dn = 'uid=%s,%s' % (user_dict['uid'],
+                                 ldap_config.defaults['users_base'])
+        app.acl_users.manage_editUserRoles(
+            user_dn, user_dict.get('user_roles', []) + user_dict['ldap_groups'])
 
 def quick_setup(app, portal, add_users=True):
     setup_fakeldap(app)

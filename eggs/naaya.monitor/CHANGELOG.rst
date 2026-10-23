@@ -1,5 +1,7 @@
 2.1 (unreleased)
 ================
+* Fix adding a blob usage statistics item failing [dumitval]
+* Fix and extend the tests [dumitval]
 
 2.0 (2026-10-12)
 ================

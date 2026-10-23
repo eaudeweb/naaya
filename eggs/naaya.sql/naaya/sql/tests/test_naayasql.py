@@ -7,7 +7,7 @@ import os.path
 from OFS.Folder import Folder
 
 # Naaya imports
-from naaya.sql import new_db, NaayaSqlDb, DbMissing
+from naaya.sql import new_db, NaayaSqlDb, DbMissing, naayasql
 
 class NaayaSqlTestCase(TestCase):
     """
@@ -33,10 +33,37 @@ class NaayaSqlTestCase(TestCase):
         self.crs.close()
 
     def test_queries(self):
+        # autocommit by default: a new cursor (new connection) sees the data
         self.crs.execute("CREATE TABLE t(x integer primary key)")
         self.crs.execute("INSERT INTO t(x) values(?)", (13, ))
-        self.crs.execute("SELECT * from t")
-        self.assertEqual(self.crs.fetchall(), [(13,)])
+        crs = self.generic_obj.db.cursor()
+        crs.execute("SELECT * from t")
+        self.assertEqual(crs.fetchall(), [(13,)])
+        crs.close()
+
+    def test_db_file(self):
+        db = self.generic_obj.db
+        self.assertTrue(os.path.isfile(db._get_path()))
+        self.assertEqual(os.path.dirname(db._get_path()),
+                         naayasql.DBS_FOLDER_PATH)
+        self.assertEqual(repr(db), '<NaayaSqlDb id: %s>' % db.db_id)
+        other_db = new_db()
+        self.assertNotEqual(other_db.db_id, db.db_id)
+        other_db.drop()
+
+    def test_transaction_isolation(self):
+        crs = self.generic_obj.db.cursor(isolation_level='DEFERRED')
+        crs.execute("CREATE TABLE t(x integer)")
+        crs.connection.commit()
+        crs.execute("INSERT INTO t(x) values(1)")
+        other = self.generic_obj.db.cursor()
+        other.execute("SELECT * from t")
+        self.assertEqual(other.fetchall(), [])
+        crs.connection.commit()
+        other.execute("SELECT * from t")
+        self.assertEqual(other.fetchall(), [(1,)])
+        other.close()
+        crs.close()
 
     def test_changedb(self):
         self.generic_obj.db.drop()

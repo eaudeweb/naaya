@@ -1085,12 +1085,14 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
 
     security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'terms_import')
 
-    def terms_import(self, format='', file=None):
+    def terms_import(self, format='', file=None, REQUEST=None):
         """ """
         if format == 'xliff':
-            self.xliff_import(file, self.REQUEST)
+            self.xliff_import(file)
         elif format == 'tmx':
-            self.tmx_import(file, self.REQUEST)
+            self.tmx_import(file)
+        if REQUEST is not None:
+            return REQUEST.RESPONSE.redirect('index_impexp_html')
 
     security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'terms_export')
 

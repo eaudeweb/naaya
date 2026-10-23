@@ -1,19 +1,9 @@
 # -*- coding: UTF-8 -*-
-import unittest
-from unittest.mock import patch
-
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 
-from naaya.i18n.interfaces import INyTranslationCatalog
 
-
-class _TranslationCatalog(unittest.TestCase):
-
-    catalog_factory = None # TBC — subclasses must override
-
-    def setUp(self):
-        if self.catalog_factory is None:
-            self.skipTest("abstract base class")
+class _TranslationCatalog(object):
+    """ Catalog tests; mix into a TestCase that defines catalog_factory """
 
     def test_clean_catalog_from_setup(self):
         catalog = self.catalog_factory(languages=('en', 'de'))
@@ -44,12 +34,6 @@ class _TranslationCatalog(unittest.TestCase):
         catalog.edit_message('water', 'en', 'water')
         catalog.edit_message('water', 'de', 'Wasser')
         catalog.del_message('water')
-        self.assertEqual(catalog.gettext('water', 'en'), 'water')
-        self.assertEqual(catalog.gettext('water', 'de'), 'water')
-
-    def test_default_behaviour_unspecified(self):
-        catalog = self.catalog_factory(languages=('en', 'de'))
-        # returns msgid, since default not specified
         self.assertEqual(catalog.gettext('water', 'en'), 'water')
         self.assertEqual(catalog.gettext('water', 'de'), 'water')
 
@@ -119,24 +103,3 @@ class NyMessageCatalogTest(NaayaTestCase, _TranslationCatalog):
             for lang in kw['languages']:
                 catalog.add_language(lang)
         return catalog
-
-# If Localizer available and installed (with translations tool working)
-# also run test suite with LocalizerWrapper
-try:
-    from naaya.i18n.LocalizerWrapper import LocalizerWrapper
-    from Products.NaayaCore.constants import ID_TRANSLATIONSTOOL
-except ImportError:
-    pass
-else:
-    class LocalizerWrapperTest(NaayaTestCase, _TranslationCatalog):
-        def catalog_factory(self, **kw):
-            """ create, clean and return Localizer instance here"""
-            catalog = LocalizerWrapper(self.portal)
-            # erase catalog
-            catalog.clear()
-            for lang in catalog.get_languages():
-                catalog.del_language(lang)
-            if 'languages' in kw:
-                for lang in kw['languages']:
-                    catalog.add_language(lang)
-            return catalog

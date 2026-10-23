@@ -102,6 +102,30 @@ class RecoverPasswordTest(NaayaFunctionalTestCase):
         self.browser_do_login('contributor', 'X')
         self.browser_do_logout()
 
+    def test_expired_token(self):
+        recover_password = self.portal.acl_users.recover_password
+        token = recover_password._new_token('contributor')
+        recover_password._get_token_map()[token].create_time -= \
+            timedelta(hours=1, minutes=1)
+        transaction.commit()
+
+        self.browser.go('http://localhost/portal/acl_users/recover_password'
+                        '/confirm?token=' + token)
+        assert TOKEN_EXPIRED_MSG in self.browser.get_html()
+        self.assertRaises(ValueError, recover_password.set_new_password,
+                          token, 'my-evil-pass')
+        self.assertEqual(self.portal.acl_users.data['contributor'].__,
+                         'contributor')
+
+    def test_token_used_once(self):
+        recover_password = self.portal.acl_users.recover_password
+        token = recover_password._new_token('contributor')
+        recover_password.set_new_password(token, 'first-pass')
+        self.assertRaises(ValueError, recover_password.set_new_password,
+                          token, 'second-pass')
+        self.assertEqual(self.portal.acl_users.data['contributor'].__,
+                         'first-pass')
+
     def test_cron(self):
         recover_password = self.portal.acl_users.recover_password
         token_map = recover_password._get_token_map()

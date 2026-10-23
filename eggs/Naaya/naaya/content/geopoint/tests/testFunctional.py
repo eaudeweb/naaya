@@ -153,6 +153,21 @@ class NyGeoPointFunctionalTestCase(NaayaFunctionalTestCase):
         self.assertEqual(form['geo_location.lon:utf8:string'], '13')
         self.browser_do_logout()
 
+    def test_zmi_add(self):
+        self.browser_do_login('admin', '')
+        self.browser.go('http://localhost/portal/myfolder/'
+                        'manage_addNyGeoPoint_html')
+        form = self.browser.get_form(1)
+        self.browser.clicked(form, form.find_control('id'))
+        form['id'] = 'zmipoint'
+        form['title:utf8:string'] = 'ZMI point'
+        form['geo_location.lat:utf8:string'] = '44.43'
+        form['geo_location.lon:utf8:string'] = '26.1'
+        self.browser.submit()
+        self.assertEqual(self.portal.myfolder.zmipoint.geo_location,
+                         Geo('44.43', '26.1'))
+        self.browser_do_logout()
+
 class NyGeoPointVersioningFunctionalTestCase(NaayaFunctionalTestCase):
     """ TestCase for NaayaContent object """
     def afterSetUp(self):
@@ -202,5 +217,10 @@ class NyGeoPointVersioningFunctionalTestCase(NaayaFunctionalTestCase):
 
         form = self.browser.get_form('frmEdit')
         self.assertEqual(form['title:utf8:string'], 'ver_geopoint_version')
+
+        self.browser.go('http://localhost/portal/info/ver_geopoint/commitVersion')
+        ob = self.portal.info.ver_geopoint
+        self.assertEqual(ob.title, 'ver_geopoint_version')
+        self.assertEqual(ob.version, None)
 
         self.browser_do_logout()

@@ -123,10 +123,8 @@ class NotificationsTest(NaayaFunctionalTestCase):
         self.browser_do_logout()
 
         notifications = self._fetch_test_notifications()
-        self.assertTrue(len(notifications) > 0)
-        for notification in notifications:
-            if notification[2].startswith('Instant'):
-                self.assertEqual(notification[1], 'reviewer@example.com')
+        instant = [n[1] for n in notifications if n[2].startswith('Instant')]
+        self.assertEqual(instant, ['reviewer@example.com'])
 
         remove_account_subscription = \
             self.portal.portal_notification.remove_account_subscription

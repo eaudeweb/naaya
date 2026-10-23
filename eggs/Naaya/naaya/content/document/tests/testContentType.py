@@ -47,19 +47,9 @@ class NaayaContentTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase):
         self._portal().info.manage_delObjects([meta_fr.id])
         
         meta = self._portal().getCatalogedObjectsCheckView(meta_type=['Naaya Document'])
-        for x in meta:
-            if x.id == 'doc1':
-                meta = x
-            else:
-                meta = []
-            
-            if x.id == 'doc1_fr':
-                meta_fr = x
-            else:
-                meta_fr = []
-            
-        self.assertEqual(meta, [])
-        self.assertEqual(meta_fr, [])
+        ids = [x.getId() for x in meta]
+        self.assertNotIn('doc1', ids)
+        self.assertNotIn('doc1_fr', ids)
 
     def do_make_document(self, kwargs=None):
         if kwargs is None:

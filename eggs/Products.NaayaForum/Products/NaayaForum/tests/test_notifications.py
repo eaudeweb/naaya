@@ -113,12 +113,17 @@ class NotificationsTestCase(NaayaTestCase):
         topic.saveProperties(title=topic.title, description='asdf')
 
         self.assertEqual(len(self._notifications), 1)
+        self.assertIn('Instant notification', self._notifications[0][2])
+        self.assertIn('My Topic', self._notifications[0][3])
+        self.assertIn(topic.absolute_url(), self._notifications[0][3])
         self._notifications[:] = []
 
         message = topic['msg_tmessage']
         message.saveProperties(title=message.title, description='qwer')
 
         self.assertEqual(len(self._notifications), 1)
+        self.assertIn('My Message', self._notifications[0][3])
+        self.assertIn(message.absolute_url(), self._notifications[0][3])
 
 def test_suite():
     suite = TestSuite()

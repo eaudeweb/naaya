@@ -43,11 +43,9 @@ class GeoTestCase(unittest.TestCase):
         self.assertIsNone(g.lon)
 
     def test_create_error(self):
-        try:
+        with self.assertRaises(ValueError) as cm:
             Geo('1.2.3', '13')
-            self.fail('should raise exception')
-        except ValueError as e:
-            self.assertTrue('Bad value "1.2.3" for latitude')
+        self.assertIn('1.2.3', str(cm.exception))
 
     def test_repr(self):
         g = Geo(13, '17.223')

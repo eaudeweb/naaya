@@ -64,15 +64,9 @@ class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):
         
         #Delete Gallery
         self._portal().info.manage_delObjects([meta.id])
-        
+        self.assertNotIn('mygallery', self._portal().info.objectIds())
         meta = self._portal().getCatalogedObjectsCheckView(meta_type=['Naaya Photo Gallery'])
-        for x in meta:
-            if x.id == 'mygallery':
-                meta = x
-            else:
-                meta = []
-            
-        self.assertEqual(meta, [])
+        self.assertEqual([x.id for x in meta if x.id == 'mygallery'], [])
     
     def test_album(self):
         """ Add, Find, Edit and Delete Naaya Photo Folder """
@@ -87,14 +81,9 @@ class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):
         #Delete Album
         gallery = meta.getParentNode()
         gallery.manage_delObjects([meta.id])
+        self.assertNotIn('myalbum', gallery.objectIds())
         meta = self._portal().getCatalogedObjectsCheckView(meta_type=['Naaya Photo Folder'])
-        for x in meta:
-            if x.id == 'myalbum':
-                meta = x
-            else:
-                meta = []
-            
-        self.assertEqual(meta, [])
+        self.assertEqual([x.id for x in meta if x.id == 'myalbum'], [])
 
     def test_NyRoleManager_wrappers(self):
         self.assertTrue(NyPhotoFolder.manage_addLocalRoles == NyRoleManager.manage_addLocalRoles)

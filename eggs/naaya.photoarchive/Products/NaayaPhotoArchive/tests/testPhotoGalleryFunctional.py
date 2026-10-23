@@ -135,21 +135,6 @@ class NyPhotoGalleryFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser_do_logout()
 
-    def test_manage(self):
-        return #TODO: photo gallery has no manageProperties method
-        self.browser_do_login('admin', '')
-
-        self.browser.go('http://localhost/portal/myfolder/mygallery/manage_edit_html')
-        form = self.browser.get_form('frmEdit')
-        self.assertEqual(form['title:utf8:string'], 'My photo gallery')
-        form['title:utf8:string'] = 'new_gallery_title'
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:string'))
-        self.browser.submit()
-
-        self.assertEqual(self.portal.myfolder.mygallery.title, 'new_gallery_title')
-
-        self.browser_do_logout()
-
 def test_suite():
     suite = TestSuite()
     suite.addTest(TestLoader().loadTestsFromTestCase(NyPhotoGalleryFunctionalTestCase))

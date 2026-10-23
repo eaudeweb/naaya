@@ -686,13 +686,13 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item,
     def generate_pdf(self, report_id):
         url = '%s/questionnaire_view_report_html?report_id=%s' % (
             self.absolute_url(), report_id)
-        http_cookies = self.REQUEST.environ['HTTP_COOKIE']
+        http_cookies = self.REQUEST.environ.get('HTTP_COOKIE', '')
         for cookie in http_cookies.split('; '):
             if cookie.startswith('__ac'):
                 __ac = cookie.replace('__ac="', '')[:-1]
                 cookie_string = '__ac=%s; domain=%s; path=/;' % (
                     __ac, self.REQUEST['HTTP_X_FORWARDED_HOST'])
-                cookie_jar = NamedTemporaryFile()
+                cookie_jar = NamedTemporaryFile('w')
                 cookie_jar.write(cookie_string)
                 cookie_jar.flush()
                 options = {'print-media-type': False,

@@ -110,7 +110,6 @@ class NyPointerFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser_do_logout()
 
     def test_edit_error(self):
-        return # this test is disabled
         self.browser_do_login('admin', '')
         self.browser.go('http://localhost/portal/myfolder/mypointer/edit_html')
 

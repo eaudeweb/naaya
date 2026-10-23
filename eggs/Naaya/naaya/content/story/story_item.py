@@ -261,6 +261,10 @@ class NyStory(story_item, NyAttributes, NyContainer, NyCheckControl, NyContentTy
         return 'topitem="%s" resourceurl="%s" frontpicture="%s"' % \
             (self.utXmlEncode(self.topitem), self.utXmlEncode(self.resourceurl), self.utBase64Encode(self.utNoneToEmpty(self.frontpicture)))
 
+    def getUploadedImages(self):
+        """ Images stored in this story """
+        return self.objectValues(['Image'])
+
     security.declarePrivate('export_this_body_custom')
     def export_this_body_custom(self):
         r = []
@@ -270,7 +274,7 @@ class NyStory(story_item, NyAttributes, NyContainer, NyCheckControl, NyContentTy
             ra('<source lang="%s"><![CDATA[%s]]></source>' % (l, self.utToUtf8(self.getLocalProperty('source', l))))
         for i in self.getUploadedImages():
             ra('<img param="0" id="%s" content="%s" />' % \
-                (self.utXmlEncode(i.id()), self.utXmlEncode(self.utBase64Encode(bytes(i.data)))))
+                (self.utXmlEncode(i.getId()), self.utXmlEncode(self.utBase64Encode(bytes(i.data)))))
         return ''.join(r)
 
     security.declarePrivate('syndicateThis')

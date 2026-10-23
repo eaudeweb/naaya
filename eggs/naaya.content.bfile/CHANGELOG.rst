@@ -1,6 +1,9 @@
 2.0.3 (unreleased)
 ------------------
 * Remove the Python deprecation warnings [dumitval]
+* Fix and extend the tests [dumitval]
+* Index the text of the current file versions in the full text index
+  [dumitval]
 
 2.0.2 (2026-10-18)
 ------------------

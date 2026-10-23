@@ -75,6 +75,9 @@ class UpdateScript(Item, Acquisition.Implicit):
 
         self.log = logging.getLogger('naayaUpdater.' + self.id)
         self.log.setLevel(logging.DEBUG)
+        # drop the handler of the previous run, which wrote to its own buffer
+        for old_handler in list(self.log.handlers):
+            self.log.removeHandler(old_handler)
         self.log.addHandler(handler)
 
     security.declareProtected(view_management_screens, 'update')
