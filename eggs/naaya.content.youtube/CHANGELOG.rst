@@ -1,4 +1,7 @@
-2.0.1 (unreleased)
+2.0.2 (unreleased)
+------------------
+
+2.0.1 (2026-10-23)
 ------------------
 * Remove the Python deprecation warnings from the tests [dumitval]
 * Fix the video check failing when youtube.com cannot be reached [dumitval]
