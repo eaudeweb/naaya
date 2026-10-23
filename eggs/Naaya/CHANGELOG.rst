@@ -1,4 +1,7 @@
-6.0.7 (unreleased)
+6.0.8 (unreleased)
+------------------
+
+6.0.7 (2026-10-23)
 ------------------
 * Remove the Python deprecation warnings [dumitval]
 * Fix password reset tokens staying valid after one hour [dumitval]
