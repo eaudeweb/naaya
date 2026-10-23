@@ -8,7 +8,7 @@ if version_info < (2, 5):
     requires.append('pysqlite')
 
 setup(name='naaya.sql',
-      version='2.2.dev0',
+      version='2.3.dev0',
       description="",
       author='Eau de Web',
       author_email='office@eaudeweb.ro',

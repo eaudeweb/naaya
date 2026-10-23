@@ -1,4 +1,7 @@
-2.2 (unreleased)
+2.3 (unreleased)
+----------------
+
+2.2 (2026-10-23)
 ----------------
 * Close the sqlite connection of a cursor when the cursor is closed
   [dumitval]
