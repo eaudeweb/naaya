@@ -1,5 +1,7 @@
 6.0.8 (unreleased)
 ------------------
+* Fetch URLs in grabFromUrl with urllib.request; FancyURLopener is removed
+  in Python 3.14 [dumitval]
 
 6.0.7 (2026-10-23)
 ------------------

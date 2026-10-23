@@ -3,6 +3,8 @@ Changelog
 
 2.0.3 (unreleased)
 ------------------
+* Remove the unused MyURLopener class; FancyURLopener is removed in
+  Python 3.14 [dumitval]
 
 2.0.2 (2026-10-23)
 ------------------

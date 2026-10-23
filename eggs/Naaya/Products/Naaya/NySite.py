@@ -104,7 +104,6 @@ from Products.NaayaCore.managers.import_export import UnicodeReader
 from Products.NaayaCore.managers.rdf_calendar_utils import rdf_cataloged_items
 from Products.NaayaCore.managers.search_tool import search_tool
 from Products.NaayaCore.managers.session_manager import session_manager
-from Products.NaayaCore.managers.urlgrab_tool import urlgrab_tool
 from Products.NaayaCore.managers.utils import utils, list_utils, batch_utils
 from Products.NaayaCore.managers.utils import file_utils
 from Products.NaayaCore.managers.utils import vcard_file
@@ -1492,17 +1491,16 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         return breadcrumbs
 
     def grabFromUrl(self, p_url):
-        # it gets the content from the given url
+        """ (data, content type) of the given url, (None, ...) on any error """
         try:
-            l_urlgrab = urlgrab_tool()
-            l_http_proxy = self.get_http_proxy()
-            if l_http_proxy != '':
-                l_urlgrab.proxies['http'] = l_http_proxy
-            webPage = l_urlgrab.open(p_url)
-            data = webPage.read()
-            ctype = webPage.headers['Content-Type']
-            return (data, ctype)
-        except:
+            handlers = []
+            http_proxy = self.get_http_proxy()
+            if http_proxy != '':
+                handlers.append(urllib.request.ProxyHandler({'http': http_proxy}))
+            opener = urllib.request.build_opener(*handlers)
+            with opener.open(p_url, timeout=60) as web_page:
+                return (web_page.read(), web_page.headers['Content-Type'])
+        except Exception:
             return (None, 'text/x-unknown-content-type')
 
     def getMaintainersEmails(self, node):

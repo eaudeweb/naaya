@@ -116,3 +116,40 @@ class FolderWriteImportTest(NaayaTestCase):
                                self.client_home):
             self.portal.info.write_import(REQUEST={'id': 'data'})
         self.assertEqual(self.portal.info.myurl.title, 'Caf\xe9')
+
+
+class GrabFromUrlTest(NaayaTestCase):
+    """ grabFromUrl uses urllib.request (FancyURLopener is gone in Python 3.14) """
+
+    def afterSetUp(self):
+        import threading
+        from http.server import BaseHTTPRequestHandler, HTTPServer
+
+        class Handler(BaseHTTPRequestHandler):
+            def do_GET(self):
+                if self.path == '/file.txt':
+                    self.send_response(200)
+                    self.send_header('Content-Type', 'text/plain')
+                    self.end_headers()
+                    self.wfile.write(b'grabbed data')
+                else:
+                    self.send_error(404)
+
+            def log_message(self, *args):
+                pass
+
+        self.server = HTTPServer(('127.0.0.1', 0), Handler)
+        threading.Thread(target=self.server.serve_forever, daemon=True).start()
+        self.base = 'http://127.0.0.1:%d' % self.server.server_port
+
+    def beforeTearDown(self):
+        self.server.shutdown()
+        self.server.server_close()
+
+    def test_grab(self):
+        self.assertEqual(self.portal.grabFromUrl(self.base + '/file.txt'),
+                         (b'grabbed data', 'text/plain'))
+
+    def test_not_found(self):
+        self.assertEqual(self.portal.grabFromUrl(self.base + '/missing'),
+                         (None, 'text/x-unknown-content-type'))
