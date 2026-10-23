@@ -1,4 +1,4 @@
-<tal:block tal:replace="structure here/standard_html_header"/>
+<metal:block use-macro="here/standard_template_macro"><metal:block fill-slot="body">
 
 <link rel="stylesheet" type="text/css" media="all"
 	tal:attributes="href string:${here/absolute_url}/css_survey_common" />
@@ -40,4 +40,4 @@
 <!-- Translation bar on bottom -->
 <div metal:use-macro="here/edit/macros/translation_bar" />
 
-<tal:block tal:replace="structure here/standard_html_footer"/>
+</metal:block></metal:block>

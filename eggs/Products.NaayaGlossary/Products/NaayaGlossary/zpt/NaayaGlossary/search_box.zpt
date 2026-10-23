@@ -1,4 +1,4 @@
-<tal:block tal:replace="structure here/standard_html_header"/>
+<metal:block use-macro="here/standard_template_macro"><metal:block fill-slot="body">
 <tal:block define="	query python:request.get('query_gloss', '');
 					size python:request.get('size', '');
 					selected_lang here/getSelectedLang;
@@ -48,4 +48,4 @@
 </table>
 
 </tal:block>
-<tal:block tal:replace="structure here/standard_html_footer"/>
+</metal:block></metal:block>

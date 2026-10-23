@@ -1,0 +1,3 @@
+<metal:block use-macro="here/standard_template_macro"><metal:block fill-slot="body">
+<tal:block replace="structure python:here.show_events_list(here, request, day=0)" />
+</metal:block></metal:block>

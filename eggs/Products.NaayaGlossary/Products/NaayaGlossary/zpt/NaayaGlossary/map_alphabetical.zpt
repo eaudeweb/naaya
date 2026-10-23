@@ -1,4 +1,4 @@
-<tal:block tal:replace="structure here/standard_html_header"/>
+<metal:block use-macro="here/standard_template_macro"><metal:block fill-slot="body">
 <div style="margin: 20px 1% 5px 1%"></div>
 
 <h1 tal:content="python:here.getCenterOb().title_or_id()" i18n:translate="" />
@@ -71,4 +71,4 @@ function fTreeClick(expand)
 	</form>
 
 </tal:block>
-<tal:block tal:replace="structure here/standard_html_footer"/>
+</metal:block></metal:block>

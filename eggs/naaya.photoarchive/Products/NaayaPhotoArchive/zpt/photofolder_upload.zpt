@@ -1,4 +1,4 @@
-<tal:block replace="structure here/standard_html_header" />
+<metal:block use-macro="here/standard_template_macro"><metal:block fill-slot="body">
 
 <script type="text/javascript"
         tal:attributes="src string:${here/getSitePath}/core_js"></script>
@@ -41,4 +41,4 @@
 
 <tal:block content="structure template/cc_license_template" />
 
-<tal:block replace="structure here/standard_html_footer" />
+</metal:block></metal:block>

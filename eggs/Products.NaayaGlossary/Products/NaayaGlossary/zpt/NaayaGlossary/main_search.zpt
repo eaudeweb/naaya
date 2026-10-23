@@ -1,4 +1,4 @@
-<tal:block tal:replace="structure here/standard_html_header"/>
+<metal:block use-macro="here/standard_template_macro"><metal:block fill-slot="body">
 
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
 	<tr>
@@ -114,4 +114,4 @@
 	</tr>
 </table>
 
-<tal:block tal:replace="structure here/standard_html_footer"/>
+</metal:block></metal:block>

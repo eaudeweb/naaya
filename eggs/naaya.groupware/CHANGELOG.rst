@@ -4,6 +4,8 @@
   and Zope does not publish methods without a docstring [dumitval]
 * Use utSlugify and get_addr_from instead of the deprecated utCleanupId and
   _get_from_address, close the local_events.py file [dumitval]
+* Use standard_template_macro instead of the deprecated
+  standard_html_header/footer in the templates [dumitval]
 
 2.0.3 (2026-10-23)
 ------------------

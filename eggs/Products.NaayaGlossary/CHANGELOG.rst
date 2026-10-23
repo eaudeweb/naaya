@@ -4,6 +4,8 @@
   and Zope does not publish methods without a docstring [dumitval]
 * Import the xml.sax names explicitly: Python 3.14 no longer exports
   handler with from xml.sax import * [dumitval]
+* Use standard_template_macro instead of the deprecated
+  standard_html_header/footer in the templates [dumitval]
 
 2.0.3 (2026-10-23)
 ------------------

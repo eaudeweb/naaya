@@ -133,7 +133,7 @@ class RDFCalendar(Implicit, Folder.Folder, PropertyManager, Cacheable):
     readme = DTMLFile("dtml/readme", globals())
 
     security.declareProtected('View', 'show_monthly_events')
-    show_monthly_events = DTMLFile("dtml/show_monthly_events", globals())
+    show_monthly_events = PageTemplateFile('zpt/show_monthly_events', globals())
 
     security.declareProtected('View','show_events_list')
     show_events_list = DTMLFile("dtml/show_events_list", globals())

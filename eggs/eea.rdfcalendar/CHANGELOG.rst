@@ -3,6 +3,8 @@
 * Give the methods with a blank docstring a text: Python 3.13 strips it to ''
   and Zope does not publish methods without a docstring [dumitval]
 * Close the RDF feed response after reading it [dumitval]
+* Use standard_template_macro instead of the deprecated
+  standard_html_header/footer in the templates [dumitval]
 
 2.0.2 (2026-10-23)
 ------------------
