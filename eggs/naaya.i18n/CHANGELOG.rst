@@ -1,4 +1,7 @@
-2.0.6 (unreleased)
+2.0.7 (unreleased)
+------------------
+
+2.0.6 (2026-10-23)
 ------------------
 * Give the methods with a blank docstring a text: Python 3.13 strips it to ''
   and Zope does not publish methods without a docstring [dumitval]
