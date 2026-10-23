@@ -1,4 +1,7 @@
-2.0.4 (unreleased)
+2.0.5 (unreleased)
+------------------
+
+2.0.4 (2026-10-23)
 ------------------
 * Remove the Python deprecation warnings [dumitval]
 * Fix update scripts adding a log handler on every run [dumitval]
