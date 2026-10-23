@@ -6,7 +6,7 @@ from Products.PluginIndexes.DateIndex.DateIndex import manage_addDateIndex
 from OFS.SimpleItem import SimpleItem
 
 def manage_addNyObservatory(parent, REQUEST=None):
-    """ """
+    """ Manage add ny observatory """
     id='observatory'
     ob = NyObservatory(id)
     ob.title = 'Naaya Observatory'
@@ -63,7 +63,7 @@ class NyObservatory(BTreeFolder2):
         return self._getOb(id)
 
     def index_html(self, REQUEST):
-        """ """
+        """ Index html """
         return REQUEST.RESPONSE.redirect('%s/map' % self.absolute_url())
 
 InitializeClass(NyObservatory)

@@ -2,7 +2,7 @@ from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 from Products.naayaUpdater.updates.utils import get_standard_template
 
 class UpdateSiteLogos(UpdateScript):
-    """ """
+    """ Update site logos """
     title = 'Adapt standard_template to the changes to site logos'
     creation_date = 'Oct 26, 2011'
     authors = ['Valentin Dumitru']

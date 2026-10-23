@@ -62,7 +62,7 @@ manage_addEnviroWindowsSite_html = PageTemplateFile('zpt/site_manage_add',
 
 def manage_addEnviroWindowsSite(self, id='', title='', lang=None,
                                 REQUEST=None):
-    """ """
+    """ Manage add enviro windows site """
     ut = utils()
     id = ut.utSlugify(id)
     if not id:
@@ -78,7 +78,7 @@ ew_bundle.set_parent(bundles.get("Naaya"))
 
 @implementer(IEWSite)
 class EnviroWindowsSite(NySite):
-    """ """
+    """ Enviro windows site """
 
     meta_type = METATYPE_ENVIROWINDOWSSITE
     icon = 'misc_/EnviroWindows/Site.gif'
@@ -92,7 +92,7 @@ class EnviroWindowsSite(NySite):
     display_subobject_count = "on"
 
     def __init__(self, *args, **kwargs):
-        """ """
+        """ Init """
         NySite.__dict__['__init__'](self, *args, **kwargs)
         self.display_subobject_count = "on"
         self.set_bundle(ew_bundle)
@@ -100,7 +100,7 @@ class EnviroWindowsSite(NySite):
     security.declarePrivate('loadDefaultData')
 
     def loadDefaultData(self):
-        """ """
+        """ Load default data """
         # set default 'Naaya' configuration
         NySite.__dict__['createPortalTools'](self)
         NySite.__dict__['loadDefaultData'](self)
@@ -264,7 +264,7 @@ class EnviroWindowsSite(NySite):
     security.declarePublic('stripAllHtmlTags')
 
     def stripAllHtmlTags(self, p_text):
-        """ """
+        """ Strip all html tags """
         return utils().utStripAllHtmlTags(p_text)
 
 ##############################
@@ -325,11 +325,11 @@ class EnviroWindowsSite(NySite):
         return self.get_list_nodes(focus_list_id.lower())
 
     def getSessionMainTopics(self, topic):
-        """ """
+        """ Get session main topics """
         return [x.split('|@|')[0] for x in self.utConvertToList(topic)]
 
     def checkSessionSubTopics(self, maintopic, subtopic, session):
-        """ """
+        """ Check session sub topics """
         for sb in self.utConvertToList(session):
             if sb == '%s|@|%s' % (maintopic, subtopic):
                 return True
@@ -611,7 +611,7 @@ class EnviroWindowsSite(NySite):
     security.declareProtected(view, 'processRequestRole')
 
     def processRequestRole(self, role=None, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Process request role """
         if role is None:
             self.setSessionErrorsTrans(
                 'It is mandatory to specify the requested role')
@@ -785,28 +785,28 @@ class EnviroWindowsSite(NySite):
     security.declareProtected(view, 'createaccount_html')
 
     def createaccount_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Createaccount html """
         return self.getFormsTool().getContent(
             {'here': self.REQUEST.PARENTS[0]}, 'site_createaccount')
 
     security.declareProtected(view, 'requestrole_html')
 
     def requestrole_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Requestrole html """
         return self.getFormsTool().getContent(
             {'here': self.REQUEST.PARENTS[0]}, 'site_requestrole')
 
     security.declareProtected(view, 'requestlocations_html')
 
     def requestlocations_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Requestlocations html """
         return self.getFormsTool().getContent(
             {'here': self.REQUEST.PARENTS[0]}, 'site_requestlocations')
 
     security.declareProtected(view, 'requestinfo_html')
 
     def requestinfo_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Requestinfo html """
         return self.getFormsTool().getContent(
             {'here': self.REQUEST.PARENTS[0]}, 'site_requestinfo')
 
@@ -815,7 +815,7 @@ class EnviroWindowsSite(NySite):
     #
 
     def showBulkDownloadButton(self):
-        """ """
+        """ Show bulk download button """
         return self.checkPermissionBulkDownload() and self.getDocuments
 
     security.declareProtected(view, 'getDocuments')
@@ -840,14 +840,14 @@ class EnviroWindowsSite(NySite):
     security.declareProtected(view, 'zip_upload_html')
 
     def zip_upload_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Zip upload html """
         return self.getFormsTool().getContent({'here': self},
                                               'folder_zipupload')
 
     security.declareProtected(PERMISSION_BULK_DOWNLOAD, 'zip_download_html')
 
     def zip_download_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Zip download html """
         return self.getFormsTool().getContent({'here': self},
                                               'folder_zipdownload')
 
@@ -1052,7 +1052,7 @@ class EnviroWindowsSite(NySite):
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getMailRecipients')
 
     def getMailRecipients(self, location='', REQUEST=None):
-        """ """
+        """ Get mail recipients """
         search = self.getCatalogedObjectsCheckView
         path = physical_path(self)
         if location not in ('', '/'):
@@ -1083,7 +1083,7 @@ class EnviroWindowsSite(NySite):
 
     def sendMailToContacts(self, subject='', content='', location='',
                            REQUEST=None):
-        """ """
+        """ Send mail to contacts """
         search = self.getCatalogedObjectsCheckView
         path = physical_path(self)
         if location not in ('', '/'):
@@ -1198,7 +1198,7 @@ class EnviroWindowsSite(NySite):
                               'export_contacts_to_csv')
 
     def export_contacts_to_csv(self, REQUEST=None, **kwargs):
-        """ """
+        """ Export contacts to csv """
         if REQUEST is not None:
             kwargs.update(REQUEST.form)
 
@@ -1214,7 +1214,7 @@ class EnviroWindowsSite(NySite):
                               'admin_contacts_html')
 
     def admin_contacts_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Admin contacts html """
         return self.getFormsTool().getContent({'here': self},
                                               'site_admin_contacts')
 
@@ -1222,7 +1222,7 @@ class EnviroWindowsSite(NySite):
                               'admin_linkchecker_html')
 
     def admin_linkchecker_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Admin linkchecker html """
         return self.getFormsTool().getContent({'here': self},
                                               'site_admin_linkchecker')
 

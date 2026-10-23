@@ -28,7 +28,7 @@ class NyContainer(Folder, NyCommentable, NyBase, NyPermissions, NyDublinCore):
     security = ClassSecurityInfo()
 
     def __init__(self):
-        """ """
+        """ Init """
 
         NyBase.__dict__['__init__'](self)
         NyDublinCore.__dict__['__init__'](self)

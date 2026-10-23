@@ -34,7 +34,7 @@ from . import SurveyReport
 from . import statistics
 
 def initialize(context):
-    """ """
+    """ Initialize """
     context.registerClass(
         MegaSurvey.MegaSurvey,
         permission = PERMISSION_ADD_MEGASURVEY,

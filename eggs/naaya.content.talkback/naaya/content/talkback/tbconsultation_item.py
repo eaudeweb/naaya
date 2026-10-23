@@ -204,7 +204,7 @@ def extend_permissions(site, role, permissions):
 
 
 def talkbackconsultation_add_html(self, REQUEST=None, RESPONSE=None):
-    """ """
+    """ Talkbackconsultation add html """
     from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
     form_helper = get_schema_helper_for_metatype(self, config['meta_type'])
     return self.getFormsTool().getContent({
@@ -298,7 +298,7 @@ class NyTalkBackConsultation(Implicit, NyContentData, NyContentType,
                              NyAttributes, NyProperties, NyRoleManager,
                              NyContainer, NyNonCheckControl, utils,
                              NyFolderBase):
-    """ """
+    """ Ny talk back consultation """
 
     meta_type = METATYPE_TALKBACKCONSULTATION
     meta_label = LABEL_OBJECT
@@ -325,7 +325,7 @@ class NyTalkBackConsultation(Implicit, NyContentData, NyContentType,
     section_sort_order = tuple()
 
     def __init__(self, id, contributor):
-        """ """
+        """ Init """
         self.id = id
         self.contributor = contributor
         NyContainer.__dict__['__init__'](self)
@@ -362,7 +362,7 @@ class NyTalkBackConsultation(Implicit, NyContentData, NyContentType,
                               'saveProperties')
 
     def saveProperties(self, REQUEST=None, **kwargs):
-        """ """
+        """ Save properties """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
 
@@ -407,7 +407,7 @@ class NyTalkBackConsultation(Implicit, NyContentData, NyContentType,
     security.declareProtected(view, 'list_sections')
 
     def list_sections(self):
-        """ """
+        """ List sections """
         metatypes = [METATYPE_TALKBACKCONSULTATION_SECTION]
         sections = dict(self.objectItems(metatypes))
 
@@ -503,7 +503,7 @@ class NyTalkBackConsultation(Implicit, NyContentData, NyContentType,
     security.declareProtected(view_management_screens, 'manage_options')
 
     def manage_options(self):
-        """ """
+        """ Manage options """
 
         l_options = (NyContainer.manage_options[0],)
         l_options += ({'label': 'View', 'action': 'index_html'},) + \
@@ -567,7 +567,7 @@ class NyTalkBackConsultation(Implicit, NyContentData, NyContentType,
     security.declareProtected(view, 'check_cannot_comment')
 
     def check_cannot_comment(self):
-        """ """
+        """ Check cannot comment """
 
         if not self.checkPermissionReviewTalkBackConsultation():
             if self.isAnonymousUser():
@@ -667,7 +667,7 @@ class NyTalkBackConsultation(Implicit, NyContentData, NyContentType,
     security.declareProtected(view, 'findUsers')
 
     def findUsers(self, search_param, search_term):
-        """ """
+        """ Find users """
         if len(search_term) == 0:
             return []
         return json.dumps(findUsers(self.getSite(), search_param, search_term))

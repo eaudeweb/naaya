@@ -11,7 +11,7 @@ from .managers.ref_manager import ref_manager
 
 manage_addRefListForm = PageTemplateFile('zpt/reflist_add', globals())
 def manage_addRefList(self, id='', title='', description='', REQUEST=None):
-    """ """
+    """ Manage add ref list """
     id = self.utSlugify(id)
     if not id: id = PREFIX_SUFIX_REFLIST % self.utGenRandomId(6)
     ob = RefList(id, title, description)
@@ -20,7 +20,7 @@ def manage_addRefList(self, id='', title='', description='', REQUEST=None):
         return self.manage_main(self, REQUEST, update_menu=1)
 
 class RefList(SimpleItem, ref_manager):
-    """ """
+    """ Ref list """
 
     meta_type = METATYPE_REFLIST
     icon = 'misc_/NaayaCore/RefList.gif'
@@ -36,7 +36,7 @@ class RefList(SimpleItem, ref_manager):
     security = ClassSecurityInfo()
 
     def __init__(self, id, title, description):
-        """ """
+        """ Init """
         self.id = id
         self.title = title
         self.description = description
@@ -45,7 +45,7 @@ class RefList(SimpleItem, ref_manager):
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', description='', REQUEST=None):
-        """ """
+        """ Manage properties """
         self.title = title
         self.description = description
         self._p_changed = 1
@@ -54,7 +54,7 @@ class RefList(SimpleItem, ref_manager):
 
     security.declareProtected(view_management_screens, 'manage_add_item')
     def manage_add_item(self, id='', title='', REQUEST=None):
-        """ """
+        """ Manage add item """
         id = self.utSlugify(id)
         if not id: id = PREFIX_SUFIX_REFLISTITEM % self.utGenRandomId(6)
         self.add_item(id, title)
@@ -62,13 +62,13 @@ class RefList(SimpleItem, ref_manager):
 
     security.declareProtected(view_management_screens, 'manage_update_item')
     def manage_update_item(self, id='', title='', REQUEST=None):
-        """ """
+        """ Manage update item """
         self.update_item(id, title)
         if REQUEST: REQUEST.RESPONSE.redirect('manage_items_html?save=ok')
 
     security.declareProtected(view_management_screens, 'manage_delete_items')
     def manage_delete_items(self, ids=[], REQUEST=None):
-        """ """
+        """ Manage delete items """
         self.delete_item(self.utConvertToList(ids))
         if REQUEST: REQUEST.RESPONSE.redirect('manage_items_html?save=ok')
 

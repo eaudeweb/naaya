@@ -143,7 +143,7 @@ class skel_parser(object):
         return new
 
     def parse(self, p_content):
-        """ """
+        """ Parse """
         try:
             dom = minidom.parseString(p_content).childNodes[0]
         except Exception as error:

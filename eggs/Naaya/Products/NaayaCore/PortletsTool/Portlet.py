@@ -14,7 +14,7 @@ from Products.NaayaBase.NyImageContainer import NyImageContainer
 
 manage_addPortlet_html = PageTemplateFile('zpt/portlet_manage_add', globals())
 def addPortlet(self, id='', title='', portlettype='0', REQUEST=None):
-    """ """
+    """ Add portlet """
     id = self.utSlugify(id)
     if not id: id = PREFIX_PORTLET + self.utGenRandomId(6)
     content_type = 'text/html'
@@ -27,7 +27,7 @@ def addPortlet(self, id='', title='', portlettype='0', REQUEST=None):
         return self.manage_main(self, REQUEST, update_menu=1)
 
 class Portlet(Folder, ZopePageTemplate):
-    """ """
+    """ Portlet """
 
     meta_type = METATYPE_PORTLET
     icon = 'misc_/NaayaCore/Portlet.gif'
@@ -43,7 +43,7 @@ class Portlet(Folder, ZopePageTemplate):
     )
 
     def all_meta_types(self, interfaces=None):
-        """ """
+        """ All meta types """
         y = []
         additional_meta_types = ['Image', 'File']
         for x in Products.meta_types:
@@ -61,7 +61,7 @@ class Portlet(Folder, ZopePageTemplate):
         self.imageContainer = NyImageContainer(self, False)
 
     def __call__(self, context={}, *args):
-        """ """
+        """ Call """
         keyset = None
         if self.ZCacheable_isCachingEnabled():
             keyset = {'here': context['here']}
@@ -79,7 +79,7 @@ class Portlet(Folder, ZopePageTemplate):
         return result
 
     def om_icons(self):
-        """ """
+        """ Om icons """
         icons = ({'path': self.icon, 'alt': self.meta_type, 'title': self.meta_type},)
         if self._v_errors:
             icons = icons + ({'path': 'misc_/PageTemplates/exclamation.gif', 'alt': 'Error', 'title': 'This template has an error'},)

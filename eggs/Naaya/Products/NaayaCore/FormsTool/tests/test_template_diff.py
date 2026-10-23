@@ -8,7 +8,7 @@ from naaya.component.interfaces import IDiff
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 
 class ITemplateDemo(Interface):
-    """"""
+    """ Itemplate demo """
 
 @implementer(ITemplateDemo, ITemplate)
 class TemplateDemo(object):

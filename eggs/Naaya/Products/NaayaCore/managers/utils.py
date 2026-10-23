@@ -375,7 +375,7 @@ class list_utils:
         return u
 
     def utRemoveLineInString(self, p_keyword, p_string):
-        """ """
+        """ Ut remove line in string """
         l_str_lines = p_string.splitlines(1)
         l_str_refined = ''
         for ln in l_str_lines:
@@ -401,47 +401,47 @@ class list_utils:
 
 
 class file_utils:
-    """ """
+    """ File utils """
 
     def __init__(self):
-        """ """
+        """ Init """
         pass
 
     def futRead(self, p_path, p_flag='r'):
-        """ """
+        """ Fut read """
         encoding = None if 'b' in p_flag else 'utf-8'
         with open(p_path, p_flag, encoding=encoding) as f:
             return f.read()
 
     def futReadEnc(self, p_path, p_flag='r', p_encode='utf-8'):
-        """ """
+        """ Fut read enc """
         with codecs.open(p_path, p_flag, p_encode) as f:
             return f.read()
 
 
 class batch_utils:
-    """ """
+    """ Batch utils """
     def __init__(self, p_num_result, p_nbr_row, p_cur_position):
-        """ """
+        """ Init """
         self.num_result = int(p_num_result)
         self.nbr_row = int(p_nbr_row)
         self.cur_position = int(p_cur_position)
 
     def __getNumberOfPages(self):
-        """ """
+        """ Get number of pages """
         l_number_pages, l_remainder = divmod(self.nbr_row, self.num_result)
         if l_remainder != 0:
             l_number_pages = l_number_pages + 1
         return l_number_pages
 
     def __getCurrentPage(self):
-        """ """
+        """ Get current page """
         l_current_page, l_remainder = divmod(
             self.cur_position * self.__getNumberOfPages(), self.nbr_row)
         return l_current_page
 
     def __getPagesArray(self):
-        """ """
+        """ Get pages array """
         l_pages = []
         l_current_page = self.__getCurrentPage()
         l_pages_number = self.__getNumberOfPages()
@@ -454,7 +454,7 @@ class batch_utils:
         return l_pages
 
     def butGetPagingInformations(self):
-        """ """
+        """ But get paging informations """
         l_start = self.cur_position
         if self.cur_position + self.num_result >= self.nbr_row:
             l_stop = self.nbr_row
@@ -576,7 +576,7 @@ class utils:
         return slugify(*args, **kw)
 
     def utCleanupProfileId(self, p_id=''):
-        """ """
+        """ Ut cleanup profile id """
         x = str(p_id) if not isinstance(p_id, str) else p_id
         return x.replace('@', '_')
 
@@ -709,14 +709,14 @@ class utils:
         return self.utToUtf8(p_string).strip()
 
     def utNoneToEmpty(self, value):
-        """ """
+        """ Ut none to empty """
         if value is None:
             return ''
         else:
             return value
 
     def utEmptyToNone(self, value):
-        """ """
+        """ Ut empty to none """
         if value == '':
             return None
         else:
@@ -874,7 +874,7 @@ class utils:
         return DateTime()
 
     def utGetDate(self, p_string):
-        """ """
+        """ Ut get date """
         try:
             return DateTime(p_string)
         except:
@@ -898,14 +898,14 @@ class utils:
             return ''
 
     def utShowCustom(self, p_date):
-        """ """
+        """ Ut show custom """
         try:
             return p_date.strftime('%Y-%m-%d')
         except:
             return ''
 
     def utStringDate(self, p_date):
-        """ """
+        """ Ut string date """
         try:
             return p_date.strftime('%d%m%Y')
         except:
@@ -1005,7 +1005,7 @@ class utils:
             return ''
 
     def utConvertDateTimeHTMLToString(self, p_datestring):
-        """ """
+        """ Ut convert date time htmlto string """
         try:
             y, m, d = p_datestring.split('T')[0].split('-')
             return '%s/%s/%s' % (d, m, y)
@@ -1220,7 +1220,7 @@ class utils:
         return urlencode(query, doseq)
 
     def utRemoveLineInString(self, p_keyword, p_string):
-        """ """
+        """ Ut remove line in string """
         l_str_lines = p_string.splitlines(1)
         l_str_refined = ''
         for ln in l_str_lines:
@@ -1293,7 +1293,7 @@ class tmpfile:
 class ZZipFile(ZipFile):
 
     def read(self, size=-1):
-        """ """
+        """ Read """
         if(self.hasbeenread == 0):
             self.hasbeenread = 1
             return ZipFile.read(self, self.filename)
@@ -1306,11 +1306,11 @@ class ZZipFile(ZipFile):
         return 0
 
     def tell(self):
-        """ """
+        """ Tell """
         return self.getinfo(filename).file_size
 
     def setcurrentfile(self, filename):
-        """ """
+        """ Setcurrentfile """
         self.hasbeenread = 0
         self.filename = filename
 

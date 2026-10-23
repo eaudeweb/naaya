@@ -27,5 +27,5 @@ class question_item(Implicit, NyProperties):
         return self.getLocalProperty('body', lang)
 
     def get_sortorder(self):
-        """ """
+        """ Get sortorder """
         return self.sortorder

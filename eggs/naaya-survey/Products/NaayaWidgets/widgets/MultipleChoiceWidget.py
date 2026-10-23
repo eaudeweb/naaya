@@ -24,7 +24,7 @@ class MultipleChoiceWidget(Widget):
         Widget.__init__(self, id, lang, **kwargs)
 
     def getChoices(self, anyLangNonEmpty=False):
-        """ """
+        """ Get choices """
         if anyLangNonEmpty and not self.choices:
             return self.getLocalAttribute('choices', langFallback=True)
         else:

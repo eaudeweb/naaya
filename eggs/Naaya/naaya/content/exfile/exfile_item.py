@@ -87,7 +87,7 @@ config = {
     }
 
 def exfile_add_html(self, REQUEST=None, RESPONSE=None):
-    """ """
+    """ Exfile add html """
     from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
     form_helper = get_schema_helper_for_metatype(self, config['meta_type'])
     return self.getFormsTool().getContent({
@@ -217,7 +217,7 @@ def importNyExFile(self, param, id, attrs, content, properties, discussion, obje
             self.recatalogNyObject(ob)
 
 class file_item(NyFSFile, NyFolderishVersioning):
-    """ """
+    """ File item """
 
     def __init__(self, id, title, file, precondition, content_type):
         """
@@ -265,7 +265,7 @@ class file_item(NyFSFile, NyFolderishVersioning):
 
 @implementer(INyExFile)
 class exfile_item(NyContentData, Folder):
-    """ """
+    """ Exfile item """
 
     meta_type = config['meta_type']
 
@@ -289,7 +289,7 @@ class exfile_item(NyContentData, Folder):
         return '\n'.join(text for text in texts if text)
 
     def copyFileItems(self, source, target):
-        """ """
+        """ Copy file items """
         if target.objectIds('File'):
             target.manage_delObjects(target.objectIds('File'))
         for lang, item in source.getFileItems():
@@ -300,7 +300,7 @@ class exfile_item(NyContentData, Folder):
             #doc.copyVersions(item)
 
     def getFileItem(self, lang=None):
-        """ """
+        """ Get file item """
         if lang is None:
             lang = self.gl_get_selected_language()
         if not lang in self.objectIds():
@@ -313,31 +313,31 @@ class exfile_item(NyContentData, Folder):
         return fileitem.get_data(as_string=as_string)
 
     def size(self, lang=None):
-        """ """
+        """ Size """
         if lang is None: lang = self.gl_get_selected_language()
         try: return self.getFileItem(lang).size
         except: return 0
 
     def get_size(self, lang=None):
-        """ """
+        """ Get size """
         if lang is None: lang = self.gl_get_selected_language()
         try: return self.getFileItem(lang).size
         except: return 0
 
     def content_type(self, lang=None):
-        """ """
+        """ Content type """
         if lang is None:
             lang = self.gl_get_selected_language()
         return self.getFileItem(lang).getContentType()
 
     def precondition(self, lang=None):
-        """ """
+        """ Precondition """
         if lang is None: lang = self.gl_get_selected_language()
         try: return self.getFileItem(lang).precondition
         except: return ''
 
     def set_precondition(self, precondition, lang):
-        """ """
+        """ Set precondition """
         self.getFileItem(lang).precondition = precondition
 
     def handleUpload(self, source, file, url, lang=None):
@@ -371,7 +371,7 @@ class exfile_item(NyContentData, Folder):
         return fileitem.getVersions()
 
 class NyExFile_extfile(exfile_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyContentType):
-    """ """
+    """ Ny ex file extfile """
 
     meta_type = config['meta_type']
     meta_label = config['label']
@@ -379,7 +379,7 @@ class NyExFile_extfile(exfile_item, NyAttributes, NyItem, NyCheckControl, NyVali
     icon_marked = 'misc_/NaayaContent/NyExFile_marked.gif'
 
     def manage_options(self):
-        """ """
+        """ Manage options """
         l_options = ()
         if not self.hasVersion():
             l_options += ({'label': 'Properties', 'action': 'manage_edit_html'}, Folder.manage_options[0])
@@ -390,7 +390,7 @@ class NyExFile_extfile(exfile_item, NyAttributes, NyItem, NyCheckControl, NyVali
     security = ClassSecurityInfo()
 
     def __init__(self, id, contributor):
-        """ """
+        """ Init """
         self.id = id
         exfile_item.__init__(self, id)
         NyValidation.__dict__['__init__'](self)
@@ -438,7 +438,7 @@ class NyExFile_extfile(exfile_item, NyAttributes, NyItem, NyCheckControl, NyVali
         return etree.tostring(item, xml_declaration=False, encoding="unicode")
 
     def _fileitemkeywords(self, lang):
-        """ """
+        """ Fileitemkeywords """
         res = ''
         if txng_converters:
             fileitem = self.getFileItem(lang)
@@ -463,7 +463,7 @@ class NyExFile_extfile(exfile_item, NyAttributes, NyItem, NyCheckControl, NyVali
         return u' '.join([self._objectkeywords(lang), self.toUnicode(self._fileitemkeywords(lang))])
 
     def getVersionContentType(self, lang):
-        """ """
+        """ Get version content type """
         if self.checkout:
             version = self._getOb('version')
             return version.content_type(lang)
@@ -476,7 +476,7 @@ class NyExFile_extfile(exfile_item, NyAttributes, NyItem, NyCheckControl, NyVali
 
     security.declarePublic('showVersionData')
     def showVersionData(self, vid=None, lang=None, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Show version data """
         if vid:
             if lang is None: lang = self.gl_get_selected_language()
             version_data = self.getFileItem(lang).getVersion(vid)
@@ -511,7 +511,7 @@ class NyExFile_extfile(exfile_item, NyAttributes, NyItem, NyCheckControl, NyVali
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, REQUEST=None, **kwargs):
-        """ """
+        """ Manage properties """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG
 )
@@ -546,7 +546,7 @@ class NyExFile_extfile(exfile_item, NyAttributes, NyItem, NyCheckControl, NyVali
     #site actions
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'commitVersion')
     def commitVersion(self, REQUEST=None):
-        """ """
+        """ Commit version """
         user = self.REQUEST.AUTHENTICATED_USER.getUserName()
         if (not self.checkPermissionEditObject()) or (
             self.checkout_user != user):
@@ -569,7 +569,7 @@ class NyExFile_extfile(exfile_item, NyAttributes, NyItem, NyCheckControl, NyVali
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'startVersion')
     def startVersion(self, REQUEST=None):
-        """ """
+        """ Start version """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG
 )
@@ -589,7 +589,7 @@ class NyExFile_extfile(exfile_item, NyAttributes, NyItem, NyCheckControl, NyVali
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'discardVersion')
     def discardVersion(self, REQUEST=None):
-        """ """
+        """ Discard version """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG
 )
@@ -605,7 +605,7 @@ class NyExFile_extfile(exfile_item, NyAttributes, NyItem, NyCheckControl, NyVali
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
     def saveProperties(self, REQUEST=None, **kwargs):
-        """ """
+        """ Save properties """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG
 )
@@ -671,7 +671,7 @@ class NyExFile_extfile(exfile_item, NyAttributes, NyItem, NyCheckControl, NyVali
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveUpload')
     def saveUpload(self, source='file', file='', url='', version=True, lang=None, REQUEST=None):
-        """ """
+        """ Save upload """
         if REQUEST:
             username = REQUEST.AUTHENTICATED_USER.getUserName()
         else:
@@ -725,7 +725,7 @@ class NyExFile_extfile(exfile_item, NyAttributes, NyItem, NyCheckControl, NyVali
 
     security.declareProtected(view_management_screens, 'manageAdvancedProperties')
     def manageAdvancedProperties(self, REQUEST=None, **kwargs):
-        """ """
+        """ Manage advanced properties """
         if REQUEST:
             kwargs.update(REQUEST.form)
 
@@ -743,12 +743,12 @@ class NyExFile_extfile(exfile_item, NyAttributes, NyItem, NyCheckControl, NyVali
     #site actions
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Index html """
         return self.getFormsTool().getContent({'here': self}, 'exfile_index')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     def edit_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Edit html """
         return self.getFormsTool().getContent({'here': self}, 'exfile_edit')
 
     def downloadfilename(self, lang=None, version=False):
@@ -769,7 +769,7 @@ class NyExFile_extfile(exfile_item, NyAttributes, NyItem, NyCheckControl, NyVali
 
     security.declareProtected(view, 'download')
     def download(self, REQUEST, RESPONSE):
-        """ """
+        """ Download """
         lang = REQUEST.get('lang', self.gl_get_selected_language())
         version = REQUEST.get('version', False)
         RESPONSE.setHeader('Content-Type', self.content_type(lang))
@@ -787,7 +787,7 @@ class NyExFile_extfile(exfile_item, NyAttributes, NyItem, NyCheckControl, NyVali
 
     security.declareProtected(view, 'view')
     def view(self, REQUEST, RESPONSE):
-        """ """
+        """ View """
         lang = self.gl_get_selected_language()
         RESPONSE.setHeader('Content-Type', self.content_type(lang))
         RESPONSE.setHeader('Content-Length', self.size)
@@ -799,7 +799,7 @@ class NyExFile_extfile(exfile_item, NyAttributes, NyItem, NyCheckControl, NyVali
 
     security.declarePublic('getDownloadUrl')
     def getDownloadUrl(self):
-        """ """
+        """ Get download url """
         site = self.getSite()
         fileitem = self.getFileItem(self.gl_get_selected_language())
         if not fileitem:
@@ -814,7 +814,7 @@ class NyExFile_extfile(exfile_item, NyAttributes, NyItem, NyCheckControl, NyVali
 
     security.declarePublic('getEditDownloadUrl')
     def getEditDownloadUrl(self, lang=None):
-        """ """
+        """ Get edit download url """
         site = self.getSite()
         lang = lang or self.gl_get_selected_language()
         fileitem = self.getFileItem(lang)

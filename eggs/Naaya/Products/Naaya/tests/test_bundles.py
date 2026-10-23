@@ -44,7 +44,7 @@ class BundleFunctionalTest(NaayaFunctionalTestCase):
         self.browser_do_logout()
 
     def test_set_bundle(self):
-        """ """
+        """ Test set bundle """
 
         bundle_name = 'CHM Bundle'
         self.browser_do_login('admin', '')

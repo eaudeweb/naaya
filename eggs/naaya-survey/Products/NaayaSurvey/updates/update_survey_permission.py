@@ -4,12 +4,12 @@ from AccessControl import ClassSecurityInfo
 from AccessControl.Permission import Permission
 from Products.NaayaSurvey.permissions import PERMISSION_VIEW_REPORTS
 class UpdatePermission(UpdateScript):
-    """  """
+    """ Update permission """
     title='Update missing permission'
     description='Update missing PERMISSION_EDIT_ANSWERS in Naaya Survey'
 
     def _update(self, portal):
-        """ """
+        """ Update """
         portal.manage_permission(PERMISSION_EDIT_ANSWERS,
                          ('Manager', 'Administrator', ), acquire=0)
         self.log.info("Added permission %r to %r", PERMISSION_EDIT_ANSWERS,
@@ -17,7 +17,7 @@ class UpdatePermission(UpdateScript):
         return True
 
 class CorrectReportPermission(UpdateScript):
-    """  """
+    """ Correct report permission """
     title = 'Remove anonymous from the view reports permission'
     description = ('Remove anonymous from the view reports permission '
                 'and add Administrator, Manager and Owner')

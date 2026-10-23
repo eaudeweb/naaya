@@ -148,7 +148,7 @@ class ZipImportTool(Implicit, Item):
         self.id = id
 
     def do_import(self, data, REQUEST=None):
-        """ """
+        """ Do import """
         if REQUEST and not self.getParentNode().checkAllowedToZipImport():
             raise Unauthorized
 

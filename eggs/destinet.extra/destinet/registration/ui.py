@@ -16,11 +16,11 @@ from naaya.core.utils import is_valid_email
 
 def render_create_account_tpl(context, widgets, request_form=None,
                               errors=None):
-    """ """
+    """ Render create account tpl """
 
 
 def create_destinet_account_html(context, request):
-    """ """
+    """ Create destinet account html """
     schema_tool = context.getSite().getSchemaTool()
 
     contact_schema = schema_tool['NyContact']
@@ -39,7 +39,7 @@ def create_destinet_account_html(context, request):
 
 
 def process_create_account(context, request):
-    """ """
+    """ Process create account """
     if request.form == {}:
         raise BadRequest('Empty request form')
     referer = request.HTTP_REFERER

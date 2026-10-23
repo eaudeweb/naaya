@@ -24,7 +24,7 @@ def get_view_adapter(version):
 
 
 def tmpl_version(context, version, ver_id, language=None):
-    """ """
+    """ Tmpl version """
     # Try to get the adapter for this version and set viewable
     viewable = False
     if get_view_adapter(version) is not None:

@@ -41,7 +41,7 @@ manage_addDiskFile_html = PageTemplateFile('zpt/disk_file_add', globals())
 manage_addDiskFile_html.list_available_pathspecs = list_available_pathspecs
 
 def manage_addDiskFile(self, id='', pathspec='', REQUEST=None):
-    """ """
+    """ Manage add disk file """
     fs_path = resolve(pathspec)
     if not path.isfile(fs_path):
         raise ValueError("File not found %r (resolved to %r)" %
@@ -120,7 +120,7 @@ class DiskFile(SimpleItem):
     _manage_main = PageTemplateFile('zpt/disk_file_manage', globals())
     security.declareProtected(view_management_screens, 'manage_main')
     def manage_main(self, REQUEST):
-        """ """
+        """ Manage main """
         options = {
             'fs_path': resolve(self.pathspec),
             'file_data': self._get_data(),

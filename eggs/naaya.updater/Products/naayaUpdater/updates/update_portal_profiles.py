@@ -8,7 +8,7 @@ class UpdatePortalProfiles(UpdateScript):
     authors = ['Alexandru Plugaru']
 
     def _update(self, portal):
-        """ """
+        """ Update """
         if hasattr(portal, 'portal_profiles'):
             if len(portal.portal_profiles.objectValues()) == 0:
                 self.log.info("Removed: %r",

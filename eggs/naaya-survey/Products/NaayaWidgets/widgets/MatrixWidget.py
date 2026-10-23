@@ -23,7 +23,7 @@ class MatrixWidget(Widget):
         self.set_localproperty('rows', 'lines', lang, rows)
 
     def getChoices(self, anyLangNonEmpty=False):
-        """ """
+        """ Get choices """
         if anyLangNonEmpty and not self.choices:
             return self.getLocalAttribute('choices', langFallback=True)
         else:

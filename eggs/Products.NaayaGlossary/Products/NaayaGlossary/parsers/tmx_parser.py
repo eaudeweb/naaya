@@ -19,7 +19,7 @@
 
 # python import
 from xml.sax.handler import ContentHandler
-from xml.sax import *
+from xml.sax import InputSource, handler, make_parser
 StringType = str
 from io import BytesIO, StringIO
 
@@ -115,7 +115,7 @@ class HandleTMXParsing(handler.ContentHandler, utils):
 
 class tmx_parser:
     def __init__(self):
-        """ """
+        """ Init """
         pass
         
     def parseContent(self, file):

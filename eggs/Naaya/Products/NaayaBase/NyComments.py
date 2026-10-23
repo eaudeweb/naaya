@@ -428,8 +428,7 @@ class NyCommentable:
                 '%s/index_html' % self.absolute_url())
 
     def _set_comment_spam_status(self, id, status):
-        """
-        """
+        """ Set comment spam status """
         container = self._get_comments_container()
         if container:
             comment = container._getOb(id, None)

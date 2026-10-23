@@ -106,14 +106,14 @@ class Themes(SimpleItem, session_manager):
     #theme constraints
     security.declareProtected(view_management_screens, 'checkTheme')
     def checkTheme(self, theme_id):
-        """ """
+        """ Check theme """
         if theme_id in self.getThemeRelationsFolder().getDistinctThemes():
             return 1
         return 0
 
     security.declareProtected(view_management_screens, 'getIdsList')
     def getIdsList(self, ids, all=0):
-        """ """
+        """ Get ids list """
         if all: return self.themes.keys()
         return th_utils().getIdsList(ids)
 
@@ -218,7 +218,7 @@ class Themes(SimpleItem, session_manager):
 
     #import related
     def skos_import(self, file, langcode, REQUEST=None):
-        """ """
+        """ Skos import """
         parser = theme_parser()
 
         #parse the SKOS information

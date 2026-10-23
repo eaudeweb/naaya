@@ -5,7 +5,7 @@ from naaya.i18n.LocalPropertyManager import LocalProperty
 from Products.NaayaBase.NyProperties import NyProperties
 
 class questionnaire_item(Implicit, NyProperties):
-    """ """
+    """ Questionnaire item """
 
     title = LocalProperty('title')
     description = LocalProperty('description')

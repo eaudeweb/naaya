@@ -1,5 +1,7 @@
 2.2 (unreleased)
 ================
+* Give the methods with a blank docstring a text: Python 3.13 strips it to ''
+  and Zope does not publish methods without a docstring [dumitval]
 
 2.1 (2026-10-23)
 ================

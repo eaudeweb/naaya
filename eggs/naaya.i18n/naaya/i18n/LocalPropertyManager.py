@@ -209,7 +209,7 @@ class LocalPropertyManager(object):
     #@deprecate(("Calling language related methods on objects is deprecated."
     #            " Call them on NySite_instance.getPortalI18n() instead"))
     def get_selected_language(self):
-        """ """
+        """ Get selected language """
         return get_i18n_context()['selected_language']
 
 
@@ -219,7 +219,7 @@ class LocalPropertyManager(object):
                 " on objects is deprecated."
                 " Call them on NySite_instance.getPortalI18n() instead"))
     def get_languages_mapping(self):
-        """ """
+        """ Get languages mapping """
         return get_i18n_context()['languages_mapping']
 
     security.declarePublic('get_language_name')

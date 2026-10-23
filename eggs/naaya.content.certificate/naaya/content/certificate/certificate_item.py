@@ -201,7 +201,7 @@ config = {
 
 
 def certificate_add_html(self, REQUEST=None, RESPONSE=None):
-    """ """
+    """ Certificate add html """
     from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
     form_helper = get_schema_helper_for_metatype(self, config['meta_type'])
     return self.getFormsTool().getContent({
@@ -353,12 +353,12 @@ def importNyCertificate(self, param, id, attrs, content, properties,
 
 @implementer(INyCertificate)
 class certificate_item(Implicit, NyContentData):
-    """ """
+    """ Certificate item """
 
 
 class NyCertificate(certificate_item, NyAttributes, NyItem, NyCheckControl,
                     NyContentType):
-    """ """
+    """ Ny certificate """
 
     meta_type = config['meta_type']
     meta_label = config['label']
@@ -367,7 +367,7 @@ class NyCertificate(certificate_item, NyAttributes, NyItem, NyCheckControl,
     icon_marked = 'misc_/NaayaContent/NyCertificate_marked.gif'
 
     def manage_options(self):
-        """ """
+        """ Manage options """
         l_options = ()
         if not self.hasVersion():
             l_options += ({'label': 'Properties',
@@ -379,7 +379,7 @@ class NyCertificate(certificate_item, NyAttributes, NyItem, NyCheckControl,
     security = ClassSecurityInfo()
 
     def __init__(self, id, contributor):
-        """ """
+        """ Init """
         self.id = id
         certificate_item.__init__(self)
         NyCheckControl.__dict__['__init__'](self)
@@ -408,7 +408,7 @@ class NyCertificate(certificate_item, NyAttributes, NyItem, NyCheckControl,
     security.declareProtected(view_management_screens, 'manageProperties')
 
     def manageProperties(self, REQUEST=None, **kwargs):
-        """ """
+        """ Manage properties """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
 
@@ -442,7 +442,7 @@ class NyCertificate(certificate_item, NyAttributes, NyItem, NyCheckControl,
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
 
     def saveProperties(self, REQUEST=None, **kwargs):
-        """ """
+        """ Save properties """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
 
@@ -500,7 +500,7 @@ class NyCertificate(certificate_item, NyAttributes, NyItem, NyCheckControl,
     security.declareProtected(view, 'index_html')
 
     def index_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Index html """
         self.notify_access_event(REQUEST)
         return self.getFormsTool().getContent({'here': self},
                                               'certificate_index')
@@ -508,7 +508,7 @@ class NyCertificate(certificate_item, NyAttributes, NyItem, NyCheckControl,
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
 
     def edit_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Edit html """
         if self.hasVersion():
             obj = self.version
         else:

@@ -14,7 +14,7 @@ from datetime import datetime
 logger = logging.getLogger('edw.productsinfo')
 
 def initialize(context):
-    """ """
+    """ Initialize """
     #Add private key
     app = context._ProductContext__app
 

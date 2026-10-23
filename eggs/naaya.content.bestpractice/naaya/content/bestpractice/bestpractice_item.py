@@ -155,7 +155,7 @@ config = {
 
 
 def bestpractice_add_html(self, REQUEST=None, RESPONSE=None):
-    """ """
+    """ Bestpractice add html """
     from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
     form_helper = get_schema_helper_for_metatype(self, config['meta_type'])
     return self.getFormsTool().getContent({
@@ -252,7 +252,7 @@ def addNyBestPractice(self, id='', REQUEST=None, contributor=None, **kwargs):
 
 @implementer(INyBestPractice)
 class NyBestPractice(NyBFile):
-    """ """
+    """ Ny best practice """
 
     meta_type = config['meta_type']
     meta_label = config['label']
@@ -262,7 +262,7 @@ class NyBestPractice(NyBFile):
     security = ClassSecurityInfo()
 
     def __init__(self, id, contributor):
-        """ """
+        """ Init """
         self.id = id
         NyContentData.__init__(self)
         NyValidation.__dict__['__init__'](self)
@@ -274,7 +274,7 @@ class NyBestPractice(NyBFile):
     security.declareProtected(view, 'index_html')
 
     def index_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Index html """
         versions = self._versions_for_tmpl()
         options = {'versions': versions}
         if versions:
@@ -288,7 +288,7 @@ class NyBestPractice(NyBFile):
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
 
     def edit_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Edit html """
         options = {'versions': self._versions_for_tmpl()}
         template_vars = {'here': self, 'options': options}
         return self.getFormsTool().getContent(template_vars,

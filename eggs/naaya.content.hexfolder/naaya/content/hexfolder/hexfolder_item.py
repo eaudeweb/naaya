@@ -121,7 +121,7 @@ config = {
     }
 
 def hexfolder_add_html(self, REQUEST=None, RESPONSE=None):
-    """ """
+    """ Hexfolder add html """
     from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
     form_helper = get_schema_helper_for_metatype(self, config['meta_type'])
     return self.getFormsTool().getContent({
@@ -266,7 +266,7 @@ def importNyHexfolder(self, param, id, attrs, content, properties, discussion, o
             self.recatalogNyObject(ob)
 
 class hexfolder_item(Implicit, NyContentData):
-    """ """
+    """ Hexfolder item """
     picture_0 = None
     picture_1 = None
     picture_2 = None
@@ -307,7 +307,7 @@ class hexfolder_item(Implicit, NyContentData):
 
 @implementer(INyHexfolder)
 class NyHexfolder(hexfolder_item, NyFolder):
-    """ """
+    """ Ny hexfolder """
 
     meta_type = config['meta_type']
     meta_label = config['label']
@@ -315,7 +315,7 @@ class NyHexfolder(hexfolder_item, NyFolder):
     icon_marked = 'misc_/NaayaContent/NyHexfolder_marked.gif'
 
     def manage_options(self):
-        """ """
+        """ Manage options """
         l_options = ()
         if not self.hasVersion():
             l_options += ({'label': 'Properties', 'action': 'manage_edit_html'},)
@@ -325,7 +325,7 @@ class NyHexfolder(hexfolder_item, NyFolder):
     security = ClassSecurityInfo()
 
     def __init__(self, id, contributor):
-        """ """
+        """ Init """
         self.id = id
         hexfolder_item.__init__(self)
         NyCheckControl.__dict__['__init__'](self)
@@ -333,7 +333,7 @@ class NyHexfolder(hexfolder_item, NyFolder):
         self.contributor = contributor
 
     def getPicture(self, count, version=None, REQUEST=None):
-        """ """
+        """ Get picture """
         REQUEST.RESPONSE.setHeader('Content-type', 'image/jpeg')
         if version is None:
             return getattr(self, "picture_%s" % count)
@@ -350,7 +350,7 @@ class NyHexfolder(hexfolder_item, NyFolder):
 
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, REQUEST=None, **kwargs):
-        """ """
+        """ Manage properties """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
 
@@ -396,7 +396,7 @@ class NyHexfolder(hexfolder_item, NyFolder):
     #site actions
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
     def saveProperties(self, REQUEST=None, **kwargs):
-        """ """
+        """ Save properties """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
 
@@ -468,14 +468,14 @@ class NyHexfolder(hexfolder_item, NyFolder):
     #site pages
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Index html """
         self.notify_access_event(REQUEST)
 
         return self.getFormsTool().getContent({'here': self}, self.layout_type)
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     def edit_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Edit html """
         if self.hasVersion():
             obj = self.version
         else:

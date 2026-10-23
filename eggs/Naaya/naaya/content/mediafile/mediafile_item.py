@@ -94,7 +94,7 @@ config = {
 
 
 def mediafile_add_html(self, REQUEST=None, RESPONSE=None):
-    """ """
+    """ Mediafile add html """
     from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
     form_helper = get_schema_helper_for_metatype(self, config['meta_type'])
     return self.getFormsTool().getContent({
@@ -263,7 +263,7 @@ def importNyMediaFile(self, param, id, attrs, content, properties, discussion,
 
 
 class mediafile_item(Implicit, NyContentData):
-    """ """
+    """ Mediafile item """
 
     subtitle = LocalProperty('subtitle')
     startup_image = None
@@ -271,7 +271,7 @@ class mediafile_item(Implicit, NyContentData):
 
 class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer,
                           NyCheckControl, NyValidation, NyContentType):
-    """ """
+    """ Ny media file extfile """
 
     meta_type = config['meta_type']
     meta_label = config['label']
@@ -280,7 +280,7 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer,
     player = 'misc_/NaayaContent/EdWideoPlayer.swf'
 
     def manage_options(self):
-        """ """
+        """ Manage options """
         l_options = (NyFSContainer.manage_options[0],)
         if not self.hasVersion():
             l_options += ({'label': 'Properties',
@@ -291,7 +291,7 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer,
         return l_options
 
     def all_meta_types(self, interfaces=None):
-        """ """
+        """ All meta types """
         y = []
         additional_meta_types = ["ExtFile", "File"]
         for x in Products.meta_types:
@@ -302,7 +302,7 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer,
     security = ClassSecurityInfo()
 
     def __init__(self, id, contributor):
-        """ """
+        """ Init """
         self.id = id
         mediafile_item.__init__(self)
         NyValidation.__dict__['__init__'](self)
@@ -394,7 +394,7 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer,
     security.declareProtected(view_management_screens, 'manageProperties')
 
     def manageProperties(self, REQUEST=None, **kwargs):
-        """ """
+        """ Manage properties """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
         if self.wl_isLocked():
@@ -433,7 +433,7 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer,
     security.declareProtected(view_management_screens, 'manageUpload')
 
     def manageUpload(self, file='', REQUEST=None):
-        """ """
+        """ Manage upload """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
         if self.wl_isLocked():
@@ -445,7 +445,7 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer,
     security.declareProtected(view_management_screens, 'manage_upload')
 
     def manage_upload(self):
-        """ """
+        """ Manage upload """
         raise EXCEPTION_NOTACCESIBLE('manage_upload')
 
     # site actions
@@ -522,7 +522,7 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer,
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'commitVersion')
 
     def commitVersion(self, REQUEST=None):
-        """ """
+        """ Commit version """
         user = self.REQUEST.AUTHENTICATED_USER.getUserName()
         if not (self.checkPermissionEditObject() or
                 self.checkout_user == user):
@@ -542,7 +542,7 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer,
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'startVersion')
 
     def startVersion(self, REQUEST=None):
-        """ """
+        """ Start version """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
         if self.hasVersion():
@@ -559,7 +559,7 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer,
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
 
     def saveProperties(self, REQUEST=None, **kwargs):
-        """ """
+        """ Save properties """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
 
@@ -626,7 +626,7 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer,
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveUpload')
 
     def saveUpload(self, file='', lang=None, REQUEST=None):
-        """ """
+        """ Save upload """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
         if self.wl_isLocked():
@@ -658,7 +658,7 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer,
     security.declareProtected(view, 'index_html')
 
     def index_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Index html """
         mediafile = self.getSingleMediaObject()
         if self.mediaReady():
             if not getattr(mediafile, 'aspect_ratio', None):
@@ -673,7 +673,7 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer,
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
 
     def edit_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Edit html """
         if self.hasVersion():
             obj = self.version
         else:
@@ -683,12 +683,12 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer,
     security.declareProtected(view, 'subtitle_xml')
 
     def subtitle_xml(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Subtitle xml """
         return self.getFormsTool().getContent({'here': self},
                                               'mediafile_subtitle')
 
     def getSubtitle(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Get subtitle """
         parser = SubtitleParser(self.subtitle)
         return parser.parse()
 

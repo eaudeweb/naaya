@@ -45,7 +45,7 @@ class TranslationsImportExport(object):
         return x
 
     def get_po_header(self, lang):
-        """ """
+        """ Get po header """
         # For backwards compatibility
         #if not hasattr(aq_base(self), '_po_headers'):
         #    self._po_headers = PersistentMapping()

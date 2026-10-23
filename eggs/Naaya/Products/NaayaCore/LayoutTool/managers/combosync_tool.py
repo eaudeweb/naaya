@@ -2,14 +2,14 @@
 
 
 class combosync_tool:
-    """ """
+    """ Combosync tool """
 
     def __init__(self):
-        """ """
+        """ Init """
         pass
 
     def getMasterCombo(self, p_name='theMasterList'):
-        """ """
+        """ Get master combo """
         l_mastercombo = '<select onchange="OnChangeTopic()" name="%s">' % p_name
         for i in range(0,20):
             l_mastercombo += '<option value="">&nbsp;</option>'
@@ -17,7 +17,7 @@ class combosync_tool:
         return l_mastercombo
 
     def getSlaveCombo(self, p_name='theSlaveList'):
-        """ """
+        """ Get slave combo """
         l_mastercombo = '<select onchange="OnChangeScheme()" name="%s">' % p_name
         for i in range(0,20):
             l_mastercombo += '<option value="">&nbsp;</option>'
@@ -25,7 +25,7 @@ class combosync_tool:
         return l_mastercombo
 
     def getSyncroObject(self, p_data):
-        """ """
+        """ Get syncro object """
         l_master_default, l_slave_default, l_data = p_data
         l_master_index = l_slave_index = 0
         l_master_found = 0

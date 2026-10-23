@@ -12,7 +12,7 @@ from .interfaces import INyTemplate
 
 manage_addTemplateForm = PageTemplateFile('zpt/template_add', globals())
 def manage_addTemplate(self, id='', title='', file='', content_type='text/html', REQUEST=None):
-    """ """
+    """ Manage add template """
     file_content = ''
     if file != '':
         if file.filename:
@@ -27,7 +27,7 @@ def manage_addTemplate(self, id='', title='', file='', content_type='text/html',
 
 @implementer(INyTemplate, ITemplate)
 class Template(ZopePageTemplate):
-    """ """
+    """ Template """
 
     meta_type = METATYPE_TEMPLATE
     icon = 'misc_/NaayaCore/Template.gif'
@@ -39,12 +39,12 @@ class Template(ZopePageTemplate):
     security = ClassSecurityInfo()
 
     def __init__(self, id, title, text, content_type):
-        """ """
+        """ Init """
         ZopePageTemplate.__dict__['__init__'](self, id, text, content_type)
         self.title = title
 
     def __call__(self, *args, **kwargs):
-        """ """
+        """ Call """
         context={'args': args}
         if kwargs:
             context['options'] = kwargs
@@ -57,7 +57,7 @@ class Template(ZopePageTemplate):
         return self.pt_render(extra_context=context)
 
     def om_icons(self):
-        """ """
+        """ Om icons """
         icons = ({'path': self.icon, 'alt': self.meta_type, 'title': self.meta_type},)
         if self._v_errors:
             icons = icons + ({'path': 'misc_/PageTemplates/exclamation.gif',

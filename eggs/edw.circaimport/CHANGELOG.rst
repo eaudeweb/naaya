@@ -1,5 +1,6 @@
 2.0.3 (unreleased)
 ------------------
+* Fix the latin-1 zip test fixture on Python 3.14 [dumitval]
 
 2.0.2 (2026-10-23)
 ------------------

@@ -9,14 +9,14 @@ from Products.NaayaCore.constants import *
 
 manage_addEmailTemplateForm = PageTemplateFile('zpt/emailtemplate_add', globals())
 def manage_addEmailTemplate(self, id='', title='', body='', REQUEST=None):
-    """ """
+    """ Manage add email template """
     ob = EmailTemplate(id, title, body)
     self._setObject(id, ob)
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
 
 class EmailTemplate(SimpleItem):
-    """ """
+    """ Email template """
 
     meta_type = METATYPE_EMAILTEMPLATE
     icon = 'misc_/NaayaCore/EmailTemplate.gif'
@@ -32,7 +32,7 @@ class EmailTemplate(SimpleItem):
     security = ClassSecurityInfo()
 
     def __init__(self, id, title, body):
-        """ """
+        """ Init """
         self.id = id
         self.title = title
         self.body = body

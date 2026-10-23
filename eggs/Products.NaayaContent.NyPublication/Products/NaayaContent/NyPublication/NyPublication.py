@@ -136,7 +136,7 @@ config = {
 
 
 def publication_add_html(self, REQUEST=None, RESPONSE=None):
-    """ """
+    """ Publication add html """
     from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
     form_helper = get_schema_helper_for_metatype(self, METATYPE_OBJECT)
     return self.getFormsTool().getContent(
@@ -283,7 +283,7 @@ def importNyPublication(self, param, id, attrs, content, properties,
 
 class NyPublication(publication_item, NyAttributes, NyItem, NyCheckControl,
                     NyValidation, NyContentType):
-    """ """
+    """ Ny publication """
 
     meta_type = METATYPE_OBJECT
     meta_label = LABEL_OBJECT
@@ -292,7 +292,7 @@ class NyPublication(publication_item, NyAttributes, NyItem, NyCheckControl,
     icon_marked = 'misc_/NaayaContent/NyPublication_marked.gif'
 
     def manage_options(self):
-        """ """
+        """ Manage options """
         l_options = ()
         l_options += ({'label': 'Properties', 'action': 'manage_edit_html'},)
         l_options += (
@@ -302,7 +302,7 @@ class NyPublication(publication_item, NyAttributes, NyItem, NyCheckControl,
     security = ClassSecurityInfo()
 
     def __init__(self, id, title, file, contributor):
-        """ """
+        """ Init """
         self.id = id
         publication_item.__init__(self, id, title, file)
         NyValidation.__dict__['__init__'](self)
@@ -334,7 +334,7 @@ class NyPublication(publication_item, NyAttributes, NyItem, NyCheckControl,
     security.declareProtected(view_management_screens, 'manageProperties')
 
     def manageProperties(self, REQUEST=None, **kwargs):
-        """ """
+        """ Manage properties """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
 
@@ -367,19 +367,19 @@ class NyPublication(publication_item, NyAttributes, NyItem, NyCheckControl,
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'commitVersion')
 
     def commitVersion(self, REQUEST=None):
-        """ """
+        """ Commit version """
         raise NotImplementedError('commitVersion')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'startVersion')
 
     def startVersion(self, REQUEST=None):
-        """ """
+        """ Start version """
         raise NotImplementedError('startVersion')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
 
     def saveProperties(self, REQUEST=None, **kwargs):
-        """ """
+        """ Save properties """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
 
@@ -431,7 +431,7 @@ class NyPublication(publication_item, NyAttributes, NyItem, NyCheckControl,
 
     def saveUpload(self, source='file', file='', url='', lang=None,
                    REQUEST=None):
-        """ """
+        """ Save upload """
 
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
@@ -465,14 +465,14 @@ class NyPublication(publication_item, NyAttributes, NyItem, NyCheckControl,
     security.declareProtected(view, 'index_html')
 
     def index_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Index html """
         return self.getFormsTool().getContent({'here': self},
                                               'publication_index')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
 
     def edit_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Edit html """
         return self.getFormsTool().getContent({'here': self},
                                               'publication_edit')
 
@@ -486,7 +486,7 @@ class NyPublication(publication_item, NyAttributes, NyItem, NyCheckControl,
     security.declareProtected(view, 'download')
 
     def download(self, REQUEST, RESPONSE):
-        """ """
+        """ Download """
         RESPONSE.setHeader('Content-Type', self.getContentType())
         RESPONSE.setHeader('Content-Length', self.size)
         filename = self.utToUtf8(self.downloadfilename())
@@ -500,7 +500,7 @@ class NyPublication(publication_item, NyAttributes, NyItem, NyCheckControl,
     security.declareProtected(view, 'view')
 
     def view(self, REQUEST, RESPONSE):
-        """ """
+        """ View """
         RESPONSE.setHeader('Content-Type', self.getContentType())
         RESPONSE.setHeader('Content-Length', self.size)
         RESPONSE.setHeader('Pragma', 'public')
@@ -510,13 +510,13 @@ class NyPublication(publication_item, NyAttributes, NyItem, NyCheckControl,
     security.declarePublic('getDownloadUrl')
 
     def getDownloadUrl(self):
-        """ """
+        """ Get download url """
         return self.absolute_url() + '/download'
 
     security.declarePublic('getEditDownloadUrl')
 
     def getEditDownloadUrl(self):
-        """ """
+        """ Get edit download url """
         return self.absolute_url() + '/download?version=1'
 
 InitializeClass(NyPublication)

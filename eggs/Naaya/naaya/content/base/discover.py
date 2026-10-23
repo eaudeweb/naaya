@@ -16,7 +16,7 @@ def get_pluggable_content():
     return _get_content_types()['content']
 
 def initialize(context):
-    """ """
+    """ Initialize """
 
     #register classes
     for x in _get_content_types()['content'].values():

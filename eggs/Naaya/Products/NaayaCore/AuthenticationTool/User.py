@@ -15,7 +15,7 @@ from zope.event import notify
 from Products.NaayaBase.events import NyAddUserRoleEvent, NySetUserRoleEvent, NyDelUserRoleEvent
 
 class User(SimpleUser, Persistent):
-    """ """
+    """ User """
 
     # we don't want to support the domains thing
     domains = ()

@@ -117,7 +117,7 @@ class UpdateLayout(UpdateScript):
 
     security.declarePrivate('update_layout_file')
     def update_layout_file(self, portal, file_id, form_fs, form_zmi, skin_id, scheme_id, location='template'):
-        """ """
+        """ Update layout file """
         if form_fs and form_zmi:
             if not create_signature(form_fs) == create_signature(self.get_template_content(form_zmi)):
                 try:
@@ -203,7 +203,7 @@ class UpdateLayout(UpdateScript):
 
     security.declarePrivate('get_scheme_filetype')
     def get_scheme_filetype(self, file_id):
-        """ """
+        """ Get scheme filetype """
         if file_id in ['style', 'style_rtl', 'style_common', 'style_common_rtl', 'style_handheld', 'style_handheld_rtl', 'style_print', 'common', 'print']:
             return 'style'
         return 'image'

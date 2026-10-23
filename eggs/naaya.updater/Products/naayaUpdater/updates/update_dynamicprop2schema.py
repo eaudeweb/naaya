@@ -3,7 +3,7 @@ from AccessControl.Permissions import view_management_screens
 from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 
 class UpdateDynamicProp2Schema(UpdateScript):
-    """ """
+    """ Update dynamic prop2 schema """
     title = 'Convert DynamicProperties to SchemaTool'
     authors = ['Alexandru Plugaru']
     description = 'Migrate all DynamicPropertiesTool properties to SchemaTool '

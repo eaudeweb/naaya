@@ -6,7 +6,7 @@
 from Products.naayaUpdater.updates import UpdateScript
 
 class UpdateAddUseOpenzoom(UpdateScript):
-    """ """
+    """ Update add use openzoom """
     title = 'Add use_openzoom property for GBIF media archive'
     creation_date = 'Aug 24, 2011'
     authors = ['Andrei Laza']

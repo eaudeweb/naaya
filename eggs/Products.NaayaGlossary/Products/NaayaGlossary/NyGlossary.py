@@ -226,7 +226,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
             catalog.catalog_object(item)
 
     def mapLocalizerLangs(self):
-        """ """
+        """ Map localizer langs """
         results = []
         localizer_langs = self.getPortalI18n().get_languages_mapping()
         for item in localizer_langs:
@@ -479,7 +479,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                            item_def_translation=[], item_meta_type='',
                            item_lang_code=[], item_url='',
                            further_references='', REQUEST=None):
-        """ """
+        """ Update glossary item """
 
         # do folder update
         if item_meta_type == "Naaya Glossary Folder":
@@ -524,7 +524,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
     #   THEME TRANSLATIONS  #
     #########################
     def getThemeByCode(self, code):
-        """ """
+        """ Get theme by code """
         return self.get_subject_by_codes(code)[0]
 
     def get_theme_trans_by_language(self, code, language):
@@ -592,7 +592,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         return results
 
     def get_language_code(self, language):
-        """ """
+        """ Get language code """
         for k in self.get_languages_list():
             if k['english_name'] == language:
                 return k['lang']
@@ -693,7 +693,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
             return REQUEST.RESPONSE.redirect('languages_html?save=ok')
 
     def addLanguage(self, english_name='', lang='', REQUEST=None):
-        """ """
+        """ Add language """
         if lang.strip() == '' or english_name.strip() == '':
             if REQUEST:
                 self.setSessionErrorsTrans(
@@ -724,7 +724,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                               'deleteLanguages')
 
     def deleteLanguages(self, ids=[], REQUEST=None):
-        """ """
+        """ Delete languages """
         if not ids or len(ids) == 0 and REQUEST:
             return REQUEST.RESPONSE.redirect('index_properties_html')
         for english_name in self.utConvertToList(ids):
@@ -750,7 +750,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
 
     def updateGlossaryProperties(self, title='', approved='',
                                  parent_anchors='', REQUEST=None):
-        """ """
+        """ Update glossary properties """
         self.manageBasicProperties(title, approved, parent_anchors,
                                    REQUEST=REQUEST)
         if REQUEST:
@@ -791,7 +791,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
     def addGlossaryEntry(self, entry_title='', entry_subjects='',
                          entry_source='', entry_contributor='',
                          entry_parent='', entry_type='', REQUEST=None):
-        """ """
+        """ Add glossary entry """
         parent = self.getGlossaryChild(entry_parent)
         if not parent:
             return
@@ -1086,7 +1086,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
     security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'terms_import')
 
     def terms_import(self, format='', file=None, REQUEST=None):
-        """ """
+        """ Terms import """
         if format == 'xliff':
             self.xliff_import(file)
         elif format == 'tmx':
@@ -1097,7 +1097,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
     security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'terms_export')
 
     def terms_export(self, format='', language='', published=0):
-        """ """
+        """ Terms export """
         if format == 'xliff':
             return self.xliff_export(language=language, published=published,
                                      REQUEST=self.REQUEST)
@@ -1329,7 +1329,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
     security.declareProtected(view_management_screens, 'manage_perform_sync')
 
     def manage_perform_sync(self, log_to_session=False, REQUEST=None):
-        """ """
+        """ Manage perform sync """
         if self.sync_remote_url is None:
             return  # synchronization is disabled
 
@@ -1371,7 +1371,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
     security.declareProtected(view_management_screens, 'manage_configure_sync')
 
     def manage_configure_sync(self, remote_url=None, REQUEST=None):
-        """ """
+        """ Manage configure sync """
         if not remote_url:
             remote_url = None
 
@@ -1408,7 +1408,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         self._getOb('glossary_skos.rdf').write(file_content)
 
     def GetElementsInfo(self):
-        """ """
+        """ Get elements info """
         result = []
         folder_list = self.folder_list_sorted()
         for folder in folder_list:
@@ -1513,7 +1513,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
     security.declarePublic('getGlossaryObTree')
 
     def getGlossaryObTree(self):
-        """ """
+        """ Get glossary ob tree """
         results = []
         for item in self.objectValues(NAAYAGLOSSARY_FOLDER_METATYPE):
             if item.is_published():
@@ -1522,7 +1522,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
             results, self.get_language_by_code(self.getSelectedLang()), 0)
 
     def getSelectedLang(self):
-        """ """
+        """ Get selected lang """
         l_lang = self.gl_get_selected_language()
         if l_lang in self.get_language_codes():
             return l_lang
@@ -1689,7 +1689,7 @@ def get_label(ob, lang_name):
 
 class mapTiny:
     def __init__(self):
-        """ """
+        """ Init """
         self.entry = ''
         self.source = ''
         self.translations = {}
@@ -1698,7 +1698,7 @@ class mapTiny:
         self.note = ''
 
     def emptyObject(self):
-        """ """
+        """ Empty object """
         self.entry = ''
         self.source = ''
         self.translations = {}

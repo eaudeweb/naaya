@@ -19,37 +19,37 @@
 
 
 from xml.sax.handler import ContentHandler
-from xml.sax import *
+from xml.sax import InputSource, handler, make_parser
 from io import BytesIO, StringIO
 
 
 class stop_words_struct:
-    """ """
+    """ Stop words struct """
     def __init__(self, text):
-        """ """
+        """ Init """
         self.text = text
 
 class stop_words_handler(ContentHandler):
-    """ """
+    """ Stop words handler """
 
     def __init__(self):
-        """ """
+        """ Init """
         self.stop_words = []
 
     def startElement(self, name, attrs):
-        """ """
+        """ Start element """
         if name == 'word':
             self.stop_words.append(stop_words_struct(attrs['text'].encode('latin-1')))
 
     def endElement(self, name):
-        """ """
+        """ End element """
         pass
 
 class stop_words_parser:
-    """ """
+    """ Stop words parser """
 
     def parseContent(self, content):
-        """ """
+        """ Parse content """
         handler = stop_words_handler()
         parser = make_parser()
         parser.setContentHandler(handler)

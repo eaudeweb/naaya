@@ -17,7 +17,7 @@ class CheckboxWidget(Widget):
     default = 0
 
     def render_meth(self):
-        """ """
+        """ Render meth """
         raise NotImplementedError
 
     def parseFormData(self, data):

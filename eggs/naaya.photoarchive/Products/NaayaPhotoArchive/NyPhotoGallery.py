@@ -50,7 +50,7 @@ DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
 
 _gallery_add_html = PageTemplateFile('zpt/photogallery_add', globals())
 def gallery_add_html(self, REQUEST):
-    """ """
+    """ Gallery add html """
     from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
     form_helper = get_schema_helper_for_metatype(self, METATYPE_NYPHOTOGALLERY)
     return _gallery_add_html.__of__(self)(REQUEST, form_helper=form_helper)
@@ -105,7 +105,7 @@ def addNyPhotoGallery(self, id='', REQUEST=None, contributor=None,
     return ob.getId()
 
 class NyPhotoGallery(NyRoleManager, NyContentData, NyAttributes, photo_archive_base, NyContainer, NyContentType):
-    """ """
+    """ Ny photo gallery """
 
     meta_type = METATYPE_NYPHOTOGALLERY
     meta_label = METALABEL_NYPHOTOGALLERY
@@ -141,7 +141,7 @@ class NyPhotoGallery(NyRoleManager, NyContentData, NyAttributes, photo_archive_b
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
     def saveProperties(self, REQUEST=None, **kwargs):
-        """ """
+        """ Save properties """
         if REQUEST is not None:
             schema_raw_data = dict(REQUEST.form)
         else:
@@ -209,7 +209,7 @@ class NyPhotoGallery(NyRoleManager, NyContentData, NyAttributes, photo_archive_b
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'restrict_html')
     def restrict_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Restrict html """
         return self.getFormsTool().getContent({'here': self}, 'folder_restrict')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'setRestrictions')

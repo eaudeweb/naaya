@@ -49,7 +49,7 @@ manage_addGroupwareSite_html = PageTemplateFile('zpt/site_manage_add',
 
 
 def manage_addGroupwareSite(self, id='', title='', lang=None, REQUEST=None):
-    """ """
+    """ Manage add groupware site """
     ut = utils()
     id = ut.utCleanupId(id)
     if not id:
@@ -74,7 +74,7 @@ ACTION_LOG_TYPES = {
 
 @implementer(IGWSite)
 class GroupwareSite(NySite):
-    """ """
+    """ Groupware site """
 
     meta_type = METATYPE_GROUPWARESITE
     # icon = 'misc_/GroupwareSite/site.gif'
@@ -90,7 +90,7 @@ class GroupwareSite(NySite):
     content_versioning_enabled = False
 
     def __init__(self, *args, **kwargs):
-        """ """
+        """ Init """
         NySite.__dict__['__init__'](self, *args, **kwargs)
         self.display_subobject_count = "on"
         self.set_bundle(groupware_bundle)
@@ -100,7 +100,7 @@ class GroupwareSite(NySite):
     security.declarePrivate('loadDefaultData')
 
     def loadDefaultData(self):
-        """ """
+        """ Load default data """
         # set default 'Naaya' configuration
         NySite.__dict__['createPortalTools'](self)
         NySite.__dict__['loadDefaultData'](self)
@@ -197,7 +197,7 @@ class GroupwareSite(NySite):
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_properties')
 
     def admin_properties(self, REQUEST=None, **kwargs):
-        """ """
+        """ Admin properties """
         if REQUEST is not None:
             kwargs.update(REQUEST.form)
         self.portal_is_archived = kwargs.get('portal_is_archived', False)
@@ -209,7 +209,7 @@ class GroupwareSite(NySite):
     def admin_email(self, mail_server_name='', mail_server_port='',
                     administrator_email='', mail_address_from='',
                     notify_on_errors_email='', REQUEST=None):
-        """ """
+        """ Admin email """
         self.getEmailTool().manageSettings(mail_server_name, mail_server_port,
                                            administrator_email,
                                            mail_address_from,
@@ -512,7 +512,7 @@ class GroupwareSite(NySite):
     security.declarePublic('login_html')
 
     def login_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Login html """
         return REQUEST.RESPONSE.redirect(self.getSite().absolute_url() +
                                          '/login/login_form?%s' %
                                          REQUEST.environ.get('QUERY_STRING'))
@@ -520,14 +520,14 @@ class GroupwareSite(NySite):
     security.declarePublic('logout_html')
 
     def logout_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Logout html """
         return REQUEST.RESPONSE.redirect(self.getSite().absolute_url() +
                                          '/login/logout')
 
     security.declarePublic('inside_meeting')
 
     def check_inside_meeting(self, came_from=None):
-        """ """
+        """ Check inside meeting """
         if came_from:
             o = urlparse(
                 came_from.replace('/index_html', '').replace('/edit_html', ''))
@@ -539,7 +539,7 @@ class GroupwareSite(NySite):
 
     @property
     def network_name(self):
-        """ """
+        """ Network name """
         return NETWORK_NAME
 
     request_ig_access_emailpt = EmailPageTemplateFile(

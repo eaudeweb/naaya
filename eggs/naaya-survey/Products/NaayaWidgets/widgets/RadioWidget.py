@@ -56,11 +56,11 @@ class RadioWidget(MultipleChoiceWidget):
     add_extra_choice = False
 
     def display_modes(self):
-        """ """
+        """ Display modes """
         return ['vertical', 'horizontal']
 
     def getChoices(self, REQUEST=None, anyLangNonEmpty=False):
-        """ """
+        """ Get choices """
         choices = super(RadioWidget, self).getChoices(anyLangNonEmpty=anyLangNonEmpty)
         if self.add_extra_choice:
             L = list(choices)

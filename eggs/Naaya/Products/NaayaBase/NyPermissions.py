@@ -80,7 +80,7 @@ class NyPermissions(object):
     @deprecate('`glCheckPermissionPublishObjects` is deprecated. Use '
                '`checkPermissionSkipApproval` instead.')
     def glCheckPermissionPublishObjects(self):
-        """ """
+        """ Gl check permission publish objects """
 
         return self.checkPermissionSkipApproval()
 

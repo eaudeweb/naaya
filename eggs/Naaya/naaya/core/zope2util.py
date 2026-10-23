@@ -352,7 +352,7 @@ def latest_visible_uploads(context, howmany=-1):
 
 
 def users_in_role(context, role_name=''):
-    """ """
+    """ Users in role """
     auth_tool = context.getSite().getAuthenticationTool()
     users = auth_tool.search_users(query='', skey='name', rkey=0,
                                    all_users=True, role=role_name,

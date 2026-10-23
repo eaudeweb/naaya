@@ -3,7 +3,7 @@ This module contains the classes for parsing export Naaya XML files.
 """
 
 from xml.sax.handler import ContentHandler
-from xml.sax import *
+from xml.sax import InputSource, make_parser
 from io import BytesIO as StringIO
 
 
@@ -65,7 +65,7 @@ class import_handler(ContentHandler):
         self.stack = []
 
     def startElement(self, name, attrs):
-        """ """
+        """ Start element """
         if name == 'export':
             obj = export_struct()
             stackObj = saxstack_struct('export', obj)
@@ -121,7 +121,7 @@ class import_handler(ContentHandler):
             pass
 
     def endElement(self, name):
-        """ """
+        """ End element """
 
         if name == 'export':
             self.root = self.stack[-1].obj

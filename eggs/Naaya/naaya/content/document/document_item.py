@@ -88,7 +88,7 @@ config = {
     }
 
 def document_add(self, REQUEST=None, RESPONSE=None):
-    """ """
+    """ Document add """
     id = uniqueId(ID_PLACEHOLDER, lambda x: self._getOb(x, None) is not None)
     self.addNyDocument(id)
     if REQUEST:
@@ -202,12 +202,12 @@ def importNyDocument(self, param, id, attrs, content, properties, discussion,
             self.import_data_custom(ob, object)
 
 class document_item(Implicit, NyContentData):
-    """ """
+    """ Document item """
 
 @implementer(INyDocument, INyContentDocumentExport)
 class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl,
                  NyValidation, NyContentType):
-    """ """
+    """ Ny document """
 
 
     meta_type = config['meta_type']
@@ -216,7 +216,7 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl,
     icon_marked = 'misc_/NaayaContent/NyDocument_marked.gif'
 
     def manage_options(self):
-        """ """
+        """ Manage options """
         l_options = (NyContainer.manage_options[0],)
         if not self.hasVersion():
             l_options += ({
@@ -230,7 +230,7 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl,
         return l_options
 
     def all_meta_types(self, interfaces=None):
-        """ """
+        """ All meta types """
         y = []
         additional_meta_types = ['Image']
         for x in Products.meta_types:
@@ -241,7 +241,7 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl,
     security = ClassSecurityInfo()
 
     def __init__(self, id, contributor):
-        """ """
+        """ Init """
         self.id = id
         document_item.__init__(self)
         NyValidation.__dict__['__init__'](self)
@@ -284,7 +284,7 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl,
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, REQUEST=None, **kwargs):
-        """ """
+        """ Manage properties """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG
 )
@@ -313,14 +313,14 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl,
 
     security.declareProtected(view_management_screens, 'submitThis')
     def submit_this(self, REQUEST=None):
-        """ """
+        """ Submit this """
         self.submitThis()
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
     #site actions
     security.declareProtected(config['permission'], 'process_add')
     def process_add(self, REQUEST, **kwargs):
-        """ """
+        """ Process add """
         schema_raw_data = dict(REQUEST.form)
         _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
         _releasedate = self.process_releasedate(
@@ -373,7 +373,7 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl,
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'commitVersion')
     def commitVersion(self, REQUEST=None):
-        """ """
+        """ Commit version """
         user = self.REQUEST.AUTHENTICATED_USER.getUserName()
         if (not self.checkPermissionEditObject()) or (
             self.checkout_user != user):
@@ -394,7 +394,7 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl,
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'startVersion')
     def startVersion(self, REQUEST=None):
-        """ """
+        """ Start version """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG
 )
@@ -412,7 +412,7 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl,
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
     def saveProperties(self, REQUEST=None, **kwargs):
-        """ """
+        """ Save properties """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG
 )
@@ -466,7 +466,7 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl,
     #site pages
     security.declareProtected(config['permission'], 'add_html')
     def add_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Add html """
         from Products.NaayaBase.NyContentType import \
                                         get_schema_helper_for_metatype
         form_helper = get_schema_helper_for_metatype(self, config['meta_type'])
@@ -481,13 +481,13 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl,
 
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Index html """
         self.notify_access_event(REQUEST)
         return self.getFormsTool().getContent({'here': self}, 'document_index')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     def edit_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Edit html """
         if self.hasVersion():
             obj = self.version
         else:

@@ -14,7 +14,7 @@ from naaya.content.exfile.exfile_item import addNyExFile
 def addSurveyAttachment(container, id='', title='', description='', coverage='', keywords='', sortorder='',
     source='file', file='', url='', precondition='', content_type='', downloadfilename='',
     contributor=None, releasedate='', discussion='', lang=None, REQUEST=None, **kwargs):
-    """ """
+    """ Add survey attachment """
     if source=='file': id = cookId(id, title, file)[0] #upload from a file
     id = container.utCleanupId(id)
     if id == '': id = 'attachment_' + container.utGenRandomId(6)

@@ -60,7 +60,7 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
         UtilsManager.__dict__['__init__'](self)
 
     def __setstate__(self,state):
-        """ """
+        """ Setstate """
         if not hasattr(self, 'ip_address'):
             self.ip_address = ''
         LinkChecker.inheritedAttribute('__setstate__')(self, state)
@@ -336,7 +336,7 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
 
     security.declarePrivate('prepareLog')
     def prepareLog(self, links_dict, logresults, all_urls, manual=0):
-        """ """
+        """ Prepare log """
         log = []
         for ob_url, links in links_dict.items():
             ob = self.unrestrictedTraverse(urllib.parse.urlsplit(ob_url)[2])

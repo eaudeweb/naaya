@@ -52,7 +52,7 @@ class NaayaUpdater(Folder):
         self._logs = PersistentList()
 
     def manage_options(self):
-        """ """
+        """ Manage options """
         return (
             {'label': 'Updates', 'action': '@@view.html'},
             {'label': 'Logs', 'action': '@@logs.html'},

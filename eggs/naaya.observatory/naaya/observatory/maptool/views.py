@@ -40,7 +40,7 @@ class MapView(SessionManager):
         return ret
 
     def xrjs_getClusters(self, lat_min, lat_max, lon_min, lon_max):
-        """ """
+        """ Xrjs get clusters """
         def make_points(r_list, lan_dict, lon_dict, type_dict, rating_dict):
             points = []
             for i, rid in enumerate(r_list):
@@ -202,7 +202,7 @@ class MapView(SessionManager):
 
     def submit_pin(self, lat, lon, address, country, type, rating,
             REQUEST, comment=None):
-        """ """
+        """ Submit pin """
         lat, lon = float(lat), float(lon)
         rating = int(rating)
         date = datetime.now()
@@ -239,7 +239,7 @@ class MapView(SessionManager):
         return short_string(s, limit)
 
     def check_user_can_add_pin(self, lat, lon, author, session_key):
-        """ """
+        """ Check user can add pin """
         tc_start = time()
         catalog = self.context.catalog
 
@@ -282,7 +282,7 @@ class MapView(SessionManager):
 
     _pin_add = ViewPageTemplateFile('zpt/pin_add.zpt', globals())
     def pin_add(self, latitude, longitude, REQUEST, type=None):
-        """ """
+        """ Pin add """
         lat, lon = float(latitude), float(longitude)
         author, session_key = self.get_author_and_session(REQUEST)
 
@@ -322,7 +322,7 @@ class MapView(SessionManager):
         return statistics
 
     def get_countries(self, q):
-        """ """
+        """ Get countries """
         def country_matches(country, q):
             return country.lower().startswith(q.lower())
 
@@ -333,6 +333,6 @@ class MapView(SessionManager):
                                     if country_matches(country, q)])
 
     def observamap_i18n_js(self):
-        """ """
+        """ Observamap i18n js """
         return ''
 

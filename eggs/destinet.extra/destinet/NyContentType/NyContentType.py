@@ -9,7 +9,7 @@ def initialize(context):
 
 
 def get_card_src(self, REQUEST=None, **kw):
-    """ """
+    """ Get card src """
     for lang in self.gl_get_languages():
         desc = self.getLocalProperty('description', lang)
         if desc:

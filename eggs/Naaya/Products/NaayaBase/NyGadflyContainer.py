@@ -17,7 +17,7 @@ CONNECTION_STRING = 'demo'
 LOG_KEY = 'NaayaBase.NyGadflyContainer'
 
 def manage_addNyGadflyContainer(self, id='.container', REQUEST=None, **kwargs):
-    """ """
+    """ Manage add ny gadfly container """
     ob = NyGadflyContainer(id)
     self._setObject(id, ob)
     ob = self._getOb(id)

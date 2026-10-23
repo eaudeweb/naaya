@@ -79,7 +79,7 @@ config = {
     }
 
 def file_add_html(self, REQUEST=None, RESPONSE=None):
-    """ """
+    """ File add html """
     from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
     form_helper = get_schema_helper_for_metatype(self, config['meta_type'])
     return self.getFormsTool().getContent({
@@ -222,7 +222,7 @@ def importNyFile(self, param, id, attrs, content, properties, discussion, object
             self.recatalogNyObject(ob)
 
 class file_item(NyContentData, NyFSFile):
-    """ """
+    """ File item """
     meta_type = config['meta_type']
 
     def __init__(self, id, title, file, precondition):
@@ -286,7 +286,7 @@ class file_item(NyContentData, NyFSFile):
 
 @implementer(INyFile)
 class NyFile_extfile(file_item, NyAttributes, NyItem, NyFolderishVersioning, NyCheckControl, NyValidation, NyContentType):
-    """ """
+    """ Ny file extfile """
 
 
     meta_type = config['meta_type']
@@ -295,7 +295,7 @@ class NyFile_extfile(file_item, NyAttributes, NyItem, NyFolderishVersioning, NyC
     icon_marked = 'misc_/NaayaContent/NyFile_marked.gif'
 
     def manage_options(self):
-        """ """
+        """ Manage options """
         l_options = ()
         if not self.hasVersion():
             l_options += ({'label': 'Properties', 'action': 'manage_edit_html'},
@@ -306,7 +306,7 @@ class NyFile_extfile(file_item, NyAttributes, NyItem, NyFolderishVersioning, NyC
     security = ClassSecurityInfo()
 
     def __init__(self, id, title, file, precondition, contributor):
-        """ """
+        """ Init """
         self.id = id
         file_item.__init__(self, id, title, file, precondition)
         NyValidation.__dict__['__init__'](self)
@@ -349,7 +349,7 @@ class NyFile_extfile(file_item, NyAttributes, NyItem, NyFolderishVersioning, NyC
 
     security.declarePublic('showVersionData')
     def showVersionData(self, vid=None, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Show version data """
         if vid:
             version_data = self.getVersion(vid)
             if version_data is not None:
@@ -374,7 +374,7 @@ class NyFile_extfile(file_item, NyAttributes, NyItem, NyFolderishVersioning, NyC
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, REQUEST=None, **kwargs):
-        """ """
+        """ Manage properties """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG
 )
@@ -416,7 +416,7 @@ class NyFile_extfile(file_item, NyAttributes, NyItem, NyFolderishVersioning, NyC
     #site actions
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'commitVersion')
     def commitVersion(self, REQUEST=None):
-        """ """
+        """ Commit version """
         user = self.REQUEST.AUTHENTICATED_USER.getUserName()
         if (not self.checkPermissionEditObject()) or (
             self.checkout_user != user):
@@ -437,7 +437,7 @@ class NyFile_extfile(file_item, NyAttributes, NyItem, NyFolderishVersioning, NyC
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'startVersion')
     def startVersion(self, REQUEST=None):
-        """ """
+        """ Start version """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG
 )
@@ -454,13 +454,13 @@ class NyFile_extfile(file_item, NyAttributes, NyItem, NyFolderishVersioning, NyC
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'discardVersion')
     def discardVersion(self, REQUEST=None):
-        """ """
+        """ Discard version """
         self.version.manage_beforeUpdate()
         NyFile_extfile.inheritedAttribute('discardVersion')(self, REQUEST)
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
     def saveProperties(self, REQUEST=None, **kwargs):
-        """ """
+        """ Save properties """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG
 )
@@ -515,7 +515,7 @@ class NyFile_extfile(file_item, NyAttributes, NyItem, NyFolderishVersioning, NyC
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveUpload')
     def saveUpload(self, source='file', file='', url='', version=True, lang=None, REQUEST=None):
-        """ """
+        """ Save upload """
         if REQUEST:
             username = REQUEST.AUTHENTICATED_USER.getUserName()
         else:
@@ -562,7 +562,7 @@ class NyFile_extfile(file_item, NyAttributes, NyItem, NyFolderishVersioning, NyC
 
     security.declareProtected(view_management_screens, 'manageAdvancedProperties')
     def manageAdvancedProperties(self, REQUEST=None, **kwargs):
-        """ """
+        """ Manage advanced properties """
         if REQUEST:
             kwargs.update(REQUEST.form)
         filename = kwargs.get('filename', '')
@@ -575,13 +575,13 @@ class NyFile_extfile(file_item, NyAttributes, NyItem, NyFolderishVersioning, NyC
     #site actions
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Index html """
         self.notify_access_event(REQUEST)
         return self.getFormsTool().getContent({'here': self}, 'file_index')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     def edit_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Edit html """
         return self.getFormsTool().getContent({'here': self}, 'file_edit')
 
     def downloadfilename(self, version=False):
@@ -599,7 +599,7 @@ class NyFile_extfile(file_item, NyAttributes, NyItem, NyFolderishVersioning, NyC
 
     security.declareProtected(view, 'download')
     def download(self, REQUEST, RESPONSE):
-        """ """
+        """ Download """
         version = REQUEST.get('version', False)
         RESPONSE.setHeader('Content-Type', self.getContentType())
         RESPONSE.setHeader('Content-Length', self.size)
@@ -615,7 +615,7 @@ class NyFile_extfile(file_item, NyAttributes, NyItem, NyFolderishVersioning, NyC
 
     security.declareProtected(view, 'view')
     def view(self, REQUEST, RESPONSE):
-        """ """
+        """ View """
         self.notify_access_event(REQUEST)
         RESPONSE.setHeader('Content-Type', self.getContentType())
         RESPONSE.setHeader('Content-Length', self.size)
@@ -625,7 +625,7 @@ class NyFile_extfile(file_item, NyAttributes, NyItem, NyFolderishVersioning, NyC
 
     security.declarePublic('getDownloadUrl')
     def getDownloadUrl(self):
-        """ """
+        """ Get download url """
         site = self.getSite()
         file_path = self._get_data_name()
         media_server = getattr(site, 'media_server', '').strip()
@@ -636,7 +636,7 @@ class NyFile_extfile(file_item, NyAttributes, NyItem, NyFolderishVersioning, NyC
 
     security.declarePublic('getEditDownloadUrl')
     def getEditDownloadUrl(self):
-        """ """
+        """ Get edit download url """
         site = self.getSite()
         file_path = self._get_data_name()
         media_server = getattr(site, 'media_server', '').strip()

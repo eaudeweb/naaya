@@ -19,7 +19,7 @@ manage_addDiskTemplate_html = PageTemplateFile('zpt/disk_template_add',
 manage_addDiskTemplate_html.list_available_pathspecs = list_available_pathspecs
 
 def manage_addDiskTemplate(self, id='', pathspec='', REQUEST=None):
-    """ """
+    """ Manage add disk template """
     fs_path = resolve(pathspec)
     if not path.isfile(fs_path):
         raise ValueError("File not found %r (resolved to %r)" %
@@ -77,7 +77,7 @@ class DiskTemplate(SimpleItem):
     _manage_main = PageTemplateFile('zpt/disk_template_manage', globals())
     security.declareProtected(view_management_screens, 'manage_main')
     def manage_main(self, REQUEST):
-        """ """
+        """ Manage main """
         options = {
             'fs_path': resolve(self.pathspec),
             'template_data': self._get_template()._text,

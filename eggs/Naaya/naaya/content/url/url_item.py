@@ -77,7 +77,7 @@ config = {
 
 
 def url_add_html(self, REQUEST=None, RESPONSE=None):
-    """ """
+    """ Url add html """
     from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
     form_helper = get_schema_helper_for_metatype(self, config['meta_type'])
     return self.getFormsTool().getContent({
@@ -215,14 +215,14 @@ def importNyURL(self, param, id, attrs, content, properties, discussion,
 
 
 class url_item(Implicit, NyContentData):
-    """ """
+    """ Url item """
     redirect = True
 
 
 @implementer(INyURL)
 class NyURL(url_item, NyAttributes, NyItem, NyCheckControl, NyValidation,
             NyContentType):
-    """ """
+    """ Ny url """
 
 
     meta_type = config['meta_type']
@@ -232,7 +232,7 @@ class NyURL(url_item, NyAttributes, NyItem, NyCheckControl, NyValidation,
     icon_marked = 'misc_/NaayaContent/NyURL_marked.gif'
 
     def manage_options(self):
-        """ """
+        """ Manage options """
         l_options = ()
         if not self.hasVersion():
             l_options += ({'label': 'Properties',
@@ -244,7 +244,7 @@ class NyURL(url_item, NyAttributes, NyItem, NyCheckControl, NyValidation,
     security = ClassSecurityInfo()
 
     def __init__(self, id, contributor):
-        """ """
+        """ Init """
         self.id = id
         url_item.__init__(self)
         NyValidation.__dict__['__init__'](self)
@@ -276,7 +276,7 @@ class NyURL(url_item, NyAttributes, NyItem, NyCheckControl, NyValidation,
     security.declareProtected(view_management_screens, 'manageProperties')
 
     def manageProperties(self, REQUEST=None, **kwargs):
-        """ """
+        """ Manage properties """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
 
@@ -309,7 +309,7 @@ class NyURL(url_item, NyAttributes, NyItem, NyCheckControl, NyValidation,
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'commitVersion')
 
     def commitVersion(self, REQUEST=None):
-        """ """
+        """ Commit version """
         user = self.REQUEST.AUTHENTICATED_USER.getUserName()
         if not self.checkPermissionEditObject() or self.checkout_user != user:
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
@@ -328,7 +328,7 @@ class NyURL(url_item, NyAttributes, NyItem, NyCheckControl, NyValidation,
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'startVersion')
 
     def startVersion(self, REQUEST=None):
-        """ """
+        """ Start version """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
         if self.hasVersion():
@@ -345,7 +345,7 @@ class NyURL(url_item, NyAttributes, NyItem, NyCheckControl, NyValidation,
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
 
     def saveProperties(self, REQUEST=None, **kwargs):
-        """ """
+        """ Save properties """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
 
@@ -398,7 +398,7 @@ class NyURL(url_item, NyAttributes, NyItem, NyCheckControl, NyValidation,
     security.declareProtected(view, 'index_html')
 
     def index_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Index html """
         self.notify_access_event(REQUEST)
         if self.redirect:
             lang = self.gl_get_selected_language()
@@ -415,7 +415,7 @@ class NyURL(url_item, NyAttributes, NyItem, NyCheckControl, NyValidation,
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
 
     def edit_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Edit html """
         if self.hasVersion():
             obj = self.version
         else:

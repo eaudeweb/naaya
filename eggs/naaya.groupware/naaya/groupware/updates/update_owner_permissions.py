@@ -2,7 +2,7 @@ from naaya.core.zope2util import permission_add_role
 from Products.naayaUpdater.updates import UpdateScript
 
 class UpdateOwnerPermissions(UpdateScript):
-    """ """
+    """ Update owner permissions """
     title = 'Update Owner permissions for Groupware sites'
     creation_date = 'Aug 02, 2011'
     authors = ['Andrei Laza']

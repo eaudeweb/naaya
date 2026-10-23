@@ -22,7 +22,7 @@ from .constants import ARCHIVE_PROPERTIES
 
 class photo_archive_base(object):
     def copyObjects(self, REQUEST=None, **kwargs):
-        """ """
+        """ Copy objects """
         if not REQUEST:
             ids = self.utConvertToList(kwargs.get('ids', []))
             return self.manage_copyObjects(ids)
@@ -38,7 +38,7 @@ class photo_archive_base(object):
         return REQUEST.RESPONSE.redirect(self.absolute_url())
 
     def cutObjects(self, REQUEST=None, **kwargs):
-        """ """
+        """ Cut objects """
         if not REQUEST:
             ids = self.utConvertToList(kwargs.get('ids', []))
             return self.manage_cutObjects(ids)
@@ -54,7 +54,7 @@ class photo_archive_base(object):
         return REQUEST.RESPONSE.redirect(self.absolute_url())
 
     def pasteObjects(self, REQUEST=None, **kwargs):
-        """ """
+        """ Paste objects """
         if not REQUEST:
             cp = kwargs.get('cp_data', None)
             return self.manage_pasteObjects(cp)
@@ -68,7 +68,7 @@ class photo_archive_base(object):
         return REQUEST.RESPONSE.redirect(self.absolute_url())
 
     def deleteObjects(self, REQUEST=None, **kwargs):
-        """ """
+        """ Delete objects """
         if REQUEST:
             kwargs.update(REQUEST.form)
         id_list = self.utConvertToList(kwargs.get('ids', []))
@@ -83,7 +83,7 @@ class photo_archive_base(object):
     # Methods required by edit template
     #
     def hasVersion(self):
-        """ """
+        """ Has version """
         return None
 
     def sort_objects(self, sort_list=(), sort_by='sortorder', reverse=0):
@@ -92,11 +92,11 @@ class photo_archive_base(object):
         return self.utSortObjsListByAttr(sort_list, sort_by, reverse)
 
     def getVersionLocalProperty(self, id, lang):
-        """ """
+        """ Get version local property """
         return self.getLocalProperty(id, lang)
 
     def getVersionProperty(self, id):
-        """ """
+        """ Get version property """
         return getattr(self, id)
 
     def getPropertyValue(self, p_id, lang=None):

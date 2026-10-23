@@ -7,14 +7,14 @@ from Products.NaayaCore.AuthenticationTool.events import RoleAssignmentEvent
 
 
 class PlugBase(SimpleItem):
-    """ """
+    """ Plug base """
 
     manage_options = (
         SimpleItem.manage_options
     )
 
     def __init__(self, id, source_obj, title):
-        """ """
+        """ Init """
         self.id = id
         self.obj_path = source_obj.absolute_url(1)
         self.title = title
@@ -69,7 +69,7 @@ class PlugBase(SimpleItem):
         return l_users_roles
 
     def revokeUserRoles(self, user, location, REQUEST=None):
-        """ """
+        """ Revoke user roles """
         if location == '' or location == '/':
             location_ob = self.getSite()
         else:
@@ -89,7 +89,7 @@ class PlugBase(SimpleItem):
 
     def addUserRoles(self, name=[], roles=[], location='', user_location='',
                      send_mail='', REQUEST=None):
-        """ """
+        """ Add user roles """
         def on_error(error_str):
             if REQUEST is not None:
                 self.setSessionErrorsTrans(error_str)

@@ -49,7 +49,7 @@ class TextAnswerListing(BaseStatistic):
         BaseStatistic.__init__(self, id, question, lang=lang, **kwargs)
 
     def calculate(self, answers):
-        """ """
+        """ Calculate """
         return self.utSortObjsListByAttr(answers, 'modification_time')
 
     security.declarePublic('render')

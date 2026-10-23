@@ -12,14 +12,14 @@ from . import DiskTemplate
 
 manage_addSchemeForm = PageTemplateFile('zpt/scheme_add', globals())
 def manage_addScheme(self, id='', title='', REQUEST=None):
-    """ """
+    """ Manage add scheme """
     ob = Scheme(id, title)
     self._setObject(id, ob)
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
 
 class Scheme(Folder):
-    """ """
+    """ Scheme """
 
     meta_type = METATYPE_SCHEME
     icon = 'misc_/NaayaCore/Scheme.gif'
@@ -36,7 +36,7 @@ class Scheme(Folder):
         {'name': METATYPE_DISKTEMPLATE, 'action': 'manage_addDiskTemplate_html', 'permission': PERMISSION_ADD_NAAYACORE_TOOL },
     )
     def all_meta_types(self, interfaces=None):
-        """ """
+        """ All meta types """
         y = []
         additional_meta_types = ['Image', 'File']
         for x in Products.meta_types:
@@ -54,7 +54,7 @@ class Scheme(Folder):
     manage_addDiskTemplate = DiskTemplate.manage_addDiskTemplate
 
     def __init__(self, id, title):
-        """ """
+        """ Init """
         self.id = id
         self.title = title
 

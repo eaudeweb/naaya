@@ -20,7 +20,7 @@ from .Style import Style
 from naaya.core.zope2util import folder_manage_main_plus
 
 def manage_addLayoutTool(self, REQUEST=None):
-    """ """
+    """ Manage add layout tool """
     ob = LayoutTool(ID_LAYOUTTOOL, TITLE_LAYOUTTOOL)
     self._setObject(ID_LAYOUTTOOL, ob)
     ob_aq = self._getOb(ID_LAYOUTTOOL)
@@ -31,7 +31,7 @@ def manage_addLayoutTool(self, REQUEST=None):
         return self.manage_main(self, REQUEST, update_menu=1)
 
 class LayoutTool(Folder, combosync_tool):
-    """ """
+    """ Layout tool """
 
     meta_type = METATYPE_LAYOUTTOOL
     icon = 'misc_/NaayaCore/LayoutTool.gif'
@@ -51,7 +51,7 @@ class LayoutTool(Folder, combosync_tool):
     )
 
     def all_meta_types(self, interfaces=None):
-        """ """
+        """ All meta types """
         y = []
         additional_meta_types = ['Image', 'File']
         for x in Products.meta_types:
@@ -66,7 +66,7 @@ class LayoutTool(Folder, combosync_tool):
     security = ClassSecurityInfo()
 
     def __init__(self, id, title):
-        """ """
+        """ Init """
         self.id = id
         self.title = title
         self.__current_skin_id = None
@@ -75,7 +75,7 @@ class LayoutTool(Folder, combosync_tool):
 
     security.declarePrivate('loadDefaultData')
     def loadDefaultData(self):
-        """ """
+        """ Load default data """
         pass
 
     def getSkinsList(self): return self.objectValues(METATYPE_SKIN)
@@ -126,7 +126,7 @@ class LayoutTool(Folder, combosync_tool):
     #zmi actions
     security.declareProtected(view_management_screens, 'manageLayout')
     def manageLayout(self, theMasterList='', theSlaveList='', REQUEST=None):
-        """ """
+        """ Manage layout """
         self.__current_skin_id = theMasterList
         self.__current_skin_scheme_id = theSlaveList
         self._p_changed = 1

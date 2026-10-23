@@ -102,7 +102,7 @@ class UpdatePortalSchemas(UpdateScript):
 
     security.declareProtected(view_management_screens, 'add_missing_schema_property')
     def add_missing_schema_property(self, property_data, REQUEST=None):
-        """ """
+        """ Add missing schema property """
         for prop in property_data:
             location = prop.split('||')
             portal = location[0]
@@ -120,7 +120,7 @@ class UpdatePortalSchemas(UpdateScript):
 
     security.declareProtected(view_management_screens, 'update_modified_schema_property')
     def update_modified_schema_property(self, property_data, REQUEST=None):
-        """ """
+        """ Update modified schema property """
         for prop in property_data:
             location = prop.split('||')
             portal = location[0]

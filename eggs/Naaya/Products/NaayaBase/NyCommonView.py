@@ -60,27 +60,27 @@ class NyCommonView(object):
     security.declareProtected(view, 'feedback_html')
 
     def feedback_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Feedback html """
         return self.getFormsTool().getContent({'here': self}, 'site_feedback')
 
     security.declareProtected(view, 'requestrole_html')
 
     def requestrole_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Requestrole html """
         return self.getFormsTool().getContent({'here': self},
                                               'site_requestrole')
 
     security.declareProtected(view, 'channel_details_html')
 
     def channel_details_html(self, REQUEST=None, RESPONSE=None, **kwargs):
-        """ """
+        """ Channel details html """
         kwargs['here'] = self
         return self.getFormsTool().getContent(kwargs, 'channel_details')
 
     security.declarePublic('standard_error_message')
 
     def standard_error_message(self, client=None, **kwargs):
-        """ """
+        """ Standard error message """
         # OFS StandardErrorMessageView does not pass error_log_url
         kwargs.setdefault('error_log_url', '')
         if self.REQUEST.get('AUTHENTICATED_USER') is None:
@@ -136,7 +136,7 @@ class NyCommonView(object):
     security.declareProtected(view, 'make_paginator')
 
     def make_paginator(self, *args, **kwargs):
-        """ """
+        """ Make paginator """
         return NaayaPaginator(*args, **kwargs).__of__(self)
 
 InitializeClass(NyCommonView)

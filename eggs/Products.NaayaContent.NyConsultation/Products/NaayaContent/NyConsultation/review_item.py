@@ -28,7 +28,7 @@ from Products.NaayaBase.NyFSFile import NyFSFile
 from .constants import *
 
 def addConsultationReviewItem(self, contributor, contributor_name, file, kwargs):
-    """ """
+    """ Add consultation review item """
     
     id = 'cr' + self.utGenRandomId(6)
     title = contributor_name
@@ -40,7 +40,7 @@ def addConsultationReviewItem(self, contributor, contributor_name, file, kwargs)
     ob.handleUpload(file)
 
 class ConsultationReviewItem(NyFSFile):
-    """ """
+    """ Consultation review item """
     
     meta_type = 'Consultation Review'
     
@@ -73,7 +73,7 @@ class ConsultationReviewItem(NyFSFile):
 
     security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'saveRate')
     def saveRate(self, REQUEST=None):
-        """ """
+        """ Save rate """
         rate_lists = self.getRateLists()
         for r in rate_lists:
             if r.id in REQUEST:
@@ -84,7 +84,7 @@ class ConsultationReviewItem(NyFSFile):
 
     security.declareProtected(PERMISSION_REVIEW_CONSULTATION, 'save_properties')
     def save_properties(self, REQUEST=None, **kwargs):
-        """ """
+        """ Save properties """
         if REQUEST:
             kwargs.update(REQUEST.form)
         if self.REQUEST.AUTHENTICATED_USER.getUserName() == self.contributor:
@@ -126,7 +126,7 @@ class ConsultationReviewItem(NyFSFile):
         return self.index_html()
 
     def get_review_date(self):
-        """ """
+        """ Get review date """
         return self.review_date
 
     security.declareProtected(PERMISSION_REVIEW_CONSULTATION, 'get_question_answer')
@@ -137,7 +137,7 @@ class ConsultationReviewItem(NyFSFile):
 
     security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'getAnswersDict')
     def getAnswersDict(self):
-        """ """
+        """ Get answers dict """
         ans_dict = {}
         for q in self.answers:
             qid, ans = q[0], q[1]

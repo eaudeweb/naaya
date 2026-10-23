@@ -104,7 +104,7 @@ class Concepts(SimpleItem, session_manager):
     #concept constraints
     security.declareProtected(view_management_screens, 'getIdsList')
     def getIdsList(self, ids, all=0):
-        """ """
+        """ Get ids list """
         if all: return self.concepts.keys()
         return th_utils().getIdsList(ids)
 
@@ -238,7 +238,7 @@ class Concepts(SimpleItem, session_manager):
 
     #import related
     def skos_import(self, file, REQUEST=None):
-        """ """
+        """ Skos import """
         parser = concept_parser()
 
         #parse the SKOS information

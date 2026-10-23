@@ -26,7 +26,7 @@ from Products.NaayaCore.managers.utils import utils
 
 
 class th_utils(utils):
-    """ """
+    """ Th utils """
 
     def __init__(self):
         """Constructor"""
@@ -44,12 +44,12 @@ class th_utils(utils):
         return dict.values()
 
     def utListToObj(self, p_list):
-        """ """
+        """ Ut list to obj """
         try:    return p_list[0]
         except: return None
 
     def getIdsList(self, l_data=''):
-        """ """
+        """ Get ids list """
         id_list = []
         ids = self.utConvertToList(l_data)
         for id in ids:

@@ -8,7 +8,7 @@ from naaya.core.exceptions import ValidationError
 
 
 class Role(RoleManager, utils):
-    """ """
+    """ Role """
 
     security = ClassSecurityInfo()
 
@@ -75,7 +75,7 @@ class Role(RoleManager, utils):
         return roles
 
     def list_valid_roles(self):
-        """ """
+        """ List valid roles """
         roles = list(self.getSite().valid_roles())
         roles = [r for r in roles
                  if r not in ('Anonymous', 'Authenticated', 'Owner')]

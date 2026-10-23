@@ -2,7 +2,7 @@ from Products.naayaUpdater.updates import UpdateScript
 
 
 class UpdateLinksList(UpdateScript):
-    """ """
+    """ Update links list """
     title = 'Update places and menunav_links'
     creation_date = 'Oct 09, 2019'
     authors = ['Valentin Dumitru']

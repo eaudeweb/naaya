@@ -163,7 +163,7 @@ def addNyConsultation(self, id='', title='', description='', sortorder='', start
             raise Exception('%s' % ', '.join(r))
 
 class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyContainer, NyCheckControl, NyValidation, utils):
-    """ """
+    """ Ny consultation """
 
     meta_type = METATYPE_OBJECT
     meta_label = LABEL_OBJECT
@@ -185,7 +185,7 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
     })
 
     def __init__(self, id, title, description, sortorder, start_date, end_date, public_registration, allow_file, line_comments, contributor, releasedate, lang):
-        """ """
+        """ Init """
         self.id = id
         NyValidation.__dict__['__init__'](self)
         NyCheckControl.__dict__['__init__'](self)
@@ -227,7 +227,7 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
     security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'saveProperties')
     def saveProperties(self, title='', description='', sortorder='', start_date='', end_date='',
                        public_registration='', allow_file='', line_comments='', file='', lang='', REQUEST=None):
-        """ """
+        """ Save properties """
 
         if not title:
             self.setSession('title', title)
@@ -302,7 +302,7 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
 
     security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'getRateValue')
     def getRateValue(self, review, rate):
-        """ """
+        """ Get rate value """
         try:
             return review.ratings[rate.title]
         except:
@@ -323,7 +323,7 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
 
     security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'admin_deleteratelist')
     def admin_deleteratelist(self, ids=[], REQUEST=None):
-        """ """
+        """ Admin deleteratelist """
         self.manage_delObjects(self.utConvertToList(ids))
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
@@ -331,7 +331,7 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
 
     security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'admin_addratelist')
     def admin_addratelist(self, id='', title='', description='', REQUEST=None):
-        """ """
+        """ Admin addratelist """
         self.manage_addRateList(id, title, description)
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
@@ -339,7 +339,7 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
 
     security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'admin_editratelist')
     def admin_editratelist(self, id='', title='', description='', REQUEST=None):
-        """ """
+        """ Admin editratelist """
         ob = self.getRateListById(id)
         if ob is not None:
             ob.manageProperties(title, description)
@@ -349,7 +349,7 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
 
     security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'admin_deleteitems')
     def admin_deleteitems(self, id='', ids=[], REQUEST=None):
-        """ """
+        """ Admin deleteitems """
         ob = self.getRateListById(id)
         if ob is not None:
             ob.manage_delete_items(self.utConvertToList(ids))
@@ -359,7 +359,7 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
 
     security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'admin_additem')
     def admin_additem(self, id='', item='', title='', REQUEST=None):
-        """ """
+        """ Admin additem """
         ob = self.getRateListById(id)
         if ob is not None:
             ob.manage_add_item(item, title)
@@ -431,7 +431,7 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
 
     security.declareProtected(view_management_screens, 'manage_options')
     def manage_options(self):
-        """ """
+        """ Manage options """
 
         l_options = (NyContainer.manage_options[0],)
         l_options += ({'label': 'View', 'action': 'index_html'},) + NyContainer.manage_options[3:8]
@@ -448,7 +448,7 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
 
     security.declareProtected(PERMISSION_REVIEW_CONSULTATION, 'addConsultationReview')
     def addConsultationReview(self, contributor_name='', file='', REQUEST=None, **kwargs):
-        """ """
+        """ Add consultation review """
 
         contributor = REQUEST.AUTHENTICATED_USER.getUserName()
 
@@ -555,7 +555,7 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
 
     security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'addQuestion')
     def addQuestion(self, question_body, lang, sortorder, REQUEST=None):
-        """ """
+        """ Add question """
         id = 'q%s' % self.utGenRandomId(4)
 
         try: sortorder = int(sortorder)
@@ -570,14 +570,14 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
 
     security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'delete_question')
     def delete_question(self, qid, REQUEST=None):
-        """ """
+        """ Delete question """
         del(self.questions[qid])
         self._p_changed = 1
         return REQUEST.RESPONSE.redirect('%s/manage_questions_html' % (self.absolute_url(), ))
 
     security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'edit_question')
     def edit_question(self, qid, question_body, lang, REQUEST=None):
-        """ """
+        """ Edit question """
         self.questions[qid].save_properties(question_body, lang)
         self._p_changed = 1
         return REQUEST.RESPONSE.redirect('%s/question_edit_html?qid=%s' % (self.absolute_url(), qid))
@@ -595,7 +595,7 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
 
     security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'changeSortorder')
     def changeSortorder(self, qid, sortorder):
-        """ """
+        """ Change sortorder """
         self.getQuestionById(qid).set_sortorder(sortorder)
         self._p_changed = 1
 
@@ -606,7 +606,7 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
 
     security.declareProtected(view, 'getQuestionSortorder')
     def getQuestionSortorder(self, qid):
-        """ """
+        """ Get question sortorder """
         return self.getQuestionById(qid).get_sortorder()
 
     security.declareProtected(view, 'review_has_comments')
@@ -622,7 +622,7 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
 
     security.declareProtected(view, 'getRatingTitles')
     def getRatingTitles(self):
-        """ """
+        """ Get rating titles """
         cns_ratings = [x.title for x in self.getRateLists()]
         return cns_ratings
 
@@ -650,7 +650,7 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
 
     security.declareProtected(PERMISSION_VIEW_CONSULTATION, 'getReviewById')
     def getReviewById(self, rid):
-        """ """
+        """ Get review by id """
         reviews = self.get_reviews()
         for review in reviews:
             if review.getId() == rid:
@@ -685,7 +685,7 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
 
     security.declareProtected(PERMISSION_REVIEW_CONSULTATION, 'edit_review')
     def edit_review(self):
-        """ """
+        """ Edit review """
         auth_user = self.REQUEST.AUTHENTICATED_USER.getUserName()
         for review in self.objectValues(['Consultation Review']):
             if review.contributor == auth_user:

@@ -23,7 +23,7 @@ manage_addScriptChannelForm = PageTemplateFile('zpt/scriptchannel_manage_add',
 def manage_addScriptChannel(self, id='', title='', description='',
                             language=None, type='', body='', numberofitems='',
                             portlet='', REQUEST=None):
-    """ """
+    """ Manage add script channel """
     id = self.utSlugify(id)
     if language is None:
         language = self.gl_get_selected_language()
@@ -47,7 +47,7 @@ def manage_addScriptChannel(self, id='', title='', description='',
 
 @implementer(IScriptChannel)
 class ScriptChannel(PythonScript, utils):
-    """ """
+    """ Script channel """
 
 
     meta_type = METATYPE_SCRIPTCHANNEL
@@ -68,7 +68,7 @@ class ScriptChannel(PythonScript, utils):
     security = ClassSecurityInfo()
 
     def __init__(self, id, title, description, language, type, numberofitems):
-        """ """
+        """ Init """
         PythonScript.__dict__['__init__'](self, id)
         self.id = id
         self.title = title
@@ -93,7 +93,7 @@ class ScriptChannel(PythonScript, utils):
 
     def manageProperties(self, title='', description='', language=None,
                          type='', numberofitems='', REQUEST=None):
-        """ """
+        """ Manage properties """
         if language is None:
             language = self.gl_get_selected_language()
         try:
@@ -128,7 +128,7 @@ class ScriptChannel(PythonScript, utils):
     security.declareProtected(view, 'index_html')
 
     def index_html(self, feed='', REQUEST=None, RESPONSE=None):
-        """ """
+        """ Index html """
         if feed == 'atom':
             return self.syndicateAtom(self, self.get_objects_for_rdf(),
                                       self.language)

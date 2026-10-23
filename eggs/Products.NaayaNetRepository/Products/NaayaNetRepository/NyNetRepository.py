@@ -36,7 +36,7 @@ from . import NyNetSite
 
 manage_addNyNetRepository_html = PageTemplateFile('zpt/netrepository_manage_add', globals())
 def manage_addNyNetRepository(self, id='', title='', lang=None, REQUEST=None):
-    """ """
+    """ Manage add ny net repository """
     id = self.utCleanupId(id)
     if not id: id = PREFIX_NYNETREPOSITORY + self.utGenRandomId(6)
     if lang is None: lang = self.gl_get_selected_language()
@@ -50,7 +50,7 @@ def manage_addNyNetRepository(self, id='', title='', lang=None, REQUEST=None):
         return self.manage_main(self, REQUEST, update_menu=1)
 
 class NyNetRepository(LocalPropertyManager, Folder):
-    """ """
+    """ Ny net repository """
 
     meta_type = METATYPE_NYNETREPOSITORY
     icon = 'misc_/NaayaNetRepository/NyNetRepository.gif'
@@ -81,7 +81,7 @@ class NyNetRepository(LocalPropertyManager, Folder):
     title = LocalProperty('title')
 
     def __init__(self, id, title, lang):
-        """ """
+        """ Init """
         self.id = id
         self._setLocalPropValue('title', lang, title)
 
@@ -115,7 +115,7 @@ class NyNetRepository(LocalPropertyManager, Folder):
     def get_netrepository_path(self, p=0): return self.absolute_url(p)
     def get_netsites(self): return self.objectValues(METATYPE_NYNETSITE)
     def get_sites(self):
-        """ """
+        """ Get sites """
         r = []
         ra = r.append
         for netsite in self.objectValues(METATYPE_NYNETSITE):
@@ -133,7 +133,7 @@ class NyNetRepository(LocalPropertyManager, Folder):
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', REQUEST=None):
-        """ """
+        """ Manage properties """
         lang = self.gl_get_selected_language()
         self._setLocalPropValue('title', lang, title)
         self._p_changed = 1
@@ -142,7 +142,7 @@ class NyNetRepository(LocalPropertyManager, Folder):
     #site actions
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'saveProperties')
     def saveProperties(self, title='', lang=None, REQUEST=None):
-        """ """
+        """ Save properties """
         if lang is None: lang = self.gl_get_selected_language()
         self._setLocalPropValue('title', lang, title)
         self._p_changed = 1
@@ -152,7 +152,7 @@ class NyNetRepository(LocalPropertyManager, Folder):
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'deleteObjects')
     def deleteObjects(self, ids=None, REQUEST=None):
-        """ """
+        """ Delete objects """
         if ids is None: ids = []
         else: ids = self.utConvertToList(ids)
         try: self.manage_delObjects(ids)

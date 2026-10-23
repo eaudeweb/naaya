@@ -108,14 +108,14 @@ class ConceptRelations(SimpleItem, session_manager):
     #concept relations constraints
     security.declareProtected(view_management_screens, 'checkCpRel')
     def checkCpRel(self, concept_id):
-        """ """
+        """ Check cp rel """
         if self.getConceptsFolder().get_concept_by_id(concept_id):
             return 1
         return 0
 
     security.declareProtected(view_management_screens, 'getIdsList')
     def getIdsList(self, ids, all=0):
-        """ """
+        """ Get ids list """
         if all: return self.concept_relations.keys()
         return th_utils().getIdsList(ids)
 
@@ -226,7 +226,7 @@ class ConceptRelations(SimpleItem, session_manager):
 
     #import related
     def skos_import(self, file, REQUEST=None):
-        """ """
+        """ Skos import """
         parser = relation_parser()
 
         #parse the SKOS information
@@ -270,15 +270,15 @@ class ConceptRelations(SimpleItem, session_manager):
 
     #relation type related
     def getRelTypes(self):
-        """ """
+        """ Get rel types """
         return RELATION_TYPES
 
     def getRelTypesIDs(self):
-        """ """
+        """ Get rel types ids """
         return self.getRelTypes().keys()
 
     def getRelTypeByID(self, id):
-        """ """
+        """ Get rel type by id """
         return self.getRelTypes()[id]
 
 

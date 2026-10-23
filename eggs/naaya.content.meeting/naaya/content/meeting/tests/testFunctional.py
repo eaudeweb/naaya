@@ -1369,7 +1369,7 @@ class NyMeetingItemsRestrictedButAgenda(NaayaFunctionalTestCase):
                             in self.browser.get_url())
 
 class NyMeetingRestrictUnrestrict(NaayaFunctionalTestCase):
-    """ """
+    """ Ny meeting restrict unrestrict """
 
     def afterSetUp(self):
         self.portal.manage_install_pluggableitem('Naaya Meeting')

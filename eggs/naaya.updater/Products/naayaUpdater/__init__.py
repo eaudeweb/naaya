@@ -10,7 +10,7 @@ logger = logging.getLogger('naayaUpdater')
 
 
 def initialize(context):
-    """ """
+    """ Initialize """
     # add Naaya Updater
     global updater
     application = app()

@@ -100,7 +100,7 @@ class Source(SimpleItem):
     #source constrints
     security.declareProtected(view_management_screens, 'getIdsList')
     def getIdsList(self, ids, all=0):
-        """ """
+        """ Get ids list """
         if all: return self.sources.keys()
         return th_utils().getIdsList(ids)
 

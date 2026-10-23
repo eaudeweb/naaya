@@ -28,7 +28,7 @@ class NyProperties(LocalPropertyManager):
     """
 
     def __init__(self):
-        """ """
+        """ Init """
 
         self.__dynamic_properties = {}
 

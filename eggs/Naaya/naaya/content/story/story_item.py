@@ -81,7 +81,7 @@ config = {
     }
 
 def story_add(self, REQUEST=None, RESPONSE=None):
-    """ """
+    """ Story add """
     id = uniqueId('story', lambda x: self._getOb(x, None) is not None)
     self.addNyStory(id)
     if REQUEST: REQUEST.RESPONSE.redirect('%s/add_html' % self._getOb(id).absolute_url())
@@ -181,7 +181,7 @@ def importNyStory(self, param, id, attrs, content, properties, discussion, objec
             self.import_data_custom(ob, object)
 
 class story_item(Implicit, NyContentData):
-    """ """
+    """ Story item """
     frontpicture = None
 
     def setFrontPicture(self, p_picture):
@@ -208,7 +208,7 @@ class story_item(Implicit, NyContentData):
 
 @implementer(INyStory)
 class NyStory(story_item, NyAttributes, NyContainer, NyCheckControl, NyContentType):
-    """ """
+    """ Ny story """
 
 
     meta_type = config['meta_type']
@@ -217,7 +217,7 @@ class NyStory(story_item, NyAttributes, NyContainer, NyCheckControl, NyContentTy
     icon_marked = 'misc_/NaayaContent/NyStory_marked.gif'
 
     def manage_options(self):
-        """ """
+        """ Manage options """
         l_options = (NyContainer.manage_options[0],)
         if not self.hasVersion():
             l_options += ({'label': 'Properties', 'action': 'manage_edit_html'},)
@@ -225,7 +225,7 @@ class NyStory(story_item, NyAttributes, NyContainer, NyCheckControl, NyContentTy
         return l_options
 
     def all_meta_types(self, interfaces=None):
-        """ """
+        """ All meta types """
         y = []
         additional_meta_types = ['Image']
         for x in Products.meta_types:
@@ -236,7 +236,7 @@ class NyStory(story_item, NyAttributes, NyContainer, NyCheckControl, NyContentTy
     security = ClassSecurityInfo()
 
     def __init__(self, id, contributor):
-        """ """
+        """ Init """
         self.id = id
         story_item.__init__(self)
         NyCheckControl.__dict__['__init__'](self)
@@ -298,7 +298,7 @@ class NyStory(story_item, NyAttributes, NyContainer, NyCheckControl, NyContentTy
         return etree.tostring(item, xml_declaration=False, encoding="unicode")
 
     def getFrontPicture(self, version=None, REQUEST=None):
-        """ """
+        """ Get front picture """
         if version is None: return self.frontpicture
         else:
             if self.checkout: return self.version.frontpicture
@@ -313,7 +313,7 @@ class NyStory(story_item, NyAttributes, NyContainer, NyCheckControl, NyContentTy
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, REQUEST=None, **kwargs):
-        """ """
+        """ Manage properties """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG
 )
@@ -344,14 +344,14 @@ class NyStory(story_item, NyAttributes, NyContainer, NyCheckControl, NyContentTy
 
     security.declareProtected(view_management_screens, 'submitThis')
     def submit_this(self, REQUEST=None):
-        """ """
+        """ Submit this """
         self.submitThis()
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
     #site actions
     security.declareProtected(config['permission'], 'process_add')
     def process_add(self, REQUEST, **kwargs):
-        """ """
+        """ Process add """
         schema_raw_data = dict(REQUEST.form)
         _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''), self.releasedate)
@@ -395,7 +395,7 @@ class NyStory(story_item, NyAttributes, NyContainer, NyCheckControl, NyContentTy
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'commitVersion')
     def commitVersion(self, REQUEST=None):
-        """ """
+        """ Commit version """
         user = self.REQUEST.AUTHENTICATED_USER.getUserName()
         if (not self.checkPermissionEditObject()) or (
             self.checkout_user != user):
@@ -416,7 +416,7 @@ class NyStory(story_item, NyAttributes, NyContainer, NyCheckControl, NyContentTy
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'startVersion')
     def startVersion(self, REQUEST=None):
-        """ """
+        """ Start version """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG
 )
@@ -433,7 +433,7 @@ class NyStory(story_item, NyAttributes, NyContainer, NyCheckControl, NyContentTy
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
     def saveProperties(self, REQUEST=None, **kwargs):
-        """ """
+        """ Save properties """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG
 )
@@ -498,7 +498,7 @@ class NyStory(story_item, NyAttributes, NyContainer, NyCheckControl, NyContentTy
     #site pages
     security.declareProtected(config['permission'], 'add_html')
     def add_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Add html """
         from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
         form_helper = get_schema_helper_for_metatype(self, config['meta_type'])
         parent = self.aq_parent
@@ -512,13 +512,13 @@ class NyStory(story_item, NyAttributes, NyContainer, NyCheckControl, NyContentTy
 
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Index html """
         self.notify_access_event(REQUEST)
         return self.getFormsTool().getContent({'here': self}, 'story_index')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     def edit_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Edit html """
         if self.hasVersion():
             obj = self.version
         else:

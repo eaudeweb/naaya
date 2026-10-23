@@ -41,7 +41,7 @@ addSection_html = NaayaPageTemplateFile('zpt/section_add', globals(),
 
 def addSection(self, id='', title='', body='', skip_splitting='',
                REQUEST=None):
-    """ """
+    """ Add section """
 
     errors = []
     if not title:
@@ -180,7 +180,7 @@ class Section(Folder):
                               'saveProperties')
 
     def saveProperties(self, title, REQUEST=None):
-        """ """
+        """ Save properties """
         self.title = title
         if REQUEST is not None:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,

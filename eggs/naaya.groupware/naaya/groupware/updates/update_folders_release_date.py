@@ -2,7 +2,7 @@ from datetime import date
 from Products.naayaUpdater.updates import UpdateScript
 
 class UpdateFoldersReleaseDate(UpdateScript):
-    """ """
+    """ Update folders release date """
     title = 'Update folders release date for Groupware Sites'
     creation_date = 'Jun 28, 2012'
     authors = ['Bogdan Tanase']

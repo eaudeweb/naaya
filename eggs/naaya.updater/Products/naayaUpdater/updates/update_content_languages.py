@@ -42,7 +42,7 @@ class UpdateContentLanguages(UpdateScript):
 
     security.declareProtected(view_management_screens, 'index_html')
     def index_html(self, action=None, portals=None, REQUEST=None, **kwargs):
-        """ """
+        """ Index html """
         if REQUEST is not None:
             kwargs.update(REQUEST.form)
         if portals:

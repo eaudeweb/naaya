@@ -25,7 +25,7 @@ message_add_html = PageTemplateFile('zpt/message_add', globals())
 
 def addNyForumMessage(self, id='', inreplyto='', title='', description='',
                       attachment='', REQUEST=None):
-    """ """
+    """ Add ny forum message """
     if self.is_topic_opened():
         if (attachment != '' and hasattr(attachment, 'filename') and
                 attachment.filename != ''):
@@ -76,7 +76,7 @@ def addNyForumMessage(self, id='', inreplyto='', title='', description='',
 
 
 class NyForumMessage(NyForumBase, Folder):
-    """ """
+    """ Ny forum message """
 
     meta_type = METATYPE_NYFORUMMESSAGE
     meta_label = LABEL_NYFORUMMESSAGE
@@ -95,7 +95,7 @@ class NyForumMessage(NyForumBase, Folder):
     )
 
     def all_meta_types(self, interfaces=None):
-        """ """
+        """ All meta types """
         y = []
         if self.is_topic_opened():
             additional_meta_types = ['File']
@@ -107,7 +107,7 @@ class NyForumMessage(NyForumBase, Folder):
     security = ClassSecurityInfo()
 
     def __init__(self, id, inreplyto, title, description, author, postdate):
-        """ """
+        """ Init """
         self.id = id
         self.inreplyto = inreplyto
         self.title = title
@@ -138,7 +138,7 @@ class NyForumMessage(NyForumBase, Folder):
     security.declareProtected(PERMISSION_MODIFY_FORUMMESSAGE, 'saveProperties')
 
     def saveProperties(self, title='', description='', REQUEST=None):
-        """ """
+        """ Save properties """
         if self.is_topic_closed():
             raise Exception(
                 'This topic is closed. No more operations are allowed.')
@@ -160,7 +160,7 @@ class NyForumMessage(NyForumBase, Folder):
                               'deleteAttachments')
 
     def deleteAttachments(self, ids='', REQUEST=None):
-        """ """
+        """ Delete attachments """
         if self.is_topic_closed():
             raise Exception(
                 'This topic is closed. No more operations are allowed.')
@@ -176,7 +176,7 @@ class NyForumMessage(NyForumBase, Folder):
     security.declareProtected(PERMISSION_MODIFY_FORUMMESSAGE, 'addAttachment')
 
     def addAttachment(self, attachment='', REQUEST=None):
-        """ """
+        """ Add attachment """
         if self.is_topic_closed():
             raise Exception(
                 'This topic is closed. No more operations are allowed.')
@@ -195,7 +195,7 @@ class NyForumMessage(NyForumBase, Folder):
 
     def replyMessage(self, title='', description='', attachment='',
                      REQUEST=None):
-        """ """
+        """ Reply message """
         if self.is_topic_closed():
             raise Exception(
                 'This topic is closed. No more operations are allowed.')
@@ -219,7 +219,7 @@ class NyForumMessage(NyForumBase, Folder):
     security.declareProtected(PERMISSION_MODIFY_FORUMMESSAGE, 'deleteMessage')
 
     def deleteMessage(self, nodes='', REQUEST=None):
-        """ """
+        """ Delete message """
         if self.is_topic_closed():
             raise Exception(
                 'This topic is closed. No more operations are allowed.')
@@ -248,7 +248,7 @@ class NyForumMessage(NyForumBase, Folder):
     security.declareProtected(view_management_screens, 'manageProperties')
 
     def manageProperties(self, title='', description='', REQUEST=None):
-        """ """
+        """ Manage properties """
         if self.is_topic_closed():
             raise Exception(
                 'This topic is closed. No more operations are allowed.')
@@ -279,7 +279,7 @@ class NyForumMessage(NyForumBase, Folder):
     security.declareProtected(PERMISSION_MODIFY_FORUMMESSAGE, 'mark_top')
 
     def mark_top(self, REQUEST=None):
-        """ """
+        """ Mark top """
         for message in self.aq_parent.objectValues(METATYPE_NYFORUMMESSAGE):
             message.remove_top()
         self.is_top_message = True
@@ -292,7 +292,7 @@ class NyForumMessage(NyForumBase, Folder):
     security.declareProtected(PERMISSION_MODIFY_FORUMMESSAGE, 'remove_top')
 
     def remove_top(self, REQUEST=None):
-        """ """
+        """ Remove top """
         self.is_top_message = False
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
@@ -303,7 +303,7 @@ class NyForumMessage(NyForumBase, Folder):
                               'mark_outdated')
 
     def mark_outdated(self, REQUEST=None):
-        """ """
+        """ Mark outdated """
         self.is_outdated_message = True
         self.is_top_message = False
         if REQUEST:
@@ -315,7 +315,7 @@ class NyForumMessage(NyForumBase, Folder):
                               'remove_outdated')
 
     def remove_outdated(self, REQUEST=None):
-        """ """
+        """ Remove outdated """
         self.is_outdated_message = False
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,

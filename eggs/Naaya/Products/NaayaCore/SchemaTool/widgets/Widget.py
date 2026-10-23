@@ -327,7 +327,7 @@ class Widget(Folder):
         return html.replace('</body>', button + '</body>')
 
     def manage_create_custom_template(self, REQUEST=None):
-        """ """
+        """ Manage create custom template """
         from Products.NaayaCore.LayoutTool.Template import manage_addTemplate
         parent_path, name = self.custom_template.rsplit('/', 1)
         parent = self.getSite().unrestrictedTraverse(parent_path)

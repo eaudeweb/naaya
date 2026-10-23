@@ -39,7 +39,7 @@ class StaticServeFromZip(object):
         self._zipfile = zipfile
 
     def __bobo_traverse__(self, REQUEST, name):
-        """ """
+        """ Bobo traverse """
         return StaticServeFromZip(self._path + '/' + name, self._zipfile)
 
     def __call__(self, REQUEST):

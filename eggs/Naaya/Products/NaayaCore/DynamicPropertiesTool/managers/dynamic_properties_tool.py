@@ -6,10 +6,10 @@ from Products.NaayaCore.constants import *
 from Products.NaayaCore.managers.utils import utils
 
 class dynamic_property(utils):
-    """ """
+    """ Dynamic property """
 
     def __init__(self, id, searchable, name, type, required, defaultvalue, values, order):
-        """ """
+        """ Init """
         self.id = id
         self.searchable = searchable
         self.name = name
@@ -23,7 +23,7 @@ class dynamic_property(utils):
     security.setDefaultAccess("allow")
 
     def render(self, default='', context=None):
-        """ """
+        """ Render """
         l_html = []
         if self.type == 'string' or self.type == 'date' or self.type == 'integer' or self.type == 'float':
             l_html.append('<input type="text" name="%s:utf8:string" id="%s" value="%s" size="50" />' % (self.utHtmlEncode(self.id), self.utHtmlEncode(self.id), self.utHtmlEncode(default)))
@@ -54,14 +54,14 @@ class dynamic_property(utils):
         return ''.join(l_html)
 
     def getindextype(self):
-        """ """
+        """ Getindextype """
         if self.dp_type == 'boolean' or self.dp_type == 'date' or self.dp_type == 'integer' or self.dp_type == 'float' or self.dp_type == 'selection':
             return 'FieldIndex'
         else:
             return 'TextIndex'
 
     def getvalues(self):
-        """ """
+        """ Getvalues """
         if type(self.values) == type({}):
             return list(self.values.values())[0]
         else:
@@ -70,38 +70,38 @@ class dynamic_property(utils):
 InitializeClass(dynamic_property)
 
 class dynamic_properties_tool:
-    """ """
+    """ Dynamic properties tool """
 
     def __init__(self):
-        """ """
+        """ Init """
         self.__dynamic_properties_definitions = {}
 
     def getFieldTypesList(self):
-        """ """
+        """ Get field types list """
         return ['boolean', 'string', 'date', 'integer', 'float', 'text', 'selection']
 
     def getDynamicPropertiesIds(self):
-        """ """
+        """ Get dynamic properties ids """
         return self.__dynamic_properties_definitions.keys()
 
     def getDynamicProperties(self):
-        """ """
+        """ Get dynamic properties """
         return self.__dynamic_properties_definitions.values()
 
     def getDynamicProperty(self, p_dp_id):
-        """ """
+        """ Get dynamic property """
         try:
             return self.__dynamic_properties_definitions[p_dp_id]
         except:
             return None
 
     def addDynamicProperty(self, id, searchable, name, type, required, defaultvalue, value, order):
-        """ """
+        """ Add dynamic property """
         self.__dynamic_properties_definitions[id] = dynamic_property(id, searchable, name, type, required, defaultvalue, value, order)
         self._p_changed = 1
 
     def updateDynamicProperty(self, id, searchable, name, type, required, defaultvalue, values, order):
-        """ """
+        """ Update dynamic property """
         l_dp = self.__dynamic_properties_definitions[id]
         l_dp.name = name
         l_dp.searchable = searchable
@@ -113,13 +113,13 @@ class dynamic_properties_tool:
         self._p_changed = 1
 
     def deleteDynamicProperty(self, ids):
-        """ """
+        """ Delete dynamic property """
         for id in ids:
             del(self.__dynamic_properties_definitions[id])
         self._p_changed = 1
 
     def getDynamicPropertyData(self, p_dp_id):
-        """ """
+        """ Get dynamic property data """
         l_dp = self.getDynamicProperty(p_dp_id)
         if l_dp is not None:
             ref_list = ''

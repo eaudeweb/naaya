@@ -10,7 +10,7 @@ It is used to provide values for two catalog indexes:
 from Products.NaayaBase.NyContentType import NyContentType
 
 class NyAttributes:
-    """ """
+    """ Ny attributes """
 
     def get_meta_label(self):
         if isinstance(self, NyContentType):

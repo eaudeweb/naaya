@@ -13,7 +13,7 @@ from .managers.links_manager import links_manager
 
 manage_addLinksListForm = PageTemplateFile('zpt/linkslist_add', globals())
 def manage_addLinksList(self, id='', title='', portlet='', REQUEST=None):
-    """ """
+    """ Manage add links list """
     id = self.utSlugify(id)
     if not id: id = PREFIX_SUFIX_LINKSLIST % self.utGenRandomId(6)
     ob = LinksList(id, title)
@@ -25,7 +25,7 @@ def manage_addLinksList(self, id='', title='', portlet='', REQUEST=None):
 
 @implementer(ILinksList)
 class LinksList(SimpleItem, links_manager):
-    """ """
+    """ Links list """
 
 
     meta_type = METATYPE_LINKSLIST
@@ -42,7 +42,7 @@ class LinksList(SimpleItem, links_manager):
     security = ClassSecurityInfo()
 
     def __init__(self, id, title):
-        """ """
+        """ Init """
         self.id = id
         self.title = title
         links_manager.__dict__['__init__'](self)
@@ -50,7 +50,7 @@ class LinksList(SimpleItem, links_manager):
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', REQUEST=None):
-        """ """
+        """ Manage properties """
         self.title = title
         self._p_changed = 1
         if REQUEST:
@@ -58,7 +58,7 @@ class LinksList(SimpleItem, links_manager):
 
     security.declareProtected(view_management_screens, 'manage_add_link_item')
     def manage_add_link_item(self, id='', title='', description='', url='', relative='', permission='', order='', REQUEST=None):
-        """ """
+        """ Manage add link item """
         if relative: relative = 1
         else: relative = 0
         try: order = abs(int(order))
@@ -68,7 +68,7 @@ class LinksList(SimpleItem, links_manager):
 
     security.declareProtected(view_management_screens, 'manage_update_link_item')
     def manage_update_link_item(self, id='', title='', description='', url='', relative='', permission='', order='', REQUEST=None):
-        """ """
+        """ Manage update link item """
         if relative: relative = 1
         else: relative = 0
         try: order = abs(int(order))
@@ -78,7 +78,7 @@ class LinksList(SimpleItem, links_manager):
 
     security.declareProtected(view_management_screens, 'manage_delete_links')
     def manage_delete_links(self, ids=[], REQUEST=None):
-        """ """
+        """ Manage delete links """
         self.delete_link_item(self.utConvertToList(ids))
         if REQUEST: REQUEST.RESPONSE.redirect('manage_links_html?save=ok')
 

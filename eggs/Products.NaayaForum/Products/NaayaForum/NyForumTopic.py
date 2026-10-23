@@ -28,7 +28,7 @@ manage_addNyForumTopic_html = PageTemplateFile('zpt/topic_manage_add', globals()
 topic_add_html = PageTemplateFile('zpt/topic_add', globals())
 def addNyForumTopic(self, id='', title='', category='', description='',
     attachment='', sort_reverse=False, REQUEST=None):
-    """ """
+    """ Add ny forum topic """
     id = self.utSlugify(id or title or PREFIX_NYFORUMTOPIC)
     author, postdate = self.processIdentity()
     #by default a topic is opened, status = 0; when closed status = 1
@@ -56,7 +56,7 @@ def addNyForumTopic(self, id='', title='', category='', description='',
 
 @implementer(INyForumTopic)
 class NyForumTopic(NyRoleManager, NyForumBase, Folder):
-    """ """
+    """ Ny forum topic """
 
     meta_type = METATYPE_NYFORUMTOPIC
     meta_label = LABEL_NYFORUMTOPIC
@@ -76,7 +76,7 @@ class NyForumTopic(NyRoleManager, NyForumBase, Folder):
         {'name': METATYPE_NYFORUMMESSAGE, 'action': 'manage_addNyForumMessage_html'},
     )
     def all_meta_types(self, interfaces=None):
-        """ """
+        """ All meta types """
         y = []
         if self.is_topic_opened():
             additional_meta_types = ['File']
@@ -101,7 +101,7 @@ class NyForumTopic(NyRoleManager, NyForumBase, Folder):
     status = 0
 
     def __init__(self, id, title, category, description, author, postdate, status, sort_reverse=False):
-        """ """
+        """ Init """
         self.id = id
         self.title = title
         self.category = category
@@ -117,7 +117,7 @@ class NyForumTopic(NyRoleManager, NyForumBase, Folder):
         self.sort_reverse = sort_reverse
 
     def __getitem__(self, key):
-        """ """
+        """ Getitem """
         if key.startswith('msg') or key.isdigit():
             try:
                 return getattr(self, key)
@@ -259,7 +259,7 @@ class NyForumTopic(NyRoleManager, NyForumBase, Folder):
     security.declareProtected(PERMISSION_MODIFY_FORUMTOPIC, 'saveProperties')
     def saveProperties(self, title='', category='', status='', description='',
         postdate='', sort_reverse=False, REQUEST=None):
-        """ """
+        """ Save properties """
         try: status = abs(int(status))
         except: status = 0
         self.title = title
@@ -280,7 +280,7 @@ class NyForumTopic(NyRoleManager, NyForumBase, Folder):
 
     security.declareProtected(PERMISSION_MODIFY_FORUMTOPIC, 'deleteAttachments')
     def deleteAttachments(self, ids='', REQUEST=None):
-        """ """
+        """ Delete attachments """
         try: self.manage_delObjects(self.utConvertToList(ids))
         except: self.setSessionErrorsTrans('Error while deleting data.')
         else: self.setSessionInfoTrans('Attachment(s) deleted.')
@@ -288,7 +288,7 @@ class NyForumTopic(NyRoleManager, NyForumBase, Folder):
 
     security.declareProtected(PERMISSION_MODIFY_FORUMTOPIC, 'addAttachment')
     def addAttachment(self, attachment='', REQUEST=None):
-        """ """
+        """ Add attachment """
         if attachment != '' and hasattr(attachment, 'filename') and attachment.filename != '':
             if len(attachment.read()) > self.file_max_size:
                 REQUEST.set('file_max_size', self.file_max_size)
@@ -341,7 +341,7 @@ class NyForumTopic(NyRoleManager, NyForumBase, Folder):
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', category='', status='', description='', postdate='',
         REQUEST=None):
-        """ """
+        """ Manage properties """
         try: status = abs(int(status))
         except: status = 0
         self.title = title
@@ -357,7 +357,7 @@ class NyForumTopic(NyRoleManager, NyForumBase, Folder):
     _index_html = PageTemplateFile('zpt/topic_index', globals())
     security.declareProtected(view, 'index_html')
     def index_html(self, *args, **kwargs):
-        """ """
+        """ Index html """
         # Update hits
         forum = self.aq_inner.aq_parent
         forum.updateTopicHits(self.id)

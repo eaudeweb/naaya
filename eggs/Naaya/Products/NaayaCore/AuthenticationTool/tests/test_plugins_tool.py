@@ -6,11 +6,11 @@ class TestPluginsTool(NaayaTestCase):
     def test_get_plugins(self):
         """ Get a list of plugins """
         expected =         [{
-            'doc': ' Plugin for User Folder ',
+            'doc': 'Plugin for User Folder',
             'name': 'plugUserFolder',
             'object_type': 'User Folder'
         }, {
-            'doc': ' Plugin for LDAPUserFolder ',
+            'doc': 'Plugin for LDAPUserFolder',
             'name': 'plugLDAPUserFolder',
             'object_type': 'LDAPUserFolder'
         }]

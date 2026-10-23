@@ -9,7 +9,7 @@ from .DestinetPublisher import DestinetPublisher, manage_addDestinetPublisher
 
 
 def initialize(context):
-    """ """
+    """ Initialize """
 
     context.registerClass(
         DestinetPublisher,

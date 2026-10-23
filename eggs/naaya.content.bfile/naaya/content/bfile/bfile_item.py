@@ -63,7 +63,7 @@ config = {'product': 'NaayaContent',
 
 
 def bfile_add_html(self, REQUEST=None, RESPONSE=None):
-    """ """
+    """ Bfile add html """
     from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
     form_helper = get_schema_helper_for_metatype(self, config['meta_type'])
     return self.getFormsTool().getContent(
@@ -247,7 +247,7 @@ localizedbfile_download = LocalizedFileDownload()
 @implementer(INyBFile)
 class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
               NyValidation, NyContentType):
-    """ """
+    """ Ny bfile """
 
     meta_type = config['meta_type']
     meta_label = config['label']
@@ -263,7 +263,7 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
     security = ClassSecurityInfo()
 
     def __init__(self, id, contributor):
-        """ """
+        """ Init """
         self.id = id
         NyContentData.__init__(self)
         NyValidation.__dict__['__init__'](self)
@@ -352,7 +352,7 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
             return None
 
     def _save_file(self, the_file, language=None, contributor=""):
-        """ """
+        """ Save file """
         bf = make_blobfile(the_file,
                            removed=False,
                            timestamp=datetime.now(timezone.utc),
@@ -396,7 +396,7 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
 
     def saveProperties(self, REQUEST=None, **kwargs):
-        """ """
+        """ Save properties """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
 
@@ -448,7 +448,7 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
     security.declareProtected(view_management_screens, 'manageProperties')
 
     def manageProperties(self, REQUEST=None, **kwargs):
-        """ """
+        """ Manage properties """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
         if self.wl_isLocked():
@@ -496,7 +496,7 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
     security.declareProtected(view, 'index_html')
 
     def index_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Index html """
         language = self.get_selected_language()
         versions = {}
         for lang in self.gl_get_languages_map():
@@ -522,7 +522,7 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl,
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
 
     def edit_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Edit html """
         hasKey = 'lang' in REQUEST.form
         if hasKey is False:
             language = self.get_selected_language()

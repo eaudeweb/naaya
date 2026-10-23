@@ -106,20 +106,20 @@ class ThemeRelations(SimpleItem, session_manager):
     #theme relations constraints
     security.declareProtected(view_management_screens, 'checkThRel')
     def checkThRel(self, concept_id):
-        """ """
+        """ Check th rel """
         if self.getConceptsFolder().get_concept_by_id(concept_id):
             return 1
         return 0
 
     security.declareProtected(view_management_screens, 'getIdsList')
     def getIdsList(self, ids, all=0):
-        """ """
+        """ Get ids list """
         if all: return self.theme_relations.keys()
         return th_utils().getIdsList(ids)
 
     security.declareProtected(view_management_screens, 'infoOnDelete')
     def infoOnDelete(self, ids, all=0):
-        """ """
+        """ Info on delete """
         results = []
         dic_cp = {}
         lst_cp = []

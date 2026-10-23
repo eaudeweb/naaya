@@ -104,14 +104,14 @@ class ScopeNotes(SimpleItem, session_manager):
     #scope constraints
     security.declareProtected(view_management_screens, 'checkScope')
     def checkScope(self, concept_id):
-        """ """
+        """ Check scope """
         if self.getConceptsFolder().get_concept_by_id(concept_id):
             return 1
         return 0
 
     security.declareProtected(view_management_screens, 'getIdsList')
     def getIdsList(self, ids, all=0):
-        """ """
+        """ Get ids list """
         if all: return self.scopes.keys()
         return th_utils().getIdsList(ids)
 

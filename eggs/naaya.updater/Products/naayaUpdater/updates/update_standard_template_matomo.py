@@ -3,7 +3,7 @@ from Products.naayaUpdater.updates.utils import get_standard_template
 
 
 class UpdateMatomo(UpdateScript):
-    """ """
+    """ Update matomo """
     title = 'Add matomo script to standard_template'
     creation_date = 'Sep 25, 2018'
     authors = ['Valentin Dumitru']

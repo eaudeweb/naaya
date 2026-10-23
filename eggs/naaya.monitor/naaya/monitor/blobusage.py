@@ -72,7 +72,7 @@ class StatsItem(SimpleItem):
     security.declareProtected(view_management_screens, 'manage_workspace')
 
     def manage_workspace(self, REQUEST, RESPONSE):
-        """ """
+        """ Manage workspace """
         pt = PageTemplateFile('zpt/stats_item', globals())
         dt = datetime.fromtimestamp(self.stats[1])
         formatted_stats = []

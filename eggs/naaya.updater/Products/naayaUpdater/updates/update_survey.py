@@ -5,7 +5,7 @@ class UpdateSurvey(UpdateScript):
     descrtiption = 'Adde new allow_multiple_answers with default value of 0 to'
     'Naaya Mega Survey objects'
     def _update(self, portal):
-        """ """
+        """ Update """
         portal_catalog = portal.getCatalogTool()
         for brain in portal_catalog(meta_type='Naaya Mega Survey'):
             survey_ob = brain.getObject()

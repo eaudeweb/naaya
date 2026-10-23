@@ -28,7 +28,7 @@ STATISTICS_COLUMNS = {'topic': 'VARCHAR(80) UNIQUE',
 
 manage_addNyForum_html = PageTemplateFile('zpt/forum_manage_add', globals())
 def addNyForum(self, id='', title='', description='', categories='', file_max_size=0, REQUEST=None):
-    """ """
+    """ Add ny forum """
     id = make_id(self, id=id, title=title, prefix=PREFIX_NYFORUM)
     categories = self.utConvertLinesToList(categories)
     file_max_size = abs(int(file_max_size))
@@ -47,7 +47,7 @@ def addNyForum(self, id='', title='', description='', categories='', file_max_si
 @implementer(INyForum)
 class NyForum(NyRoleManager, NyPermissions, NyForumBase, Folder, utils,
                 LocalPropertyManager):
-    """ """
+    """ Ny forum """
 
     meta_type = METATYPE_NYFORUM
     meta_label = LABEL_NYFORUM
@@ -93,7 +93,7 @@ class NyForum(NyRoleManager, NyPermissions, NyForumBase, Folder, utils,
     addNyForumTopic = addNyForumTopic
 
     def __init__(self, id, title, description, categories, file_max_size, contributor):
-        """ """
+        """ Init """
         self.id = id
         self.title = title
         self.description = description
@@ -304,7 +304,7 @@ class NyForum(NyRoleManager, NyPermissions, NyForumBase, Folder, utils,
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', description='', categories='', file_max_size='', topics_listing='', topics_ordering='', REQUEST=None):
-        """ """
+        """ Manage properties """
         contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
         self.contributor = contributor
         self.title = title
@@ -322,7 +322,7 @@ class NyForum(NyRoleManager, NyPermissions, NyForumBase, Folder, utils,
         file_max_size='', topics_listing='', topics_ordering='',
         message_top='', message_outdated='', alphabetic_categories=None,
         REQUEST=None):
-        """ """
+        """ Save properties """
         contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
         self.contributor = contributor
         self.title = title
@@ -343,7 +343,7 @@ class NyForum(NyRoleManager, NyPermissions, NyForumBase, Folder, utils,
     #site actions
     security.declareProtected(PERMISSION_MODIFY_FORUMTOPIC, 'deleteTopics')
     def deleteTopics(self, ids='', REQUEST=None):
-        """ """
+        """ Delete topics """
         try: self.manage_delObjects(self.utConvertToList(ids))
         except: self.setSessionErrorsTrans('Error while deleting data.')
         else: self.setSessionInfoTrans('Topic(s) deleted.')
@@ -423,12 +423,12 @@ class NyForum(NyRoleManager, NyPermissions, NyForumBase, Folder, utils,
 
     security.declareProtected(view, 'hasVersion')
     def hasVersion(self):
-        """ """
+        """ Has version """
         return False
 
     security.declarePublic('export_this')
     def export_this(self, folderish=0):
-        """ """
+        """ Export this """
         return ''
 
     security.declareProtected(view, 'get_categories')

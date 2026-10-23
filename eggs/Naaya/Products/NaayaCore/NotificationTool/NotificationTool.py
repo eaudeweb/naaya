@@ -61,7 +61,7 @@ email_templates = {
 
 
 def manage_addNotificationTool(self, REQUEST=None):
-    """ """
+    """ Manage add notification tool """
     ob = NotificationTool(core_constants.ID_NOTIFICATIONTOOL,
                           core_constants.TITLE_NOTIFICATIONTOOL)
     self._setObject(core_constants.ID_NOTIFICATIONTOOL, ob)
@@ -75,7 +75,7 @@ Subscription = namedtuple('Subscription', 'user_id location notif_type lang')
 
 
 class NotificationTool(Folder):
-    """ """
+    """ Notification tool """
 
     meta_type = core_constants.METATYPE_NOTIFICATIONTOOL
     icon = 'misc_/NaayaCore/NotificationTool.gif'
@@ -103,7 +103,7 @@ class NotificationTool(Folder):
     }
 
     def __init__(self, id, title):
-        """ """
+        """ Init """
         self.id = id
         self.title = title
         self.config = PersistentMapping(self.default_config)
@@ -915,7 +915,7 @@ class NotificationTool(Folder):
     def admin_add_account_subscription(self, REQUEST, user_id,
                                        location, notif_type, lang,
                                        content_types=[]):
-        """ """
+        """ Admin add account subscription """
         # Even if some content types were selected (by turning off javascript)
         # they should be ignored, no filtering in administrative notifications
         if notif_type == 'administrative':
@@ -935,7 +935,7 @@ class NotificationTool(Folder):
                               'admin_remove_account_subscription')
 
     def admin_remove_account_subscription(self, REQUEST, location, sub_id):
-        """ """
+        """ Admin remove account subscription """
         obj = self.getSite().restrictedTraverse(location)
         subscription_container = ISubscriptionContainer(obj)
         subscription_container.remove(sub_id)

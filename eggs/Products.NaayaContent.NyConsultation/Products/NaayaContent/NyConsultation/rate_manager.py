@@ -24,7 +24,7 @@ from AccessControl import ClassSecurityInfo
 #Product imports
 
 class rate_item:
-    """ """
+    """ Rate item """
 
     def __init__(self, id, title):
         self.id = id
@@ -36,10 +36,10 @@ class rate_item:
 InitializeClass(rate_item)
 
 class rate_manager:
-    """ """
+    """ Rate manager """
 
     def __init__(self):
-        """ """
+        """ Init """
         self.__collection = {}
 
     #security stuff

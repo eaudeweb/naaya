@@ -28,7 +28,7 @@ from Products.NaayaBase.NyFSFile import NyFSFile
 from Products.NaayaBase.NyContentType import NyContentData
 
 class publication_item(Implicit, NyContentData, NyFSFile):
-    """ """
+    """ Publication item """
     def __init__(self, id, title, file):
         """
         Constructor.

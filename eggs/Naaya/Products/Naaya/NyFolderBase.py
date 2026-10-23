@@ -295,7 +295,7 @@ class NyFolderBase(Folder, NyPermissions):
     security.declareProtected(view, 'copyObjects')
 
     def copyObjects(self, REQUEST=None, **kwargs):
-        """ """
+        """ Copy objects """
         ids = self.utConvertToList(kwargs.get('id', []))
 
         if not self.checkPermissionCopyObjects(ids):
@@ -321,7 +321,7 @@ class NyFolderBase(Folder, NyPermissions):
     security.declareProtected(view, 'cutObjects')
 
     def cutObjects(self, REQUEST=None, **kwargs):
-        """ """
+        """ Cut objects """
         if REQUEST:
             kwargs.update(REQUEST.form)
         id_list = self.utConvertToList(kwargs.get('id', []))
@@ -346,7 +346,7 @@ class NyFolderBase(Folder, NyPermissions):
     security.declareProtected(view, 'pasteObjects')
 
     def pasteObjects(self, REQUEST=None, **kwargs):
-        """ """
+        """ Paste objects """
         if not REQUEST:
             cp = kwargs.get('cp_data', None)
             return self.manage_pasteObjects(cp)
@@ -369,7 +369,7 @@ class NyFolderBase(Folder, NyPermissions):
     security.declareProtected(view, 'deleteObjects')
 
     def deleteObjects(self, REQUEST=None, **kwargs):
-        """ """
+        """ Delete objects """
         if REQUEST:
             kwargs.update(REQUEST.form)
         id_list = self.utConvertToList(kwargs.get('id', []))

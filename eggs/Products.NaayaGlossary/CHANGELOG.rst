@@ -1,5 +1,9 @@
 2.0.4 (unreleased)
 ------------------
+* Give the methods with a blank docstring a text: Python 3.13 strips it to ''
+  and Zope does not publish methods without a docstring [dumitval]
+* Import the xml.sax names explicitly: Python 3.14 no longer exports
+  handler with from xml.sax import * [dumitval]
 
 2.0.3 (2026-10-23)
 ------------------

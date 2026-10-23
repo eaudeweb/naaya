@@ -72,7 +72,7 @@ class MemberSearch(Implicit, Item):
 
     def search_users_html(self, search_string=u'', sort_by='',
                           reverse_sort='False', only_admins=False):
-        """ """
+        """ Search users html """
         reverse_sort = reverse_sort != 'False'
         errors = []
         user_list = self._search_users(search_string, sort_by, reverse_sort,
@@ -302,7 +302,7 @@ class MemberSearch(Implicit, Item):
     security.declareProtected(view, 'is_member')
 
     def is_member(self):
-        """ """
+        """ Is member """
         return self.get_user_access() in ['member', 'admin']
 
     security.declareProtected(view, 'download')

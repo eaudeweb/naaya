@@ -54,7 +54,7 @@ class CheckboxesWidget(MultipleChoiceWidget):
     display = 'vertical'
 
     def display_modes(self):
-        """ """
+        """ Display modes """
         return ['vertical', 'horizontal']
 
     def getDatamodel(self, form):

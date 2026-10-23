@@ -427,7 +427,7 @@ class NaayaPaginator(DiggPaginator, Implicit):
 
     security.declareProtected(view, 'page')
     def page(self, number, *args, **kwargs):
-        """ """
+        """ Page """
         page = super(NaayaPaginator, self).page(number, *args, **kwargs)
         page.__class__ = NaayaPage
         return page.__of__(self)

@@ -103,7 +103,7 @@ class NyGlossaryFolder(Folder, utils, glossary_export, catalog_utils):
         return obj_lst
 
     def get_objects_sorted(self, lang_code):
-        """ """
+        """ Get objects sorted """
         l_elems = self.objectValues([NAAYAGLOSSARY_ELEMENT_METATYPE])
         return self.utSortObjsListByAttr(
             l_elems, self.get_language_by_code(lang_code), 0, lower=True)
@@ -302,7 +302,7 @@ class NyGlossaryFolder(Folder, utils, glossary_export, catalog_utils):
     security.declarePublic('getGlossaryObTree')
 
     def getGlossaryObTree(self):
-        """ """
+        """ Get glossary ob tree """
         results = []
         for item in self.objectValues([NAAYAGLOSSARY_FOLDER_METATYPE]):
             if item.is_published():
@@ -311,16 +311,16 @@ class NyGlossaryFolder(Folder, utils, glossary_export, catalog_utils):
             results, self.get_language_by_code(self.getSelectedLang()), 0)
 
     def hasGlossFolders(self):
-        """ """
+        """ Has gloss folders """
         return len(self.objectValues([NAAYAGLOSSARY_FOLDER_METATYPE]))
 
     def getGlossElems(self):
-        """ """
+        """ Get gloss elems """
         return self.utSortObjsListByAttr(self.objectValues(
             [NAAYAGLOSSARY_ELEMENT_METATYPE]), 'id', 0)
 
     def hasGlossElems(self):
-        """ """
+        """ Has gloss elems """
         return len(self.getGlossElems())
 
     security.declareProtected(view_management_screens, 'manage_tabs')

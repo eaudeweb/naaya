@@ -13,7 +13,7 @@ from .managers.dynamic_properties_tool import dynamic_properties_tool
 
 manage_addDynamicPropertiesItemForm = PageTemplateFile('zpt/dynamicpropertiesitem_add', globals())
 def manage_addDynamicPropertiesItem(self, id='', title='', REQUEST=None):
-    """ """
+    """ Manage add dynamic properties item """
     ob = DynamicPropertiesItem(id, title)
     self._setObject(id, ob)
     if REQUEST is not None:
@@ -39,7 +39,7 @@ class DynamicPropertiesItem(SimpleItem, utils, dynamic_properties_tool):
     security = ClassSecurityInfo()
 
     def __init__(self, id, title):
-        """ """
+        """ Init """
         self.id = id
         self.title = title
         utils.__dict__['__init__'](self)
@@ -47,7 +47,7 @@ class DynamicPropertiesItem(SimpleItem, utils, dynamic_properties_tool):
 
     security.declareProtected(view_management_screens, 'manageSettings')
     def manageSettings(self, title='', REQUEST=None):
-        """ """
+        """ Manage settings """
         self.title = title
         self._p_changed = 1
         if REQUEST:
@@ -56,7 +56,7 @@ class DynamicPropertiesItem(SimpleItem, utils, dynamic_properties_tool):
     security.declareProtected(view_management_screens, 'manageAddDynamicProperty')
     def manageAddDynamicProperty(self, id='', searchable='', name='', type='',
         required='', defaultvalue='', values='', order='', ref_list='', REQUEST=None):
-        """ """
+        """ Manage add dynamic property """
         lang = self.gl_get_selected_language()
         if searchable: searchable=1
         else: searchable=0
@@ -78,7 +78,7 @@ class DynamicPropertiesItem(SimpleItem, utils, dynamic_properties_tool):
     security.declareProtected(view_management_screens, 'manageUpdateDynamicProperty')
     def manageUpdateDynamicProperty(self, id='', searchable='', name='', type='',
         required='', defaultvalue='', values='', order='', ref_list='', REQUEST=None):
-        """ """
+        """ Manage update dynamic property """
         lang = self.gl_get_selected_language()
         if searchable: searchable=1
         else: searchable=0
@@ -100,7 +100,7 @@ class DynamicPropertiesItem(SimpleItem, utils, dynamic_properties_tool):
 
     security.declareProtected(view_management_screens, 'manageDeleteDynamicProperties')
     def manageDeleteDynamicProperties(self, id=[], REQUEST=None):
-        """ """
+        """ Manage delete dynamic properties """
         l_ids = self.utConvertToList(id)
         self.deleteDynamicProperty(l_ids)
         #delete objects dynamic properties

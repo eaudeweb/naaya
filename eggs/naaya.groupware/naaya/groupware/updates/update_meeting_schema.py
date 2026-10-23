@@ -2,7 +2,7 @@ from datetime import date
 from Products.naayaUpdater.updates import UpdateScript
 
 class UpdateMeetingSchema(UpdateScript):
-    """ """
+    """ Update meeting schema """
     title = 'Update Meeting pointer widgets for Groupware Sites'
     creation_date = 'Mar 26, 2013'
     authors = ['Cornel Nitu']

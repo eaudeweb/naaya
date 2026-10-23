@@ -291,7 +291,7 @@ class CookieCrumbler:
 
     security.declarePublic('logged_in')
     def logged_in(self, REQUEST, RESPONSE):
-        """ """
+        """ Logged in """
         isAnonymous = self.isAnonymousUser()
         came_from = REQUEST.get('came_from', '')
 

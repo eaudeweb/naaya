@@ -70,7 +70,7 @@ DEFAULT_SCHEMA.update({
 
 _photo_add_html = PageTemplateFile('zpt/photo_add', globals())
 def photo_add_html(self, REQUEST):
-    """ """
+    """ Photo add html """
     from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
     form_helper = get_schema_helper_for_metatype(self, METATYPE_NYPHOTO)
     return _photo_add_html.__of__(self)(REQUEST, form_helper=form_helper)
@@ -155,7 +155,7 @@ def addNyPhoto(self, id='', REQUEST=None, contributor=None,
 
 @implementer(INyPhoto)
 class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, NyContentType):
-    """ """
+    """ Ny photo """
 
     meta_type = METATYPE_NYPHOTO
     icon = '++resource++naaya.photoarchive/NyPhoto.gif'
@@ -169,7 +169,7 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
     security = ClassSecurityInfo()
 
     def __init__(self, id, contributor, content_type='', displays={}):
-        """ """
+        """ Init """
         #image stuff
         self.id = id
         self.contributor = contributor
@@ -517,7 +517,7 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
 
     security.declareProtected(view_management_screens, 'manageDisplays')
     def manageDisplays(self, display=None, width=None, height=None, REQUEST=None):
-        """ """
+        """ Manage displays """
         if display and width and height:
             for x,y,z in zip(display,width,height):
                 self.displays[x] = (int(y), int(z))
@@ -526,7 +526,7 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
 
     security.declareProtected(view_management_screens, 'manageGenerateDisplays')
     def manageGenerateDisplays(self, REQUEST=None):
-        """ """
+        """ Manage generate displays """
         self.managePurgeDisplays()
         for display in list(self.displays):
             self.__generate_display(display)
@@ -535,7 +535,7 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
 
     security.declareProtected(view_management_screens, 'managePurgeDisplays')
     def managePurgeDisplays(self, REQUEST=None):
-        """ """
+        """ Manage purge displays """
         original = self._getDisplayId()
         to_delete = [x for x in self.objectIds() if x != original]
         self.manage_delObjects(to_delete)
@@ -544,7 +544,7 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
     #site actions
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
     def saveProperties(self, REQUEST=None, **kwargs):
-        """ """
+        """ Save properties """
 
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
@@ -585,7 +585,7 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveUpload')
     def saveUpload(self, file='', lang=None, REQUEST=None):
-        """ """
+        """ Save upload """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
         if self.wl_isLocked():
@@ -601,7 +601,7 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
 
     security.declareProtected(view_permission, 'download')
     def download(self, REQUEST, RESPONSE):
-        """ """
+        """ Download """
         display = self._getDisplayId()
         self.REQUEST.RESPONSE.setHeader('Content-Type', self.content_type)
         self.REQUEST.RESPONSE.setHeader('Content-Length', self.get_size(display))
@@ -610,7 +610,7 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
 
     security.declareProtected(view_permission, 'view')
     def view(self, REQUEST, display='', **kwargs):
-        """ """
+        """ View """
         if not display in self.displays:
             if not display in LISTING_DISPLAYS:
                 if self.check_view_photo_permission('Original'):

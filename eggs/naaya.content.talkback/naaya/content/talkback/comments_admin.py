@@ -259,7 +259,7 @@ class CommentsAdmin(SimpleItem):
         raise Unauthorized
 
     def export(self, file_type="CSV", as_attachment=False, REQUEST=None):
-        """ """
+        """ Export """
         perm_manage = self.checkPermissionManageTalkBackConsultation()
         perm_manage_comments = self.checkPermissionManageComments()
         if not (perm_manage or perm_manage_comments or self.own_comments()):

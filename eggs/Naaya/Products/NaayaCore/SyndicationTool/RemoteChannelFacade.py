@@ -12,7 +12,7 @@ from .RemoteChannel import RemoteChannel
 manage_addRemoteChannelFacadeForm = PageTemplateFile('zpt/remotechannelfacade_manage_add', globals())
 def manage_addRemoteChannelFacade(self, id='', title='', url='', providername='',
     location='', obtype='news', numbershownitems='', portlet='', REQUEST=None):
-    """ """
+    """ Manage add remote channel facade """
     id = self.utSlugify(id)
     if not id: id = PREFIX_SUFIX_REMOTECHANNELFACADE % self.utGenRandomId(6)
     try: numbershownitems = abs(int(numbershownitems))
@@ -26,7 +26,7 @@ def manage_addRemoteChannelFacade(self, id='', title='', url='', providername=''
 
 @implementer(IRemoteChannelFacade)
 class RemoteChannelFacade(RemoteChannel):
-    """ """
+    """ Remote channel facade """
 
 
     meta_type = METATYPE_REMOTECHANNELFACADE
@@ -39,7 +39,7 @@ class RemoteChannelFacade(RemoteChannel):
     security = ClassSecurityInfo()
 
     def __init__(self, id, title, url, providername, location, obtype, numbershownitems):
-        """ """
+        """ Init """
         RemoteChannel.__dict__['__init__'](self, id, title, url, numbershownitems)
         self.providername = providername
         self.location = location
@@ -47,7 +47,7 @@ class RemoteChannelFacade(RemoteChannel):
 
     #api
     def updateChannel(self, uid):
-        """ """
+        """ Update channel """
         if uid==self.get_site_uid():
             self.harvest_feed()
             if self.get_feed_bozo_exception() is not None: error = self.get_feed_bozo_exception()
@@ -145,7 +145,7 @@ class RemoteChannelFacade(RemoteChannel):
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', url='', providername='', location='',
         obtype='news', numbershownitems='', REQUEST=None):
-        """ """
+        """ Manage properties """
         try: numbershownitems = abs(int(numbershownitems))
         except: numbershownitems = self.numbershownitems
         self.title = title

@@ -9,7 +9,7 @@ from Products.NaayaCore.constants import *
 
 manage_addChannelAggregatorForm = PageTemplateFile('zpt/aggregator_manage_add', globals())
 def manage_addChannelAggregator(self, id='', title='', channels=[], portlet='', description='', REQUEST=None):
-    """ """
+    """ Manage add channel aggregator """
 
     channels = [ch for ch in channels if self.getSyndicationTool()._getOb(ch, None)]
 
@@ -23,7 +23,7 @@ def manage_addChannelAggregator(self, id='', title='', channels=[], portlet='', 
         return self.manage_main(self, REQUEST, update_menu=1)
 
 class ChannelAggregator(SimpleItem):
-    """ """
+    """ Channel aggregator """
 
     meta_type = METATYPE_CHANNEL_AGGREGATOR
     icon = 'misc_/NaayaCore/ChannelAggregator.gif'
@@ -40,7 +40,7 @@ class ChannelAggregator(SimpleItem):
     security = ClassSecurityInfo()
 
     def __init__(self, id, title, channels, description):
-        """ """
+        """ Init """
         self.id = id
         self.title = title
         self.channels = channels
@@ -58,7 +58,7 @@ class ChannelAggregator(SimpleItem):
    #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', channels=[], description='', REQUEST=None):
-        """ """
+        """ Manage properties """
         self.title = title
         self.description = description
         self.channels = [ch for ch in channels if self.getSyndicationTool()._getOb(ch, None)]

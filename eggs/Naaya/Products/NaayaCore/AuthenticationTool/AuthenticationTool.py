@@ -53,7 +53,7 @@ log = logging.getLogger(__name__)
 
 
 def manage_addAuthenticationTool(self, REQUEST=None):
-    """ """
+    """ Manage add authentication tool """
     ob = AuthenticationTool(ID_AUTHENTICATIONTOOL, TITLE_AUTHENTICATIONTOOL)
     self._setObject(ID_AUTHENTICATIONTOOL, ob)
     if REQUEST:
@@ -294,7 +294,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
     security.declarePrivate('_doChangeUserRoles')
 
     def _doChangeUserRoles(self, name, roles, **kw):
-        """ """
+        """ Do change user roles """
         user = self.data[name]
         user.setRoles(self.getSite(), roles)
         self._p_changed = 1
@@ -302,7 +302,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
     security.declarePrivate('_doDelUserRoles')
 
     def _doDelUserRoles(self, name, **kw):
-        """ """
+        """ Do del user roles """
         for user in name:
             user_obj = self.data[user]
             user_obj.delRoles(self.getSite())
@@ -355,7 +355,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
     def manage_addUser(self, name='', password='', confirm='', roles=[],
                        domains=[], firstname='', lastname='', email='',
                        strict=0, REQUEST=None):
-        """ """
+        """ Manage add user """
         email = email.strip()
         if not check_username(name):
             raise ValidationError('Username: only letters and numbers allowed')
@@ -416,7 +416,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
     def manage_changeUser(self, name='', password='', confirm='', roles=[],
                           domains=[], firstname='', lastname='', email='',
                           REQUEST=None):
-        """ """
+        """ Manage change user """
         user_ob = self.getUser(name)
         email = email.strip()
         if password == '' and confirm == '':
@@ -460,7 +460,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
     def manage_addUsersRoles(self, name='', roles=[], location='',
                              REQUEST=None):
-        """ """
+        """ Manage add users roles """
         roles = self.utConvertToList(roles)
 
         if not name:
@@ -481,7 +481,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
     security.declareProtected(manage_users, 'manage_revokeUserRole')
 
     def manage_revokeUserRole(self, user, location, REQUEST=None):
-        """ """
+        """ Manage revoke user role """
         user = [user]
         if location == '' or location == '/':
             self._doDelUserRoles(user)
@@ -494,7 +494,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
     security.declareProtected(manage_users, 'manage_delUsers')
 
     def manage_delUsers(self, names=[], REQUEST=None):
-        """ """
+        """ Manage del users """
         self._doDelUsers(self.utConvertToList(names))
         if REQUEST:
             REQUEST.RESPONSE.redirect('manage_users_html')
@@ -679,7 +679,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
     def revoke_searched_roles(self, usernames, role_to_revoke, filter_location,
                               REQUEST=None):
-        """ """
+        """ Revoke searched roles """
         if REQUEST:
             # for logging
             manager_id = REQUEST.AUTHENTICATED_USER.getUserName()
@@ -1523,7 +1523,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             return None
 
     def manageAddSource(self, source_path, title='', REQUEST=None):
-        """ """
+        """ Manage add source """
         source_obj = self.unrestrictedTraverse('/' + source_path, None)
         plugin_factory = self.getPluginFactory(source_obj.meta_type)
 
@@ -1546,7 +1546,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         return False
 
     def manageDeleteSource(self, id, REQUEST=None):
-        """ """
+        """ Manage delete source """
         try:
             self._delObject(id)
         except AttributeError:
@@ -1555,7 +1555,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             REQUEST.RESPONSE.redirect('manage_sources_html')
 
     def showBulkDownloadButton(self):
-        """ """
+        """ Show bulk download button """
         return self.checkPermissionPublishObjects()
 
     def makeRolesString(self, roles, path='', date=None,
@@ -1795,7 +1795,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
     security.declareProtected(manage_users, 'manage_importUsers')
 
     def manage_importUsers(self, data=None, REQUEST=None):
-        """ """
+        """ Manage import users """
 
         if (REQUEST and
                 not self.getParentNode().checkPermissionPublishObjects()):
@@ -1930,7 +1930,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
     security.declareProtected(manage_users, 'template')
 
     def template(self, as_attachment=True, REQUEST=None):
-        """ """
+        """ Template """
         output = StringIO()
         columns = ['firstname', 'lastname', 'email', 'name', 'password',
                    'roles', 'domains']
@@ -1944,7 +1944,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
     security.declareProtected(view, 'get_ldap_user_groups')
 
     def get_ldap_user_groups(self, user_id):
-        """ """
+        """ Get ldap user groups """
         try:
             from eea.usersdb.factories import agent_from_site
         except ImportError:

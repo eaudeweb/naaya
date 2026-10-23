@@ -70,7 +70,7 @@ config = {
 
 
 def youtube_add_html(self, REQUEST=None, RESPONSE=None):
-    """ """
+    """ Youtube add html """
     from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
     form_helper = get_schema_helper_for_metatype(self, config['meta_type'])
     return self.getFormsTool().getContent(
@@ -190,7 +190,7 @@ def addNyYoutube(self, id='', REQUEST=None, contributor=None, **kwargs):
 @implementer(INyYoutube)
 class NyYoutube(Implicit, NyContentData, NyAttributes, NyItem,
                 NyNonCheckControl, NyValidation, NyContentType):
-    """ """
+    """ Ny youtube """
 
     meta_type = config['meta_type']
     meta_label = config['label']
@@ -206,7 +206,7 @@ class NyYoutube(Implicit, NyContentData, NyAttributes, NyItem,
     security = ClassSecurityInfo()
 
     def __init__(self, id, contributor):
-        """ """
+        """ Init """
         self.id = id
         NyValidation.__dict__['__init__'](self)
         NyItem.__dict__['__init__'](self)
@@ -216,7 +216,7 @@ class NyYoutube(Implicit, NyContentData, NyAttributes, NyItem,
     security.declareProtected(view_management_screens, 'manageProperties')
 
     def manageProperties(self, REQUEST=None, **kwargs):
-        """ """
+        """ Manage properties """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
 
@@ -279,7 +279,7 @@ class NyYoutube(Implicit, NyContentData, NyAttributes, NyItem,
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
 
     def saveProperties(self, REQUEST=None, **kwargs):
-        """ """
+        """ Save properties """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
 
@@ -365,13 +365,13 @@ class NyYoutube(Implicit, NyContentData, NyAttributes, NyItem,
     security.declareProtected(view, 'index_html')
 
     def index_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Index html """
         return self.getFormsTool().getContent({'here': self}, 'youtube_index')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
 
     def edit_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Edit html """
         return self.getFormsTool().getContent({'here': self}, 'youtube_edit')
 
 

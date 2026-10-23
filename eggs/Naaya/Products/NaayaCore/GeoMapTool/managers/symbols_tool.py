@@ -15,7 +15,7 @@ CIRCLE_IMAGE_SIZE = 12
 ImageSize = namedtuple('ImageSize', 'w h')
 
 class symbol_item:
-    """ """
+    """ Symbol item """
 
     sortorder = 100
     color = None
@@ -88,14 +88,14 @@ class symbol_item:
 InitializeClass(symbol_item)
 
 class symbols_tool:
-    """ """
+    """ Symbols tool """
 
     def __init__(self):
-        """ """
+        """ Init """
         self.__symbol_collection = {}
 
     def __addSymbol(self, id, title, description, parent, color, picture, sortorder):
-        """ """
+        """ Add symbol """
         if not title:
             raise ValueError('The title is required')
 
@@ -115,7 +115,7 @@ class symbols_tool:
         self.__symbol_collection[id] = obj
 
     def __updateSymbol(self, id, title, description, parent, color, picture, sortorder):
-        """ """
+        """ Update symbol """
 
         try: obj = self.__symbol_collection[id]
         except: pass
@@ -149,7 +149,7 @@ class symbols_tool:
             obj._p_changed = 1
 
     def __deleteSymbol(self, id):
-        """ """
+        """ Delete symbol """
         try: del(self.__symbol_collection[id])
         except: pass
 
@@ -199,7 +199,7 @@ class symbols_tool:
         except: return None
 
     def getSymbolData(self, id):
-        """ """
+        """ Get symbol data """
         ob = self.getSymbol(id)
         if ob is not None:
             return {
@@ -264,7 +264,7 @@ class symbols_tool:
                 return symbol.getPicture(dict(REQUEST.form))
 
     def updateSymbols(self):
-        """ """
+        """ Update symbols """
         #to be removed
         for id in self.getSymbolsIds():
             if not id.startswith('symbol'):
@@ -276,7 +276,7 @@ class symbols_tool:
         self._p_changed = 1
 
     def updateSymbolsSortorders(self):
-        """ """
+        """ Update symbols sortorders """
         #to be removed
         for id in self.getSymbolsIds():
             obj = self.__symbol_collection[id]
@@ -287,7 +287,7 @@ class symbols_tool:
         self._p_changed = 1
 
     def updateSymbolsParent(self):
-        """ """
+        """ Update symbols parent """
         #to be removed
         for id in self.getSymbolsIds():
             obj = self.__symbol_collection[id]
@@ -298,17 +298,17 @@ class symbols_tool:
         self._p_changed = 1
 
     def addSymbol(self, id, title, description, parent, color, picture, sortorder):
-        """ """
+        """ Add symbol """
         self.__addSymbol(id, title, description, parent, color, picture, sortorder)
         self._p_changed = 1
 
     def updateSymbol(self, id, title, description, parent, color, picture, sortorder):
-        """ """
+        """ Update symbol """
         self.__updateSymbol(id, title, description, parent, color, picture, sortorder)
         self._p_changed = 1
 
     def deleteSymbol(self, ids):
-        """ """
+        """ Delete symbol """
         for symbol_id in ids:
             self.__deleteSymbol(symbol_id)
         self._p_changed = 1

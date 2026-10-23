@@ -293,7 +293,7 @@ class plugLDAPUserFolder(PlugBase):
 
     def addUserRoles(self, name=[], roles=[], location='',
                      user_location='', send_mail='', REQUEST=None):
-        """ """
+        """ Add user roles """
         super(plugLDAPUserFolder, self).addUserRoles(name, roles, location,
                                                      user_location, send_mail,
                                                      REQUEST)
@@ -308,7 +308,7 @@ class plugLDAPUserFolder(PlugBase):
     security.declareProtected(manage_users, 'revokeUserRoles')
 
     def revokeUserRoles(self, user, location, REQUEST=None):
-        """ """
+        """ Revoke user roles """
         super(plugLDAPUserFolder, self).revokeUserRoles(user, location,
                                                         REQUEST)
         if REQUEST is not None:
@@ -388,7 +388,7 @@ class plugLDAPUserFolder(PlugBase):
 
     def map_group_to_role(self, group, roles=[], location='',
                           send_mail='', REQUEST=None):
-        """ """
+        """ Map group to role """
         def on_error(error_str):
             if REQUEST is not None:
                 self.setSessionErrorsTrans(error_str)
@@ -424,7 +424,7 @@ class plugLDAPUserFolder(PlugBase):
     security.declareProtected(manage_users, 'revoke_group_role')
 
     def revoke_group_role(self, group_id, role, location, REQUEST=None):
-        """ """
+        """ Revoke group role """
         ob = self.getSite().unrestrictedTraverse(location)
         ob.acl_satellite.remove_group_roles(group_id, [role])
 

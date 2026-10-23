@@ -37,7 +37,7 @@ from naaya.i18n.LocalPropertyManager import LocalPropertyManager, LocalProperty
 manage_addNyNetChannel_html = PageTemplateFile('zpt/netchannel_manage_add', globals())
 def addNyNetChannel(self, id='', title='', description='', url='', language=None,
     type=None, manual=1, lang=None, REQUEST=None):
-    """ """
+    """ Add ny net channel """
     id = self.utCleanupId(id)
     if not id: id = PREFIX_NYNETCHANNEL + self.utGenRandomId(6)
     try: manual = abs(int(manual))
@@ -57,7 +57,7 @@ def addNyNetChannel(self, id='', title='', description='', url='', language=None
             REQUEST.RESPONSE.redirect('%s/messages_html' % self.getSitePath())
 
 class NyNetChannel(NyAttributes, LocalPropertyManager, NyItem, NyFeed):
-    """ """
+    """ Ny net channel """
 
     meta_type = METATYPE_NYNETCHANNEL
     icon = 'misc_/NaayaNetRepository/NyNetChannel.gif'
@@ -76,7 +76,7 @@ class NyNetChannel(NyAttributes, LocalPropertyManager, NyItem, NyFeed):
     description = LocalProperty('description')
 
     def __init__(self, id, title, description, url, language, type, manual, lang):
-        """ """
+        """ Init """
         self.id = id
         self._setLocalPropValue('title', lang, title)
         self._setLocalPropValue('description', lang, description)
@@ -108,7 +108,7 @@ class NyNetChannel(NyAttributes, LocalPropertyManager, NyItem, NyFeed):
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', description='', url='', language=None,
         type=None, REQUEST=None):
-        """ """
+        """ Manage properties """
         lang = self.gl_get_selected_language()
         if language is None: language = lang
         self._setLocalPropValue('title', lang, title)
@@ -124,7 +124,7 @@ class NyNetChannel(NyAttributes, LocalPropertyManager, NyItem, NyFeed):
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'saveProperties')
     def saveProperties(self, title='', description='', url='', language=None, type=None,
         lang=None, REQUEST=None):
-        """ """
+        """ Save properties """
         if lang is None: lang = self.gl_get_selected_language()
         if language is None: language = lang
         self._setLocalPropValue('title', lang, title)
@@ -140,7 +140,7 @@ class NyNetChannel(NyAttributes, LocalPropertyManager, NyItem, NyFeed):
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'update_netchannel')
     def update_netchannel(self, REQUEST=None):
-        """ """
+        """ Update netchannel """
         self.harvest_feed()
         if REQUEST:
             if self.get_feed_bozo_exception() is not None: self.setSessionErrors([self.get_feed_bozo_exception()])

@@ -2,7 +2,7 @@ from DateTime import DateTime
 from Products.naayaUpdater.updates import UpdateScript
 
 class UpdateNewsContributor(UpdateScript):
-    """ """
+    """ Update news contributor """
     title = 'Update news contributor'
     creation_date = 'Jan 6, 2011'
     authors = ['Alexandru Plugaru']

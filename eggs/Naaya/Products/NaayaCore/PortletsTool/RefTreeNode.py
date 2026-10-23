@@ -12,7 +12,7 @@ from Products.NaayaCore.managers.utils import make_id
 manage_addRefTreeNodeForm = PageTemplateFile('zpt/reftreenode_manage_add', globals())
 def manage_addRefTreeNode(self, id='', title='', parent=None, pickable='',
     lang=None, REQUEST=None, weight=0):
-    """ """
+    """ Manage add ref tree node """
     id = make_id(self, id=id, title=title, prefix=PREFIX_SUFIX_REFTREE)
     if parent == '': parent = None
     if pickable: pickable = 1
@@ -39,7 +39,7 @@ def localizer_setter(self, value):
 localizer_patcher = property(localizer_getter, localizer_setter)
 
 class RefTreeNode(LocalPropertyManager, SimpleItem):
-    """ """
+    """ Ref tree node """
 
     meta_type = METATYPE_REFTREENODE
     icon = 'misc_/NaayaCore/RefTreeNode.gif'
@@ -58,7 +58,7 @@ class RefTreeNode(LocalPropertyManager, SimpleItem):
     title = localizer_patcher
 
     def __init__(self, id, title, parent, pickable, lang, weight=0):
-        """ """
+        """ Init """
         self.id = id
         self.title = title
         self.parent = parent
@@ -69,7 +69,7 @@ class RefTreeNode(LocalPropertyManager, SimpleItem):
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', parent='', pickable='',
         lang=None, REQUEST=None):
-        """ """
+        """ Manage properties """
         if parent == '': parent = None
         if pickable: pickable = 1
         else: pickable = 0

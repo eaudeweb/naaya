@@ -6,7 +6,7 @@ from Products.NaayaCore.managers.utils import utils
 
 
 class EnviroWindowsSite(GroupwareSite):	# NySite):
-    """ """
+    """ Enviro windows site """
     meta_type = "Groupware site"
     security = ClassSecurityInfo()
 
@@ -20,7 +20,7 @@ class EnviroWindowsSite(GroupwareSite):	# NySite):
 
     security.declarePublic('stripAllHtmlTags')
     def stripAllHtmlTags(self, p_text):
-        """ """
+        """ Strip all html tags """
         return utils().utStripAllHtmlTags(p_text)
 
 InitializeClass(EnviroWindowsSite)

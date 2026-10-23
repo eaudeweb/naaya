@@ -4,7 +4,7 @@ from AccessControl import ClassSecurityInfo
 
 
 class ref_item:
-    """ """
+    """ Ref item """
 
     def __init__(self, id, title):
         self.id = id
@@ -16,10 +16,10 @@ class ref_item:
 InitializeClass(ref_item)
 
 class ref_manager:
-    """ """
+    """ Ref manager """
 
     def __init__(self):
-        """ """
+        """ Init """
         self.__collection = {}
 
     #security stuff

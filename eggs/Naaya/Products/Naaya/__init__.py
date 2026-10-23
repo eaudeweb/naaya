@@ -24,7 +24,7 @@ except Exception:
     pass
 
 def initialize(context):
-    """ """
+    """ Initialize """
     from .constants import PERMISSION_ADD_SITE, PERMISSION_ADD_FOLDER
     from naaya.content.base import discover
     from . import NySite

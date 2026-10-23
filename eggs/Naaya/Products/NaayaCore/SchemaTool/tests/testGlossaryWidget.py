@@ -16,7 +16,7 @@ class GlossaryWidgetTestCase(NaayaTestCase):
         self.assertTrue('value="glossary"' in html)
 
     def test_default_value(self):
-        """ """
+        """ Test default value """
         html = self.widget.render_html('')
         self.assertTrue('value="%s"' % self.widget.default in html)
 

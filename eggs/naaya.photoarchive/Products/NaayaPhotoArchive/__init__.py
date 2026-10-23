@@ -65,7 +65,7 @@ register_schema_product(name='NyPhotoFolder', label='Photo Folder',
     default_schema=NyPhotoFolder.DEFAULT_SCHEMA)
 
 def initialize(context):
-    """ """
+    """ Initialize """
 
     context.registerClass(
         NyPhotoGallery.NyPhotoGallery,

@@ -40,7 +40,7 @@ portlet_template_reverse_names = dict((v,k) for k,v in portlet_template_names.it
 
 
 def manage_addPortletsTool(self, REQUEST=None):
-    """ """
+    """ Manage add portlets tool """
     ob = PortletsTool(ID_PORTLETSTOOL, TITLE_PORTLETSTOOL)
     self._setObject(ID_PORTLETSTOOL, ob)
     self._getOb(ID_PORTLETSTOOL).loadDefaultData()
@@ -48,7 +48,7 @@ def manage_addPortletsTool(self, REQUEST=None):
         return self.manage_main(self, REQUEST, update_menu=1)
 
 class PortletsTool(Folder, utils):
-    """ """
+    """ Portlets tool """
 
     meta_type = METATYPE_PORTLETSTOOL
     icon = 'misc_/NaayaCore/PortletsTool.gif'
@@ -83,7 +83,7 @@ class PortletsTool(Folder, utils):
     manage_addRefTree = manage_addRefTree
 
     def __init__(self, id, title):
-        """ """
+        """ Init """
         self.id = id
         self.title = title
         self._portlet_layout = {}
@@ -146,7 +146,7 @@ class PortletsTool(Folder, utils):
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'handle_jstree_actions')
     def handle_jstree_actions(self, data):
-        """ """
+        """ Handle jstree actions """
         data = json.loads(data)
         action = data['action']
         type = data['type']
@@ -532,25 +532,25 @@ class PortletsTool(Folder, utils):
     #zmi actions
     security.declareProtected(view_management_screens, 'manage_left_portlets')
     def manage_left_portlets(self, portlets=[], REQUEST=None):
-        """ """
+        """ Manage left portlets """
         self.getSite().set_left_portlets_ids(self.utConvertToList(portlets))
         if REQUEST: REQUEST.RESPONSE.redirect('manage_left_portlets_html')
 
     security.declareProtected(view_management_screens, 'manage_center_portlets')
     def manage_center_portlets(self, portlets=[], REQUEST=None):
-        """ """
+        """ Manage center portlets """
         self.getSite().set_center_portlets_ids(self.utConvertToList(portlets))
         if REQUEST: REQUEST.RESPONSE.redirect('manage_center_portlets_html')
 
     security.declareProtected(view_management_screens, 'manage_set_right_portlets')
     def manage_set_right_portlets(self, portlets=[], folder='', REQUEST=None):
-        """ """
+        """ Manage set right portlets """
         self.getSite().set_right_portlets_locations(folder, self.utConvertToList(portlets))
         if REQUEST: REQUEST.RESPONSE.redirect('manage_right_portlets_html')
 
     security.declareProtected(view_management_screens, 'manage_delete_right_portlets')
     def manage_delete_right_portlets(self, ids=[], REQUEST=None):
-        """ """
+        """ Manage delete right portlets """
         ids = self.utConvertToList(ids)
         ob = self.getSite()
         for pair in ids:

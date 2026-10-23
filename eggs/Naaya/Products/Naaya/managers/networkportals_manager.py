@@ -4,10 +4,10 @@ from AccessControl import ClassSecurityInfo
 
 
 class networkportal_item:
-    """ """
+    """ Networkportal item """
 
     def __init__(self, id, title, url, langs):
-        """ """
+        """ Init """
         self.id = id
         self.title = title
         self.url = url
@@ -19,10 +19,10 @@ class networkportal_item:
 InitializeClass(networkportal_item)
 
 class networkportals_manager:
-    """ """
+    """ Networkportals manager """
 
     def __init__(self):
-        """ """
+        """ Init """
         self.__networkportals_collection = {}
 
     def __add_networkportal_item(self, id, title, url, langs):

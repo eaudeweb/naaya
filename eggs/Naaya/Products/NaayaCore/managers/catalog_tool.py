@@ -29,7 +29,7 @@ class catalog_tool(object):
         return self.getCatalogTool()(p_criteria)
 
     def __getObjectsAndScore(self, p_brains):
-        """ """
+        """ Get objects and score """
         output = []
         for brain in p_brains:
             try:
@@ -97,7 +97,7 @@ class catalog_tool(object):
         return l_result
 
     def searchCatalog(self, p_query, p_path, lang):
-        """ """
+        """ Search catalog """
         if type(p_query) == type(''):
             l_results = self.safe_getobjects(self.__eliminateDuplicates(self.findCatalogedObjects(p_query, p_path, lang)))
         else:

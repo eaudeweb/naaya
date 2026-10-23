@@ -144,7 +144,7 @@ class SurveyAnswer(Folder, NyProperties):
     security.declareProtected(view, 'getDatamodel')
 
     def getDatamodel(self):
-        """ """
+        """ Get datamodel """
         # can_view checks permission view answers or if the user is
         # anonymous, checks if he has provided a valid key
         if not self.can_view():
@@ -220,7 +220,7 @@ class SurveyAnswer(Folder, NyProperties):
     security.declareProtected(PERMISSION_EDIT_ANSWERS, 'deleteSurveyAnswer')
 
     def deleteSurveyAnswer(self, REQUEST=None):
-        """ """
+        """ Delete survey answer """
         survey = self.aq_inner.aq_parent
         survey.deleteAnswer(self.id)
 
@@ -230,7 +230,7 @@ class SurveyAnswer(Folder, NyProperties):
     security.declarePublic('can_edit')
 
     def can_edit(self):
-        """ """
+        """ Can edit """
         if (self.aq_parent.expired() and
                 not self.checkPermissionPublishObjects()):
             return False
@@ -309,7 +309,7 @@ class SurveyAnswer(Folder, NyProperties):
 
 @interface.implementer(INySurveyAnswerAddEvent)
 class NySurveyAnswerAddEvent(object):
-    """ """
+    """ Ny survey answer add event """
 
     def __init__(self, context):
         self.context = context

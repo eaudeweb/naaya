@@ -33,7 +33,7 @@ megasurvey_add_html = NaayaPageTemplateFile('zpt/megasurvey_add', globals(),
 
 def manage_addMegaSurvey(context, id='', title='', lang=None, REQUEST=None,
                          **kwargs):
-    """ """
+    """ Manage add mega survey """
     title = title or 'Survey'
     id = make_id(context, id=id, title=title)
 
@@ -82,7 +82,7 @@ def manage_addMegaSurvey(context, id='', title='', lang=None, REQUEST=None,
 
 
 class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
-    """ """
+    """ Mega survey """
 
     meta_type = 'Naaya Mega Survey'
     meta_label = 'Survey'
@@ -101,7 +101,7 @@ class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
     })
 
     def __init__(self, id, **kwargs):
-        """ """
+        """ Init """
         # BaseSurveyTemplate.__init__(self, id, **kwargs)
         SurveyQuestionnaire.__init__(self, id, None, **kwargs)
         self.contributor = kwargs.get('contributor')
@@ -119,7 +119,7 @@ class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
         return BaseSurveyTemplate.all_meta_types(self, interfaces)
 
     def getSurveyTemplate(self):
-        """ """
+        """ Get survey template """
         return self
 
     security.declareProtected(view, 'download')
@@ -165,7 +165,7 @@ class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
     security.declareProtected(view, 'index_html')
 
     def index_html(self):
-        """ """
+        """ Index html """
         if (not self.checkPermissionSkipCaptcha() and
                 not self.recaptcha_is_present()):
             raise ValueError("Invalid recaptcha keys")

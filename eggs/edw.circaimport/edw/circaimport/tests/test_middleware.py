@@ -31,7 +31,8 @@ class Latin1ZipInfo(zipfile.ZipInfo):
     """Store the member name as latin-1, like the CIRCA exports."""
 
     def _encodeFilenameFlags(self):
-        return self.filename.encode('latin-1'), self.flag_bits
+        # without the UTF-8 flag (0x800), which Python 3.14 sets for non-ASCII names
+        return self.filename.encode('latin-1'), self.flag_bits & ~0x800
 
 
 def write_circa_zip(path):

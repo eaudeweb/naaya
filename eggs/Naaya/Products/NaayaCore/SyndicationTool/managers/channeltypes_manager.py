@@ -4,10 +4,10 @@ from AccessControl import ClassSecurityInfo
 
 
 class channeltype_item:
-    """ """
+    """ Channeltype item """
 
     def __init__(self, id, title):
-        """ """
+        """ Init """
         self.id = id
         self.title = title
 
@@ -17,10 +17,10 @@ class channeltype_item:
 InitializeClass(channeltype_item)
 
 class channeltypes_manager:
-    """ """
+    """ Channeltypes manager """
 
     def __init__(self):
-        """ """
+        """ Init """
         self.__channeltypes_collection = {}
 
     def __add_channeltype_item(self, id, title):

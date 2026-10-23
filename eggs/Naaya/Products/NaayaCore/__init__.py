@@ -10,7 +10,7 @@ except ImportError:
     geo_installed = False
 
 def initialize(context):
-    """ """
+    """ Initialize """
 
     # don't think about importing these top-level like this because
     # they mess up modules' paths

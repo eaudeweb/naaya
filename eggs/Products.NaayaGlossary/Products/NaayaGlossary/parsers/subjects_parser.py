@@ -19,37 +19,37 @@
 
 
 from xml.sax.handler import ContentHandler
-from xml.sax import *
+from xml.sax import InputSource, handler, make_parser
 from io import BytesIO, StringIO
 
 class subjects_struct:
-    """ """
+    """ Subjects struct """
     def __init__(self, code, name):
-        """ """
+        """ Init """
         self.code = code
         self.name = name
 
 class subjects_handler(ContentHandler):
-    """ """
+    """ Subjects handler """
 
     def __init__(self):
-        """ """
+        """ Init """
         self.subjects = []
 
     def startElement(self, name, attrs):
-        """ """
+        """ Start element """
         if name == 'subject':
             self.subjects.append(subjects_struct(attrs['code'].encode('latin-1'), attrs['name'].encode('latin-1')))
 
     def endElement(self, name):
-        """ """
+        """ End element """
         pass
 
 class subjects_parser:
-    """ """
+    """ Subjects parser """
 
     def parseContent(self, content):
-        """ """
+        """ Parse content """
         handler = subjects_handler()
         parser = make_parser()
         parser.setContentHandler(handler)

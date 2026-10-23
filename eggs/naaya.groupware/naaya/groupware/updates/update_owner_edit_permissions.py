@@ -1,7 +1,7 @@
 from Products.naayaUpdater.updates import UpdateScript
 
 class UpdateOwnerEditPermissions(UpdateScript):
-    """ """
+    """ Update owner edit permissions """
     title = 'Update Owner edit permissions for Groupware sites'
     creation_date = 'Nov 09, 2012'
     authors = ['Cornel Nitu']

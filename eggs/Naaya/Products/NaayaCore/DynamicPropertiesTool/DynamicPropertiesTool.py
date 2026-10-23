@@ -17,7 +17,7 @@ from Products.NaayaCore.managers.utils import utils
 from . import DynamicPropertiesItem
 
 def manage_addDynamicPropertiesTool(self, REQUEST=None):
-    """ """
+    """ Manage add dynamic properties tool """
     ob = DynamicPropertiesTool(ID_DYNAMICPROPERTIESTOOL, TITLE_DYNAMICPROPERTIESTOOL)
     self._setObject(ID_DYNAMICPROPERTIESTOOL, ob)
     if REQUEST:
@@ -46,7 +46,7 @@ class DynamicPropertiesTool(Folder, utils):
     security = ClassSecurityInfo()
 
     def __init__(self, id, title):
-        """ """
+        """ Init """
         self.id = id
         self.title = title
         utils.__dict__['__init__'](self)

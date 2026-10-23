@@ -69,7 +69,7 @@ class EmailSender(SimpleItem):
     title = 'Send Emails'
 
     def __init__(self, id):
-        """ """
+        """ Init """
         self.id = id
 
     def getMeeting(self):
@@ -78,7 +78,7 @@ class EmailSender(SimpleItem):
     security.declareProtected(PERMISSION_ADMIN_MEETING, 'index_html')
 
     def index_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Index html """
         return self.getFormsTool().getContent(
             {'here': self,
              'meeting': self.getMeeting()},
@@ -86,7 +86,7 @@ class EmailSender(SimpleItem):
 
     def _send_email(self, p_from, p_to, p_cc, p_subject, p_content,
                     only_to=False, only_cc=False):
-        """ """
+        """ Send email """
         try:
             email_tool = self.getEmailTool()
             return email_tool.sendEmail(p_content=p_content,
@@ -101,7 +101,7 @@ class EmailSender(SimpleItem):
             return 0
 
     def _send_email_with_template(self, template_id, p_from, p_to, mail_opts):
-        """ """
+        """ Send email with template """
         try:
             email_tool = self.getEmailTool()
 
@@ -125,7 +125,7 @@ class EmailSender(SimpleItem):
 
     def send_email(self, from_email, subject, body_text, cc_emails, REQUEST,
                    to_uids=None):
-        """ """
+        """ Send email """
         errors = []
         if not to_uids:
             to_uids = []
@@ -200,7 +200,7 @@ class EmailSender(SimpleItem):
     security.declareProtected(PERMISSION_ADMIN_MEETING, 'send_signup_email')
 
     def send_signup_email(self, signup):
-        """ """
+        """ Send signup email """
         meeting = self.getMeeting()
         site = self.getSite()
         from_email = site.administrator_email
@@ -223,7 +223,7 @@ class EmailSender(SimpleItem):
                               'send_account_subscription_email')
 
     def send_account_subscription_email(self, account_subscription):
-        """ """
+        """ Send account subscription email """
         meeting = self.getMeeting()
         site = self.getSite()
         from_email = site.administrator_email
@@ -242,7 +242,7 @@ class EmailSender(SimpleItem):
                               'send_signup_accepted_email')
 
     def send_signup_accepted_email(self, signup, resend=False):
-        """ """
+        """ Send signup accepted email """
         meeting = self.getMeeting()
         subscriptions = meeting.getParticipants().getSubscriptions()
         account_info = meeting.getParticipants()._get_attendees()[signup.key]
@@ -266,7 +266,7 @@ class EmailSender(SimpleItem):
                               'send_signup_rejected_email')
 
     def send_signup_rejected_email(self, signup):
-        """ """
+        """ Send signup rejected email """
         meeting = self.getMeeting()
         from_email = meeting.contact_email
         to_email = signup.email
@@ -284,7 +284,7 @@ class EmailSender(SimpleItem):
 
     def send_account_subscription_accepted_email(self, account_subscription,
                                                  resend=False):
-        """ """
+        """ Send account subscription accepted email """
         meeting = self.getMeeting()
         uid = account_subscription.uid
         account_info = meeting.getParticipants()._get_attendee_info(uid)
@@ -306,7 +306,7 @@ class EmailSender(SimpleItem):
                               'send_account_subscription_rejected_email')
 
     def send_account_subscription_rejected_email(self, account_subscription):
-        """ """
+        """ Send account subscription rejected email """
         meeting = self.getMeeting()
         from_email = meeting.contact_email
         to_email = account_subscription.email
@@ -413,7 +413,7 @@ class EmailSender(SimpleItem):
     security.declareProtected(PERMISSION_ADMIN_MEETING, 'findUsers')
 
     def findUsers(self, search_param, search_term):
-        """ """
+        """ Find users """
         if len(search_term) == 0:
             return []
         return json.dumps(findUsers(self.getSite(), search_param, search_term))

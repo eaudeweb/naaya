@@ -115,14 +115,14 @@ class Terms(SimpleItem, session_manager):
     #term constraints
     security.declareProtected(view_management_screens, 'checkTerm')
     def checkTerm(self, concept_id):
-        """ """
+        """ Check term """
         if self.getConceptsFolder().get_concept_by_id(concept_id):
             return 1
         return 0
 
     security.declareProtected(view_management_screens, 'getIdsList')
     def getIdsList(self, ids, all=0):
-        """ """
+        """ Get ids list """
         if all: return self.terms.keys()
         return th_utils().getIdsList(ids)
 
@@ -235,7 +235,7 @@ class Terms(SimpleItem, session_manager):
 
     #import related
     def skos_import(self, file, langcode, REQUEST=None):
-        """ """
+        """ Skos import """
         parser = term_parser()
 
         #parse the SKOS information

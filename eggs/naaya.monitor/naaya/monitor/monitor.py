@@ -41,12 +41,12 @@ class NaayaMonitor(Folder):
                               'manage_add_blobstats_html')
 
     def manage_add_blobstats_html(self, REQUEST, RESPONSE):
-        """ """
+        """ Manage add blobstats html """
         return blobusage.manage_addStatsItem(self, REQUEST, RESPONSE)
 
 
 def add_monitor_stats():
-    ''' '''
+    ''' Add monitor stats '''
     try:
         monitor = Zope2.app().objectValues('Naaya Monitor')[0]
     except IndexError:

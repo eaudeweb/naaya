@@ -26,7 +26,7 @@ from DateTime import DateTime
 from Products.NaayaBase.NyFSFile import NyFSFile
 
 def addSimpleConsultationComment(self, title='', contributor='', contributor_name='', message='', file='', REQUEST=None):
-    """ """
+    """ Add simple consultation comment """
     
     id = 'scc' + self.utGenRandomId(6)
     if REQUEST and not contributor:
@@ -42,7 +42,7 @@ def addSimpleConsultationComment(self, title='', contributor='', contributor_nam
         return REQUEST.RESPONSE.redirect(self.absolute_url() + '/add_simpleconsultation_comment?status=ok')
 
 class SimpleConsultationComment(NyFSFile):
-    """ """
+    """ Simple consultation comment """
     
     meta_type = 'Simple Consultation Comment'
     
@@ -75,7 +75,7 @@ class SimpleConsultationComment(NyFSFile):
         return self.index_html()
 
     def get_comment_date(self):
-        """ """
+        """ Get comment date """
         return self.comment_date
 
 InitializeClass(SimpleConsultationComment)

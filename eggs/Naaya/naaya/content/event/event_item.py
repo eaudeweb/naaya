@@ -101,7 +101,7 @@ config = {
 
 
 def event_add_html(self, REQUEST=None, RESPONSE=None):
-    """ """
+    """ Event add html """
     from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
     form_helper = get_schema_helper_for_metatype(self, config['meta_type'])
     return self.getFormsTool().getContent({
@@ -250,12 +250,12 @@ def importNyEvent(self, param, id, attrs, content, properties, discussion,
 
 
 class event_item(Implicit, NyContentData):
-    """ """
+    """ Event item """
 
 
 @implementer(INyEvent)
 class NyEvent(event_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
-    """ """
+    """ Ny event """
 
 
     meta_type = config['meta_type']
@@ -264,7 +264,7 @@ class NyEvent(event_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
     icon_marked = 'misc_/NaayaContent/NyEvent_marked.gif'
 
     def manage_options(self):
-        """ """
+        """ Manage options """
         l_options = ()
         if not self.hasVersion():
             l_options += ({'label': 'Properties',
@@ -276,7 +276,7 @@ class NyEvent(event_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
     security = ClassSecurityInfo()
 
     def __init__(self, id, contributor):
-        """ """
+        """ Init """
         self.id = id
         event_item.__init__(self)
         NyCheckControl.__dict__['__init__'](self)
@@ -365,7 +365,7 @@ class NyEvent(event_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
     security.declareProtected(view_management_screens, 'manageProperties')
 
     def manageProperties(self, REQUEST=None, **kwargs):
-        """ """
+        """ Manage properties """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
 
@@ -399,7 +399,7 @@ class NyEvent(event_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'commitVersion')
 
     def commitVersion(self, REQUEST=None):
-        """ """
+        """ Commit version """
         user = self.REQUEST.AUTHENTICATED_USER.getUserName()
         if (not self.checkPermissionEditObject()) or (
                 self.checkout_user != user):
@@ -419,7 +419,7 @@ class NyEvent(event_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'startVersion')
 
     def startVersion(self, REQUEST=None):
-        """ """
+        """ Start version """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
         if self.hasVersion():
@@ -436,7 +436,7 @@ class NyEvent(event_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
 
     def saveProperties(self, REQUEST=None, **kwargs):
-        """ """
+        """ Save properties """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
 
@@ -503,13 +503,13 @@ class NyEvent(event_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
     security.declareProtected(view, 'index_html')
 
     def index_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Index html """
         return self.getFormsTool().getContent({'here': self}, 'event_index')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
 
     def edit_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Edit html """
         if self.hasVersion():
             obj = self.version
         else:

@@ -15,7 +15,7 @@ class plugins_tool(object):
         for klass in plugin_classes:
             plugins.append({
                 'name': klass.__name__,
-                'doc': klass.__doc__,
+                'doc': (klass.__doc__ or '').strip(),
                 'object_type': klass.object_type
             })
         return plugins

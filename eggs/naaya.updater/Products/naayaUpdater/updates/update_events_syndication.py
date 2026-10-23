@@ -48,7 +48,7 @@ class UpdateEventsSyndication(UpdateScript):
     authors = ['Alexandru Plugaru']
 
     def _update(self, portal):
-        """ """
+        """ Update """
         channels_to_update = ['upcomingevents_rdf', 'latestevents_rdf',
                               'pastevents_rdf']
         if hasattr(portal, 'portal_syndication'):

@@ -4,7 +4,7 @@ from AccessControl import ClassSecurityInfo
 
 
 class link_item:
-    """ """
+    """ Link item """
 
     def __init__(self, id, title, description, url, relative, permission, order):
         self.id = id
@@ -21,10 +21,10 @@ class link_item:
 InitializeClass(link_item)
 
 class links_manager:
-    """ """
+    """ Links manager """
 
     def __init__(self):
-        """ """
+        """ Init """
         self.__links_collection = {}
 
     #security stuff

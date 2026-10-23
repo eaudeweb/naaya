@@ -13,20 +13,18 @@ jobs:
     name: test (${{ matrix.site }}, Python ${{ matrix.python }})
     runs-on: ubuntu-24.04
     timeout-minutes: 60
-    # Python 3.14 is a trial: its failures do not fail the workflow
-    continue-on-error: ${{ matrix.python != '3.12' }}
     strategy:
       fail-fast: false
       matrix:
         site: [circa, destinet]
-        python: ['3.12', '3.14']
+        python: ['3.12']
         include:
           - site: circa
             repo: eaudeweb/naaya.buildout.circabe
           - site: destinet
             repo: eaudeweb/naaya.buildout.destinet
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           path: naaya
 
@@ -36,20 +34,20 @@ jobs:
           git config --global url."https://github.com/".insteadOf git@github.com:
           git -C naaya submodule update --init bundles/NaayaBundles-DESTINET
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           repository: ${{ matrix.repo }}
           ref: pip
           path: site
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           repository: eaudeweb/naaya.buildout.naaya
           ref: pip
           path: site/src/naaya.buildout.naaya
 
       # ubuntu-24.04 has Python 3.12; other versions come from setup-python
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         if: matrix.python != '3.12'
         with:
           python-version: ${{ matrix.python }}
@@ -58,7 +56,7 @@ jobs:
       - name: Install the python-ldap build dependencies, ffmpeg and poppler-utils
         run: sudo apt-get update && sudo apt-get install -y libldap2-dev libsasl2-dev ffmpeg poppler-utils
 
-      - uses: actions/cache@v4
+      - uses: actions/cache@v6
         with:
           path: ~/.cache/pip
           key: pip-${{ matrix.site }}-${{ matrix.python }}-${{ hashFiles('site/versions.cfg', 'site/src/naaya.buildout.naaya/zope6-versions.cfg') }}

@@ -40,7 +40,7 @@ def convertLinesToList(value):
     return values
 
 def readFile(p_path, p_flag='r'):
-    """ """
+    """ Read file """
     encoding = None if 'b' in p_flag else 'utf-8'
     with open(p_path, p_flag, encoding=encoding) as f:
         return f.read()

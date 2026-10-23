@@ -4,14 +4,14 @@ from DateTime import DateTime
 from .xmlrpc_tool import ProxiedTransport
 
 class search_tool:
-    """ """
+    """ Search tool """
 
     def __init__(self):
-        """ """
+        """ Init """
         pass
 
     def external_get_items_age(self, search_list, age):
-        """ """
+        """ External get items age """
         if len(search_list)==0:
             return 0
         items_old=0
@@ -20,7 +20,7 @@ class search_tool:
         return (items_old*100)/len(search_list)
 
     def external_get_item_age(self, item, age):
-        """ """
+        """ External get item age """
         item_date = DateTime(item)
         current_date = DateTime()
         difference = current_date-item_date

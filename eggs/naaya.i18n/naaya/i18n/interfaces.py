@@ -6,10 +6,10 @@ class INyTranslationCatalog(Interface):
 
 
     def edit_message(msgid, lang, translation):
-        """ """
+        """ Edit message """
 
     def del_message(msgid):
-        """ """
+        """ Del message """
 
     def gettext(msgid, lang, default=None):
         """Returns the corresponding translation of msgid in Catalog."""

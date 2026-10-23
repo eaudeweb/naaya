@@ -27,7 +27,7 @@ from .constants import *
 from . import NyNetRepository
 
 def initialize(context):
-    """ """
+    """ Initialize """
 
     context.registerClass(
         NyNetRepository.NyNetRepository,

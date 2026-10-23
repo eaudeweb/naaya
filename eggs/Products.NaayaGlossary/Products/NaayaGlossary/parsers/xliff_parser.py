@@ -19,7 +19,7 @@
 
 
 from xml.sax.handler import ContentHandler
-from xml.sax import *
+from xml.sax import InputSource, handler, make_parser
 from io import BytesIO, StringIO
 StringType = str
 
@@ -143,11 +143,11 @@ class xliff_parser:
     """ class for parse xliff files """
 
     def __init__(self):
-        """ """
+        """ Init """
         pass
 
     def parseContent(self, xml_string):
-        """ """
+        """ Parse content """
         chandler = xliff_handler()
         parser = make_parser()
         # Tell the parser to use our handler

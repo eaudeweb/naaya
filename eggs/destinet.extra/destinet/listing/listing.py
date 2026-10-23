@@ -55,12 +55,12 @@ RESOURCE_FRIENDLY_NAMES = {
 
 
 def get_object_types(context, request):
-    """ """
+    """ Get object types """
     return list(RESOURCE_FRIENDLY_NAMES.keys())
 
 
 def get_content(context, request):
-    """ """
+    """ Get content """
     catalog = context.getCatalogTool()
     form = context.REQUEST.form
 #    sort_by = int(form.get('order[0][column]'))

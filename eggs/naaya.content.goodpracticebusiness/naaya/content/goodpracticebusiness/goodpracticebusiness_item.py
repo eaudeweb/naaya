@@ -123,7 +123,7 @@ config = {
 
 
 def goodpracticebusiness_add_html(self, REQUEST=None, RESPONSE=None):
-    """ """
+    """ Goodpracticebusiness add html """
     from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
     form_helper = get_schema_helper_for_metatype(self, config['meta_type'])
     return self.getFormsTool().getContent({
@@ -221,7 +221,7 @@ def addNyGoodPracticeBusiness(self, id='', REQUEST=None, contributor=None,
 
 @implementer(INyGoodPracticeBusiness)
 class NyGoodPracticeBusiness(NyBFile):
-    """ """
+    """ Ny good practice business """
 
     meta_type = config['meta_type']
     meta_label = config['label']
@@ -231,7 +231,7 @@ class NyGoodPracticeBusiness(NyBFile):
     security = ClassSecurityInfo()
 
     def __init__(self, id, contributor):
-        """ """
+        """ Init """
         self.id = id
         NyContentData.__init__(self)
         NyValidation.__dict__['__init__'](self)
@@ -243,7 +243,7 @@ class NyGoodPracticeBusiness(NyBFile):
     security.declareProtected(view, 'index_html')
 
     def index_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Index html """
         versions = self._versions_for_tmpl()
         options = {'versions': versions}
         if versions:
@@ -257,7 +257,7 @@ class NyGoodPracticeBusiness(NyBFile):
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
 
     def edit_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Edit html """
         options = {'versions': self._versions_for_tmpl()}
         template_vars = {'here': self, 'options': options}
         return self.getFormsTool().getContent(template_vars,

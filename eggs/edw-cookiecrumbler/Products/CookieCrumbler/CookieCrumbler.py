@@ -410,7 +410,7 @@ def _create_forms(ob):
         addDTMLMethod(ob, fn, file=data)
 
 def manage_addCC(dispatcher, id, create_forms=0, REQUEST=None):
-    ' '
+    ''' Manage add cc '''
     ob = CookieCrumbler()
     ob.id = id
     dispatcher._setObject(ob.getId(), ob)

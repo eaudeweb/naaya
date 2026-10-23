@@ -73,7 +73,7 @@ email_templates = {
 
 class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item,
                           NyContainer):
-    """ """
+    """ Survey questionnaire """
     meta_type = "Naaya Survey Questionnaire"
     meta_label = "Survey Instance"
     icon = 'misc_/NaayaSurvey/NySurveyQuestionnaire.gif'
@@ -122,7 +122,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item,
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
 
     def saveProperties(self, REQUEST=None, **kwargs):
-        """ """
+        """ Save properties """
         if REQUEST:
             kwargs.update(REQUEST.form)
             kwargs.setdefault('contributor',
@@ -165,19 +165,19 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item,
     security.declareProtected(view, 'hasVersion')
 
     def hasVersion(self):
-        """ """
+        """ Has version """
         return False
 
     security.declareProtected(view, 'getVersionLocalProperty')
 
     def getVersionLocalProperty(self, id, lang):
-        """ """
+        """ Get version local property """
         return self.getLocalProperty(id, lang)
 
     security.declareProtected(view, 'getVersionProperty')
 
     def getVersionProperty(self, id):
-        """ """
+        """ Get version property """
         return getattr(self, id, '')
 
     #
@@ -372,7 +372,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item,
     security.declareProtected(PERMISSION_EDIT_ANSWERS, 'deleteAnswer')
 
     def deleteAnswer(self, answer_id, REQUEST=None):
-        """ """
+        """ Delete answer """
         self._delObject(answer_id)
         logger.debug('Deleting answer %s', answer_id)
 
@@ -615,7 +615,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item,
     security.declarePublic('getMyAnswerDatamodel')
 
     def getMyAnswerDatamodel(self):
-        """ """
+        """ Get my answer datamodel """
         answer = self.getMyAnswer()
         if answer is None:
             return {}

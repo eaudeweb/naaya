@@ -13,7 +13,7 @@ def initialize(context):
 
 
 def export_geo_rss_dzt(self, REQUEST=None, **kwargs):
-    """ """
+    """ Export geo rss dzt """
     if REQUEST and self.isAnonymousUser() and 'portal_map' not in REQUEST.URL:
         raise Unauthorized
 

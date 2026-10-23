@@ -18,7 +18,7 @@
 
 
 from xml.sax.handler import ContentHandler
-from xml.sax import *
+from xml.sax import InputSource, handler, make_parser
 from io import BytesIO
 from types import StringType
 
@@ -77,11 +77,11 @@ class relation_parser:
     """ class for parse relation files """
 
     def __init__(self):
-        """ """
+        """ Init """
         pass
 
     def parseContent(self, xml_string):
-        """ """
+        """ Parse content """
         chandler = relation_handler()
         parser = make_parser()
         # Tell the parser to use our handler

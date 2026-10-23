@@ -137,7 +137,7 @@ Contributor = namedtuple(
 
 
 class TalkBackConsultationComment(NyFSFile):
-    """ """
+    """ Talk back consultation comment """
 
     meta_type = METATYPE_TALKBACKCONSULTATION_COMMENT
 
@@ -254,7 +254,7 @@ class TalkBackConsultationComment(NyFSFile):
 
     security.declareProtected(view, 'get_comment_date')
     def get_comment_date(self):
-        """ """
+        """ Get comment date """
         return self.comment_date
 
     @property

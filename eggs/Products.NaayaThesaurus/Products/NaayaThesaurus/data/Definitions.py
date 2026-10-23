@@ -113,14 +113,14 @@ class Definitions(SimpleItem, session_manager):
     #definition constraints
     security.declareProtected(view_management_screens, 'checkDefinition')
     def checkDefinition(self, concept_id):
-        """ """
+        """ Check definition """
         if self.getConceptsFolder().get_concept_by_id(concept_id):
             return 1
         return 0
 
     security.declareProtected(view_management_screens, 'getIdsList')
     def getIdsList(self, ids, all=0):
-        """ """
+        """ Get ids list """
         if all: return self.definitions.keys()
         return th_utils().getIdsList(ids)
 

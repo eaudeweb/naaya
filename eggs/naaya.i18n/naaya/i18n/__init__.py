@@ -12,7 +12,7 @@ from . import patches
 
 
 def initialize(context):
-    """ """
+    """ Initialize """
 
     context.registerClass(
         NaayaI18n,

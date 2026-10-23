@@ -11,7 +11,7 @@ class UpdateACLPluggableAuth(UpdateScript):
     descrtiption = 'Migrate root ACL folder to Pluggable Auth Service'
 
     def _update(self, portal):
-        """ """
+        """ Update """
         app = portal.aq_parent.aq_base
         make_objectmanager_site(app)
         setSite(app)

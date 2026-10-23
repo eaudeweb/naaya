@@ -21,7 +21,7 @@
 #Python imports
 import string
 from xml.sax.handler import ContentHandler
-from xml.sax import *
+from xml.sax import InputSource, make_parser
 from io import BytesIO
 
 #Zope imports
@@ -50,14 +50,14 @@ class saxstack_struct:
         self.content = ''
 
 class config_handler(ContentHandler):
-    """ """
+    """ Config handler """
 
     def __init__(self):
         self.root = None
         self.stack = []
 
     def startElement(self, name, attrs):
-        """ """
+        """ Start element """
         if name == 'config':
             obj = config_struct()
             stackObj = saxstack_struct('config', obj)
@@ -72,7 +72,7 @@ class config_handler(ContentHandler):
             self.stack.append(stackObj)
 
     def endElement(self, name):
-        """ """
+        """ End element """
         if name == 'config':
             self.root = self.stack[-1].obj
             self.stack.pop()
@@ -88,14 +88,14 @@ class config_handler(ContentHandler):
             self.stack[-1].content += content.strip(' \t')
 
 class config_parser:
-    """ """
+    """ Config parser """
 
     def __init__(self):
-        """ """
+        """ Init """
         pass
 
     def parse(self, p_content):
-        """ """
+        """ Parse """
         l_handler = config_handler()
         l_parser = make_parser()
         l_parser.setContentHandler(l_handler)

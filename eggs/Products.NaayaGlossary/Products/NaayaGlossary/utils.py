@@ -172,7 +172,7 @@ class utils:
         return s.encode('latin-1')
 
     def debug(self, error):
-        """ """
+        """ Debug """
         import sys
         return str(error) + ' at line ' + str(sys.exc_info()[2].tb_lineno)
 
@@ -221,7 +221,7 @@ class utils:
 class catalog_utils:
 
     def __init__(self):
-        """ """
+        """ Init """
         pass
 
     def __build_catalog_path(self, item):

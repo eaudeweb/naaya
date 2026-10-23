@@ -36,7 +36,7 @@ def escape(s):
 
 
 class glossary_export:
-    """ """
+    """ Glossary export """
 
     def __init__(self):
         """ constructor """

@@ -69,16 +69,16 @@ class ProxiedTransport(xmlrpclib.Transport):
         connection.putheader('Host', self.realhost)
 
 class XMLRPCConnector:
-    """ """
+    """ Xmlrpcconnector """
 
     def __init__(self, http_proxy, uid='', pwd=''):
-        """ """
+        """ Init """
         self.http_proxy = http_proxy
         self.uid = uid
         self.pwd = pwd
 
     def __call__(self, url, method, *args):
-        """ """
+        """ Call """
         transport = ProxiedTransport()
         transport.set_proxy(self.http_proxy)
         #try to connect without proxy

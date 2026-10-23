@@ -32,14 +32,14 @@ from lxml import etree
 from lxml.builder import ElementMaker
 
 def manage_addSyndicationTool(self, REQUEST=None):
-    """ """
+    """ Manage add syndication tool """
     ob = SyndicationTool(ID_SYNDICATIONTOOL, TITLE_SYNDICATIONTOOL)
     self._setObject(ID_SYNDICATIONTOOL, ob)
     self._getOb(ID_SYNDICATIONTOOL).loadDefaultData()
     if REQUEST: return self.manage_main(self, REQUEST, update_menu=1)
 
 class SyndicationTool(Folder, utils, namespaces_tool, channeltypes_manager):
-    """ """
+    """ Syndication tool """
 
     meta_type = METATYPE_SYNDICATIONTOOL
     icon = 'misc_/NaayaCore/SyndicationTool.gif'
@@ -83,7 +83,7 @@ class SyndicationTool(Folder, utils, namespaces_tool, channeltypes_manager):
     security = ClassSecurityInfo()
 
     def __init__(self, id, title):
-        """ """
+        """ Init """
         self.id = id
         self.title = title
         self.image = None
@@ -125,7 +125,7 @@ class SyndicationTool(Folder, utils, namespaces_tool, channeltypes_manager):
 
     security.declareProtected(view, 'getImage')
     def getImage(self):
-        """ """
+        """ Get image """
         return self.image
 
     def getNamespacesForRdf(self):
@@ -245,7 +245,7 @@ class SyndicationTool(Folder, utils, namespaces_tool, channeltypes_manager):
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', image='', del_image='', REQUEST=None):
-        """ """
+        """ Manage properties """
         self.title = title
         if del_image != '': self.delImage()
         else: self.setImage(image)
@@ -255,40 +255,40 @@ class SyndicationTool(Folder, utils, namespaces_tool, channeltypes_manager):
 
     security.declareProtected(view_management_screens, 'manageAddNamespaceItem')
     def manageAddNamespaceItem(self, id='', prefix='', value='', REQUEST=None):
-        """ """
+        """ Manage add namespace item """
         self.createNamespaceItem(id, prefix, value)
         if REQUEST:
             REQUEST.RESPONSE.redirect('manage_namespaces_html')
 
     security.declareProtected(view_management_screens, 'manageUpdateNamespaceItem')
     def manageUpdateNamespaceItem(self, id='', prefix='', value='', REQUEST=None):
-        """ """
+        """ Manage update namespace item """
         self.modifyNamespaceItem(id, prefix, value)
         if REQUEST:
             REQUEST.RESPONSE.redirect('manage_namespaces_html')
 
     security.declareProtected(view_management_screens, 'manageDeleteNamespaceItems')
     def manageDeleteNamespaceItems(self, id=[], REQUEST=None):
-        """ """
+        """ Manage delete namespace items """
         self.deleteNamespaceItem(self.utConvertToList(id))
         if REQUEST:
             REQUEST.RESPONSE.redirect('manage_namespaces_html')
 
     security.declareProtected(view_management_screens, 'manage_add_channeltype_item')
     def manage_add_channeltype_item(self, id='', title='', REQUEST=None):
-        """ """
+        """ Manage add channeltype item """
         self.add_channeltype_item(id, title)
         if REQUEST: REQUEST.RESPONSE.redirect('manage_channeltypes_html')
 
     security.declareProtected(view_management_screens, 'manage_edit_channeltype_item')
     def manage_edit_channeltype_item(self, id='', title='', REQUEST=None):
-        """ """
+        """ Manage edit channeltype item """
         self.edit_channeltype_item(id, title)
         if REQUEST: REQUEST.RESPONSE.redirect('manage_channeltypes_html')
 
     security.declareProtected(view_management_screens, 'manage_delete_channeltypes')
     def manage_delete_channeltypes(self, ids=[], REQUEST=None):
-        """ """
+        """ Manage delete channeltypes """
         self.delete_channeltype_item(self.utConvertToList(ids))
         if REQUEST: REQUEST.RESPONSE.redirect('manage_channeltypes_html')
 

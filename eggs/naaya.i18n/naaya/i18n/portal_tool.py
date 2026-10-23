@@ -260,7 +260,7 @@ class NaayaI18n(SimpleItem):
     # Management screens
     #######################################################################
     def manage_options(self):
-        """ """
+        """ Manage options """
         options = (
             {'label': u'Messages', 'action': 'manage_messages'},
             {'label': u'Languages', 'action': 'manage_languages'},
@@ -559,7 +559,7 @@ class NaayaI18n(SimpleItem):
 
     security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_editmessage')
     def admin_editmessage(self, message, language, translation, start, skey, rkey, query, REQUEST=None):
-        """ """
+        """ Admin editmessage """
         ob = self.get_message_catalog()
         ob.edit_message(message_decode(message), language, translation)
         if REQUEST:
@@ -572,7 +572,7 @@ class NaayaI18n(SimpleItem):
 
     security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_delmsg')
     def admin_delmsg(self, messages=[], REQUEST=None):
-        """ """
+        """ Admin delmsg """
         message_catalog = self.get_message_catalog()
         messages = self.utConvertToList(messages)
         for message in messages:
@@ -586,12 +586,12 @@ class NaayaI18n(SimpleItem):
 
     security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_exportmessages')
     def admin_exportmessages(self, x, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Admin exportmessages """
         return self.manage_export_po(x, REQUEST, RESPONSE)
 
     security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_importmessages')
     def admin_importmessages(self, lang, file, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Admin importmessages """
         if REQUEST:
             if not file:
                 self.getSite().setSessionErrorsTrans('You must select a file to import.')
@@ -603,12 +603,12 @@ class NaayaI18n(SimpleItem):
 
     security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_exportxliff')
     def admin_exportxliff(self, x, export_all=1, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Admin exportxliff """
         return self.manage_export_xliff(export_all, x, REQUEST, RESPONSE)
 
     security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_importxliff')
     def admin_importxliff(self, file, REQUEST=None):
-        """ """
+        """ Admin importxliff """
         raise NotImplementedError("Imports not yet implemented in naaya.i18n")
         if REQUEST:
             if not file:
@@ -621,7 +621,7 @@ class NaayaI18n(SimpleItem):
 
     security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'spreadsheet_export')
     def spreadsheet_export(self, target_lang, dialect, REQUEST, RESPONSE):
-        """ """
+        """ Spreadsheet export """
         cat = self.get_message_catalog()
         export_tool = self.get_importexport_tool()
         (headers, content) = export_tool.spreadsheet_export(target_lang, dialect)
@@ -631,7 +631,7 @@ class NaayaI18n(SimpleItem):
 
     security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'spreadsheet_import')
     def spreadsheet_import(self, file, target_lang, dialect, REQUEST, RESPONSE):
-        """ """
+        """ Spreadsheet import """
         if not file:
             self.setSessionErrorsTrans('You must select a file to import.')
             return RESPONSE.redirect('%s/admin_importexport_html' %

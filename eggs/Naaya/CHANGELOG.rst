@@ -2,6 +2,11 @@
 ------------------
 * Fetch URLs in grabFromUrl with urllib.request; FancyURLopener is removed
   in Python 3.14 [dumitval]
+* Give the methods with a blank docstring a text: Python 3.13 strips it to ''
+  and Zope does not publish methods without a docstring [dumitval]
+* Import the xml.sax names explicitly: Python 3.14 no longer exports
+  handler with from xml.sax import * [dumitval]
+* Strip the plugin docstrings returned by getPluginsInfo [dumitval]
 
 6.0.7 (2026-10-23)
 ------------------

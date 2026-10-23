@@ -16,7 +16,7 @@ from Products.NaayaCore.AuthenticationTool.utils import (
 
 
 class MeetingReports(SimpleItem):
-    """ """
+    """ Meeting reports """
     security = ClassSecurityInfo()
 
     title = "Meeting Reports"
@@ -24,11 +24,11 @@ class MeetingReports(SimpleItem):
     organization_icon = 'misc_/NaayaContent/organization.gif'
 
     def __init__(self, id):
-        """ """
+        """ Init """
         self.id = id
 
     def jstree_participants(self):
-        """ """
+        """ Jstree participants """
         jstree, participants = [], {}
         site = self.getSite()
         meeting_config = meeting_module.get_config()
@@ -68,7 +68,7 @@ class MeetingReports(SimpleItem):
         return json.dumps(jstree)
 
     def jstree_organizations(self):
-        """ """
+        """ Jstree organizations """
         jstree, organizations = [], {}
         site = self.getSite()
         meeting_config = meeting_module.get_config()
@@ -118,14 +118,14 @@ class MeetingReports(SimpleItem):
     security.declareProtected(view, 'report_meeting_participants')
 
     def report_meeting_participants(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Report meeting participants """
         return self.getFormsTool().getContent({'here': self},
                                               'report_meeting_participants')
 
     security.declareProtected(view, 'report_meeting_organizations')
 
     def report_meeting_organizations(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Report meeting organizations """
         return self.getFormsTool().getContent({'here': self},
                                               'report_meeting_organizations')
 

@@ -72,7 +72,7 @@ else:
 
 
 def manage_addEmailTool(self, REQUEST=None):
-    """ """
+    """ Manage add email tool """
     ob = EmailTool(ID_EMAILTOOL, TITLE_EMAILTOOL)
     self._setObject(ID_EMAILTOOL, ob)
     self._getOb(ID_EMAILTOOL).loadDefaultData()
@@ -81,7 +81,7 @@ def manage_addEmailTool(self, REQUEST=None):
 
 
 class EmailTool(Folder):
-    """ """
+    """ Email tool """
 
     meta_type = METATYPE_EMAILTOOL
     icon = 'misc_/NaayaCore/EmailTool.gif'
@@ -107,7 +107,7 @@ class EmailTool(Folder):
     security = ClassSecurityInfo()
 
     def __init__(self, id, title):
-        """ """
+        """ Init """
         self.id = id
         self.title = title
 
@@ -288,7 +288,7 @@ class EmailTool(Folder):
     def manageSettings(self, mail_server_name='', mail_server_port='',
                        administrator_email='', mail_address_from='',
                        notify_on_errors_email='', REQUEST=None):
-        """ """
+        """ Manage settings """
         site = self.getSite()
         try:
             mail_server_port = int(mail_server_port)

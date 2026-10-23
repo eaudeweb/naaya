@@ -189,7 +189,7 @@ manage_addNySite_html = PageTemplateFile('zpt/site_manage_add', globals())
 
 def manage_addNySite(self, id='', title='', lang=DEFAULT_PORTAL_LANGUAGE_CODE,
                      default_content=True, REQUEST=None):
-    """ """
+    """ Manage add ny site """
     ut = utils()
     id = ut.utSlugify(id)
     if not id:
@@ -209,7 +209,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
              list_utils, file_utils, catalog_tool, search_tool,
              session_manager, portlets_manager,
              networkportals_manager, NyFolderBase):
-    """ """
+    """ Ny site """
 
 
     meta_type = METATYPE_NYSITE
@@ -254,7 +254,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     www = StaticServeFromFolder("www", globals())
 
     def __init__(self, id, title='', lang=None):
-        """ """
+        """ Init """
         self.id = id
 
         # Set local site manager
@@ -342,7 +342,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declarePrivate('createPortalTools')
 
     def createPortalTools(self):
-        """ """
+        """ Create portal tools """
         self.manage_addProperty('management_page_charset', 'utf-8', 'string')
         languages = [DEFAULT_PORTAL_LANGUAGE_CODE]
         manage_addCatalogTool(self, languages)
@@ -366,7 +366,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declarePrivate('loadDefaultData')
 
     def loadDefaultData(self):
-        """ """
+        """ Load default data """
 
         sm = self.getSiteManager()
         # Register Action Logger utility
@@ -402,7 +402,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declarePrivate('loadSkeleton')
 
     def loadSkeleton(self, product_path):
-        """ """
+        """ Load skeleton """
         # load site skeleton - configuration
         self._load_skel_from_handler(self.get_skel_handler(product_path))
 
@@ -866,7 +866,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         BeforeTraverse.registerBeforeTraverse(self, nc, handle)
 
     def get_archive_listing(self, p_objects):
-        """ """
+        """ Get archive listing """
         results = []
         select_all, delete_all, flag = 0, 0, 0
         for x in p_objects:
@@ -1560,7 +1560,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                                                             **kwargs)
 
     def processDynamicProperties(self, meta_type, REQUEST=None, keywords={}):
-        """ """
+        """ Process dynamic properties """
         output = {}
         for l_prop in self.getDynamicPropertiesTool().getDynamicProperties(
                 meta_type):
@@ -1977,7 +1977,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
     def processFeedbackForm(self, username='', email='', comments='',
                             recaptcha_response='', REQUEST=None):
-        """ """
+        """ Process feedback form """
         err = []
         if not self.checkPermissionPublishDirect():
             captcha_errors = self.validateCaptcha(recaptcha_response, REQUEST)
@@ -2008,7 +2008,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
     def processChangeCredentials(self, password='', confirm='', firstname='',
                                  lastname='', email='', REQUEST=None):
-        """ """
+        """ Process change credentials """
         auth_user = REQUEST.AUTHENTICATED_USER.getUserName()
         user = self.getAuthenticationTool().getUser(auth_user)
         try:
@@ -2186,7 +2186,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declarePublic('processNotifyOnErrors')
 
     def processNotifyOnErrors(self, error_type, error_value, REQUEST):
-        """ """
+        """ Process notify on errors """
         if not self.get_notify_on_errors_email():
             return
 
@@ -2211,7 +2211,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declarePublic('dumpErrorToJSON')
 
     def dumpErrorToJSON(self, error_type, error_value):
-        """ """
+        """ Dump error to json """
         conf = getConfiguration()
         if 'JSON_ERROR_DUMPFILE' not in conf.environment:
             return
@@ -2347,7 +2347,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
     def externalSearch(self, servers=[], langs=[], query='', skey='', rkey='',
                        start=0):
-        """ """
+        """ External search """
         r = []
         rex = r.extend
         try:
@@ -2387,7 +2387,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     def internalSearch(self, query='', langs=None, releasedate=None,
                        releasedate_range=None, meta_types=[], skey='',
                        rkey='', path=''):
-        """ """
+        """ Internal search """
         object_list = []
 
         if langs is None:
@@ -2484,7 +2484,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     def admin_metadata(self, site_title='', site_subtitle='', description='',
                        publisher='', contributor='', creator='', rights='',
                        lang=None, REQUEST=None):
-        """ """
+        """ Admin metadata """
         if lang is None:
             lang = self.gl_get_selected_language()
         self._setLocalPropValue('title', lang, site_title)
@@ -2634,7 +2634,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     def admin_email(self, mail_server_name='', mail_server_port='',
                     administrator_email='', mail_address_from='',
                     notify_on_errors_email='', REQUEST=None):
-        """ """
+        """ Admin email """
         self.getEmailTool().manageSettings(
             mail_server_name, mail_server_port, administrator_email,
             mail_address_from, notify_on_errors_email)
@@ -2677,7 +2677,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_layout')
 
     def admin_layout(self, theMasterList='', theSlaveList='', REQUEST=None):
-        """ """
+        """ Admin layout """
         if theMasterList == '' or theSlaveList == '':
             pass
         else:
@@ -2778,7 +2778,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deleteusers')
 
     def admin_deleteusers(self, names=[], REQUEST=None):
-        """ """
+        """ Admin deleteusers """
         if REQUEST is not None:
             redirect_url = REQUEST.environ.get(
                 'HTTP_REFERER', '%s/admin_users_html' % self.absolute_url())
@@ -2824,7 +2824,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declareProtected(change_permissions, 'admin_editrole_html')
 
     def admin_editrole_html(self, role, REQUEST):
-        """ """
+        """ Admin editrole html """
         permission_list = sorted(
             self.get_naaya_permissions_in_site().values(),
             key=operator.itemgetter('title'))
@@ -2983,7 +2983,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
     def admin_revoke_searched_roles(self, names=[], role='', location='_all_',
                                     REQUEST=None):
-        """ """
+        """ Admin revoke searched roles """
         if not isinstance(names, list):
             names = [names]
         self.getAuthenticationTool().revoke_searched_roles(names, role,
@@ -3011,7 +3011,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_deletereflist')
 
     def admin_deletereflist(self, ids=[], REQUEST=None):
-        """ """
+        """ Admin deletereflist """
         self.getPortletsTool().manage_delObjects(self.utConvertToList(ids))
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
@@ -3022,7 +3022,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addreflist')
 
     def admin_addreflist(self, id='', title='', description='', REQUEST=None):
-        """ """
+        """ Admin addreflist """
         self.getPortletsTool().manage_addRefList(id, title, description)
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
@@ -3033,7 +3033,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_editreflist')
 
     def admin_editreflist(self, id='', title='', description='', REQUEST=None):
-        """ """
+        """ Admin editreflist """
         ob = self.getPortletsTool().getRefListById(id)
         if ob is not None:
             ob.manageProperties(title, description)
@@ -3046,7 +3046,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deleteitems')
 
     def admin_deleteitems(self, id='', ids=[], REQUEST=None):
-        """ """
+        """ Admin deleteitems """
         ob = self.getPortletsTool().getRefListById(id)
         if ob is not None:
             ob.manage_delete_items(self.utConvertToList(ids))
@@ -3059,7 +3059,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_additem')
 
     def admin_additem(self, id='', item='', title='', REQUEST=None):
-        """ """
+        """ Admin additem """
         ob = self.getPortletsTool().getRefListById(id)
         if ob is not None:
             ob.manage_add_item(item, title)
@@ -3072,7 +3072,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_edititem')
 
     def admin_edititem(self, id='', item='', title='', REQUEST=None):
-        """ """
+        """ Admin edititem """
         ob = self.getPortletsTool().getRefListById(id)
         if ob is not None:
             ob.manage_update_item(item, title)
@@ -3086,7 +3086,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_deletelinkslist')
 
     def admin_deletelinkslist(self, ids=[], REQUEST=None):
-        """ """
+        """ Admin deletelinkslist """
         self.getPortletsTool().manage_delObjects(self.utConvertToList(ids))
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
@@ -3097,7 +3097,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addlinkslist')
 
     def admin_addlinkslist(self, id='', title='', portlet='', REQUEST=None):
-        """ """
+        """ Admin addlinkslist """
         self.getPortletsTool().manage_addLinksList(id, title, portlet)
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
@@ -3109,7 +3109,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_editlinkslist')
 
     def admin_editlinkslist(self, id='', title='', REQUEST=None):
-        """ """
+        """ Admin editlinkslist """
         ob = self.getPortletsTool().getLinksListById(id)
         if ob is not None:
             ob.manageProperties(title)
@@ -3122,7 +3122,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deletelinks')
 
     def admin_deletelinks(self, id='', ids=[], REQUEST=None):
-        """ """
+        """ Admin deletelinks """
         ob = self.getPortletsTool().getLinksListById(id)
         if ob is not None:
             ob.manage_delete_links(self.utConvertToList(ids))
@@ -3136,7 +3136,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
     def admin_addlink(self, id='', title='', description='', url='',
                       relative='', permission='', order='', REQUEST=None):
-        """ """
+        """ Admin addlink """
         ob = self.getPortletsTool().getLinksListById(id)
         if ob is not None:
             ob.manage_add_link_item('', title, description, url, relative,
@@ -3151,7 +3151,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
     def admin_editlink(self, id='', item='', title='', description='', url='',
                        relative='', permission='', order='', REQUEST=None):
-        """ """
+        """ Admin editlink """
         ob = self.getPortletsTool().getLinksListById(id)
         if ob is not None:
             ob.manage_update_link_item(item, title, description, url, relative,
@@ -3166,7 +3166,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_addnetworkportal')
 
     def admin_addnetworkportal(self, title='', url='', REQUEST=None):
-        """ """
+        """ Admin addnetworkportal """
         err, res = '', None
         success = False
         xconn = XMLRPCConnector(self.get_http_proxy())
@@ -3191,7 +3191,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_updatenetworkportal')
 
     def admin_updatenetworkportal(self, id='', REQUEST=None):
-        """ """
+        """ Admin updatenetworkportal """
         err, res = '', None
         success = False
         networkportal = self.get_networkportal_item(id)
@@ -3219,7 +3219,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_deletenetworkportal')
 
     def admin_deletenetworkportal(self, ids=[], REQUEST=None):
-        """ """
+        """ Admin deletenetworkportal """
         self.delete_networkportal_item(self.utConvertToList(ids))
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
@@ -3230,7 +3230,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declareProtected(PERMISSION_ADMINISTRATE, 'admin_discardversion')
 
     def admin_discardversion(self, url=None, REQUEST=None):
-        """ """
+        """ Admin discardversion """
         ob = self.utGetObject(url)
         if ob is not None:
             ob.discardVersion()
@@ -3245,7 +3245,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_updatemaintopics')
 
     def admin_updatemaintopics(self, folder_url='', REQUEST=None):
-        """ """
+        """ Admin updatemaintopics """
         try:
             folder_url = path_in_site(self.utGetObject(folder_url))
         except:
@@ -3325,7 +3325,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_deletemaintopics')
 
     def admin_deletemaintopics(self, ids=None, REQUEST=None):
-        """ """
+        """ Admin deletemaintopics """
         if ids is not None:
             ids = self.utConvertToList(ids)
         else:
@@ -3350,7 +3350,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                                portlet='', saveit='', providername='',
                                location='', obtype='', filter_by_language='',
                                automatic_translation_portlet='', REQUEST=None):
-        """ """
+        """ Admin addremotechannel """
         if saveit:
             self.getSyndicationTool().manage_addRemoteChannelFacade(
                 '', title, url, providername, location, obtype,
@@ -3371,7 +3371,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     def admin_editremotechannel(self, id='', title='', url='',
                                 numbershownitems='', filter_by_language='',
                                 harvester_name='', REQUEST=None):
-        """ """
+        """ Admin editremotechannel """
         self.getSyndicationTool().get_channel(id).manageProperties(
             title, url, numbershownitems, filter_by_language, harvester_name)
         if REQUEST:
@@ -3387,7 +3387,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                                       numbershownitems='', providername='',
                                       location='', obtype='news',
                                       REQUEST=None):
-        """ """
+        """ Admin editremotechannelfacade """
         self.getSyndicationTool().get_channel(id).manageProperties(
             title, url, providername, location, obtype, numbershownitems)
         if REQUEST:
@@ -3400,7 +3400,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_updateremotechannel')
 
     def admin_updateremotechannel(self, id='', REQUEST=None):
-        """ """
+        """ Admin updateremotechannel """
         res = self.getSyndicationTool().get_channel(id).updateChannel(
             self.get_site_uid())
         if REQUEST:
@@ -3416,7 +3416,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_deleteremotechannel')
 
     def admin_deleteremotechannel(self, ids=[], REQUEST=None):
-        """ """
+        """ Admin deleteremotechannel """
         self.getSyndicationTool().manage_delObjects(self.utConvertToList(ids))
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
@@ -3430,7 +3430,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     def admin_addremotechannels_aggregator(self, title='', channels=[],
                                            portlet='', description='',
                                            REQUEST=None):
-        """ """
+        """ Admin addremotechannels aggregator """
         self.getSyndicationTool().manage_addChannelAggregator(
             '', title, channels, portlet, description)
 
@@ -3446,7 +3446,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
     def admin_editremotechannels_aggregator(self, id='', title='', channels=[],
                                             description='', REQUEST=None):
-        """ """
+        """ Admin editremotechannels aggregator """
         self.getSyndicationTool().get_channel(id).manageProperties(
             title, channels, description)
         if REQUEST:
@@ -3460,7 +3460,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_deleteremotechannel')
 
     def admin_deleteremotechannels_aggregator(self, ids=[], REQUEST=None):
-        """ """
+        """ Admin deleteremotechannels aggregator """
         self.getSyndicationTool().manage_delObjects(self.utConvertToList(ids))
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
@@ -3475,7 +3475,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     def admin_addlocalchannel(self, title='', description='', language=None,
                               type=None, objmetatype=[], numberofitems='',
                               portlet='', REQUEST=None):
-        """ """
+        """ Admin addlocalchannel """
         self.getSyndicationTool().manage_addLocalChannel(
             '', title, description, language, type, objmetatype, numberofitems,
             portlet)
@@ -3491,7 +3491,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     def admin_editlocalchannel(self, id='', title='', description='',
                                language=None, type=None, objmetatype=[],
                                numberofitems='', portlet='', REQUEST=None):
-        """ """
+        """ Admin editlocalchannel """
         self.getSyndicationTool().get_channel(id).manageProperties(
             title, description, language, type, objmetatype, numberofitems,
             portlet)
@@ -3505,7 +3505,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_deletelocalchannel')
 
     def admin_deletelocalchannel(self, ids=[], REQUEST=None):
-        """ """
+        """ Admin deletelocalchannel """
         self.getSyndicationTool().manage_delObjects(self.utConvertToList(ids))
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
@@ -3517,7 +3517,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_leftportlets')
 
     def admin_leftportlets(self, portlets=[], REQUEST=None):
-        """ """
+        """ Admin leftportlets """
         self.set_left_portlets_ids(self.utConvertToList(portlets))
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
@@ -3529,7 +3529,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_frontportlets')
 
     def admin_frontportlets(self, portlets=[], REQUEST=None):
-        """ """
+        """ Admin frontportlets """
         self.set_center_portlets_ids(self.utConvertToList(portlets))
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
@@ -3541,7 +3541,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_rightportlets')
 
     def admin_rightportlets(self, folder='', portlets=[], REQUEST=None):
-        """ """
+        """ Admin rightportlets """
         self.set_right_portlets_locations(folder,
                                           self.utConvertToList(portlets))
         if REQUEST:
@@ -3554,7 +3554,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_deleterightportlets')
 
     def admin_deleterightportlets(self, portlets=[], REQUEST=None):
-        """ """
+        """ Admin deleterightportlets """
         for pair in self.utConvertToList(portlets):
             location, id = pair.split('||')
             self.delete_right_portlets_locations(location, id)
@@ -3568,7 +3568,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_deleteremotechportlet')
 
     def admin_deleteremotechportlet(self, ids=[], REQUEST=None):
-        """ """
+        """ Admin deleteremotechportlet """
         self.getPortletsTool().manage_delObjects(self.utConvertToList(ids))
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
@@ -3580,7 +3580,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_addremotechportlet')
 
     def admin_addremotechportlet(self, id='', REQUEST=None):
-        """ """
+        """ Admin addremotechportlet """
         ob = self.getSyndicationTool().get_channel(id)
         if ob is not None:
             if ob.meta_type == METATYPE_REMOTECHANNEL:
@@ -3597,7 +3597,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_deletelocalchportlet')
 
     def admin_deletelocalchportlet(self, ids=[], REQUEST=None):
-        """ """
+        """ Admin deletelocalchportlet """
         self.getPortletsTool().manage_delObjects(self.utConvertToList(ids))
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
@@ -3609,7 +3609,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_addlocalchportlet')
 
     def admin_addlocalchportlet(self, id='', REQUEST=None):
-        """ """
+        """ Admin addlocalchportlet """
         ob = self.getSyndicationTool().get_channel(id)
         if ob is not None:
             self.create_portlet_for_localchannel(ob)
@@ -3623,7 +3623,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_deletefolderportlet')
 
     def admin_deletefolderportlet(self, ids=[], REQUEST=None):
-        """ """
+        """ Admin deletefolderportlet """
         self.getPortletsTool().manage_delObjects(self.utConvertToList(ids))
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
@@ -3635,7 +3635,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_addfolderportlet')
 
     def admin_addfolderportlet(self, folder='', REQUEST=None):
-        """ """
+        """ Admin addfolderportlet """
         if folder != '':
             ob = self.getFolderByPath(folder)
             if ob is not None:
@@ -3651,7 +3651,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_deletelinksportlet')
 
     def admin_deletelinksportlet(self, ids=[], REQUEST=None):
-        """ """
+        """ Admin deletelinksportlet """
         self.getPortletsTool().manage_delObjects(self.utConvertToList(ids))
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
@@ -3663,7 +3663,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_addlinksportlet')
 
     def admin_addlinksportlet(self, id='', REQUEST=None):
-        """ """
+        """ Admin addlinksportlet """
         ob = self.getPortletsTool().getLinksListById(id)
         if ob is not None:
             self.create_portlet_for_linkslist(ob)
@@ -3677,7 +3677,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_addhtmlportlet')
 
     def admin_addhtmlportlet(self, REQUEST=None):
-        """ """
+        """ Admin addhtmlportlet """
         id = PREFIX_PORTLET + self.utGenRandomId(6)
         self.getPortletsTool().addHTMLPortlet(id=id, title='New portlet')
         if REQUEST:
@@ -3691,7 +3691,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
     def admin_edithtmlportlet(self, id='', title='', body='', lang=None,
                               REQUEST=None):
-        """ """
+        """ Admin edithtmlportlet """
         ob = self.getPortletsTool().getPortletById(id)
         if ob is not None:
             ob.manage_properties(title, body, lang)
@@ -3705,7 +3705,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_deletehtmlportlet')
 
     def admin_deletehtmlportlet(self, ids=[], REQUEST=None):
-        """ """
+        """ Admin deletehtmlportlet """
         self.getPortletsTool().manage_delObjects(self.utConvertToList(ids))
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
@@ -3717,14 +3717,14 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declareProtected(PERMISSION_ADMINISTRATE, 'admin_centre_html')
 
     def admin_centre_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Admin centre html """
         return self.getFormsTool().getContent({'here': self},
                                               'site_admin_centre')
 
     security.declareProtected(PERMISSION_ADMINISTRATE, 'admin_topcontent_html')
 
     def admin_topcontent_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Admin topcontent html """
         return self.getFormsTool().getContent({'here': self},
                                               'site_admin_topcontent')
 
@@ -3732,7 +3732,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_basketofapprovals_html')
 
     def admin_basketofapprovals_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Admin basketofapprovals html """
         return self.getFormsTool().getContent({'here': self},
                                               'site_admin_basketofapprovals')
 
@@ -3740,14 +3740,14 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_metadata_html')
 
     def admin_metadata_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Admin metadata html """
         return self.getFormsTool().getContent({'here': self},
                                               'site_admin_metadata')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_email_html')
 
     def admin_email_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Admin email html """
         from zope.sendmail.interfaces import IMailDelivery
         delivery = component.queryUtility(IMailDelivery, 'naaya-mail-delivery')
         queue_enabled = bool(delivery is not None)
@@ -3757,7 +3757,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_logos_html')
 
     def admin_logos_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Admin logos html """
         return self.getFormsTool().getContent({'here': self},
                                               'site_admin_logos')
 
@@ -3765,28 +3765,28 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_properties_html')
 
     def admin_properties_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Admin properties html """
         return self.getFormsTool().getContent({'here': self},
                                               'site_admin_properties')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_layout_html')
 
     def admin_layout_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Admin layout html """
         return self.getFormsTool().getContent({'here': self},
                                               'site_admin_layout')
 
     security.declareProtected('View', 'admin_documentation_html')
 
     def admin_documentation_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Admin documentation html """
         return self.getFormsTool().getContent({'here': self},
                                               'site_admin_documentation')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_users_html')
 
     def admin_users_html(self):
-        """ """
+        """ Admin users html """
         return self.getFormsTool().getContent({'here': self},
                                               'site_admin_users')
 
@@ -3794,7 +3794,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_local_users_html')
 
     def admin_local_users_html(self):
-        """ """
+        """ Admin local users html """
         return self.getFormsTool().getContent({'here': self},
                                               'site_admin_local_users')
 
@@ -3802,14 +3802,14 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_all_users_html')
 
     def admin_all_users_html(self):
-        """ """
+        """ Admin all users html """
         return self.getFormsTool().getContent({'here': self},
                                               'site_admin_all_users')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_adduser_html')
 
     def admin_adduser_html(self):
-        """ """
+        """ Admin adduser html """
         return self.getFormsTool().getContent({'here': self},
                                               'site_admin_adduser')
 
@@ -3817,7 +3817,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_importusers_html')
 
     def admin_importusers_html(self):
-        """ """
+        """ Admin importusers html """
         return self.getFormsTool().getContent({'here': self},
                                               'site_admin_importusers')
 
@@ -3825,7 +3825,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_edituser_html')
 
     def admin_edituser_html(self, REQUEST=None, **kwargs):
-        """ """
+        """ Admin edituser html """
         name = REQUEST.get('name', '') if REQUEST is not None else ''
         if REQUEST is not None and self.getAuthenticationTool().getUser(name) is None:
             self.setSessionErrorsTrans('User ${name} not found', name=name)
@@ -3837,21 +3837,21 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_assignroles_html')
 
     def admin_assignroles_html(self, **kwargs):
-        """ """
+        """ Admin assignroles html """
         kwargs['here'] = self
         return self.getFormsTool().getContent(kwargs, 'site_admin_assignroles')
 
     security.declareProtected(change_permissions, 'admin_roles_html')
 
     def admin_roles_html(self):
-        """ """
+        """ Admin roles html """
         return self.getFormsTool().getContent({'here': self},
                                               'site_admin_roles')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_sources_html')
 
     def admin_sources_html(self, REQUEST=None):
-        """ """
+        """ Admin sources html """
         if REQUEST is not None:
             came_from = REQUEST.get('came_from', None)
             if came_from is not None:
@@ -3863,7 +3863,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_translations_html')
 
     def admin_translations_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Admin translations html """
         REQUEST.RESPONSE.redirect(self.getPortalI18nPath() +
                                   '/admin_translations_html')
 
@@ -3871,7 +3871,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_messages_html')
 
     def admin_messages_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Admin messages html """
         REQUEST.RESPONSE.redirect(self.getPortalI18nPath() +
                                   '/admin_messages_html')
 
@@ -3879,7 +3879,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_importexport_html')
 
     def admin_importexport_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Admin importexport html """
         REQUEST.RESPONSE.redirect(self.getPortalI18nPath() +
                                   '/admin_importexport_html')
 
@@ -3887,7 +3887,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_linkslists_html')
 
     def admin_linkslists_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Admin linkslists html """
         return self.getFormsTool().getContent({'here': self},
                                               'site_admin_linkslists')
 
@@ -3895,7 +3895,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_linkslist_html')
 
     def admin_linkslist_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Admin linkslist html """
         permission_list = sorted(
             self.get_naaya_permissions_in_site().values(),
             key=operator.itemgetter('title'))
@@ -3912,28 +3912,28 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_reflists_html')
 
     def admin_reflists_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Admin reflists html """
         return self.getFormsTool().getContent({'here': self},
                                               'site_admin_reflists')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_reflist_html')
 
     def admin_reflist_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Admin reflist html """
         return self.getFormsTool().getContent({'here': self},
                                               'site_admin_reflist')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_network_html')
 
     def admin_network_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Admin network html """
         return self.getFormsTool().getContent({'here': self},
                                               'site_admin_network')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_basket_html')
 
     def admin_basket_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Admin basket html """
         return self.getFormsTool().getContent({'here': self},
                                               'site_admin_basket')
 
@@ -3941,7 +3941,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_basket_translations_html')
 
     def admin_basket_translations_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Admin basket translations html """
         REQUEST.RESPONSE.redirect(self.getPortalI18nPath() +
                                   '/admin_basket_translations_html')
 
@@ -3949,7 +3949,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_validation_html')
 
     def admin_validation_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Admin validation html """
         return self.getFormsTool().getContent({'here': self},
                                               'site_admin_validation')
 
@@ -3957,7 +3957,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_validation_tree_html')
 
     def admin_validation_tree_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Admin validation tree html """
         return self.getFormsTool().getContent({'here': self},
                                               'site_admin_validation_tree')
 
@@ -3965,7 +3965,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_versioncontrol_html')
 
     def admin_versioncontrol_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Admin versioncontrol html """
         return self.getFormsTool().getContent({'here': self},
                                               'site_admin_versioncontrol')
 
@@ -3973,7 +3973,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_maintopics_html')
 
     def admin_maintopics_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Admin maintopics html """
         return self.getFormsTool().getContent({'here': self},
                                               'site_admin_maintopics')
 
@@ -3981,7 +3981,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_localchannels_html')
 
     def admin_localchannels_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Admin localchannels html """
         return self.getFormsTool().getContent({'here': self},
                                               'site_admin_localchannels')
 
@@ -3989,7 +3989,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_remotechannels_html')
 
     def admin_remotechannels_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Admin remotechannels html """
         return self.getFormsTool().getContent({'here': self},
                                               'site_admin_remotechannels')
 
@@ -3998,7 +3998,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
     def admin_remotechannels_aggregators_html(self, REQUEST=None,
                                               RESPONSE=None):
-        """ """
+        """ Admin remotechannels aggregators html """
         return self.getFormsTool().getContent(
             {'here': self}, 'site_admin_remotechannels_aggregators')
 
@@ -4006,7 +4006,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_leftportlets_html_old')
 
     def admin_leftportlets_html_old(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Admin leftportlets html old """
         return self.getFormsTool().getContent({'here': self},
                                               'site_admin_leftportlets')
 
@@ -4017,7 +4017,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_frontportlets_html_old')
 
     def admin_frontportlets_html_old(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Admin frontportlets html old """
         return self.getFormsTool().getContent({'here': self},
                                               'site_admin_frontportlets')
 
@@ -4028,7 +4028,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_rightportlets_html_old')
 
     def admin_rightportlets_html_old(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Admin rightportlets html old """
         return self.getFormsTool().getContent({'here': self},
                                               'site_admin_rightportlets')
 
@@ -4045,7 +4045,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_specialportlets_html')
 
     def admin_specialportlets_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Admin specialportlets html """
         return self.getFormsTool().getContent({'here': self},
                                               'site_admin_specialportlets')
 
@@ -4053,7 +4053,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_remotechportlets_html')
 
     def admin_remotechportlets_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Admin remotechportlets html """
         return self.getFormsTool().getContent({'here': self},
                                               'site_admin_remotechportlets')
 
@@ -4061,7 +4061,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_localchportlets_html')
 
     def admin_localchportlets_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Admin localchportlets html """
         return self.getFormsTool().getContent({'here': self},
                                               'site_admin_localchportlets')
 
@@ -4069,7 +4069,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_folderportlets_html')
 
     def admin_folderportlets_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Admin folderportlets html """
         return self.getFormsTool().getContent({'here': self},
                                               'site_admin_folderportlets')
 
@@ -4077,7 +4077,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_linksportlets_html')
 
     def admin_linksportlets_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Admin linksportlets html """
         return self.getFormsTool().getContent({'here': self},
                                               'site_admin_linksportlets')
 
@@ -4085,7 +4085,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_htmlportlets_html')
 
     def admin_htmlportlets_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Admin htmlportlets html """
         return self.getFormsTool().getContent({'here': self},
                                               'site_admin_htmlportlets')
 
@@ -4154,7 +4154,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_comments_html')
 
     def admin_comments_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Admin comments html """
         return self.getFormsTool().getContent({'here': self},
                                               'site_admin_comments')
 
@@ -4476,7 +4476,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'manage_uninstall_pluggableitem')
 
     def manage_uninstall_pluggableitem(self, meta_type=None, REQUEST=None):
-        """ """
+        """ Manage uninstall pluggableitem """
         if meta_type is not None:
             # remember that this meta_type was removed
             del(self.__pluggable_installed_content[meta_type])
@@ -4494,7 +4494,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                                       self.absolute_url())
 
     def is_logged(self, REQUEST=None):
-        """ """
+        """ Is logged """
         if not REQUEST:
             REQUEST = self.REQUEST
         return REQUEST.AUTHENTICATED_USER.getUserName() != 'Anonymous User'
@@ -4641,7 +4641,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declareProtected(view, 'HEAD')
 
     def HEAD(self, REQUEST=None):
-        """ """
+        """ Head """
         modified = DateTime(self._p_mtime)
         return self.REQUEST.RESPONSE.setHeader('Last-Modified', modified)
 
@@ -4667,7 +4667,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     @deprecate('standard_html_header is deprecated and will be removed. '
                'Use standard_template_macro instead.')
     def standard_html_header(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Standard html header """
         context = self.REQUEST.PARENTS[0]
         ltool = self.getLayoutTool()
         if hasattr(ltool.get_current_skin(), 'site_header'):
@@ -4682,7 +4682,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     @deprecate('standard_html_footer is deprecated and will be removed. '
                'Use standard_template_macro instead.')
     def standard_html_footer(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Standard html footer """
         context = self.REQUEST.PARENTS[0]
         ltool = self.getLayoutTool()
         if hasattr(ltool.get_current_skin(), 'site_footer'):
@@ -4694,7 +4694,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declareProtected(view, 'index_html')
 
     def index_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Index html """
         layout_tool = self.getLayoutTool()
         current_skin = layout_tool.get_current_skin()
         layout_site_index = current_skin._getOb('site_index', None)
@@ -4705,91 +4705,91 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declareProtected(view, 'menusubmissions')
 
     def menusubmissions(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Menusubmissions """
         return self.getFormsTool().getContent({'here': self},
                                               'site_menusubmissions')
 
     security.declareProtected(view, 'messages_html')
 
     def messages_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Messages html """
         return self.getFormsTool().getContent({'here': self}, 'site_messages')
 
     security.declarePublic('messages_box')
 
     def messages_box(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Messages box """
         return self.getFormsTool().getContent({'here': self}, 'messages_box')
 
     security.declarePublic('languages_box')
 
     def languages_box(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Languages box """
         return self.getFormsTool().getContent({'here': self}, 'languages_box')
 
     security.declareProtected(view, 'form_languages_box')
 
     def form_languages_box(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Form languages box """
         return self.getFormsTool().getContent({'here': self},
                                               'form_languages_box')
 
     security.declarePublic('changecredentials_html')
 
     def changecredentials_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Changecredentials html """
         return self.getFormsTool().getContent({'here': self},
                                               'site_changecredentials')
 
     security.declarePublic('login_html')
 
     def login_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Login html """
         return self.getFormsTool().getContent({'here': self}, 'site_login')
 
     security.declarePublic('logout_html')
 
     def logout_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Logout html """
         return self.getFormsTool().getContent({'here': self}, 'site_logout')
 
     security.declarePublic('unauthorized_html')
 
     def unauthorized_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Unauthorized html """
         return self.getFormsTool().getContent({'here': self},
                                               'site_unauthorized')
 
     security.declareProtected(view, 'search_html')
 
     def search_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Search html """
         return self.getFormsTool().getContent({'here': self}, 'site_search')
 
     security.declareProtected(view, 'external_search_html')
 
     def external_search_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ External search html """
         return self.getFormsTool().getContent({'here': self},
                                               'site_external_search')
 
     security.declareProtected(view, 'sitemap_html')
 
     def sitemap_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Sitemap html """
         return self.getFormsTool().getContent({'here': self}, 'site_sitemap')
 
     security.declareProtected(view, 'sitemap_add_html')
 
     def sitemap_add_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Sitemap add html """
         return self.getFormsTool().getContent({'here': self}, 'sitemap_add')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
                               'admin_bulk_mail_html')
 
     def admin_bulk_mail_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Admin bulk mail html """
         return PageTemplateFile('skel/forms/site_admin_bulk_mail',
                                 globals()).__of__(self)()
 
@@ -4833,7 +4833,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declareProtected(view, 'sitemap_xml')
 
     def sitemap_xml(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Sitemap xml """
         return self.getFormsTool().getContent({'here': self}, 'sitemap_xml')
 
     sitemap_rdf_xml = NaayaPageTemplateFile('zpt/sitemap_rdf_xml', globals(),
@@ -4895,7 +4895,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     reset_css = ImageFile('www/reset.css', globals())
 
     def additional_style_css(self, REQUEST):
-        """ """
+        """ Additional style css """
         REQUEST.RESPONSE.setHeader('Content-Type', 'text/css')
         return self.getLayoutTool().getNaayaContentStyles()
 

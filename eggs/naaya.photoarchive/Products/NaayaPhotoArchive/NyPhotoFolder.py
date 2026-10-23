@@ -76,7 +76,7 @@ DEFAULT_SCHEMA.update({
 
 _photofolder_add_html = PageTemplateFile('zpt/photofolder_add', globals())
 def photofolder_add_html(self, REQUEST):
-    """ """
+    """ Photofolder add html """
     from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
     form_helper = get_schema_helper_for_metatype(self, METATYPE_NYPHOTOFOLDER)
     return _photofolder_add_html.__of__(self)(REQUEST, form_helper=form_helper)
@@ -142,7 +142,7 @@ def addNyPhotoFolder(self, id='', REQUEST=None, contributor=None,
     return ob.getId()
 
 class NyPhotoFolder(NyRoleManager, NyContentData, NyAttributes, photo_archive_base, NyContainer, NyContentType):
-    """ """
+    """ Ny photo folder """
 
     meta_type = METATYPE_NYPHOTOFOLDER
     meta_label = METALABEL_NYPHOTOFOLDER
@@ -330,7 +330,7 @@ class NyPhotoFolder(NyRoleManager, NyContentData, NyAttributes, photo_archive_ba
 
     @deprecate('NyPhotoFolder.get_archive_listing is deprecated and will be removed in the next version.')
     def get_archive_listing(self, p_objects):
-        """ """
+        """ Get archive listing """
         results = []
         select_all, delete_all, flag = 0, 0, 0
         for x in p_objects:
@@ -369,7 +369,7 @@ class NyPhotoFolder(NyRoleManager, NyContentData, NyAttributes, photo_archive_ba
     #zmi actions
     security.declareProtected(view_management_screens, 'manageDisplays')
     def manageDisplays(self, display=None, width=None, height=None, REQUEST=None):
-        """ """
+        """ Manage displays """
         if display and width and height:
             for x,y,z in zip(display,width,height):
                 self.displays[x] = (int(y), int(z))
@@ -378,14 +378,14 @@ class NyPhotoFolder(NyRoleManager, NyContentData, NyAttributes, photo_archive_ba
 
     security.declareProtected(view_management_screens, 'manageGenerateDisplays')
     def manageGenerateDisplays(self, REQUEST=None):
-        """ """
+        """ Manage generate displays """
         for photo in self.getObjects():
             photo.manageGenerateDisplays()
         if REQUEST: REQUEST.RESPONSE.redirect('manage_displays_html?save=ok')
 
     security.declareProtected(view_management_screens, 'managePurgeDisplays')
     def managePurgeDisplays(self, REQUEST=None):
-        """ """
+        """ Manage purge displays """
         for photo in self.getObjects():
             photo.managePurgeDisplays()
         if REQUEST: REQUEST.RESPONSE.redirect('manage_displays_html?save=ok')
@@ -393,7 +393,7 @@ class NyPhotoFolder(NyRoleManager, NyContentData, NyAttributes, photo_archive_ba
     #site actions
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
     def saveProperties(self, REQUEST=None, **kwargs):
-        """ """
+        """ Save properties """
         if REQUEST is not None:
             schema_raw_data = dict(REQUEST.form)
         else:
@@ -615,7 +615,7 @@ class NyPhotoFolder(NyRoleManager, NyContentData, NyAttributes, photo_archive_ba
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'setTopPhotoObjects')
     @deprecate('NyPhotoFolder.setTopPhotoObjects is deprecated and will be removed in the next version.')
     def setTopPhotoObjects(self, REQUEST=None):
-        """ """
+        """ Set top photo objects """
         try:
             for item in self.objectValues():
                 if hasattr(item, 'topitem'): item.topitem = 0
@@ -680,7 +680,7 @@ class NyPhotoFolder(NyRoleManager, NyContentData, NyAttributes, photo_archive_ba
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'restrict_html')
     #@deprecate('NyPhotoFolder.restrict_html is deprecated and will be removed in the next version.')
     def restrict_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Restrict html """
         return self.getFormsTool().getContent({'here': self}, 'folder_restrict')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'setRestrictions')

@@ -54,7 +54,7 @@ class AddHelpTextOnNewsDescription(UpdateScript):
         return True
 
 class RestrictUnapproved(UpdateScript):
-    """ """
+    """ Restrict unapproved """
     title = 'Restrict view for unapproved objects'
     creation_date = 'Oct 28, 2011'
     authors = ['Andrei Laza']

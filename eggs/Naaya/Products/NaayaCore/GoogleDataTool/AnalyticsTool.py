@@ -47,7 +47,7 @@ formatter.setPattern('#,##0;-#,##0')
 
 
 def manage_addAnalyticsTool(self, REQUEST=None):
-    """ """
+    """ Manage add analytics tool """
     ob = AnalyticsTool(ID_ANALYTICSTOOL, TITLE_ANALYTICSTOOL)
     self._setObject(ID_ANALYTICSTOOL, ob)
     if REQUEST:
@@ -55,7 +55,7 @@ def manage_addAnalyticsTool(self, REQUEST=None):
 
 
 class AnalyticsTool(SimpleItem, utils):
-    """ """
+    """ Analytics tool """
 
     meta_type = METATYPE_ANALYTICSTOOL
     icon = 'misc_/NaayaCore/AnalyticsTool.gif'
@@ -68,7 +68,7 @@ class AnalyticsTool(SimpleItem, utils):
     profile = None
 
     def __init__(self, id, title):
-        """ """
+        """ Init """
         self.id = id
         self.title = title
         self._reset()
@@ -125,7 +125,7 @@ class AnalyticsTool(SimpleItem, utils):
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_stats')
 
     def admin_stats(self, REQUEST):
-        """ """
+        """ Admin stats """
         if self._google_access_token is None:
             REQUEST.RESPONSE.redirect(self.absolute_url() + '/authorize')
             return
@@ -138,7 +138,7 @@ class AnalyticsTool(SimpleItem, utils):
                                        'site_admin_stats_authorize')
 
     def authorize(self):
-        """ """
+        """ Authorize """
         is_configured = bool('GOOGLE_AUTH_CLIENT_ID' in os.environ and
                              'GOOGLE_AUTH_CLIENT_SECRET' in os.environ)
         return self._authorize(is_configured=is_configured)
@@ -146,7 +146,7 @@ class AnalyticsTool(SimpleItem, utils):
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'stats_info')
 
     def stats_info(self):
-        """ """
+        """ Stats info """
         view_name = 'stats'
         cached_data = self.get_cache(view_name=view_name)
         if cached_data is None:
@@ -233,7 +233,7 @@ class AnalyticsTool(SimpleItem, utils):
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getProfiles')
 
     def getProfiles(self, account, REQUEST=None):
-        """ """
+        """ Get profiles """
         resp_json = self._api_get('management/accounts/%s/webproperties'
                                   % account)
         data = {'profiles': [{'code': i['id'], 'name': i['name']}
@@ -257,7 +257,7 @@ class AnalyticsTool(SimpleItem, utils):
 
     def admin_account_save(self, account=None, profile_code=None,
                            date_interval='30', start_date='', REQUEST=None):
-        """ """
+        """ Admin account save """
         if account:
             self.account = account
 
@@ -290,7 +290,7 @@ class AnalyticsTool(SimpleItem, utils):
                               'admin_account_revoke')
 
     def admin_account_revoke(self, REQUEST=None):
-        """ """
+        """ Admin account revoke """
         self._reset(revoke=True)
         if REQUEST is not None:
             REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_account')
@@ -326,7 +326,7 @@ class AnalyticsTool(SimpleItem, utils):
                               'saveAuthorizationCode')
 
     def saveAuthorizationCode(self, code, REQUEST=None):
-        """ """
+        """ Save authorization code """
         data = {
             'grant_type': 'authorization_code',
             'client_id': os.environ['GOOGLE_AUTH_CLIENT_ID'],
@@ -500,7 +500,7 @@ class AnalyticsTool(SimpleItem, utils):
     security.declarePublic('get_date_interval')
 
     def get_date_interval(self):
-        """ """
+        """ Get date interval """
         end_date = datetime.datetime.today()
         if self.start_date:
             sd = time.strptime(self.start_date, '%d/%m/%Y')
@@ -512,7 +512,7 @@ class AnalyticsTool(SimpleItem, utils):
     security.declarePublic('get_intervals')
 
     def get_intervals(self):
-        """ """
+        """ Get intervals """
         return INTERVALS
 
 InitializeClass(AnalyticsTool)

@@ -16,7 +16,7 @@ register_content(
 )
 
 def initialize(context):
-    """ """
+    """ Initialize """
 
     #register classes
     context.registerClass(

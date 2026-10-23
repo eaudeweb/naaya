@@ -226,11 +226,11 @@ class SchemaTool(Folder):
             REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_properties_html')
 
     def get_ratings(self):
-        """ """
+        """ Get ratings """
         return []
 
     def sort_objects_by_ratings(self, skey=1, rkey=1, max_range=10):
-        """ """
+        """ Sort objects by ratings """
         import operator
         objects = self.get_ratings()
         objects = sorted(objects, key=operator.itemgetter(skey), reverse=rkey)
@@ -240,7 +240,7 @@ class SchemaTool(Folder):
 
     _admin_ratings_overview = PageTemplateFile('zpt/admin_ratings_overview', globals())
     def admin_ratings_overview_html(self, REQUEST):
-        """ """
+        """ Admin ratings overview html """
         skey = 1
         rkey = 1
         if 'show_lowest_rated' in REQUEST:

@@ -30,13 +30,13 @@ class NyAccess(SimpleItem):
 
     security.declareProtected(change_permissions, 'sortedPermissions')
     def sortedPermissions(self):
-        """ """
+        """ Sorted permissions """
 
         return sorted(self.permissions.keys())
 
     security.declareProtected(change_permissions, 'getValidRoles')
     def getValidRoles(self):
-        """ """
+        """ Get valid roles """
 
         roles_to_remove = ['Owner', 'Manager']
         return [role for role in self.getObject().validRoles()
@@ -55,7 +55,7 @@ class NyAccess(SimpleItem):
 
     security.declareProtected(change_permissions, 'getPermissionAcquiredMapping')
     def getPermissionAcquiredMapping(self):
-        """ """
+        """ Get permission acquired mapping """
 
         parent = self.getObjectParent()
         acquiring_permissions = self.getPermissionsWithAcquiredRoles()

@@ -7,12 +7,12 @@ from Products.NaayaWidgets.widgets.TextAreaWidget import TextAreaWidget
 
 def addLocalizedTextAreaWidget(container, id="", title="Localized Lines Widget",
                              REQUEST=None, **kwargs):
-    """ """
+    """ Add localized text area widget """
     return manage_addWidget(LocalizedTextAreaWidget, container, id, title,
                             REQUEST, **kwargs)
 
 class LocalizedTextAreaWidget(TextAreaWidget):
-    """ """
+    """ Localized text area widget """
     meta_type = "Naaya Localized Text Area Widget"
     meta_label = "Paragraph text (localized)"
     meta_description = "Multiple line answer that can be translated, used for longer responses"

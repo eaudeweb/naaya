@@ -162,7 +162,7 @@ def addNySimpleConsultation(self, id='', title='', description='', sortorder='',
             raise Exception('%s' % ', '.join(r))
 
 class NySimpleConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyContainer, NyCheckControl, NyValidation, utils):
-    """ """
+    """ Ny simple consultation """
 
     meta_type = METATYPE_OBJECT
     meta_label = LABEL_OBJECT
@@ -183,7 +183,7 @@ class NySimpleConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, N
     })
 
     def __init__(self, id, title, description, sortorder, start_date, end_date, public_registration, allow_file, contributor, releasedate, lang):
-        """ """
+        """ Init """
         self.id = id
         NyValidation.__dict__['__init__'](self)
         NyCheckControl.__dict__['__init__'](self)
@@ -225,7 +225,7 @@ class NySimpleConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, N
     security.declareProtected(PERMISSION_MANAGE_SIMPLECONSULTATION, 'saveProperties')
     def saveProperties(self, title='', description='', sortorder='', start_date='', end_date='',
                        public_registration='', allow_file='', file='', lang='', REQUEST=None):
-        """ """
+        """ Save properties """
 
         if not title:
             self.setSession('title', title)
@@ -339,7 +339,7 @@ class NySimpleConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, N
 
     security.declareProtected(view_management_screens, 'manage_options')
     def manage_options(self):
-        """ """
+        """ Manage options """
 
         l_options = (NyContainer.manage_options[0],)
         l_options += ({'label': 'View', 'action': 'index_html'},) + NyContainer.manage_options[3:8]
@@ -356,7 +356,7 @@ class NySimpleConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, N
 
     security.declareProtected(PERMISSION_REVIEW_SIMPLECONSULTATION, 'addComment')
     def addComment(self, title='', contributor_name='', message='', file='', REQUEST=None):
-        """ """
+        """ Add comment """
 
         if not title or not contributor_name or not message:
             self.setSession('title', title)

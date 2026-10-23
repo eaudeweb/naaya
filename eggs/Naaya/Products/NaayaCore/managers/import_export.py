@@ -645,7 +645,7 @@ class CSVReader(object):
     """ Manipulate CSV files """
 
     def __init__(self, file_ob, dialect, encoding):
-        """ """
+        """ Init """
         if dialect == 'comma':
             dialect = csv.excel
         elif dialect == 'tab':

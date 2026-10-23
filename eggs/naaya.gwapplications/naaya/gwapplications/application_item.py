@@ -172,8 +172,7 @@ class GWApplication(SimpleItem):
 
 
 class GWApplicationIndexView(BrowserView):
-    """
-    """
+    """ Gwapplication index view """
 
     def __call__(self, submitted='', **kwargs):
         if not submitted:

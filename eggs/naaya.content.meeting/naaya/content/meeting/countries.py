@@ -7,7 +7,7 @@ with open(os.path.join(os.path.dirname(__file__), 'countries.json'), encoding='u
 
 
 def get_country_name(code):
-    """ """
+    """ Get country name """
     if code is None:
         return '-'
     return COUNTRIES.get(code.lower(), code)

@@ -81,7 +81,7 @@ config = {
     }
 
 def blog_entry_add_html(self, REQUEST=None, RESPONSE=None):
-    """ """
+    """ Blog entry add html """
     from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
     form_helper = get_schema_helper_for_metatype(self, config['meta_type'])
     return self.getFormsTool().getContent({
@@ -199,11 +199,11 @@ def importNyBlogEntry(self, param, id, attrs, content, properties, discussion, o
             self.recatalogNyObject(ob)
 
 class blog_entry_item(Implicit, NyContentData):
-    """ """
+    """ Blog entry item """
 
 @implementer(INyBlogEntry)
 class NyBlogEntry(blog_entry_item, NyAttributes, NyContainer, NyCheckControl, NyValidation, NyContentType):
-    """ """
+    """ Ny blog entry """
 
     meta_type = config['meta_type']
     meta_label = config['label']
@@ -212,7 +212,7 @@ class NyBlogEntry(blog_entry_item, NyAttributes, NyContainer, NyCheckControl, Ny
     icon_marked = 'misc_/NaayaContent/NyBlogEntry_marked.gif'
 
     def manage_options(self):
-        """ """
+        """ Manage options """
         l_options = (NyContainer.manage_options[0],)
         if not self.hasVersion():
             l_options += ({'label': 'Properties', 'action': 'manage_edit_html'},)
@@ -220,7 +220,7 @@ class NyBlogEntry(blog_entry_item, NyAttributes, NyContainer, NyCheckControl, Ny
         return l_options
 
     def all_meta_types(self, interfaces=None):
-        """ """
+        """ All meta types """
         y = []
         additional_meta_types = ['Image']
         for x in Products.meta_types:
@@ -231,7 +231,7 @@ class NyBlogEntry(blog_entry_item, NyAttributes, NyContainer, NyCheckControl, Ny
     security = ClassSecurityInfo()
 
     def __init__(self, id, contributor):
-        """ """
+        """ Init """
         self.id = id
         blog_entry_item.__init__(self)
         NyValidation.__dict__['__init__'](self)
@@ -276,7 +276,7 @@ class NyBlogEntry(blog_entry_item, NyAttributes, NyContainer, NyCheckControl, Ny
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, REQUEST=None, **kwargs):
-        """ """
+        """ Manage properties """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
 
@@ -302,14 +302,14 @@ class NyBlogEntry(blog_entry_item, NyAttributes, NyContainer, NyCheckControl, Ny
 
     security.declareProtected(view_management_screens, 'submitThis')
     def submit_this(self, REQUEST=None):
-        """ """
+        """ Submit this """
         self.submitThis()
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
     #site actions
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'commitVersion')
     def commitVersion(self, REQUEST=None):
-        """ """
+        """ Commit version """
         user = self.REQUEST.AUTHENTICATED_USER.getUserName()
         if (not self.checkPermissionEditObject()) or (
             self.checkout_user != user):
@@ -327,7 +327,7 @@ class NyBlogEntry(blog_entry_item, NyAttributes, NyContainer, NyCheckControl, Ny
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'startVersion')
     def startVersion(self, REQUEST=None):
-        """ """
+        """ Start version """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
         if self.hasVersion():
@@ -342,7 +342,7 @@ class NyBlogEntry(blog_entry_item, NyAttributes, NyContainer, NyCheckControl, Ny
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
     def saveProperties(self, REQUEST=None, **kwargs):
-        """ """
+        """ Save properties """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
 
@@ -392,12 +392,12 @@ class NyBlogEntry(blog_entry_item, NyAttributes, NyContainer, NyCheckControl, Ny
     #site pages
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Index html """
         return self.getFormsTool().getContent({'here': self}, 'blog_entry_index')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     def edit_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Edit html """
         if self.hasVersion():
             obj = self.version
         else:

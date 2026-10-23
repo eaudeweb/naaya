@@ -283,7 +283,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     security.declarePrivate('get_geo_objects')
 
     def get_geo_objects(self, lat, lon, path='', geo_types=None, query=''):
-        """ """
+        """ Get geo objects """
         eps = Decimal('0.000001')
         lat, lon = Decimal(lat), Decimal(lon)
         kwargs = {
@@ -572,7 +572,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     security.declareProtected(view, 'xrjs_getGeoPoints')
 
     def xrjs_getGeoPoints(self, REQUEST):
-        """ """
+        """ Xrjs get geo points """
         try:
             points = []
             for res in self.search_geo_objects(REQUEST=REQUEST):
@@ -600,7 +600,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     security.declareProtected(view, 'xrjs_getGeoClusters')
 
     def xrjs_getGeoClusters(self, REQUEST):
-        """ """
+        """ Xrjs get geo clusters """
         try:
             points = []
             cluster_obs, single_obs = self.search_geo_clusters(REQUEST)
@@ -672,7 +672,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
 
     def xrjs_getTooltip(self, lat, lon, path='', geo_types=None,
                         geo_query=None):
-        """ """
+        """ Xrjs get tooltip """
         warn("`xrjs_getTooltip` is deprecated. Use `xrjs_getPointBalloon` "
              "instead.")
         obs = self.get_geo_objects(lat, lon, path, geo_types, geo_query)
@@ -830,7 +830,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
 
     def adminAddSymbol(self, id='', title='', description='', parent='',
                        color='', picture='', sortorder='', REQUEST=None):
-        """ """
+        """ Admin add symbol """
         if color:
             picture = None
         else:
@@ -858,7 +858,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
 
     def adminUpdateSymbol(self, id='', title='', description='', parent='',
                           color='', picture='', sortorder='', REQUEST=None):
-        """ """
+        """ Admin update symbol """
         if color:
             picture = None
         else:
@@ -883,7 +883,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'adminDeleteSymbols')
 
     def adminDeleteSymbols(self, id=[], REQUEST=None):
-        """ """
+        """ Admin delete symbols """
         self.deleteSymbol(self.utConvertToList(id))
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
@@ -905,7 +905,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                               'admin_set_contenttypes')
 
     def admin_set_contenttypes(self, geotag=[], REQUEST=None):
-        """ """
+        """ Admin set contenttypes """
         schema_tool = self.getSite().getSchemaTool()
         return schema_tool.admin_set_contenttypes(geotag=geotag,
                                                   REQUEST=REQUEST)
@@ -917,7 +917,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     security.declareProtected(view, 'index_html')
 
     def index_html(self, REQUEST=None):
-        """ """
+        """ Index html """
         return self._index_template()({'here': self})
 
     security.declareProtected(view_management_screens,
@@ -1121,7 +1121,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
 
     def export_geo_rss(self, sort_on='', sort_order='',
                        REQUEST=None, **kwargs):
-        """ """
+        """ Export geo rss """
         timestamp = datetime.fromtimestamp(time.time())
         timestamp = str(timestamp.strftime('%Y-%m-%dT%H:%M:%SZ'))
         rss = ["""<feed xmlns="http://www.w3.org/2005/Atom"
@@ -1223,7 +1223,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
 
     def suggest_location_redirect(self, REQUEST, content_type, folder,
                                   url=None):
-        """ """
+        """ Suggest location redirect """
         if not folder and not url:
             raise ValueError('No value given for folder')
 
@@ -1274,7 +1274,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'manageProperties')
 
     def manageProperties(self, REQUEST):
-        """ """
+        """ Manage properties """
         form = dict(REQUEST.form)
         form.setdefault('cluster_points', False)
         for key in ('initial_address', 'map_height_px',

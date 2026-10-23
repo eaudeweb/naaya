@@ -17,7 +17,7 @@ from Products.NaayaBase.countries import language_from_country_code
 manage_addRemoteChannelForm = PageTemplateFile('zpt/remotechannel_manage_add', globals())
 def manage_addRemoteChannel(self, id='', title='', url='', numbershownitems='', portlet='', filter_by_language='',
         automatic_translation_portlet='', REQUEST=None):
-    """ """
+    """ Manage add remote channel """
     id = self.utSlugify(id)
     if not id: id = PREFIX_SUFIX_REMOTECHANNEL % self.utGenRandomId(6)
     try: numbershownitems = abs(int(numbershownitems))
@@ -33,7 +33,7 @@ def manage_addRemoteChannel(self, id='', title='', url='', numbershownitems='', 
 
 @implementer(IRemoteChannel)
 class RemoteChannel(SimpleItem, NyFeed, utils):
-    """ """
+    """ Remote channel """
 
 
     meta_type = METATYPE_REMOTECHANNEL
@@ -55,7 +55,7 @@ class RemoteChannel(SimpleItem, NyFeed, utils):
     harvester_name = None
 
     def __init__(self, id, title, url, numbershownitems, filter_by_language):
-        """ """
+        """ Init """
         self.id = id
         self.title = title
         self.url = url
@@ -145,7 +145,7 @@ class RemoteChannel(SimpleItem, NyFeed, utils):
         return L
 
     def updateChannel(self, uid):
-        """ """
+        """ Update channel """
         if uid==self.get_site_uid():
             self.harvest_feed(self.get_http_proxy(), self.harvester_name)
             if self.get_feed_bozo_exception() is not None: error = self.get_feed_bozo_exception()
@@ -155,7 +155,7 @@ class RemoteChannel(SimpleItem, NyFeed, utils):
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', url='', numbershownitems='', filter_by_language='', harvester_name='', REQUEST=None):
-        """ """
+        """ Manage properties """
         try: numbershownitems = abs(int(numbershownitems))
         except: numbershownitems = self.numbershownitems
         self.title = title
@@ -171,7 +171,7 @@ class RemoteChannel(SimpleItem, NyFeed, utils):
             REQUEST.RESPONSE.redirect('manage_properties_html')
 
     def get_language_from_domain(self):
-        """ """
+        """ Get language from domain """
         # get main domain name
         rq = urllib.request.Request(self.url)
         host = rq.get_host()

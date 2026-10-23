@@ -105,14 +105,14 @@ class AltTerms(SimpleItem, session_manager):
     #altterm constraints
     security.declareProtected(view_management_screens, 'checkAltTerm')
     def checkAltTerm(self, concept_id):
-        """ """
+        """ Check alt term """
         if self.getConceptsFolder().get_concept_by_id(concept_id):
             return 1
         return 0
 
     security.declareProtected(view_management_screens, 'getIdsList')
     def getIdsList(self, ids, all=0):
-        """ """
+        """ Get ids list """
         if all: return self.altterms.keys()
         return th_utils().getIdsList(ids)
 

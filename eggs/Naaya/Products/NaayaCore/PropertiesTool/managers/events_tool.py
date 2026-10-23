@@ -90,7 +90,7 @@ class events_tool:
         self._p_changed = 1
 
     def getEventTypeData(self, p_et_id):
-        """ """
+        """ Get event type data """
         l_et = self.getEventType(p_et_id)
         if l_et is not None:
             return ['update', l_et.id, l_et.title]

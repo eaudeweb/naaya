@@ -14,7 +14,7 @@ from . import DiskTemplate
 
 manage_addSkinForm = PageTemplateFile('zpt/skin_add', globals())
 def manage_addSkin(self, id='', title='', content=None, REQUEST=None):
-    """ """
+    """ Manage add skin """
     if content is None or content == '':
         ob = Skin(id, title)
         self._setObject(id, ob)
@@ -30,7 +30,7 @@ def manage_addSkin(self, id='', title='', content=None, REQUEST=None):
         return self.manage_main(self, REQUEST, update_menu=1)
 
 class Skin(Folder):
-    """ """
+    """ Skin """
 
     meta_type = METATYPE_SKIN
     icon = 'misc_/NaayaCore/Skin.gif'
@@ -66,7 +66,7 @@ class Skin(Folder):
     manage_addTemplate = Template.manage_addTemplate
 
     def __init__(self, id, title):
-        """ """
+        """ Init """
         self.id = id
         self.title = title
 

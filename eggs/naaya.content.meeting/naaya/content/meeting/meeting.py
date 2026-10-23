@@ -191,7 +191,7 @@ def add_observer_role(site):
 
 
 def meeting_on_install(site):
-    """ """
+    """ Meeting on install """
     add_observer_role(site)
 
     # add new map symbols for the meeting
@@ -232,7 +232,7 @@ def meeting_on_install(site):
 
 
 def meeting_add_html(self):
-    """ """
+    """ Meeting add html """
     from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
     form_helper = get_schema_helper_for_metatype(self, config['meta_type'])
     return self.getFormsTool().getContent(
@@ -379,7 +379,7 @@ _marker = object()
 
 @implementer(INyMeeting)
 class NyMeeting(NyContentData, NyFolder):
-    """ """
+    """ Ny meeting """
 
     meta_type = config['meta_type']
     meta_label = config['label']
@@ -404,7 +404,7 @@ class NyMeeting(NyContentData, NyFolder):
     __ac_roles__ = (PARTICIPANT_ROLE, WAITING_ROLE)
 
     def __init__(self, id, contributor):
-        """ """
+        """ Init """
         NyFolder.__dict__['__init__'](self, id, contributor)
         self.participants = Participants('participants')
         self.email_sender = EmailSender('email_sender')
@@ -548,7 +548,7 @@ class NyMeeting(NyContentData, NyFolder):
     security.declareProtected(view_management_screens, 'manageProperties')
 
     def manageProperties(self, REQUEST=None, **kwargs):
-        """ """
+        """ Manage properties """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
 
@@ -584,7 +584,7 @@ class NyMeeting(NyContentData, NyFolder):
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
 
     def saveProperties(self, REQUEST=None, **kwargs):
-        """ """
+        """ Save properties """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
 
@@ -644,27 +644,27 @@ class NyMeeting(NyContentData, NyFolder):
                 raise ValueError(form_errors.popitem()[1])  # pick an error
 
     def checkPermissionParticipateInMeeting(self):
-        """ """
+        """ Check permission participate in meeting """
         return (self.checkPermission(PERMISSION_PARTICIPATE_IN_MEETING) or
                 self.checkPermissionAdminMeeting() or
                 self.nfp_for_country())
 
     def checkPermissionAdminMeeting(self):
-        """ """
+        """ Check permission admin meeting """
         return self.checkPermission(PERMISSION_ADMIN_MEETING)
 
     def checkPermissionChangePermissions(self):
-        """ """
+        """ Check permission change permissions """
         return self.nfp_for_country() or self.checkPermission(
             change_permissions)
 
     def isParticipant(self, userid=None):
-        """ """
+        """ Is participant """
         participants = self.getParticipants()
         return participants.isParticipant(userid)
 
     def registration_status(self, username=None):
-        """ """
+        """ Registration status """
         username = username or self.REQUEST.AUTHENTICATED_USER.getUserName()
         participants = self.getParticipants()
         a_subscriptions = participants.subscriptions._account_subscriptions
@@ -724,7 +724,7 @@ class NyMeeting(NyContentData, NyFolder):
     security.declareProtected(view, 'index_html')
 
     def index_html(self, REQUEST):
-        """ """
+        """ Index html """
         if self.survey_required and (self.registration_status() or
                                      self.isParticipant() or
                                      self.is_pending_signup()):
@@ -748,13 +748,13 @@ class NyMeeting(NyContentData, NyFolder):
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
 
     def edit_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Edit html """
         return self.getFormsTool().getContent({'here': self}, 'meeting_edit')
 
     security.declareProtected(view, 'menusubmissions')
 
     def menusubmissions(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Menusubmissions """
         return self.getFormsTool().getContent(
             {'here': self}, 'naaya.content.meeting.meeting_menusubmissions')
 
@@ -820,7 +820,7 @@ class NyMeeting(NyContentData, NyFolder):
     security.declareProtected(view, 'nfp_for_country')
 
     def nfp_for_country(self):
-        """ """
+        """ Nfp for country """
         # if we are not in the Eionet network, NFPs don't get special treatment
         if not self.in_eionet():
             return ''
@@ -837,17 +837,17 @@ class NyMeeting(NyContentData, NyFolder):
     security.declareProtected(view, 'get_country')
 
     def get_country(self, country_code):
-        """ """
+        """ Get country """
         return get_country_name(country_code)
 
     def get_countries(self):
-        """ """
+        """ Get countries """
         return get_countries()
 
     security.declareProtected(view, 'is_signup')
 
     def is_signup(self):
-        """ """
+        """ Is signup """
         username = self.REQUEST.AUTHENTICATED_USER.getUserName()
         key = username.replace('signup:', '')
         return self.participants.getSubscriptions()._is_signup(key)
@@ -855,7 +855,7 @@ class NyMeeting(NyContentData, NyFolder):
     security.declareProtected(view, 'is_pending_signup')
 
     def is_pending_signup(self):
-        """ """
+        """ Is pending signup """
         username = self.REQUEST.AUTHENTICATED_USER.getUserName()
         key = username.replace('signup:', '')
         return self.participants.getSubscriptions()._is_pending_signup(key)

@@ -27,8 +27,7 @@ class UpdatePortletAdministrationAddEntries(UpdateScript):
 
     security.declarePrivate('_update')
     def pre_update_hook(self):
-        """
-        """
+        """ Pre update hook """
 
         portals = get_portals(self)
         portlets = [(portal, self.portal_portlet(portal)) for portal in portals]
@@ -68,8 +67,7 @@ class UpdatePortletAdministrationAddEntries(UpdateScript):
         }
 
     def get_section_markup_index(self, lines, section):
-        """
-        """
+        """ Get section markup index """
         index = 0
         for line in lines:
             if ('>' + section + '<' in line) and '<li' in line:
@@ -79,8 +77,7 @@ class UpdatePortletAdministrationAddEntries(UpdateScript):
 
     security.declarePrivate('_update')
     def _update(self, portal):
-        """
-        """
+        """ Update """
         portal_path = "".join(portal.getPhysicalPath())
         portlet = self.portal_portlet(portal)
 

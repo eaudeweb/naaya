@@ -156,11 +156,11 @@ class term_parser:
     """ class for parse term files """
 
     def __init__(self):
-        """ """
+        """ Init """
         pass
 
     def parseContent(self, xml_string):
-        """ """
+        """ Parse content """
         chandler = term_handler()
         parser = make_parser()
         # Tell the parser to use our handler

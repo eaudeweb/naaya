@@ -201,7 +201,7 @@ class Widget(Folder, LocalPropertyManager):
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
 
     def edit_html(self):
-        """ """
+        """ Edit html """
         if getattr(self, 'locked', '') and not self.checkPermission(
                 'View Management Screens'):
             raise Unauthorized

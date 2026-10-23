@@ -65,7 +65,7 @@ DEFAULT_SCHEMA['maintainer_email'] = {
 
 
 def folder_add_html(self, REQUEST=None, RESPONSE=None):
-    """ """
+    """ Folder add html """
     from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
     form_helper = get_schema_helper_for_metatype(self, 'Naaya Folder')
     return self.getFormsTool().getContent({
@@ -258,7 +258,7 @@ class NyFolder(
         NyRoleManager, NyFolderBase, NyCommonView, NyAttributes, NyProperties,
         NyImportExport, NyContainer, utils, NyContentType, NyContentData):
 
-    """ """
+    """ Ny folder """
 
 
     meta_type = METATYPE_FOLDER
@@ -317,7 +317,7 @@ class NyFolder(
             return self.meta_types
 
     def __init__(self, id, contributor):
-        """ """
+        """ Init """
         self.id = id
         NyContainer.__dict__['__init__'](self)
         NyProperties.__dict__['__init__'](self)
@@ -328,7 +328,7 @@ class NyFolder(
         return False
 
     def write_import(self, REQUEST=None):
-        """ """
+        """ Write import """
         from os.path import join
         file_id = REQUEST.get('id', None)
         file_path = join(CLIENT_HOME, '%s.nyexp' % file_id)
@@ -594,7 +594,7 @@ class NyFolder(
     security.declareProtected(manage_users, 'admin_getusers')
 
     def admin_getusers(self):
-        """ """
+        """ Admin getusers """
         return self.getAuthenticationTool().getUserNames()
 
     def getUsersRoles(self):
@@ -693,7 +693,7 @@ class NyFolder(
     def admin_folder_feedback_form(self, who=0, username='', email='',
                                    comments='', recaptcha_response='',
                                    REQUEST=None):
-        """ """
+        """ Admin folder feedback form """
         err = []
 
         try:
@@ -739,7 +739,7 @@ class NyFolder(
 
     def admin_folder_feedback(self, status='0', emails='', postal='',
                               REQUEST=None):
-        """ """
+        """ Admin folder feedback """
         # process data
         try:
             status = abs(int(status))
@@ -772,7 +772,7 @@ class NyFolder(
     @deprecate('admin_folder_revokeroles is deprecated and will be removed. '
                'manage_revokeUsersRoles has been deleted.')
     def admin_folder_revokeroles(self, roles=[], REQUEST=None):
-        """ """
+        """ Admin folder revokeroles """
         self.getAuthenticationTool().manage_revokeUsersRoles(roles)
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_ROLEREVOKED)
@@ -783,7 +783,7 @@ class NyFolder(
 
     def admin_adduser(self, firstname='', lastname='', email='', name='',
                       password='', confirm='', REQUEST=None, RESPONSE=None):
-        """ """
+        """ Admin adduser """
         self.setUserSession(name, '', '', firstname, lastname, email, '')
         try:
             self.getAuthenticationTool().manage_addUser(
@@ -800,7 +800,7 @@ class NyFolder(
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_getuser')
 
     def admin_getuser(self, username):
-        """ """
+        """ Admin getuser """
         auth_tool = self.getAuthenticationTool()
         user_obj = auth_tool.getUser(username)
         if user_obj:
@@ -821,7 +821,7 @@ class NyFolder(
             self, name='', password='', confirm='', roles=[], domains=[],
             firstname='', lastname='', email='', lastupdated='', REQUEST=None,
             RESPONSE=None):
-        """ """
+        """ Admin saveuser credentials """
         self.setUserSession(name, '', '', firstname, lastname, email, '')
         try:
             self.getAuthenticationTool().manage_changeUser(
@@ -843,7 +843,7 @@ class NyFolder(
 
     def admin_folder_portlets(self, portlets=[], folder='', mode='',
                               REQUEST=None):
-        """ """
+        """ Admin folder portlets """
         # right portlets
         if mode == 'delete':
             for pair in self.utConvertToList(portlets):
@@ -866,7 +866,7 @@ class NyFolder(
 
     def admin_folder_addroles(self, name='', roles=[], location='',
                               REQUEST=None):
-        """ """
+        """ Admin folder addroles """
         if location == '':
                 # this is the current folder actually
             location = self.absolute_url(1)
@@ -975,7 +975,7 @@ class NyFolder(
             self, title='', description='', coverage='', keywords='',
             sortorder='', custom_index='', maintainer_email='', approved='',
             releasedate='', discussion='', REQUEST=None, **kwargs):
-        """ """
+        """ Manage properties """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
         try:
@@ -1017,7 +1017,7 @@ class NyFolder(
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'manageSubobjects')
 
     def manageSubobjects(self, REQUEST=None, **kwargs):
-        """ """
+        """ Manage subobjects """
         if REQUEST:
             kwargs.update(REQUEST.form)
 
@@ -1052,7 +1052,7 @@ class NyFolder(
     security.declareProtected(view_management_screens, 'setMaintainer')
 
     def setMaintainer(self, maintainer_email):
-        """ """
+        """ Set maintainer """
         self.maintainer_email = maintainer_email
         self._p_changed = 1
 
@@ -1060,7 +1060,7 @@ class NyFolder(
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
 
     def saveProperties(self, REQUEST=None, **kwargs):
-        """ """
+        """ Save properties """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
 
@@ -1102,7 +1102,7 @@ class NyFolder(
 
     def saveLogo(self, source='file', file='', url='', del_logo='',
                  REQUEST=None, **kwargs):
-        """ """
+        """ Save logo """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG)
         if del_logo != '':
@@ -1117,7 +1117,7 @@ class NyFolder(
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'setSortOrder')
 
     def setSortOrder(self, ids, REQUEST):
-        """ """
+        """ Set sort order """
         for id in self.utConvertToList(ids):
             try:
                 sortorder = abs(int(REQUEST.get('%s__sortorder' % id, 0)))
@@ -1148,7 +1148,7 @@ class NyFolder(
     security.declareProtected(PERMISSION_VALIDATE_OBJECTS, 'validateObject')
 
     def validateObject(self, id='', status='', comment='', REQUEST=None):
-        """ """
+        """ Validate object """
         err = ''
         success = False
         try:
@@ -1314,7 +1314,7 @@ class NyFolder(
     security.declareProtected(view, 'getTagCloud')
 
     def getTagCloud(self, tagCount=1):
-        """ """
+        """ Get tag cloud """
         import string
         import copy
         chars = list(string.ascii_lowercase)
@@ -1387,7 +1387,7 @@ class NyFolder(
     security.declareProtected(view, 'entries_rdf')
 
     def entries_rdf(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Entries rdf """
         entries = self.getWeekObjects()
         s = self.getSite()
         lang = self.gl_get_selected_language()
@@ -1431,7 +1431,7 @@ class NyFolder(
     security.declareProtected(view, 'comments_rdf')
 
     def comments_rdf(self, REQUEST):
-        """ """
+        """ Comments rdf """
         catalog_tool = self.getCatalogTool()
         comments = catalog_tool.getLatestComments(
             self.getPhysicalPath(), limit=20)
@@ -1462,7 +1462,7 @@ class NyFolder(
     security.declareProtected(view, 'HEAD')
 
     def HEAD(self, REQUEST=None):
-        """ """
+        """ Head """
         modified = DateTime(self._p_mtime)
         return self.REQUEST.RESPONSE.setHeader('Last-Modified', modified)
 
@@ -1498,7 +1498,7 @@ class NyFolder(
     @deprecate('standard_html_header is deprecated and will be removed. '
                'Use standard_template_macro instead.')
     def standard_html_header(self, REQUEST=None, RESPONSE=None, **args):
-        """ """
+        """ Standard html header """
         context = self.REQUEST.PARENTS[0]
         pt = self._getOb('header', None)
         if pt is None:
@@ -1516,7 +1516,7 @@ class NyFolder(
     @deprecate('standard_html_footer is deprecated and will be removed. '
                'Use standard_template_macro instead.')
     def standard_html_footer(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Standard html footer """
         context = self.REQUEST.PARENTS[0]
         pt = self._getOb('footer', None)
         if pt is None:
@@ -1575,7 +1575,7 @@ class NyFolder(
                              custom_index)
 
     def manage_create_custom_template(self, REQUEST=None):
-        """ """
+        """ Manage create custom template """
         custom_index = self.compute_custom_index_value()
 
         if custom_index.startswith('local:'):
@@ -1601,7 +1601,7 @@ class NyFolder(
     security.declareProtected(view, 'index_html')
 
     def index_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Index html """
         tmpl = self.get_custom_index_template()
         if tmpl is None:
             # no custom_index was configured, or the template is missing
@@ -1741,13 +1741,13 @@ class NyFolder(
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
 
     def edit_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Edit html """
         return self.getFormsTool().getContent({'here': self}, 'folder_edit')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'editlogo_html')
 
     def editlogo_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Editlogo html """
         return self.getFormsTool().getContent({'here': self},
                                               'folder_editlogo')
 
@@ -1755,7 +1755,7 @@ class NyFolder(
         PERMISSION_PUBLISH_OBJECTS, 'basketofapprovals_html')
 
     def basketofapprovals_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Basketofapprovals html """
         return self.getFormsTool().getContent(
             {'here': self}, 'folder_basketofapprovals')
 
@@ -1763,35 +1763,35 @@ class NyFolder(
         PERMISSION_VALIDATE_OBJECTS, 'basketofvalidation_html')
 
     def basketofvalidation_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Basketofvalidation html """
         return self.getFormsTool().getContent(
             {'here': self}, 'folder_basketofvalidation')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'sortorder_html')
 
     def sortorder_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Sortorder html """
         return self.getFormsTool().getContent({'here': self},
                                               'folder_sortorder')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'restrict_html')
 
     def restrict_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Restrict html """
         return self.getFormsTool().getContent({'here': self},
                                               'folder_restrict')
 
     security.declareProtected(view, 'menusubmissions')
 
     def menusubmissions(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Menusubmissions """
         return self.getFormsTool().getContent(
             {'here': self}, 'folder_menusubmissions')
 
     security.declareProtected(view, 'renameobject_html')
 
     def renameobject_html(self, REQUEST=None, RESPONSE=None, **kwargs):
-        """ """
+        """ Renameobject html """
         kwargs['here'] = self
         return self.getFormsTool().getContent(kwargs, 'folder_renameid')
 
@@ -1800,7 +1800,7 @@ class NyFolder(
         PERMISSION_PUBLISH_OBJECTS, 'administration_basket_html')
 
     def administration_basket_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Administration basket html """
         return self.getFormsTool().getContent(
             {'here': self}, 'folder_administration_basket')
 
@@ -1808,7 +1808,7 @@ class NyFolder(
         PERMISSION_PUBLISH_OBJECTS, 'administration_logo_html')
 
     def administration_logo_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Administration logo html """
         return self.getFormsTool().getContent(
             {'here': self}, 'folder_administration_logo')
 
@@ -1816,7 +1816,7 @@ class NyFolder(
         PERMISSION_PUBLISH_OBJECTS, 'administration_users_html')
 
     def administration_users_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Administration users html """
         return self.getFormsTool().getContent(
             {'here': self}, 'folder_administration_users')
 
@@ -1824,7 +1824,7 @@ class NyFolder(
         PERMISSION_PUBLISH_OBJECTS, 'administration_source_html')
 
     def administration_source_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Administration source html """
         return self.getFormsTool().getContent(
             {'here': self}, 'folder_administration_source')
 
@@ -1832,7 +1832,7 @@ class NyFolder(
         PERMISSION_PUBLISH_OBJECTS, 'administration_portlets_html')
 
     def administration_portlets_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Administration portlets html """
         return self.getFormsTool().getContent(
             {'here': self}, 'folder_administration_portlets')
 
@@ -1840,14 +1840,14 @@ class NyFolder(
         PERMISSION_PUBLISH_OBJECTS, 'administration_feedback_html')
 
     def administration_feedback_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Administration feedback html """
         return self.getFormsTool().getContent(
             {'here': self}, 'folder_administration_feedback')
 
     security.declareProtected(view, 'feedback_html')
 
     def feedback_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Feedback html """
         return self.getFormsTool().getContent({'here': self}, 'site_feedback')
 
     csv_import = CSVImportTool('csv_import')

@@ -91,7 +91,7 @@ class NyThesaurus(Folder):
         self.__alphabets_cache =    {}
 
     def __setstate__(self,state):
-        """ """
+        """ Setstate """
         NyThesaurus.inheritedAttribute('__setstate__')(self, state)
         if not hasattr(self, '__alphabets_cache'):
             self.__alphabets_cache = {}
@@ -274,7 +274,7 @@ class NyThesaurus(Folder):
     #thesaurus api
     security.declarePublic('getThemeByID')
     def getThemeByID(self, theme_id='', lang=''):
-        """ """
+        """ Get theme by id """
         query = [('meta_type',THEME_ITEM_METATYPE),
                  ('theme_id',theme_id),
                  ('langcode', lang)]
@@ -284,7 +284,7 @@ class NyThesaurus(Folder):
 
     security.declarePublic('getTermByID')
     def getTermByID(self, concept_id='', lang=''):
-        """ """
+        """ Get term by id """
         query = [('meta_type',TERM_ITEM_METATYPE),
                  ('concept_id',concept_id),
                  ('langcode', lang)]
@@ -292,14 +292,14 @@ class NyThesaurus(Folder):
 
     security.declarePublic('getConceptTranslation')
     def getConceptTranslation(self, concept_id, lang):
-        """ """
+        """ Get concept translation """
         term_ob = self.getTermByID(concept_id, lang)
         if not term_ob: term_ob = DummyTerm(concept_id, '')
         return term_ob
 
     security.declarePublic('getTermByID')
     def getAltTermByID(self, concept_id='', lang=''):
-        """ """
+        """ Get alt term by id """
         query = [('meta_type',ALTTERM_ITEM_METATYPE),
                  ('concept_id',concept_id),
                  ('langcode', lang)]
@@ -307,14 +307,14 @@ class NyThesaurus(Folder):
 
     security.declarePublic('getConceptByID')
     def getConceptByID(self, concept_id=''):
-        """ """
+        """ Get concept by id """
         query = [('meta_type',CONCEPT_ITEM_METATYPE),
                  ('concept_id',concept_id)]
         return th_utils().utListToObj(self.catalog.searchCatalog(query))
 
     security.declarePublic('getDefinition')
     def getDefinition(self, concept_id='', lang=''):
-        """ """
+        """ Get definition """
         query = [('meta_type',DEFINITION_ITEM_METATYPE),
                  ('concept_id',concept_id),
                  ('langcode',lang)]
@@ -322,14 +322,14 @@ class NyThesaurus(Folder):
 
     security.declarePublic('getSource')
     def getSource(self, source_id=''):
-        """ """
+        """ Get source """
         query = [('meta_type',SOURCE_ITEM_METATYPE),
                  ('source_id',source_id)]
         return th_utils().utListToObj(self.catalog.searchCatalog(query))
 
     security.declarePublic('getScopeNote')
     def getScopeNote(self, concept_id='', lang=''):
-        """ """
+        """ Get scope note """
         query = [('meta_type',SCOPE_ITEM_METATYPE),
                  ('concept_id',concept_id),
                  ('langcode',lang)]
@@ -337,7 +337,7 @@ class NyThesaurus(Folder):
 
     security.declarePublic('getThemeByID')
     def getThemesForConcept(self, concept_id='', lang=''):
-        """ """
+        """ Get themes for concept """
         results= []
         add_theme_trans = results.append
 
@@ -354,34 +354,34 @@ class NyThesaurus(Folder):
 
     security.declarePublic('getThemesByConceptId')
     def getThemesByConceptId(self, concept_id=''):
-        """ """
+        """ Get themes by concept id """
         query = [('meta_type',THEME_RELATION_ITEM_METATYPE),
                  ('concept_id',concept_id)]
         return self.catalog.searchCatalog(query)
 
     security.declarePublic('getAllConcepts')
     def getAllConcepts(self):
-        """ """
+        """ Get all concepts """
         query = [('meta_type',CONCEPT_ITEM_METATYPE)]
         return th_utils().utSortObjsListByAttr(self.catalog.searchCatalog(query), 'concept_id', 0)
 
     security.declarePublic('getConceptRelations')
     def getConceptRelations(self, concept_id=''):
-        """ """
+        """ Get concept relations """
         query = [('meta_type',CONCEPT_RELATION_ITEM_METATYPE),
                  ('concept_id',concept_id)]
         return self.catalog.searchCatalog(query)
 
     security.declarePublic('getTranslations')
     def getTranslations(self, concept_id=''):
-        """ """
+        """ Get translations """
         query = [('meta_type',TERM_ITEM_METATYPE),
                  ('concept_id',concept_id)]
         return self.catalog.searchCatalog(query)
 
     security.declarePublic('getLanguages')
     def getLanguages(self):
-        """ """
+        """ Get languages """
         return self.catalog.uniqueValuesFor('langcode')
 
     security.declarePublic('getThemesList')
@@ -409,7 +409,7 @@ class NyThesaurus(Folder):
 
     security.declarePublic('getThemeConcept')
     def getThemeConcept(self, theme_id='', lang=''):
-        """ """
+        """ Get theme concept """
         #get concepts
         query = [('meta_type', THEME_RELATION_ITEM_METATYPE),
                  ('theme_id', theme_id)]
@@ -425,7 +425,7 @@ class NyThesaurus(Folder):
 
     security.declarePublic('getConceptDetails')
     def getConceptDetails(self, concept_id='', lang=''):
-        """ """
+        """ Get concept details """
         #the result list will contain:
         #   0: term_ob
         #   1: theme_list
@@ -607,7 +607,7 @@ InitializeClass(NyThesaurus)
 
 #Dummy objects:
 class DummyTerm:
-    """ """
+    """ Dummy term """
 
     def __init__(self, concept_id, concept_name):
         self.concept_id =   concept_id
@@ -620,7 +620,7 @@ InitializeClass(DummyTerm)
 
 
 class DummyTheme:
-    """ """
+    """ Dummy theme """
 
     def __init__(self, theme_id, theme_name):
         self.theme_id =     theme_id

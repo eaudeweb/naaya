@@ -30,7 +30,7 @@ from .managers.config_parser import config_parser
 
 
 def initialize(context):
-    """ """
+    """ Initialize """
 
     #register classes
     context.registerClass(

@@ -130,7 +130,7 @@ class Paragraph(Folder):
     security.declareProtected(view, 'delete_comment')
 
     def delete_comment(self, comment_id, REQUEST=None):
-        """ """
+        """ Delete comment """
         comment = self._getOb(comment_id)
         if not comment.check_del_permissions():
             raise Unauthorized
@@ -158,7 +158,7 @@ class Paragraph(Folder):
                               'split_body')
 
     def split_body(self, body_0=None, body_1=None, REQUEST=None):
-        """ """
+        """ Split body """
         if REQUEST is not None and REQUEST.REQUEST_METHOD != 'POST':
             return self._split_content_html(self, REQUEST)
 
@@ -185,7 +185,7 @@ class Paragraph(Folder):
         PERMISSION_MANAGE_TALKBACKCONSULTATION, 'remove_paragraph')
 
     def remove_paragraph(self, REQUEST):
-        """ """
+        """ Remove paragraph """
 
         self.get_section().remove_paragraph(self.id)
 
@@ -199,7 +199,7 @@ class Paragraph(Folder):
         PERMISSION_MANAGE_TALKBACKCONSULTATION, 'merge_down')
 
     def merge_down(self, REQUEST):
-        """ """
+        """ Merge down """
 
         # get a list of paragraphs
         section = self.get_section()
@@ -237,7 +237,7 @@ class Paragraph(Folder):
         PERMISSION_MANAGE_TALKBACKCONSULTATION, 'move_down')
 
     def move_down(self, REQUEST):
-        """ """
+        """ Move down """
 
         # get a list of paragraphs
         section = self.get_section()

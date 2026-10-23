@@ -7,12 +7,12 @@ from Products.NaayaWidgets.widgets.StringWidget import StringWidget
 
 def addLocalizedStringWidget(container, id="", title="Localized String Widget",
                              REQUEST=None, **kwargs):
-    """ """
+    """ Add localized string widget """
     return manage_addWidget(LocalizedStringWidget, container, id, title,
                             REQUEST, **kwargs)
 
 class LocalizedStringWidget(StringWidget):
-    """ """
+    """ Localized string widget """
     meta_type = "Naaya Localized String Widget"
     meta_label = "Single line text (localized)"
     meta_description = "Free text input box that can be translated"

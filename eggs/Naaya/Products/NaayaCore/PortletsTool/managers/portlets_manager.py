@@ -3,7 +3,7 @@ from zope.deprecation import deprecate
 from Products.NaayaCore.constants import *
 
 class portlets_manager:
-    """ """
+    """ Portlets manager """
 
     def __init__(self):
         self.__left_portlets_ids = []

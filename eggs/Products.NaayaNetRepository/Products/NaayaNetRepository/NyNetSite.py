@@ -38,7 +38,7 @@ from . import NyNetChannel
 
 manage_addNyNetSite_html = PageTemplateFile('zpt/netsite_manage_add', globals())
 def addNyNetSite(self, id='', title='', description='', url='', lang=None, REQUEST=None):
-    """ """
+    """ Add ny net site """
     id = self.utCleanupId(id)
     if not id: id = PREFIX_NYNETSITE + self.utGenRandomId(6)
     if url.endswith('/'): url = url[:-1]
@@ -59,7 +59,7 @@ def addNyNetSite(self, id='', title='', description='', url='', lang=None, REQUE
             REQUEST.RESPONSE.redirect('%s/messages_html' % self.getSitePath())
 
 class NyNetSite(NyAttributes, LocalPropertyManager, NyContainer, NyFeed):
-    """ """
+    """ Ny net site """
 
     meta_type = METATYPE_NYNETSITE
     icon = 'misc_/NaayaNetRepository/NyNetSite.gif'
@@ -91,7 +91,7 @@ class NyNetSite(NyAttributes, LocalPropertyManager, NyContainer, NyFeed):
     description = LocalProperty('description')
 
     def __init__(self, id, title, description, url, lang):
-        """ """
+        """ Init """
         self.id = id
         self._setLocalPropValue('title', lang, title)
         self._setLocalPropValue('description', lang, description)
@@ -125,7 +125,7 @@ class NyNetSite(NyAttributes, LocalPropertyManager, NyContainer, NyFeed):
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', description='', url='', REQUEST=None):
-        """ """
+        """ Manage properties """
         if url.endswith('/'): url = url[:-1]
         lang = self.gl_get_selected_language()
         self._setLocalPropValue('title', lang, title)
@@ -138,7 +138,7 @@ class NyNetSite(NyAttributes, LocalPropertyManager, NyContainer, NyFeed):
     #site actions
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'saveProperties')
     def saveProperties(self, title='', description='', url='', lang=None, REQUEST=None):
-        """ """
+        """ Save properties """
         if url.endswith('/'): url = url[:-1]
         if lang is None: lang = self.gl_get_selected_language()
         self._setLocalPropValue('title', lang, title)
@@ -154,7 +154,7 @@ class NyNetSite(NyAttributes, LocalPropertyManager, NyContainer, NyFeed):
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'deleteObjects')
     def deleteObjects(self, ids=None, REQUEST=None):
-        """ """
+        """ Delete objects """
         if ids is None: ids = []
         else: ids = self.utConvertToList(ids)
         try: self.manage_delObjects(ids)
@@ -203,7 +203,7 @@ class NyNetSite(NyAttributes, LocalPropertyManager, NyContainer, NyFeed):
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'update_search_capabilities')
     def update_search_capabilities(self, REQUEST=None):
-        """ """
+        """ Update search capabilities """
         msg, err, res = '', '', None
         xconn = XMLRPCConnector(self.get_http_proxy())
         res = xconn(self.url, 'external_search_capabilities')

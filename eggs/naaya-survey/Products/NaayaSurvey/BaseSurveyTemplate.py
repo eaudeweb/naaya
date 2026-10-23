@@ -89,11 +89,11 @@ class BaseSurveyTemplate(Folder, LocalPropertyManager):
         return meta_types
 
     def get_widget_meta_types(self):
-        """ """
+        """ Get widget meta types """
         return self._get_meta_types_from_names([w.meta_type for w in AVAILABLE_WIDGETS])
 
     def get_report_meta_types(self):
-        """ """
+        """ Get report meta types """
         return self._get_meta_types_from_names([SurveyReport.meta_type])
 
     def all_meta_types(self, interfaces=None):
@@ -187,7 +187,7 @@ class BaseSurveyTemplate(Folder, LocalPropertyManager):
 
     security.declareProtected(view, 'getWidgets')
     def getWidgets(self):
-        """ """
+        """ Get widgets """
         return self.objectValues([w.meta_type for w in AVAILABLE_WIDGETS])
 
     security.declareProtected(view, 'getSortedWidgets')
@@ -296,12 +296,12 @@ class BaseSurveyTemplate(Folder, LocalPropertyManager):
 
     security.declareProtected(view, 'getReports')
     def getReports(self):
-        """ """
+        """ Get reports """
         return self.objectValues([SurveyReport.meta_type])
 
     security.declareProtected(view, 'getSortedReports')
     def getSortedReports(self, sort_by='title'):
-        """ """
+        """ Get sorted reports """
         return sorted(self.getReports(), key=lambda x: getattr(x, sort_by, ''))
 
     security.declarePrivate('addReport')
@@ -372,12 +372,12 @@ class BaseSurveyTemplate(Folder, LocalPropertyManager):
     #
     security.declareProtected(view, 'getAttachments')
     def getAttachments(self):
-        """ """
+        """ Get attachments """
         return self.objectValues([SurveyAttachment.meta_type])
 
     security.declareProtected(view, 'getReports')
     def getSortedAttachments(self, sort_by='title'):
-        """ """
+        """ Get sorted attachments """
         return sorted(self.getAttachments(), key=lambda x: getattr(x, sort_by, ''))
 
     security.declarePrivate('addAttachment')

@@ -321,7 +321,7 @@ class RDFCalendar(Implicit, Folder.Folder, PropertyManager, Cacheable):
 
     security.declareProtected('View', 'get_hover_events')
     def get_hover_events(self, date):
-        """ """
+        """ Get hover events """
         ret = []
         date = date.split('/')
         events = self.get_events(date[0], date[1], date[2])

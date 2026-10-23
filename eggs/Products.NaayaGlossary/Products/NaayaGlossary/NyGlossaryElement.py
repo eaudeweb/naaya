@@ -260,7 +260,7 @@ class NyGlossaryElement(SimpleItem, ElementBasic, utils, catalog_utils):
     security.declarePublic('getGlossaryObTree')
 
     def getGlossaryObTree(self):
-        """ """
+        """ Get glossary ob tree """
         return None
 
     security.declareProtected(view_management_screens, 'manage_tabs')

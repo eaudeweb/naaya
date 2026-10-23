@@ -136,7 +136,7 @@ class TraversalErrorPageTest(NaayaFunctionalTestCase):
 
 
 class TestNySiteListing(NaayaFunctionalTestCase):
-    """ """
+    """ Test ny site listing """
     def afterSetUp(self):
         addNyFolder(self.portal, 'test_folder', contributor='contributor',
                     submission=1)

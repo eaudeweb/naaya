@@ -15,7 +15,7 @@ from Products.NaayaCore.managers.utils import make_id
 manage_addRefTreeForm = PageTemplateFile('zpt/reftree_manage_add', globals())
 def manage_addRefTree(self, id='', title='', description='', lang=None,
                       REQUEST=None):
-    """ """
+    """ Manage add ref tree """
     id = make_id(self, id=id, title=title, prefix=PREFIX_SUFIX_REFTREE)
     if lang is None: lang = self.gl_get_selected_language()
     ob = RefTree(id, title, description, lang)
@@ -27,7 +27,7 @@ def manage_addRefTree(self, id='', title='', description='', lang=None,
 
 
 class RefTree(LocalPropertyManager, Folder):
-    """ """
+    """ Ref tree """
 
     meta_type = METATYPE_REFTREE
     icon = 'misc_/NaayaCore/RefTree.gif'
@@ -58,7 +58,7 @@ class RefTree(LocalPropertyManager, Folder):
     manage_addRefTreeNode = manage_addRefTreeNode
 
     def __init__(self, id, title, description, lang):
-        """ """
+        """ Init """
         self.id = id
         self.title = title
         self.description = description
@@ -219,7 +219,7 @@ class RefTree(LocalPropertyManager, Folder):
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', description='', lang=None, REQUEST=None):
-        """ """
+        """ Manage properties """
         if lang is None: lang = self.gl_get_selected_language()
         self.title = title
         self.description = description

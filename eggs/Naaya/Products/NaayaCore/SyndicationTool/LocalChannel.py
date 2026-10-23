@@ -23,7 +23,7 @@ manage_addLocalChannelForm = PageTemplateFile('zpt/localchannel_manage_add',
 def manage_addLocalChannel(self, id='', title='', description='',
                            language=None, type='', objmetatype=[],
                            numberofitems='', portlet='', REQUEST=None):
-    """ """
+    """ Manage add local channel """
     id = self.utSlugify(id)
     if language is None:
         language = self.gl_get_selected_language()
@@ -45,7 +45,7 @@ def manage_addLocalChannel(self, id='', title='', description='',
 
 @implementer(ILocalChannel)
 class LocalChannel(SimpleItem, utils):
-    """ """
+    """ Local channel """
 
 
     meta_type = METATYPE_LOCALCHANNEL
@@ -62,7 +62,7 @@ class LocalChannel(SimpleItem, utils):
 
     def __init__(self, id, title, description, language, type, objmetatype,
                  numberofitems):
-        """ """
+        """ Init """
         self.id = id
         self.title = title
         self.description = description
@@ -82,7 +82,7 @@ class LocalChannel(SimpleItem, utils):
     def manageProperties(self, title='', description='', language=None,
                          type='', objmetatype=[], numberofitems='',
                          REQUEST=None):
-        """ """
+        """ Manage properties """
         if language is None:
             language = self.gl_get_selected_language()
         objmetatype = self.utConvertToList(objmetatype)
@@ -121,7 +121,7 @@ class LocalChannel(SimpleItem, utils):
     security.declareProtected(view, 'index_html')
 
     def index_html(self, feed='', REQUEST=None, RESPONSE=None):
-        """ """
+        """ Index html """
         if feed == 'atom':
             return self.syndicateAtom(self, self.get_objects_for_rdf(),
                                       self.language)

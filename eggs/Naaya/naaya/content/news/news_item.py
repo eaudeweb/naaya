@@ -91,7 +91,7 @@ config = {
     }
 
 def news_add_html(self, REQUEST=None, RESPONSE=None):
-    """ """
+    """ News add html """
     from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
     form_helper = get_schema_helper_for_metatype(self, config['meta_type'])
     return self.getFormsTool().getContent({
@@ -215,7 +215,7 @@ def importNyNews(self, param, id, attrs, content, properties, discussion, object
             self.recatalogNyObject(ob)
 
 class news_item(Implicit, NyContentData):
-    """ """
+    """ News item """
     smallpicture = None
     bigpicture = None
 
@@ -275,7 +275,7 @@ class news_item(Implicit, NyContentData):
 
 @implementer(INyNews)
 class NyNews(news_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
-    """ """
+    """ Ny news """
 
 
     meta_type = config['meta_type']
@@ -284,7 +284,7 @@ class NyNews(news_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
     icon_marked = 'misc_/NaayaContent/NyNews_marked.gif'
 
     def manage_options(self):
-        """ """
+        """ Manage options """
         l_options = ()
         if not self.hasVersion():
             l_options += ({'label': 'Properties', 'action': 'manage_edit_html'},)
@@ -294,7 +294,7 @@ class NyNews(news_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
     security = ClassSecurityInfo()
 
     def __init__(self, id, contributor):
-        """ """
+        """ Init """
         self.id = id
         news_item.__init__(self)
         NyCheckControl.__dict__['__init__'](self)
@@ -353,7 +353,7 @@ class NyNews(news_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
         return etree.tostring(item, xml_declaration=False, encoding="unicode")
 
     def getSmallPicture(self, version=None, REQUEST=None):
-        """ """
+        """ Get small picture """
         REQUEST.RESPONSE.setHeader('Content-type', 'image/jpeg')
         if version is None: return self.smallpicture
         else:
@@ -361,7 +361,7 @@ class NyNews(news_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
             else: return self.smallpicture
 
     def getBigPicture(self, version=None, REQUEST=None):
-        """ """
+        """ Get big picture """
         REQUEST.RESPONSE.setHeader('Content-type', 'image/jpeg')
         if version is None: return self.bigpicture
         else:
@@ -387,7 +387,7 @@ class NyNews(news_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
 
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, REQUEST=None, **kwargs):
-        """ """
+        """ Manage properties """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG
 )
@@ -424,7 +424,7 @@ class NyNews(news_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
     #site actions
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'commitVersion')
     def commitVersion(self, REQUEST=None):
-        """ """
+        """ Commit version """
         user = self.REQUEST.AUTHENTICATED_USER.getUserName()
         if (not self.checkPermissionEditObject()) or (
             self.checkout_user != user):
@@ -446,7 +446,7 @@ class NyNews(news_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'startVersion')
     def startVersion(self, REQUEST=None):
-        """ """
+        """ Start version """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG
 )
@@ -463,7 +463,7 @@ class NyNews(news_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
     def saveProperties(self, REQUEST=None, **kwargs):
-        """ """
+        """ Save properties """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED(EXCEPTION_NOTAUTHORIZED_MSG
 )
@@ -539,19 +539,19 @@ class NyNews(news_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
     #site pages
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Index html """
         self.notify_access_event(REQUEST)
         return self.getFormsTool().getContent({'here': self}, 'news_index')
 
     security.declareProtected(view, 'picture_html')
     def picture_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Picture html """
         REQUEST.RESPONSE.setHeader('content-type', 'text/html')
         return '<img src="getBigPicture" alt="" />'
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     def edit_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ Edit html """
         if self.hasVersion():
             obj = self.version
         else:
