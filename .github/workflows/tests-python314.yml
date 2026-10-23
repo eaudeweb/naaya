@@ -52,9 +52,9 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
 
-      # ffmpeg and pdftotext (poppler-utils) are required on the servers
-      - name: Install the python-ldap build dependencies, ffmpeg and poppler-utils
-        run: sudo apt-get update && sudo apt-get install -y libldap2-dev libsasl2-dev ffmpeg poppler-utils
+      # ffmpeg, pdftotext (poppler-utils) and Pango (WeasyPrint) are required on the servers
+      - name: Install the python-ldap build dependencies, ffmpeg, poppler-utils and Pango
+        run: sudo apt-get update && sudo apt-get install -y libldap2-dev libsasl2-dev ffmpeg poppler-utils libpango-1.0-0 libpangoft2-1.0-0
 
       - uses: actions/cache@v6
         with:

@@ -4,8 +4,6 @@ import tempfile
 import shutil
 import os.path
 
-import pdfkit
-from tempfile import NamedTemporaryFile
 
 # Zope imports
 from AccessControl import ClassSecurityInfo
@@ -684,25 +682,10 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item,
     security.declarePrivate('generate_pdf')
 
     def generate_pdf(self, report_id):
-        url = '%s/questionnaire_view_report_html?report_id=%s' % (
-            self.absolute_url(), report_id)
-        http_cookies = self.REQUEST.environ.get('HTTP_COOKIE', '')
-        for cookie in http_cookies.split('; '):
-            if cookie.startswith('__ac'):
-                __ac = cookie.replace('__ac="', '')[:-1]
-                cookie_string = '__ac=%s; domain=%s; path=/;' % (
-                    __ac, self.REQUEST['HTTP_X_FORWARDED_HOST'])
-                cookie_jar = NamedTemporaryFile('w')
-                cookie_jar.write(cookie_string)
-                cookie_jar.flush()
-                options = {'print-media-type': False,
-                           'cookie-jar': cookie_jar.name}
-                pdf = pdfkit.from_url(url, False, options=options)
-                cookie_jar.close()
-                return pdf
-        else:
-            options = {'print-media-type': False, 'no-images': False}
-            return pdfkit.from_url(url, False, options=options)
+        """ PDF of the report, rendered in this request as the current user """
+        from Products.NaayaSurvey.pdf import html_to_pdf
+        report = self.getReport(report_id)
+        return html_to_pdf(self, report.view_report_html(answers=self.getAnswers()))
 
     security.declareProtected(PERMISSION_VIEW_REPORTS, 'questionnaire_export')
 

@@ -41,7 +41,8 @@ def media2mp4(mediafile):
         height = int(o_height) // 16 * 16
     cmd = [CONVERSION_TOOL, "-y", "-v", "8", "-benchmark", "-i", tcv_path,
            "-s", "%sx%s" % (width, height), "-c:v", "libx264", "-crf", "20",
-           "-c:a", "libfdk_aac", "-q:a", "100", "-f", "mp4", cvd_path]
+           "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "160k",
+           "-f", "mp4", cvd_path]
     process = subprocess.Popen(cmd, stdout=log, stderr=log)
 
     TIMEOUT = 3 * 3600  # seconds
@@ -110,13 +111,6 @@ def _get_convertor_tool():
 
             if process.returncode != 0:
                 continue
-
-            if tool == 'ffmpeg' and not (
-                    "--enable-libfdk_aac" not in stdout or
-                    "--enable-libfdk-aac" not in stdout):
-                raise MediaConverterError(
-                    'ffmpeg was not compiled with --enable-libfdk_aac '
-                    '- Audio compression not possible')
 
             if (tool == 'ffmpeg') and ("--enable-libx264" not in stdout):
                 raise MediaConverterError(

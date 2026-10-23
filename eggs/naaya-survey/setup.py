@@ -12,6 +12,6 @@ setup(
     zip_safe=False,
     install_requires=['Naaya',
                       'xlsxwriter',
-                      'pdfkit',
+                      'weasyprint',
                       'naaya.i18n >= 1.1.8'],
 )

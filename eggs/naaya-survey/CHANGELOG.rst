@@ -2,6 +2,9 @@
 ------------------
 * Give the methods with a blank docstring a text: Python 3.13 strips it to ''
   and Zope does not publish methods without a docstring [dumitval]
+* Generate the report PDF with WeasyPrint instead of pdfkit and
+  wkhtmltopdf, which is archived since 2023; needs Pango 1.44 or newer
+  [dumitval]
 
 2.0.2 (2026-10-23)
 ------------------

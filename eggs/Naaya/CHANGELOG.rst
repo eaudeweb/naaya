@@ -7,6 +7,8 @@
 * Import the xml.sax names explicitly: Python 3.14 no longer exports
   handler with from xml.sax import * [dumitval]
 * Strip the plugin docstrings returned by getPluginsInfo [dumitval]
+* Convert media files with ffmpeg's native AAC encoder instead of
+  libfdk_aac, and to yuv420p video, which browsers can play [dumitval]
 
 6.0.7 (2026-10-23)
 ------------------

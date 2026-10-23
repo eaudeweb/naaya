@@ -1,7 +1,9 @@
 import csv
+import shutil
+import subprocess
 from datetime import date, timedelta
 from io import StringIO
-from unittest.mock import patch, Mock
+from unittest.mock import patch
 
 import transaction
 from pyquery import PyQuery
@@ -124,40 +126,31 @@ class SurveyFunctionalTest(NaayaFunctionalTestCase):
         self.assertIn('chl=Yes|No|Not%20answered', charts[1].get('src'))
         self.assertTrue(PyQuery(html)('img[alt="66.67"]'))
 
-    def test_pdf_export_with_auth_cookie(self):
+    def test_pdf_export(self):
         self.answer('Ana', 0, 1, 1)
         report_id = self.survey.generateFullReport(title='Full report')
         request = self.portal.REQUEST
-        request.environ['HTTP_COOKIE'] = 'lang=en; __ac="c2VjcmV0"'
-        request.environ['HTTP_X_FORWARDED_HOST'] = 'example.com'
-        request['HTTP_X_FORWARDED_HOST'] = 'example.com'
-        jars = []
+        request.environ['HTTP_COOKIE'] = '__ac="c2VjcmV0"'
+        fetched = []
 
-        def from_url(url, output, options):
-            with open(options['cookie-jar']) as f:
-                jars.append(f.read())
-            return b'%PDF'
-        with patch('Products.NaayaSurvey.SurveyQuestionnaire.pdfkit') as kit:
-            kit.from_url.side_effect = from_url
+        def fetch(fetcher, url, headers=None):
+            fetched.append((url, (headers or {}).get('Cookie')))
+            raise OSError('no network in tests')
+        with patch('weasyprint.urls.URLFetcher.fetch', fetch):
             data = self.survey.questionnaire_export(report_id, request,
                                                     type='pdf')
-        self.assertEqual(data, b'%PDF')
-        self.assertEqual(jars, ['__ac=c2VjcmV0; domain=example.com; path=/;'])
-        url = kit.from_url.call_args.args[0]
-        self.assertTrue(url.endswith(
-            '/questionnaire_view_report_html?report_id=' + report_id))
-
-    def test_pdf_export_without_cookies(self):
-        report_id = self.survey.generateFullReport(title='Full report')
-        request = self.portal.REQUEST
-        request.environ.pop('HTTP_COOKIE', None)
-        with patch('Products.NaayaSurvey.SurveyQuestionnaire.pdfkit') as kit:
-            kit.from_url.return_value = b'%PDF'
-            data = self.survey.questionnaire_export(report_id, request,
-                                                    type='pdf')
-        self.assertEqual(data, b'%PDF')
-        self.assertNotIn('cookie-jar', kit.from_url.call_args.kwargs[
-            'options'])
+        self.assertTrue(data.startswith(b'%PDF'))
+        # the site's CSS and images get the user's cookie, the Google charts do not
+        site = [c for u, c in fetched if u.startswith('http://localhost/')]
+        other = [c for u, c in fetched if not u.startswith('http://localhost/')]
+        self.assertTrue(site and other)
+        self.assertEqual(set(site), {'__ac="c2VjcmV0"'})
+        self.assertEqual(set(other), {None})
+        if shutil.which('pdftotext'):
+            text = subprocess.run(['pdftotext', '-', '-'], input=data,
+                                  capture_output=True, check=True).stdout
+            for expected in (b'Happy', b'Ana', b'100.00%'):
+                self.assertIn(expected, text)
 
     def test_respondent_edits_own_answer(self):
         self.answer('Ana', 0, 1, 1)
