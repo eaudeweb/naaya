@@ -2,7 +2,7 @@ from setuptools import setup, find_namespace_packages
 
 setup(
     name='Products.NaayaForum',
-    version='2.0.1.dev0',
+    version='2.0.2.dev0',
     description="Naaya Forum",
     long_description=open("README.rst").read() + "\n" +
                 open("CHANGELOG.rst").read(),

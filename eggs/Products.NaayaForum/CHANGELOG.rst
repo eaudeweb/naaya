@@ -1,4 +1,7 @@
-2.0.1 (unreleased)
+2.0.2 (unreleased)
+------------------
+
+2.0.1 (2026-10-23)
 ------------------
 * Fix and extend the tests [dumitval]
 * Refresh the map view restrictions when a topic is restricted [dumitval]
