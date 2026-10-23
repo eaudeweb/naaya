@@ -1,7 +1,7 @@
 from setuptools import setup, find_namespace_packages
 
 setup(name='edw.circaimport',
-      version='2.0.3.dev0',
+      version='2.0.4.dev0',
       author='Eau de Web',
       author_email='office@eaudeweb.ro',
       packages=find_namespace_packages(include=['edw.*']),
