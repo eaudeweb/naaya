@@ -490,7 +490,7 @@ class NyPublication(publication_item, NyAttributes, NyItem, NyCheckControl,
         RESPONSE.setHeader('Content-Type', self.getContentType())
         RESPONSE.setHeader('Content-Length', self.size)
         filename = self.utToUtf8(self.downloadfilename())
-        filename = self.utCleanupId(filename)
+        filename = self.utSlugify(filename, 1000, [])
         RESPONSE.setHeader('Content-Disposition',
                            'attachment;filename=' + filename)
         RESPONSE.setHeader('Pragma', 'public')

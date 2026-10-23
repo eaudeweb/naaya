@@ -1,5 +1,7 @@
 2.2 (unreleased)
 ----------------
+* Close the sqlite connection of a cursor when the cursor is closed
+  [dumitval]
 
 2.1 (2026-10-23)
 ----------------

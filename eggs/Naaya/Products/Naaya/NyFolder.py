@@ -333,7 +333,8 @@ class NyFolder(
         file_id = REQUEST.get('id', None)
         file_path = join(CLIENT_HOME, '%s.nyexp' % file_id)
         if file_id is not None:
-            self.manage_import(source='', file=open(file_path, 'rb').read(), url='')
+            with open(file_path, 'rb') as f:
+                self.manage_import(source='', file=f.read(), url='')
         return 'done import'
 
     # image container for this folder

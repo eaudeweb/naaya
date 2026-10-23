@@ -16,7 +16,7 @@ def addSurveyAttachment(container, id='', title='', description='', coverage='',
     contributor=None, releasedate='', discussion='', lang=None, REQUEST=None, **kwargs):
     """ Add survey attachment """
     if source=='file': id = cookId(id, title, file)[0] #upload from a file
-    id = container.utCleanupId(id)
+    id = container.utSlugify(id, 1000, [])
     if id == '': id = 'attachment_' + container.utGenRandomId(6)
     if downloadfilename == '': downloadfilename = id
     try: sortorder = abs(int(sortorder))

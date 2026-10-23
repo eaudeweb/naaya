@@ -1,5 +1,7 @@
 2.0.3 (unreleased)
 ------------------
+* Close the sqlite connection after saving and after reading a dump
+  [dumitval]
 
 2.0.2 (2026-10-23)
 ------------------

@@ -38,7 +38,7 @@ manage_addNyNetChannel_html = PageTemplateFile('zpt/netchannel_manage_add', glob
 def addNyNetChannel(self, id='', title='', description='', url='', language=None,
     type=None, manual=1, lang=None, REQUEST=None):
     """ Add ny net channel """
-    id = self.utCleanupId(id)
+    id = self.utSlugify(id, 1000, [])
     if not id: id = PREFIX_NYNETCHANNEL + self.utGenRandomId(6)
     try: manual = abs(int(manual))
     except: manual = 0

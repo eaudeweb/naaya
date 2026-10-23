@@ -157,6 +157,7 @@ import pytz
 import sys
 import time
 import transaction
+import urllib.error
 import urllib.parse
 import urllib.request
 import logging
@@ -1500,8 +1501,11 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             opener = urllib.request.build_opener(*handlers)
             with opener.open(p_url, timeout=60) as web_page:
                 return (web_page.read(), web_page.headers['Content-Type'])
+        except urllib.error.HTTPError as e:
+            e.close()
         except Exception:
-            return (None, 'text/x-unknown-content-type')
+            pass
+        return (None, 'text/x-unknown-content-type')
 
     def getMaintainersEmails(self, node):
         # returns a list of emails for given folder until the site object

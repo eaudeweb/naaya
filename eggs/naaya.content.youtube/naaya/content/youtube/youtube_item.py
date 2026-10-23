@@ -404,7 +404,8 @@ def checkExistingVideo(video_id):
         urllib.request.urlopen('https://www.youtube.com/oembed?format=json&url='
                                'https://www.youtube.com/watch?v=%s' % video_id,
                                timeout=10).close()
-    except urllib.error.HTTPError:
+    except urllib.error.HTTPError as e:
+        e.close()
         return False
     except OSError:
         # YouTube unreachable: do not reject the video

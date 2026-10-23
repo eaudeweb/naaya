@@ -30,38 +30,41 @@ def media2mp4(mediafile):
     tcv_path = finput
     cvd_path = os.path.join(tempdir, fname + ".cvd")  # converted
     log = open(os.path.join(tempdir, fname + '.log'), 'w+', encoding='utf-8')
+    try:
+        o_width, o_height = get_resolution(tcv_path)
+        ratio = o_width / o_height
+        if o_height > 720:
+            width = int(ratio * 720) // 16 * 16
+            height = 720
+        else:
+            width = int(o_width) // 16 * 16
+            height = int(o_height) // 16 * 16
+        cmd = [CONVERSION_TOOL, "-y", "-v", "8", "-benchmark",
+               "-i", tcv_path, "-s", "%sx%s" % (width, height),
+               "-c:v", "libx264", "-crf", "20", "-pix_fmt", "yuv420p",
+               "-c:a", "aac", "-b:a", "160k", "-f", "mp4", cvd_path]
+        process = subprocess.Popen(cmd, stdout=log, stderr=log)
 
-    o_width, o_height = get_resolution(tcv_path)
-    ratio = o_width / o_height
-    if o_height > 720:
-        width = int(ratio * 720) // 16 * 16
-        height = 720
-    else:
-        width = int(o_width) // 16 * 16
-        height = int(o_height) // 16 * 16
-    cmd = [CONVERSION_TOOL, "-y", "-v", "8", "-benchmark", "-i", tcv_path,
-           "-s", "%sx%s" % (width, height), "-c:v", "libx264", "-crf", "20",
-           "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "160k",
-           "-f", "mp4", cvd_path]
-    process = subprocess.Popen(cmd, stdout=log, stderr=log)
+        TIMEOUT = 3 * 3600  # seconds
+        timer = Timer(TIMEOUT, lambda x: x.kill(), [process])
+        timer.start()
 
-    TIMEOUT = 3 * 3600  # seconds
-    timer = Timer(TIMEOUT, lambda x: x.kill(), [process])
-    timer.start()
+        exit_code = process.wait()
+        timer.cancel()
 
-    exit_code = process.wait()
-    timer.cancel()
+        if exit_code != 0:
+            logger.exception('MediaConverterError: Exit code %s' % exit_code)
+            try:
+                shutil.rmtree(tempdir)
+            except Exception as err:
+                logger.exception(err)
 
-    if exit_code != 0:
-        logger.exception('MediaConverterError: Exit code %s' % exit_code)
-        try:
-            shutil.rmtree(tempdir)
-        except Exception as err:
-            logger.exception(err)
+        process = None
 
-    process = None
-
-    return _finish(mediafile, tempdir, cvd_path, log)
+        return _finish(mediafile, tempdir, cvd_path, log)
+    finally:
+        # _finish closes it; this covers the errors before it
+        log.close()
 
 
 def _finish(mediafile, tempdir, cvd_path, log):

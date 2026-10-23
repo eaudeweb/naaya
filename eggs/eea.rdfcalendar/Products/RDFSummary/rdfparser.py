@@ -166,7 +166,8 @@ class RDFParser:
 
         if not f:
             raise IOError("Failure in open")
-        self.rdfsource = f.read()
+        with f:
+            self.rdfsource = f.read()
 
         if self.rdfsource:
             proxy_support = urllib.request.ProxyHandler(self._proxies)

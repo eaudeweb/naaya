@@ -2,6 +2,7 @@
 ------------------
 * Give the methods with a blank docstring a text: Python 3.13 strips it to ''
   and Zope does not publish methods without a docstring [dumitval]
+* Use utSlugify instead of the deprecated utCleanupId [dumitval]
 
 2.0.0 (2026-10-16)
 ------------------

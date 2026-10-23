@@ -67,7 +67,7 @@ class ZGadFlyMigration(UpdateScript):
                         topics_stats[topic.id] = 0
 
                 forum._removeStatisticsContainer()
-                stats_container = forum._getStatisticsContainerCursor()
+                forum._getStatisticsContainerCursor().connection.close()
 
                 for topic in forum.get_topics():
                     forum.setTopicHits(topic.id, topics_stats.get(topic.id, 0))

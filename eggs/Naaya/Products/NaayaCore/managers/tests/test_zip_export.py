@@ -25,6 +25,13 @@ folder_with_files = load_file('./data/folder_with_files_zip.zip')
 zip_one_file = load_file('./data/one_file_zip.zip')
 mac_zip = load_file('./data/mac_zip.zip')
 
+
+def do_export(test, folder):
+    """ Export folder; the temporary zip file is closed after the test """
+    export_file = folder.zip_export.do_export()
+    test.addCleanup(export_file.close)
+    return export_file
+
 class NyZipExport(NaayaTestCase):
     """ TestCase for Naaya CSV import """
 
@@ -42,7 +49,7 @@ class NyZipExport(NaayaTestCase):
 
     def test_export_ok(self):
         self.test_folder.zip_import.do_import(data=zip_one_file)
-        export_value = self.test_folder.zip_export.do_export()
+        export_value = do_export(self, self.test_folder)
         self.assertFalse(isinstance(export_value, list),
                          ('Errors are raised: ', export_value))
         self.assertTrue(isinstance(export_value, object))
@@ -55,7 +62,7 @@ class NyZipExport(NaayaTestCase):
 
     def test_export_folder(self):
         self.test_folder.zip_import.do_import(data=folder_with_files)
-        export_value = self.test_folder.zip_export.do_export()
+        export_value = do_export(self, self.test_folder)
         self.assertFalse(isinstance(export_value, list),
                          ('Errors are raised: ', export_value))
         zip = ZipFile(export_value, 'r')
@@ -73,7 +80,7 @@ class NyZipExport(NaayaTestCase):
     def test_export_empty_folder(self):
         """An empty folder should also be exported"""
         addNyFolder(self.test_folder, title="Some title")
-        export_value = self.test_folder.zip_export.do_export()
+        export_value = do_export(self, self.test_folder)
         zip = ZipFile(export_value, 'r')
         expected_namelist = [
             'index.txt',
@@ -84,7 +91,7 @@ class NyZipExport(NaayaTestCase):
     def test_export_datetime(self):
         """The files and folders in the zipfile should have the datetime set"""
         folder_id = addNyFolder(self.test_folder, title="Some title")
-        export_value = self.test_folder.zip_export.do_export()
+        export_value = do_export(self, self.test_folder)
         zip = ZipFile(export_value, 'r')
 
         folder_datetime = self.test_folder._getOb(folder_id).releasedate
@@ -102,7 +109,7 @@ class NyZipExport(NaayaTestCase):
         addNyDocument(self.test_folder, id='html_document')
         self.test_folder['html_document'].body = '<p>Html document</p>'
         self.test_folder['html_document'].approved = 1
-        export_value = self.test_folder.zip_export.do_export()
+        export_value = do_export(self, self.test_folder)
         zip = ZipFile(export_value, 'r')
         self.assertEqual(sorted(zip.namelist()),
                          sorted(['index.txt',
@@ -114,7 +121,7 @@ class NyZipExport(NaayaTestCase):
         addNyStory(self.test_folder, id='a_nice_story')
         self.test_folder['a_nice_story'].body = '<p>A nice story</p>'
         self.test_folder['a_nice_story'].approved = 1
-        export_value = self.test_folder.zip_export.do_export()
+        export_value = do_export(self, self.test_folder)
         zip = ZipFile(export_value, 'r')
         self.assertEqual(sorted(zip.namelist()),
                          sorted(['index.txt',
@@ -125,7 +132,7 @@ class NyZipExport(NaayaTestCase):
     def test_export_contact(self):
         addNyContact(self.test_folder, id="important_contact",
                      title='Important contact')
-        export_value = self.test_folder.zip_export.do_export()
+        export_value = do_export(self, self.test_folder)
         zip = ZipFile(export_value, 'r')
         self.assertEqual(sorted(zip.namelist()),
                          sorted(['index.txt',
@@ -139,7 +146,7 @@ class NyZipExport(NaayaTestCase):
         addNyEvent(self.test_folder, id='interesting_event',
                    title='Great event', start_date='10/10/2000')
 
-        export_value = self.test_folder.zip_export.do_export()
+        export_value = do_export(self, self.test_folder)
         self.assertFalse(isinstance(export_value, list),
                          ('Errors are raised: ', export_value))
 
@@ -176,7 +183,7 @@ class NyZipExport(NaayaTestCase):
         addNyNews(self.test_folder, id='interesting_news',
                    title='Great news')
 
-        export_value = self.test_folder.zip_export.do_export()
+        export_value = do_export(self, self.test_folder)
         self.assertFalse(isinstance(export_value, list),
                          ('Errors are raised: ', export_value))
 
@@ -214,7 +221,7 @@ class NyZipExport(NaayaTestCase):
         addNyDocument(self.test_folder, id='html_document')
         self.test_folder['html_document'].body = u'<p>Html document</p>'
         self.test_folder['html_document'].approved = 1
-        export_value = self.test_folder.zip_export.do_export()
+        export_value = do_export(self, self.test_folder)
         self.assertFalse(isinstance(export_value, list),
                          ('Errors are raised: ', export_value))
 
@@ -242,7 +249,7 @@ class NyZipExport(NaayaTestCase):
         self.test_folder['public_access'].body = '<p>Some html</p>'
         self.test_folder['public_access'].approved = 1
         self.logout()
-        export_value = self.test_folder.zip_export.do_export()
+        export_value = do_export(self, self.test_folder)
         self.assertFalse(isinstance(export_value, list),
                          ('Errors are raised: ', export_value))
         zip = ZipFile(export_value, 'r')
@@ -270,7 +277,7 @@ class NyZipExport(NaayaTestCase):
 
         self.logout()
 
-        export_value = self.test_folder.zip_export.do_export()
+        export_value = do_export(self, self.test_folder)
         self.assertFalse(isinstance(export_value, list),
                          ('Errors are raised: ', export_value))
         zip = ZipFile(export_value, 'r')
@@ -282,7 +289,7 @@ class NyZipExport(NaayaTestCase):
 
         self.login('contributor')
 
-        export_value = self.test_folder.zip_export.do_export()
+        export_value = do_export(self, self.test_folder)
         self.assertFalse(isinstance(export_value, list),
                          ('Errors are raised: ', export_value))
         zip = ZipFile(export_value, 'r')
@@ -302,7 +309,7 @@ class NyZipExport(NaayaTestCase):
         ob_id = self.test_folder.addNyBFile(uploaded_file=f)
         self.test_folder[ob_id].approveThis()
 
-        export_value = self.test_folder.zip_export.do_export()
+        export_value = do_export(self, self.test_folder)
 
         zip = ZipFile(export_value, 'r')
         index_row = b"myfile\tFile\tzip_export_folder/myfile.rst\n"
@@ -332,8 +339,8 @@ def _create_folder(parent, folder_id, title=None):
 def _zip_export_filenames(ctx):
     export_value = ctx.zip_export.do_export()
     assert not isinstance(export_value, list), 'Errors: %r' % export_value
-    zip_file = ZipFile(export_value, 'r')
-    return sorted(zip_file.namelist())
+    with export_value, ZipFile(export_value, 'r') as zip_file:
+        return sorted(zip_file.namelist())
 
 class ZipExportFilenames(NaayaTestCase):
 

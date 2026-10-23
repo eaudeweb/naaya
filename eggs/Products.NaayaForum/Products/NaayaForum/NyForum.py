@@ -1,3 +1,5 @@
+from contextlib import contextmanager
+
 from OFS.Folder import Folder
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl.class_init import InitializeClass
@@ -389,24 +391,32 @@ class NyForum(NyRoleManager, NyPermissions, NyForumBase, Folder, utils,
                 stats_container.drop()
             delattr(self, STATISTICS_CONTAINER)
 
+    @contextmanager
+    def _statisticsCursor(self):
+        """ Statistics cursor; its sqlite connection is closed after use """
+        cursor = self._getStatisticsContainerCursor()
+        try:
+            yield cursor
+        finally:
+            cursor.connection.close()
+
     security.declareProtected(view, 'getTopicHits')
     def getTopicHits(self, topic):
         """ Returns statistics for given topic
         """
-        cursor = self._getStatisticsContainerCursor()
-        cursor.execute("SELECT hits from HITS where topic=?", (topic,))
-        res = cursor.fetchone()
-        if not res:
-            cursor.execute("INSERT into HITS(topic) values(?)", (topic,))
-            return 0
-        else:
+        with self._statisticsCursor() as cursor:
+            cursor.execute("SELECT hits from HITS where topic=?", (topic,))
+            res = cursor.fetchone()
+            if not res:
+                cursor.execute("INSERT into HITS(topic) values(?)", (topic,))
+                return 0
             return res[0]
 
     security.declarePrivate('setTopicHits')
     def setTopicHits(self, topic, how_many=1):
         hits = self.getTopicHits(topic) + how_many
-        cursor = self._getStatisticsContainerCursor()
-        cursor.execute("UPDATE HITS set hits=? where topic=?", (hits, topic))
+        with self._statisticsCursor() as cursor:
+            cursor.execute("UPDATE HITS set hits=? where topic=?", (hits, topic))
 
     security.declareProtected(view, 'updateTopicHits')
     def updateTopicHits(self, topic):
@@ -418,8 +428,8 @@ class NyForum(NyRoleManager, NyPermissions, NyForumBase, Folder, utils,
     def removeTopicHits(self, topic):
         """ Remove hits record for topic
         """
-        cursor = self._getStatisticsContainerCursor()
-        cursor.execute("DELETE FROM HITS where topic=?", (topic, ))
+        with self._statisticsCursor() as cursor:
+            cursor.execute("DELETE FROM HITS where topic=?", (topic, ))
 
     security.declareProtected(view, 'hasVersion')
     def hasVersion(self):

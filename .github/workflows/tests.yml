@@ -52,18 +52,26 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
 
+      # The azure Ubuntu mirror is sometimes very slow: keep the downloaded packages
+      - uses: actions/cache@v6
+        with:
+          path: ~/apt-archives
+          key: apt-${{ runner.os }}-${{ hashFiles('naaya/.github/workflows/tests.yml') }}
+          restore-keys: apt-${{ runner.os }}-
+
       # ffmpeg, pdftotext (poppler-utils) and Pango (WeasyPrint) are required on the servers
       - name: Install the python-ldap build dependencies, ffmpeg, poppler-utils and Pango
-        # an Ubuntu mirror sometimes stalls: each attempt is limited to 5 minutes
-        timeout-minutes: 16
+        timeout-minutes: 45
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
+          mkdir -p ~/apt-archives/partial
           for attempt in 1 2 3; do
             timeout 300 sudo -E apt-get -o Acquire::Retries=3 update &&
-            timeout 300 sudo -E apt-get -o Acquire::Retries=3 -o DPkg::Lock::Timeout=120 install -y --no-install-recommends \
-                libldap2-dev libsasl2-dev ffmpeg poppler-utils libpango-1.0-0 libpangoft2-1.0-0 &&
-            exit 0
+            sudo -E apt-get -o Acquire::Retries=3 -o DPkg::Lock::Timeout=120 \
+                -o Dir::Cache::Archives=$HOME/apt-archives install -y --no-install-recommends \
+                libldap2-dev libsasl2-dev ffmpeg poppler-utils libpango-1.0-0 libpangoft2-1.0-0 libharfbuzz-subset0 &&
+            sudo chown -R "$USER" ~/apt-archives && exit 0
             echo "apt attempt $attempt failed"
           done
           exit 1

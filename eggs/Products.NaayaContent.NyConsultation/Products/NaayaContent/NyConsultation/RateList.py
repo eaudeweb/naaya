@@ -33,7 +33,7 @@ from .rate_manager import rate_manager
 manage_addRateListForm = PageTemplateFile('zpt/ratelist_add', globals())
 def manage_addRateList(self, id='', title='', description='', REQUEST=None):
     """ Manage add rate list """
-    id = self.utCleanupId(id)
+    id = self.utSlugify(id, 1000, [])
     if not id: id = 'rate%s' % self.utGenRandomId(6)
     ob = RateList(id, title, description)
     self._setObject(id, ob)

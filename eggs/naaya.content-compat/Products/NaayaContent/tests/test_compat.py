@@ -36,16 +36,29 @@ class CompatImportsTest(unittest.TestCase):
                 self.assertTrue(value.__module__.startswith('naaya.content.'),
                                 (dotted, value))
 
+    def assertDeprecatedImport(self, dotted):
+        """ Import dotted; (re)loading it warns once, whatever the test order """
+        with warnings.catch_warnings():
+            warnings.simplefilter('ignore', DeprecationWarning)
+            module = importlib.import_module(dotted)
+        with self.assertWarns(DeprecationWarning):
+            importlib.reload(module)
+        return module
+
     def test_class_aliases(self):
-        from Products.NaayaContent.NyFile.NyFile import NyFile
-        from Products.NaayaContent.NyContact.NyContact import NyContact
         from naaya.content.file.file_item import NyFile_extfile
         from naaya.content.contact.contact_item import NyContact as Contact
+        # the packages warn, the modules in them hold the class aliases
+        self.assertDeprecatedImport('Products.NaayaContent.NyFile')
+        self.assertDeprecatedImport('Products.NaayaContent.NyContact')
+        from Products.NaayaContent.NyFile.NyFile import NyFile
+        from Products.NaayaContent.NyContact.NyContact import NyContact
         self.assertIs(NyFile, NyFile_extfile)
         self.assertIs(NyContact, Contact)
 
     def test_constants(self):
-        from Products.NaayaContent import constants
         from naaya.content.base import constants as base_constants
+        constants = self.assertDeprecatedImport(
+            'Products.NaayaContent.constants')
         self.assertEqual(constants.MUST_BE_NONEMPTY,
                          base_constants.MUST_BE_NONEMPTY)

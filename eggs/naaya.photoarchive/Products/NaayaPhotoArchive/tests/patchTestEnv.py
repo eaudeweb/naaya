@@ -13,7 +13,11 @@ def patch_NyPhoto_view():
         ret = old_view(self, REQUEST, display, **kwargs)
         if isinstance(ret, (str, bytes)):
             return ret
-        return b''.join(ret)
+        try:
+            return b''.join(ret)
+        finally:
+            if hasattr(ret, 'close'):
+                ret.close()
 
     NyPhoto.view = new_view
 

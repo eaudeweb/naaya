@@ -49,7 +49,7 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
 
     def beforeTearDown(self):
         # get sqlite db (if any) or create one
-        cursor = self.portal.forum_id._getStatisticsContainerCursor()
+        self.portal.forum_id._getStatisticsContainerCursor().connection.close()
         self.portal.forum_id._removeStatisticsContainer()
         self.portal.manage_delObjects(['forum_id'])
         transaction.commit()

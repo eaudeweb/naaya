@@ -51,7 +51,7 @@ manage_addGroupwareSite_html = PageTemplateFile('zpt/site_manage_add',
 def manage_addGroupwareSite(self, id='', title='', lang=None, REQUEST=None):
     """ Manage add groupware site """
     ut = utils()
-    id = ut.utCleanupId(id)
+    id = ut.utSlugify(id, 1000, [])
     if not id:
         id = 'gw' + ut.utGenRandomId(6)
     self._setObject(id, GroupwareSite(id, title=title, lang=lang))
@@ -137,9 +137,10 @@ class GroupwareSite(NySite):
             manage_addPythonScript(rdfcalendar_ob, 'local_events')
             local_events_ob = rdfcalendar_ob._getOb('local_events')
             local_events_ob._params = 'year=None, month=None, day=None'
-            local_events_ob.write(open(os.path.dirname(__file__) +
-                                  '/skel/others/local_events.py', 'r',
-                                  encoding='utf-8').read())
+            with open(os.path.dirname(__file__) +
+                      '/skel/others/local_events.py', 'r',
+                      encoding='utf-8') as f:
+                local_events_ob.write(f.read())
 
         self.getPortletsTool().assign_portlet('library', 'right',
                                               'portlet_latestuploads_rdf',
@@ -346,7 +347,7 @@ class GroupwareSite(NySite):
                     user_info = source_obj.get_user_info(log_entry.user)
                     mail_tool = self.getEmailTool()
                     mail_to = user_info.email
-                    mail_from = mail_tool._get_from_address()
+                    mail_from = mail_tool.get_addr_from()
                     mail_data = self.request_rejected_emailpt.render_email(**{
                         'here': self,
                         'role': log_entry.role,

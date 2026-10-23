@@ -1089,7 +1089,8 @@ class utils:
                 zf.writestr(zfi, b'')
         zf.close()
         stat = os.stat(tmpfile)
-        content = open(tmpfile, 'rb').read()
+        with open(tmpfile, 'rb') as f:
+            content = f.read()
         os.unlink(tmpfile)
         RESPONSE.setHeader('Content-Type', 'application/x-zip-compressed')
         RESPONSE.setHeader('Content-Disposition',

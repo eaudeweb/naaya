@@ -5,6 +5,7 @@
 * Generate the report PDF with WeasyPrint instead of pdfkit and
   wkhtmltopdf, which is archived since 2023; needs Pango 1.44 or newer
   [dumitval]
+* Use utSlugify instead of the deprecated utCleanupId [dumitval]
 
 2.0.2 (2026-10-23)
 ------------------

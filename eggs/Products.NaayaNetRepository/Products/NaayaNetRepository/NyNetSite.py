@@ -39,7 +39,7 @@ from . import NyNetChannel
 manage_addNyNetSite_html = PageTemplateFile('zpt/netsite_manage_add', globals())
 def addNyNetSite(self, id='', title='', description='', url='', lang=None, REQUEST=None):
     """ Add ny net site """
-    id = self.utCleanupId(id)
+    id = self.utSlugify(id, 1000, [])
     if not id: id = PREFIX_NYNETSITE + self.utGenRandomId(6)
     if url.endswith('/'): url = url[:-1]
     if lang is None: lang = self.gl_get_selected_language()

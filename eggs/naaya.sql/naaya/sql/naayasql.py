@@ -25,6 +25,14 @@ DBS_FOLDER_PATH = os.path.join(CLIENT_HOME, "..", "naaya.sql")
 class DbMissing(Exception):
     pass
 
+
+class _Cursor(sqlite3.Cursor):
+    """ Each cursor has its own connection; closing the cursor closes it """
+
+    def close(self):
+        super().close()
+        self.connection.close()
+
 class NaayaSqlDb(Persistent):
 
     def __init__(self, db_id):
@@ -50,7 +58,7 @@ class NaayaSqlDb(Persistent):
             raise DbMissing
         connection = sqlite3.connect(self._get_path(),
                                      isolation_level=isolation_level)
-        return connection.cursor()
+        return connection.cursor(factory=_Cursor)
 
     def drop(self):
         """Drop database, delete it from disk"""

@@ -153,6 +153,7 @@ def create_site_logger(site):
         for handler in existing:
             try:
                 logger.removeHandler(handler)
+                handler.close()
             except Exception:
                 log.exception("Could not remove existing site logger handler")
     custom_format = '%(asctime) %(message)'
@@ -273,26 +274,26 @@ def get_site_logger_content(site, REQUEST=None, RESPONSE=None, month=None):
             writeables.append(False)
             continue
 
-        log_file = open(lfname, encoding='utf-8')
         writeables.append(True)
+        with open(lfname, encoding='utf-8') as log_file:
+            c = 0
+            for line in log_file:
+                c += 1
+                plain_text_lines.append(line)
 
-        c = 0
-        for line in log_file:
-            c += 1
-            plain_text_lines.append(line)
+                try:
+                    line = json.loads(line)
+                except json.JSONDecodeError:
+                    log.error("Could not parse line %s from file %s",
+                              c, lfname)
+                    continue
 
-            try:
-                line = json.loads(line)
-            except json.JSONDecodeError:
-                log.error("Could not parse line %s from file %s", c, lfname)
-                continue
-
-            line_data = line['message']
-            date_str = line['asctime']
-            time_tuple = time.strptime(date_str, "%y-%m-%d %H:%M:%S,%f")
-            line_data['date'] = datetime(*(time_tuple[0:6]))
-            line_data['readable_message'] = readable_action(line_data)
-            lines.append(line_data)
+                line_data = line['message']
+                date_str = line['asctime']
+                time_tuple = time.strptime(date_str, "%y-%m-%d %H:%M:%S,%f")
+                line_data['date'] = datetime(*(time_tuple[0:6]))
+                line_data['readable_message'] = readable_action(line_data)
+                lines.append(line_data)
 
     return {
         'writeable': all(writeables),

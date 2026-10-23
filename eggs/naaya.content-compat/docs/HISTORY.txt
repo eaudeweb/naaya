@@ -3,6 +3,7 @@ Changelog
 
 2.0.2 (unreleased)
 ------------------
+* Check the deprecation warnings in the tests [dumitval]
 
 2.0.1 (2026-10-23)
 ------------------

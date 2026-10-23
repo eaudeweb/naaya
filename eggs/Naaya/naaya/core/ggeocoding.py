@@ -82,6 +82,7 @@ def _get_url_data(url, throttle=True):
         try:
             response = urllib.request.urlopen(request, timeout=TIMEOUT)
         except urllib.error.HTTPError as e:
+            e.close()
             if e.code in (403, 429):
                 raise GeocoderOverQuotaLimit(
                     'Geocoding over quota: HTTP %s' % e.code)

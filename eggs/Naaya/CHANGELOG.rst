@@ -9,6 +9,11 @@
 * Strip the plugin docstrings returned by getPluginsInfo [dumitval]
 * Convert media files with ffmpeg's native AAC encoder instead of
   libfdk_aac, and to yuv420p video, which browsers can play [dumitval]
+* Fix version comparison reading the blob stream objects instead of their
+  data, so identical file versions counted as changed [dumitval]
+* Close the files, log handlers and HTTP errors left open by the zip
+  export, folder import, site logging, media conversion, URL fetching and
+  geocoding [dumitval]
 
 6.0.7 (2026-10-23)
 ------------------

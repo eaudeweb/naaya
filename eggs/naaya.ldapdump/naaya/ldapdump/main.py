@@ -185,17 +185,19 @@ def save_results(config, results_list):
     db_path = get_db_path(config)
 
     db_conn = sqlite3.connect(db_path)
-    cursor = db_conn.cursor()
     try:
-        write_values(cursor, results_list)
-        reset_dump_timestamp(cursor)
-    except:
-        log.exception("Error saving ldap results")
-        raise
-    else:
-        db_conn.commit()
-        log.info("Successfully dumped ldap data")
-    cursor.close()
+        cursor = db_conn.cursor()
+        try:
+            write_values(cursor, results_list)
+            reset_dump_timestamp(cursor)
+        except:
+            log.exception("Error saving ldap results")
+            raise
+        else:
+            db_conn.commit()
+            log.info("Successfully dumped ldap data")
+    finally:
+        db_conn.close()
 
 
 def setup_log_handler(config):
@@ -260,6 +262,13 @@ class DumpReader(object):
 
     def _get_dump_items(self):
         db_conn = sqlite3.connect(self.db_path)
+        # closed also when the caller stops iterating early
+        try:
+            yield from self._dump_items(db_conn)
+        finally:
+            db_conn.close()
+
+    def _dump_items(self, db_conn):
         cursor = db_conn.cursor()
         text = "SELECT dn, attr, value FROM LDAPMapping ORDER BY dn, attr"
         cursor.execute(text)
@@ -286,8 +295,6 @@ class DumpReader(object):
                 except StopIteration:
                     blob_dn = None
             yield dn, tuples
-
-        db_conn.close()
 
     def get_dump(self):
         log.debug('Starting read of dump')

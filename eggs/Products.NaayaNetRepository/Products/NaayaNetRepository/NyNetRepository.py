@@ -37,7 +37,7 @@ from . import NyNetSite
 manage_addNyNetRepository_html = PageTemplateFile('zpt/netrepository_manage_add', globals())
 def manage_addNyNetRepository(self, id='', title='', lang=None, REQUEST=None):
     """ Manage add ny net repository """
-    id = self.utCleanupId(id)
+    id = self.utSlugify(id, 1000, [])
     if not id: id = PREFIX_NYNETREPOSITORY + self.utGenRandomId(6)
     if lang is None: lang = self.gl_get_selected_language()
     ob = NyNetRepository(id, title, lang)

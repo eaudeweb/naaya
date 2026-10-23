@@ -66,6 +66,7 @@ class NaayaSqlTestCase(TestCase):
         crs.close()
 
     def test_changedb(self):
+        self.crs.close()
         self.generic_obj.db.drop()
         self.assertRaises(DbMissing, self.generic_obj.db.cursor)
         del self.generic_obj.db
@@ -82,8 +83,10 @@ class NaayaSqlTestCase(TestCase):
         for i in range(size):
             pool.append(new_db())
         for i in range(size):
-            pool[i].cursor().execute("CREATE TABLE t(x integer primary key)")
-            pool[i].cursor().execute("INSERT INTO t(x) values(?)", (i, ))
+            crs = pool[i].cursor()
+            crs.execute("CREATE TABLE t(x integer primary key)")
+            crs.execute("INSERT INTO t(x) values(?)", (i, ))
+            crs.close()
         for i in range(size):
             crs = pool[size-i-1].cursor()
             crs.execute("SELECT * from t")

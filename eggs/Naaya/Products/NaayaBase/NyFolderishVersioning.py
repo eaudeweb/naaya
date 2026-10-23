@@ -61,23 +61,28 @@ class NyFolderishVersioning:
             return versions.objectValues()
         return versions._getOb(vid, None)
 
+    def _version_bytes(self, vdata):
+        """ Data of a version as bytes; blob streams are read and closed """
+        if getattr(vdata, 'index_html', None):
+            vdata = vdata.index_html()
+        if hasattr(vdata, 'read'):
+            stream = vdata
+            try:
+                vdata = stream.read()
+            finally:
+                if hasattr(stream, 'close'):
+                    stream.close()
+        if isinstance(vdata, str):
+            return vdata.encode('utf-8')
+        if isinstance(vdata, bytes):
+            return vdata
+        return str(vdata).encode('utf-8')
+
     def _compare_versions(self, vdata1, vdata2):
         """ Compare 2 versions data.
         """
-
-        if getattr(vdata1, 'index_html', None):
-            vdata1 = vdata1.index_html()
-        if getattr(vdata2, 'index_html', None):
-            vdata2 = vdata2.index_html()
-        if isinstance(vdata1, str):
-            vdata1 = vdata1.encode('utf-8')
-        elif not isinstance(vdata1, bytes):
-            vdata1 = str(vdata1).encode('utf-8')
-        if isinstance(vdata2, str):
-            vdata2 = vdata2.encode('utf-8')
-        elif not isinstance(vdata2, bytes):
-            vdata2 = str(vdata2).encode('utf-8')
-        return crc32(vdata1) != crc32(vdata2)
+        return (crc32(self._version_bytes(vdata1)) !=
+                crc32(self._version_bytes(vdata2)))
     #
     # Public interface
     #
