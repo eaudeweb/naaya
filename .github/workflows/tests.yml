@@ -1,5 +1,5 @@
 # Tests of the Naaya packages, installed with pip as on the circa and destinet servers
-name: tests
+name: tests python 3.12
 
 on:
   push:
@@ -89,6 +89,20 @@ jobs:
         working-directory: site
         run: make requirements packages config PYTHON=python${{ matrix.python }}
 
+      - uses: actions/cache@v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-1.58.0
+
+      # Chromium for the browser tests (BrowserTestCase); the runner image has its libraries
+      - name: Install Playwright and Chromium
+        working-directory: site
+        run: |
+          .venv/bin/pip install playwright==1.58.0
+          .venv/bin/playwright install --only-shell chromium
+
       - name: Test
         working-directory: site
+        env:
+          NAAYA_BROWSER_TESTS: required
         run: make test INSTANCE=ci TEST_ARGS=-v

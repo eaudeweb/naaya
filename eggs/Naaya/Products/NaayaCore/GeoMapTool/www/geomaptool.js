@@ -316,7 +316,9 @@ function showPageElements() {
     a = document.getElementById('address').readOnly = false;
     document.getElementById('address_button').disabled = false;
     document.getElementById('geo_query_button').disabled = false;
-    document.getElementById('map_links_js').style.display = "block";
+    // embed_map_html has no map links
+    var map_links = document.getElementById('map_links_js');
+    if (map_links) map_links.style.display = "block";
     //Also place handlers on inputs:
     jQuery('#geo_query, #address').keypress(handleKeyPress);
 }

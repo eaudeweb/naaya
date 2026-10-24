@@ -1,5 +1,11 @@
 6.0.9 (unreleased)
 ------------------
+* Fix embed_map_html failing with a JavaScript error before the map starts:
+  showPageElements used the map_links_js element, which the page does not
+  have [dumitval]
+* Add BrowserTestCase (Playwright/Chromium against the test Zope over HTTP)
+  and browser tests for the portal map, the TinyMCE editor and the folder
+  listing Delete action [dumitval]
 
 6.0.8 (2026-10-23)
 ------------------
