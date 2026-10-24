@@ -2,9 +2,9 @@
 
 [![tests python 3.12](https://github.com/eaudeweb/naaya/actions/workflows/tests.yml/badge.svg?branch=python3)](https://github.com/eaudeweb/naaya/actions/workflows/tests.yml?query=branch%3Apython3)
 [![tests python 3.14](https://github.com/eaudeweb/naaya/actions/workflows/tests-python314.yml/badge.svg?branch=python3)](https://github.com/eaudeweb/naaya/actions/workflows/tests-python314.yml?query=branch%3Apython3)
-![Python 3.12](https://img.shields.io/badge/python-3.12-blue)
-![Python 3.14](https://img.shields.io/badge/python-3.14-blue)
-![Zope 6.2](https://img.shields.io/badge/zope-6.2-blue)
+[![Python 3.12](https://img.shields.io/badge/python-3.12-blue)](https://docs.python.org/3.12/)
+[![Python 3.14](https://img.shields.io/badge/python-3.14-blue)](https://docs.python.org/3.14/)
+[![Zope 6.2](https://img.shields.io/badge/zope-6.2-blue)](https://zope.readthedocs.io/en/latest/)
 
 ## Working with git submodules
 
