@@ -2,6 +2,9 @@
 -------------------
 * add plone.keyring and five.localsitemanager to install_requires, as
   naaya.updater imports them [dumitval]
+* add repoze.sendmail, zope.app.component, zope.app.i18n,
+  zope.app.interface, zope.globalrequest and zope.processlifetime to
+  install_requires, as Naaya and contentratings import them [dumitval]
 
 5.0.37 (2026-10-20)
 -------------------

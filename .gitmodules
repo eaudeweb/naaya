@@ -17,7 +17,7 @@
 [submodule "buildout/enisa-privacy-forum"]
 	path = buildout/enisa-privacy-forum
 	url = git@github.com:eaudeweb/naaya.buildout.enisa-privacy-forum.git
-	branch = master
+	branch = pip-py2
 [submodule "buildout/groupware"]
 	path = buildout/groupware
 	url = git@github.com:eaudeweb/naaya.buildout.groupware.git

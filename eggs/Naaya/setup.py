@@ -51,6 +51,12 @@ setup(name='Naaya',
           'Products.TextIndexNG3 >= 3.2.11',
           'plone.keyring',
           'five.localsitemanager',
+          'repoze.sendmail',
+          'zope.app.component',
+          'zope.app.i18n',
+          'zope.app.interface',
+          'zope.globalrequest',
+          'zope.processlifetime',
 
           # Customized 3rd party
           'edw-pycaptcha >= 0.3.1',
