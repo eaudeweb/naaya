@@ -53,6 +53,11 @@
 [submodule "buildout/circa-be"]
 	path = buildout/circa-be
 	url = git@github.com:eaudeweb/naaya.buildout.circabe.git
+	branch = pip-py2
 [submodule "buildout/ispraforum"]
 	path = buildout/ispraforum
 	url = git@github.com:eaudeweb/naaya.buildout.ispraforum.git
+[submodule "buildout/naaya.buildout.naaya"]
+	path = buildout/naaya.buildout.naaya
+	url = git@github.com:eaudeweb/naaya.buildout.naaya.git
+	branch = pip-py2

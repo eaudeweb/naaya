@@ -49,6 +49,8 @@ setup(name='Naaya',
           'zope.deprecation',
           'contentratings',
           'Products.TextIndexNG3 >= 3.2.11',
+          'plone.keyring',
+          'five.localsitemanager',
 
           # Customized 3rd party
           'edw-pycaptcha >= 0.3.1',
