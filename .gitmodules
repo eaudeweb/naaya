@@ -21,7 +21,7 @@
 [submodule "buildout/groupware"]
 	path = buildout/groupware
 	url = git@github.com:eaudeweb/naaya.buildout.groupware.git
-	branch = master
+	branch = pip-py2
 [submodule "bundles/NaayaBundles-CHMBE-cop10"]
 	branch = master
 	path = bundles/NaayaBundles-CHMBE-cop10
