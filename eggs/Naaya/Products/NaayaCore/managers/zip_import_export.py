@@ -264,7 +264,7 @@ class ZipExportTool(Implicit, Item):
         count = (
             "Portal catalog count for the following object types:\n\n"
             "Folders: %s\nFiles: %s\nMeetings: %s\nNews: %s\nURLs: %s\n\n" % (
-                folders, files, meetings, urls)
+                folders, files, meetings, news, urls)
         )
         temp_file = tempfile.TemporaryFile()
         zip_file = ZipFile(temp_file, mode='w', allowZip64=True)

@@ -1,5 +1,7 @@
 5.0.39 (unreleased)
 -------------------
+* fix zip_export failing with "not enough arguments for format string":
+  the news count was missing from the index.txt counts [dumitval]
 
 5.0.38 (2026-10-27)
 -------------------
