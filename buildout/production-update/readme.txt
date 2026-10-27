@@ -1,1 +1,0 @@
-A package which automates updates and restarts on production servers

@@ -1,18 +1,6 @@
-[submodule "buildout/chm-be"]
-	path = buildout/chm-be
-	url = git@github.com:eaudeweb/naaya.buildout.chm-be.git
-	branch = master
-[submodule "buildout/chm-eu"]
-	path = buildout/chm-eu
-	url = git@github.com:eaudeweb/naaya.buildout.chm-eu.git
-	branch = master
 [submodule "buildout/destinet"]
 	path = buildout/destinet
 	url = git@github.com:eaudeweb/naaya.buildout.destinet.git
-	branch = master
-[submodule "buildout/eionet"]
-	path = buildout/eionet
-	url = git@github.com:eaudeweb/naaya.buildout.eionet.git
 	branch = master
 [submodule "buildout/enisa-privacy-forum"]
 	path = buildout/enisa-privacy-forum
