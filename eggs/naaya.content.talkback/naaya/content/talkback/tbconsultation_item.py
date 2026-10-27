@@ -512,9 +512,10 @@ class NyTalkBackConsultation(Implicit, NyContentData, NyContentType,
     security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION,
                               'delete_sections')
 
-    def delete_sections(self, del_section_id, REQUEST=None):
+    def delete_sections(self, del_section_id=(), REQUEST=None):
         """ remove the specified sections """
-        self.manage_delObjects(list(del_section_id))
+        if del_section_id:
+            self.manage_delObjects(list(del_section_id))
         self.setSessionInfoTrans('Removed ${count} sections.',
                                  count=str(len(del_section_id)))
         if REQUEST is not None:

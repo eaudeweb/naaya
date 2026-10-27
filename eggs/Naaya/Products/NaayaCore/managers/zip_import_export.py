@@ -104,7 +104,7 @@ def read_zipfile_contents(data):
                 file_path = file_path.decode('utf-8')
             except UnicodeDecodeError:
                 file_path = file_path.decode('CP437')
-            except:
+            except Exception:
                 # try to go forward with the file_path as it is
                 pass
             yield file_path, file_data
@@ -222,6 +222,7 @@ class ZipImportTool(Implicit, Item):
 
     index_html = PageTemplateFile('../zpt/zip_import', globals())
 
+
 InitializeClass(ZipImportTool)
 
 
@@ -249,6 +250,22 @@ class ZipExportTool(Implicit, Item):
                 raise Unauthorized
 
         my_container = self.getParentNode()
+        catalog = my_container.getSite().getCatalogTool()
+        folders = len(catalog({'path': my_container.absolute_url(1),
+                               'meta_type': 'Naaya Folder'}))
+        files = len(catalog({'path': my_container.absolute_url(1),
+                             'meta_type': 'Naaya Blob File'}))
+        meetings = len(catalog({'path': my_container.absolute_url(1),
+                                'meta_type': 'Naaya Meeting'}))
+        news = len(catalog({'path': my_container.absolute_url(1),
+                                'meta_type': 'Naaya News'}))
+        urls = len(catalog({'path': my_container.absolute_url(1),
+                            'meta_type': 'Naaya URL'}))
+        count = (
+            "Portal catalog count for the following object types:\n\n"
+            "Folders: %s\nFiles: %s\nMeetings: %s\nNews: %s\nURLs: %s\n\n" % (
+                folders, files, meetings, urls)
+        )
         temp_file = tempfile.TemporaryFile()
         zip_file = ZipFile(temp_file, mode='w', allowZip64=True)
 
@@ -258,7 +275,9 @@ class ZipExportTool(Implicit, Item):
         if zip_adapter is None:
             REQUEST.RESPONSE.notFoundError()
         builder.recurse(my_container, zip_adapter.filename)
-        builder.write_index()
+        index = count + builder.index_txt.getvalue()
+        # overwrite builder.write_index() to add the count
+        builder.zip_file.writestr("index.txt", index)
 
         zip_file.close()
         temp_file.seek(0)
@@ -277,6 +296,7 @@ class ZipExportTool(Implicit, Item):
                            'attachment; filename=%s.zip' %
                            my_container.getId())
         return stream_response(REQUEST.RESPONSE, temp_file)
+
 
 InitializeClass(ZipExportTool)
 

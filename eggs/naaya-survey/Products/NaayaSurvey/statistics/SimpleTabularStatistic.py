@@ -110,7 +110,7 @@ class SimpleTabularStatistic(BaseStatistic):
         current_row += 1
         ws.write(current_row, 1, translator('Total'), header_style)
         ws.write(current_row, 2, total, normal_style)
-        ws.write(current_row, 3, '100%%', normal_style)
+        ws.write(current_row, 3, '100%', normal_style)
         current_row += 1
 
         state['current_row'] = current_row

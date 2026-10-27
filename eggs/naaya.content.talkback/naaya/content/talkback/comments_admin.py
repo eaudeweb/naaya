@@ -201,8 +201,9 @@ class CommentsAdmin(SimpleItem):
                 if (fields[col][0] == 'Contributor' and
                         'invited by' not in text and
                         '(' in text):
-                    link = 'https://www.eionet.europa.eu/users/' + text[
-                        text.find("(") + 1:text.find(")")]
+                    # display_name is "userid (full name)"
+                    link = ('https://www.eionet.europa.eu/users/' +
+                            text[:text.find(' (')])
                     try:
                         formula = u'HYPERLINK("{}", "{}")'.format(
                             link, text)
@@ -314,11 +315,14 @@ class CommentsAdmin(SimpleItem):
 
         elif file_type == 'CustomExcel':
             fields = [
-                ('Section', lambda c: c.get_section().title_or_id()),
-                ('Message', lambda c: plain(c.message)),
+                ('Section',
+                 lambda i: i['comment'].get_section().title_or_id()),
+                ('Message', lambda i: plain(i['comment'].message)),
                 ('Contributor',
-                 lambda c: c.get_contributor_info()['display_name']),
-                ('Date', lambda c: c.comment_date.strftime('%Y/%m/%d %H:%M')),
+                 lambda i: (i['comment'].get_contributor_info()
+                            ['display_name'])),
+                ('Date', lambda i: (i['comment'].comment_date
+                                    .strftime('%Y/%m/%d %H:%M'))),
             ]
             ret = self.generate_custom_excel_output(fields, comments)
             content_type = 'application/vnd.ms-excel'

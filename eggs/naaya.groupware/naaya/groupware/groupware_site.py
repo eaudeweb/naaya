@@ -480,19 +480,19 @@ class GroupwareSite(NySite):
             return REQUEST.RESPONSE.redirect(
                 self.getSite().aq_parent.absolute_url() + '/index_html')
 
-        user = REQUEST.AUTHENTICATED_USER
-        if user.name == 'Anonymous User':
+        user_name = REQUEST.AUTHENTICATED_USER.getUserName()
+        if user_name == 'Anonymous User':
             return REQUEST.RESPONSE.redirect(
                 self.getSite().absolute_url() + '/login_html')
 
         acl = self.getAuthenticationTool()
         relinquished = False
         for source in acl.getSources():
-            relinquished = source.removeUser(user.name)
+            relinquished = source.removeUser(user_name)
 
         try:
-            acl.manage_delUsers([user.name])
-            if user.name not in acl.getUserNames():
+            acl.manage_delUsers([user_name])
+            if user_name not in acl.getUserNames():
                 relinquished = True
         except KeyError:
             pass

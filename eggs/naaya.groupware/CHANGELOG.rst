@@ -1,5 +1,30 @@
-1.4.67 (unreleased)
+1.4.72 (unreleased)
 -------------------
+
+1.4.71 (2026-10-20)
+-------------------
+* fix member_search failing with 500 when the LDAP server does not answer:
+  log the error, list only the local users and show a message [dumitval]
+
+1.4.70 (2026-10-15)
+-------------------
+* Privacy Statement customisations [dumitval]
+
+1.4.69 (2026-10-15)
+-------------------
+* relinquish_membership: take the user name from getUserName(); the
+  authenticated PAS user has no name attribute, so the page always failed
+  with AttributeError [dumitval]
+* ig_roles_ajax.pt: compare the access level with == instead of "is"
+  [dumitval]
+
+1.4.68 (2022-04-08)
+-------------------
+* remove ispraforum mention, it will be added when ready [dumitval]
+
+1.4.67 (2022-04-08)
+-------------------
+* replace NRC by Eionet [dumitval]
 
 1.4.66 (2021-12-02)
 -------------------

@@ -42,7 +42,7 @@ class MigrateToContributor(UpdateScript):
                     # Old style storage was: "invite:inviteKey" or
                     # "anonymous:User inputed name" or "userid".
                     if ':' in contributor_current:
-                        source, value = contributor_current.split(':')
+                        source, value = contributor_current.split(':', 1)
                     else:
                         value = contributor_current
 

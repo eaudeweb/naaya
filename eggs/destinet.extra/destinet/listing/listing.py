@@ -70,9 +70,10 @@ def get_content(context, request):
     else:
         reversed = False
 
-    length = int(form.get('length'))
-    start = int(form.get('start'))
-    search = form.get('search[value]').decode('utf-8').strip()
+    # DataTables sends these; a direct call without them gets the first 10 rows
+    length = int(form.get('length') or 10)
+    start = int(form.get('start') or 0)
+    search = (form.get('search[value]') or '').decode('utf-8').strip()
     topics = form.get('topic')
     if isinstance(topics, basestring):
         topics = [topics]
@@ -140,7 +141,7 @@ def get_content(context, request):
 
     return context.rstk['json_dumps']({
         'data': data,
-        'draw': int(form.get('draw')),
+        'draw': int(form.get('draw') or 0),
         'recordsTotal': len(all_objects),
         'recordsFiltered': len(objects),
     })
@@ -179,7 +180,7 @@ def second_level(context, request):
     """ return second level folders that are not marked as hidden for the
     dropdown navigation (i.e. have 'nomenu' as keyword) """
     second_level_folders = context.utSortObjsListByAttr(
-        [x for x in context.objectValues(['Naaya Folder', 'Naaya Pointer'])
+        [x for x in context.objectValues(['Naaya Folder', 'Naaya Hex Folder', 'Naaya Pointer'])
             if (x.approved or not hasattr(x, 'approved'))],
         'sortorder', 0)
     valid_folders = []

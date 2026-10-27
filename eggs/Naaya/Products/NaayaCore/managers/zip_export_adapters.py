@@ -29,7 +29,7 @@ class DefaultZipAdapter(object):
 
     @property
     def base_filename(self):
-        base_name = self.context.title_or_id()
+        base_name = self.context.getId()
         return illegal_fs_char.sub('_', base_name).encode('utf-8')
 
     @property

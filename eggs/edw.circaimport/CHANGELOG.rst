@@ -1,5 +1,28 @@
-1.3.13 (unreleased)
+1.3.16 (unreleased)
+-------------------
+
+1.3.15 (2026-10-15)
+-------------------
+* compute_roles_mapping: do not fail on max() of an empty list when the
+  ACLs file has no __N profiles [dumitval]
+* Import all: pass the selected notification type to the notifications
+  import [dumitval]
+* Import report: format the log records with getMessage(), so messages that
+  contain "%" do not fail [dumitval]
+* zimport_data: format the error of an unreadable zexp file with (e,);
+  formatting e.args fails for exceptions with two arguments [dumitval]
+* DemoActor.document_entry: accept the lang argument passed by the importer
+  [dumitval]
+
+1.3.14 (2023-09-20)
 ------------------
+* add count.txt to zip_export from console
+  [valipod refs #257967]
+
+1.3.13 (2023-02-07)
+------------------
+* add zip_export to console scripts
+  [valipod]
 
 1.3.12 (2020-12-14)
 ------------------

@@ -73,6 +73,16 @@
 </div>
 
 <div class="field">
+    <label for="overwrite_existing" i18n:translate="">
+        Update (overwrite!) objects with the same id</label>
+    <p i18n:translate="">
+        If checked, objects with the same id will be updated according to the file data.<br>
+        If unchecked, objects with the same id will be skipped from import.
+    </p>
+    <input type="checkbox" id="overwrite_existing" name="overwrite_existing" /><br />
+</div>
+
+<div class="field">
     <label for="data" i18n:translate="">Step 3: upload the filled in file</label>
     <input type="file" id="data" name="data"/><br />
 </div>

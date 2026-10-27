@@ -213,9 +213,8 @@ def add_acls_from_circa_export(site, filepath):
             non_userids.extend([val for val in values
                                 if not val.endswith('@circa')])
         roles = [val[2:] for val in non_userids if val.startswith('__')]
-        roles = list(set(roles))  # remove duplicates
-        roles = map(int, roles)  # convert to integers
-        max_role = max(roles)
+        roles = set(map(int, roles))  # convert to integers
+        max_role = max(roles or [6])
         max_role = max(max_role, 6)  # max role should be at least 6
 
         ROLES_MAPPING[str(max_role)] = 'Authenticated'

@@ -1,5 +1,18 @@
-1.5.3 (unreleased)
--------------------
+1.5.5 (unreleased)
+------------------
+
+1.5.4 (2026-10-20)
+------------------
+* return the image without a watermark when it is narrower than the
+  watermark text, instead of failing with UnboundLocalError [dumitval]
+* transliterate non-ASCII letters in photo ids made from file names
+  ("photo ț.png" gave "photo-.png") [dumitval]
+
+1.5.3 (2026-10-15)
+------------------
+* saveUpload: use gl_get_selected_language(); get_default_language() does
+  not exist on Naaya sites, so replacing a photo file without a lang
+  argument failed [dumitval]
 
 1.5.2 (2015-10-23)
 -------------------

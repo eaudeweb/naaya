@@ -80,7 +80,7 @@ def nfp_for_country(context):
 
 def nrc_admin_link(context, request):
     """
-    Check if LDAP user is NFP and return the URL to 'Edit NRC members' section
+    Check if LDAP user is NFP and return the URL to 'Edit Eionet members'
     """
     nrc_url = ''
     country = nfp_for_country(context)

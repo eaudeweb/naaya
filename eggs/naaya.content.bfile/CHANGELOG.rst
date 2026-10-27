@@ -1,5 +1,10 @@
-1.4.28 (unreleased)
+1.4.29 (unreleased)
 --------------------
+
+1.4.28 (2023-02-07)
+--------------------
+* support exporting to zip from console script (without REQUEST)
+  [valipod]
 
 1.4.27 (2020-03-27)
 --------------------

@@ -18,6 +18,8 @@ from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
 from Products.NaayaCore.GeoMapTool.managers import geocoding
 from Products.NaayaCore.SchemaTool.widgets.GeoWidget import GeoWidget
+from Products.NaayaCore.SchemaTool.widgets.SelectMultipleWidget import \
+    SelectMultipleWidget
 from Products.NaayaCore.SchemaTool.widgets.geo import Geo
 from Products.NaayaCore.events import CSVImportEvent
 from Products.NaayaCore.interfaces import ICSVImportExtraColumns
@@ -25,6 +27,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from naaya.core.zope2util import path_in_site
 import simplejson as json
+import re
 import transaction
 import xlrd
 import xlwt
@@ -61,7 +64,7 @@ class CSVImportTool(Implicit, Item):
         schema = self.getSite().getSchemaTool().getSchemaForMetatype(meta_type)
         if schema is None:
             raise ValueError('Schema for meta-type "%s" not found' % meta_type)
-        columns = []
+        columns = ['ID']
         for widget in schema.listWidgets():
             if widget.multiple_form_values:
                 for subname in widget.multiple_form_values:
@@ -108,7 +111,7 @@ class CSVImportTool(Implicit, Item):
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'do_import')
 
-    def do_import(self, meta_type, file_type, data, REQUEST=None):
+    def do_import(self, meta_type, file_type, data, overwrite_existing=False, REQUEST=None):
         """do_import.
 
         :param meta_type:
@@ -122,6 +125,7 @@ class CSVImportTool(Implicit, Item):
 
         errors = []
         warnings = []
+        infos = []
         site = self.getSite()
 
         schema = site.getSchemaTool().getSchemaForMetatype(meta_type)
@@ -136,7 +140,9 @@ class CSVImportTool(Implicit, Item):
 
         # build a list of property names based on the object schema
         # TO DO: extract this loop into a separate function
-        prop_map = {}
+        prop_map = {
+            u'ID': {'column': 'id', 'convert': lambda x: x.strip()},
+        }
         for widget in schema.listWidgets():
             prop_name = widget.prop_name()
 
@@ -171,6 +177,7 @@ class CSVImportTool(Implicit, Item):
                     raise ValueError(msg)
                 else:
                     errors.append(msg)
+                    header = ['']
                     rows = []
         elif file_type == 'CSV':
             rows = UnicodeReader(data)
@@ -191,15 +198,22 @@ class CSVImportTool(Implicit, Item):
 
         else:
             raise ValueError('unknown file format %r' % file_type)
+        id_present = header[0] == 'ID'
 
-        record_number = 0
+        added_number = 0
+        edited_number = 0
+        skipped_number = 0
         obj_ids = []
 
         count = 0
         try:
             for row in rows:
+                if id_present and not overwrite_existing and row[0] in location_obj.objectIds():
+                    # skip existing objects
+                    skipped_number += 1
+                    continue
                 try:
-                    record_number += 1
+                    ob_id = ''
                     # pass the word that the object is created during
                     # import from file and facilitate skipping the
                     # geolocation to avoid a timeout - the geolocation
@@ -210,6 +224,8 @@ class CSVImportTool(Implicit, Item):
                     for column, value in zip(header, row):
                         if value == '':
                             continue
+                        if column == 'ID' and value:
+                            ob_id = value.strip()
                         if column not in prop_map:
                             extra_properties[column] = value
                             continue
@@ -225,14 +241,23 @@ class CSVImportTool(Implicit, Item):
                         lon = properties[self.geo_fields['lon']]
                     except (AttributeError, KeyError):
                         lat = lon = None
-                    ob_id = add_object(location_obj, _send_notifications=False,
-                                       **properties)
+                    if not ob_id or ob_id not in location_obj.objectIds():
+                        # only create the object if no ob_id is passed or
+                        # if that id is not parent in the location_obj
+                        ob_id = add_object(location_obj, _send_notifications=False,
+                                           **properties)
+                        ob = location_obj._getOb(ob_id)
+                        added_number += 1
+                    else:
+                        # here overwrite_existing is True
+                        ob = location_obj._getOb(ob_id)
+                        ob.saveProperties(**properties)
+                        edited_number += 1
                     count += 1
                     if count / 50 * 50 == count:
                         # commit the transaction at each 50 items to
                         # avoid database conflict errors
                         transaction.commit()
-                    ob = location_obj._getOb(ob_id)
                     if address:
                         if lat and lon:
                             setattr(
@@ -269,7 +294,7 @@ class CSVImportTool(Implicit, Item):
                     self.log_current_error()
                     msg = ('Error while importing from file, '
                            'row ${record_number}: ${error}',
-                           {'record_number': record_number + 1,
+                           {'record_number': added_number + edited_number + skipped_number + 1,
                             'error': str(e)})
                     if REQUEST is None:
                         raise ValueError(msg)
@@ -292,10 +317,23 @@ class CSVImportTool(Implicit, Item):
             else:
                 if warnings:
                     self.setSessionErrorsTrans(warnings)
-                self.setSessionInfoTrans(
-                    '${records} object(s) of type "${title}" '
-                    'successfully imported.',
-                    records=record_number, title=schema.title_or_id())
+                if skipped_number:
+                    infos.append(
+                        '%s object(s) of type "%s" already in folder and skipped.' %
+                        (skipped_number, schema.title_or_id())
+                    )
+                if added_number:
+                    infos.append(
+                        '%s object(s) of type "%s" successfully imported.' %
+                        (added_number, schema.title_or_id())
+                    )
+                if edited_number:
+                    infos.append(
+                        '%s object(s) of type "%s" successfully updated.' %
+                        (edited_number, schema.title_or_id())
+                    )
+                if infos:
+                    self.setSessionInfoTrans(infos)
             return self.index_html(REQUEST, meta_type=meta_type)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'index_html')
@@ -306,6 +344,19 @@ class CSVImportTool(Implicit, Item):
 
 
 InitializeClass(CSVImportTool)
+
+
+def _list_converter(widget):
+    """
+    convert_to_user_string of a SelectMultipleWidget, reading the selection
+    list once per export instead of once per cell
+    """
+    titles = dict((node.id, node.title)
+                  for node in widget.get_list_nodes(widget.list_id))
+
+    def convert(values):
+        return ';'.join([titles.get(value, value) for value in values])
+    return convert
 
 
 class ExportTool(Implicit, Item):
@@ -370,8 +421,9 @@ class ExportTool(Implicit, Item):
                 return u''
             return unicode(value)
 
-        prop_getters = []
-        dump_header = []
+        dump_header = ['ID']
+        # add the getter for the object id
+        prop_getters = [lambda x: x.getId()]
 
         # create columns for schema widgets
         for widget in schema.listWidgets():
@@ -384,6 +436,8 @@ class ExportTool(Implicit, Item):
             else:
                 dump_header.append(widget.title)
                 convert = widget.convert_to_user_string
+                if isinstance(widget, SelectMultipleWidget):
+                    convert = _list_converter(widget)
                 getter = getter_factory(prop_name, None, convert)
                 prop_getters.append(getter)
 
@@ -652,6 +706,10 @@ def generate_csv(header, rows):
     return output.getvalue()
 
 
+DATE_RE = re.compile(r'^\d{1,2}/\d{1,2}/\d{4}$')
+EXCEL_1900 = datetime(1900, 1, 1)
+
+
 def generate_excel(header, rows):
     """generate_excel.
 
@@ -674,13 +732,19 @@ def generate_excel(header, rows):
         row += 1
         for col in range(0, len(item)):
             style.num_format_str = 'general'
-            try:
-                col_date = datetime.strptime(item[col], '%d/%m/%Y')
-                excel_1900 = datetime.strptime('01/01/1900', '%d/%m/%Y')
-                style.num_format_str = 'dd/MM/yyyy'
-                ws.write(row, col, (col_date - excel_1900).days + 2, style)
-            except ValueError:
-                ws.write(row, col, item[col], style)
+            value = item[col]
+            # strptime only on values that look like dates; it was most of
+            # the export time when tried on every cell
+            if isinstance(value, basestring) and DATE_RE.match(value):
+                try:
+                    col_date = datetime.strptime(value, '%d/%m/%Y')
+                except ValueError:
+                    pass
+                else:
+                    style.num_format_str = 'dd/MM/yyyy'
+                    ws.write(row, col, (col_date - EXCEL_1900).days + 2, style)
+                    continue
+            ws.write(row, col, value, style)
     output = StringIO()
 
     wb.save(output)

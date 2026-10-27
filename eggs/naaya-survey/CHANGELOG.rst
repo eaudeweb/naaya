@@ -1,6 +1,16 @@
-1.3.17 (unreleased)
+1.3.19 (unreleased)
+-------------------
+
+1.3.18 (2026-10-15)
+-------------------
+* Statistics Excel export: write the total as "100%" instead of the literal
+  "100%%" [dumitval]
+
+1.3.17 (2022-09-06)
 ------------------
-* add possibility to deny editing own answers [dumitval]
+* fix getting details of signups (Naaya Meeting)
+  [valipod refs #154063]
+* add possibility to deny editing own answers [valipod]
 
 1.3.16 (2021-12-23)
 ------------------

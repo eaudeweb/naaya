@@ -1,12 +1,14 @@
-from AccessControl import ClassSecurityInfo
-from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
-from Widget import Widget, WidgetError, manage_addWidget
+from Widget import Widget, manage_addWidget
 
-def addGeoTypeWidget(container, id="", title="Select Widget", REQUEST=None, **kwargs):
+
+def addGeoTypeWidget(container, id="", title="Select Widget", REQUEST=None,
+                     **kwargs):
     """ Contructor for Select widget"""
-    return manage_addWidget(GeoTypeWidget, container, id, title, REQUEST, **kwargs)
+    return manage_addWidget(GeoTypeWidget, container, id, title, REQUEST,
+                            **kwargs)
+
 
 class GeoTypeWidget(Widget):
     """ Select Widget """
@@ -30,7 +32,8 @@ class GeoTypeWidget(Widget):
             return ''
         geo_map_tool = self.getSite().getGeoMapTool()
         for symbol in geo_map_tool.getSymbolsList():
-            if value.strip().lower() == symbol.title.lower():
+            if value.strip().lower() == symbol.title.lower() or \
+                    value.strip().lower() == symbol.id:
                 return symbol.id
         raise ValueError('Could not convert value %s' % repr(value))
 

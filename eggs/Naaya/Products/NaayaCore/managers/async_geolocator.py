@@ -33,7 +33,7 @@ def geolocate_queue(site):
             continue
         lat = obj.geo_location.lat
         lon = obj.geo_location.lon
-        address = obj.geo_location.address
+        address = obj.geo_location.address.replace(u'\x81', '')
         if address and not (lat and lon):
             try:
                 # Google also restricts requests per second, so we need

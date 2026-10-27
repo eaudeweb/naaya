@@ -378,6 +378,13 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item,
         if REQUEST:
             REQUEST.RESPONSE.redirect(self.absolute_url())
 
+    def getOwner(self):
+        """ get the owner of the object in the form of an LDAP user """
+        for user_id in self.__ac_local_roles__:
+            if 'Owner' in self.__ac_local_roles__[user_id]:
+                auth_tool = self.getSite().getAuthenticationTool()
+                return auth_tool.get_user_with_userid(user_id)
+
     #
     # Email notifications
     #
@@ -396,15 +403,16 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item,
         respondent_id = self.REQUEST.AUTHENTICATED_USER.getId()
         respondent = auth_tool.get_user_with_userid(respondent_id)
         if not respondent:
-            # probably a zope root user
+            # either a zope root user or a signup (invited user)
             respondent = self.getSite().aq_parent.acl_users.getUser(
                 respondent_id)
-        respondent_name = auth_tool.getUserFullName(
-            respondent) or respondent_id
+        if respondent:
+            respondent_name = auth_tool.getUserFullName(
+                respondent) or respondent_id
 
         d = {}
-        if respondent.getUserName().startswith('signup:'):
-            signup_uid = respondent.getUserName().replace('signup:', '')
+        if respondent_id.startswith('signup:'):
+            signup_uid = respondent_id.replace('signup:', '')
             subscriptions = self.aq_parent.getParticipants().getSubscriptions()
             signup = subscriptions.getSignup(signup_uid)
             respondent_name = signup.name
@@ -445,8 +453,8 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item,
 
         d = {}
         link_prefix = ''
-        if respondent.getUserName().startswith('signup:'):
-            signup_uid = respondent.getUserName().replace('signup:', '')
+        if respondent_id.startswith('signup:'):
+            signup_uid = respondent_id.replace('signup:', '')
             link_prefix = '%s/participants/subscriptions/welcome?key=%s' % (
                 self.aq_parent.absolute_url(), signup_uid)
             subscriptions = self.aq_parent.getParticipants().getSubscriptions()

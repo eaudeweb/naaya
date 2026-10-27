@@ -1,0 +1,70 @@
+<tal:block metal:use-macro="here/macro_manage_edit/macros/page">
+
+<tal:block metal:fill-slot="description">
+	Change the properties in the form below and click <strong>Save changes</strong>.
+</tal:block>
+
+<tal:block metal:fill-slot="custom_properties">
+<tr>
+	<td class="form-label">Picture 1</td>
+	<td><input type="file" name="picture_0" value="" /></td>
+</tr>
+<tr>
+	<td></td>
+	<td><img src="getPicture?version=1&count=0" alt="Picture" i18n:attributes="alt" /></td>
+</tr>
+<tr>
+	<td></td>
+	<td><input type="checkbox" name="del_picture_0" /> check this if you want do delete current picture</td>
+</tr>
+<tr>
+	<td class="form-label">Picture 2</td>
+	<td><input type="file" name="picture_1" value="" /></td>
+</tr>
+<tr>
+	<td></td>
+	<td><img src="getPicture?version=1&count=0" alt="Picture" i18n:attributes="alt" /></td>
+</tr>
+<tr>
+	<td></td>
+	<td><input type="checkbox" name="del_picture_1" /> check this if you want do delete current picture</td>
+</tr>
+<tr>
+	<td class="form-label">Picture 3</td>
+	<td><input type="file" name="picture_2" value="" /></td>
+</tr>
+<tr>
+	<td></td>
+	<td><img src="getPicture?version=1&count=0" alt="Picture" i18n:attributes="alt" /></td>
+</tr>
+<tr>
+	<td></td>
+	<td><input type="checkbox" name="del_picture_2" /> check this if you want do delete current picture</td>
+</tr>
+<tr>
+	<td class="form-label">Picture 4</td>
+	<td><input type="file" name="picture_3" value="" /></td>
+</tr>
+<tr>
+	<td></td>
+	<td><img src="getPicture?version=1&count=0" alt="Picture" i18n:attributes="alt" /></td>
+</tr>
+<tr>
+	<td></td>
+	<td><input type="checkbox" name="del_picture_3" /> check this if you want do delete current picture</td>
+</tr>
+<tr>
+	<td class="form-label">Picture 5</td>
+	<td><input type="file" name="picture_4" value="" /></td>
+</tr>
+<tr>
+	<td></td>
+	<td><img src="getPicture?version=1&count=0" alt="Picture" i18n:attributes="alt" /></td>
+</tr>
+<tr>
+	<td></td>
+	<td><input type="checkbox" name="del_picture_4" /> check this if you want do delete current picture</td>
+</tr>
+</tal:block>
+
+</tal:block>

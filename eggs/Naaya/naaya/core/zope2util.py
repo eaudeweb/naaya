@@ -80,9 +80,12 @@ def json_default(value):
 
 def json_dumps(obj):
     """
-    Convert a Python object to JSON
+    Convert a Python object to JSON; <, > and & are escaped so it can go
+    inside <script>
     """
-    return json.dumps(obj, default=json_default)
+    text = json.dumps(obj, default=json_default)
+    return (text.replace('<', '\\u003c').replace('>', '\\u003e')
+            .replace('&', '\\u0026'))
 
 
 def uni_decode(text):

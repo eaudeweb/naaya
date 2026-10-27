@@ -3,7 +3,9 @@
     window.NaayaOpenLayers = {
 
         osm_layer: function() {
-            return new OpenLayers.Layer.OSM();
+            // OpenLayers 2.12 defaults to http tiles, blocked on https pages
+            return new OpenLayers.Layer.OSM("OpenStreetMap",
+                "https://tile.openstreetmap.org/${z}/${x}/${y}.png");
         },
 
         google_layer: function(layer_info) {
@@ -70,8 +72,19 @@
     };
 
     engine.geocode = function(address, callback) {
-        var url = engine.config['server_url'] + '/geocode';
-        $.getJSON(url, {'address': address}, callback);
+        // Nominatim results converted to the format of GeoMapTool.geocode
+        engine.geocode_nominatim(address, function(data) {
+            var results = $.map(data, function(r) {
+                var bb = $.map(r['boundingbox'], parseFloat);
+                return {
+                    boundingbox: {bottom: bb[0], top: bb[1],
+                                  left: bb[2], right: bb[3]},
+                    location: {lat: parseFloat(r['lat']),
+                               lon: parseFloat(r['lon'])}
+                };
+            });
+            if(results.length) callback(results);
+        });
     };
 
     engine.bounds_btlr = function(box) {
@@ -83,10 +96,44 @@
     engine.config['initial_bounds'] = engine.bounds_btlr(
         engine.config['initial_bounding_box']);
 
+    // Zoom only on ctrl/cmd + wheel; plain wheel scrolls the page and shows a hint.
+    function setup_ctrl_wheel_zoom(olmap, div_id) {
+        var div = $('#' + div_id);
+        var is_mac = /Mac/.test(navigator.platform);
+        var hint = $('<div class="naaya-openlayers-wheel-hint">')
+            .text(is_mac ? 'Use ⌘ + scroll to zoom the map'
+                         : 'Use ctrl + scroll to zoom the map')
+            .hide().appendTo(div);
+        var hint_timer, last_zoom = 0;
+
+        div[0].addEventListener('wheel', function(e) {
+            if(!(e.ctrlKey || e.metaKey)) {
+                hint.stop(true, true).fadeIn(150);
+                clearTimeout(hint_timer);
+                hint_timer = setTimeout(function() { hint.fadeOut(300); }, 1500);
+                return;
+            }
+            e.preventDefault();
+            var now = Date.now();
+            if(now - last_zoom < 200) return;  // trackpads fire many events
+            last_zoom = now;
+            var zoom = olmap.getZoom() + (e.deltaY < 0 ? 1 : -1);
+            if(!olmap.isValidZoomLevel(zoom)) return;
+            // keep the point under the cursor fixed while zooming
+            var xy = olmap.events.getMousePosition(e);
+            var at = olmap.getLonLatFromViewPortPx(xy);
+            var c = olmap.getCenter();
+            var k = olmap.getResolutionForZoom(zoom) / olmap.getResolution();
+            olmap.setCenter(new OpenLayers.LonLat(at.lon + (c.lon - at.lon) * k,
+                                                  at.lat + (c.lat - at.lat) * k),
+                            zoom);
+        }, {passive: false});
+    }
+
     engine.create_olmap = function(div_id) {
         $('#' + div_id).addClass('naaya-openlayers');
         var nav_control = new OpenLayers.Control.Navigation();
-        nav_control.zoomWheelEnabled = engine.config['mouse_wheel_zoom'];
+        nav_control.zoomWheelEnabled = false;
         var olmap = new OpenLayers.Map({
             'div': div_id,
             controls: [
@@ -98,6 +145,9 @@
         var layer_factory = eval(engine.config['base_layer']['factory']);
         var layer = layer_factory(engine.config['base_layer']);
         olmap.addLayer(layer);
+        if(engine.config['mouse_wheel_zoom']) {
+            setup_ctrl_wheel_zoom(olmap, div_id);
+        }
         return olmap;
     };
 
@@ -303,6 +353,7 @@
         function setup_event_handlers() {
             marker._ol_marker.events.register("click", null, function() {
                 var balloon = map_marker_clicked(place);
+                if(!balloon) return;  // cluster click zoomed in instead
                 marker._has_balloon = true;
                 update_icon();
                 balloon.destroy(function() {
@@ -350,6 +401,8 @@
         map.display_points = function(places) {
             points.empty();
             $.each(places, function(j, place) {
+                // skip points whose geo type has no symbol
+                if(!engine.geotype_icons[place.icon_name]) return;
                 points.add(engine.new_portal_map_marker(place));
             });
         };

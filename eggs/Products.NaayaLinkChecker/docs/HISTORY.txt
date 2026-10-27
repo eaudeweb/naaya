@@ -1,6 +1,19 @@
 Changelog
 =========
 
+1.2.8 (unreleased)
+------------------
+
+1.2.7 (2026-10-20)
+------------------
+* remove tag_build from setup.cfg; the 1.2.6 release was uploaded as
+  1.2.6.dev0 [dumitval]
+
+1.2.6 (2026-10-20)
+------------------
+* give each new LinkChecker its own meta type dict; the {} default was one
+  dict shared by all LinkCheckers created in the same process [dumitval]
+
 1.2.5 (2011-09-23)
 ------------------
 * New release for CHM server migration to use the eggshop (no more svn)

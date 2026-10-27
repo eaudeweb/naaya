@@ -1,5 +1,62 @@
-1.3.49 - (unreleased)
+1.3.59 - (unreleased)
+=====================
+* remove the zmi folders (copies of portal_map/geomaptool.js,
+  portal_map/custom_filter and gsearch_html); the copies of the ZMI objects
+  are kept in NaayaBundles-DESTINET [dumitval]
+
+1.3.58 - (2026-10-20)
+=====================
+* zmi/geomaptool.js: zoom in on clusters without point ids; the server
+  sends them only for co-located points [dumitval]
+* signup: log in and grant Contributor only when the account was created;
+  a signup with an existing username granted Contributor to that user
+  [dumitval]
+* write the map filter values into JavaScript as JSON in the listing
+  templates; request values were inserted unescaped (reflected XSS)
+  [dumitval]
+* get_content: default length, start and draw when the DataTables
+  parameters are missing, instead of failing with TypeError [dumitval]
+
+1.3.57 - (2026-10-15)
+=====================
+* list_locations: pass the keyword arguments to get_map_results with **kw
+  instead of *kw, which raised TypeError [dumitval]
+
+1.3.56 - (2026-10-07)
 =======================
+* Remove the duplicate map creation from topic.zpt [valipod]
+* Check history.pushState before calling it on unload in geomaptool.js [valipod]
+* Return a balloon handle from custom_balloon in geomaptool.js [valipod]
+
+1.3.55 - (2026-10-07)
+=======================
+* Zoom the good practice browser map to the selected country [valipod]
+
+1.3.54 - (2026-10-07)
+=======================
+* Return a balloon handle from custom_balloon for the OpenLayers map engine [valipod]
+
+1.3.53 - (2026-03-17)
+=======================
+* Keep zoom level when loading maps from custom links [valipod]
+* add Naaya Hex Folder to the available second level folders (menu) [valipod]
+
+1.3.52 - (2026-03-04)
+=======================
+* add Naaya Hex Folder to the available second level folders (menu) [valipod]
+
+1.3.51 - (2023-12-12)
+=======================
+* show title_or_id on My submissions [refs #22203 valipod]
+
+1.3.50 - (2023-12-08)
+=======================
+* add "My folders" to the login_html page [dumitval]
+
+1.3.49 - (2023-05-02)
+=======================
+* serve non-empty description on index_rdf_extended [dumitval]
+* add webpage to index_rdf_extended [dumitval]
 
 1.3.48 - (2022-04-01)
 =======================

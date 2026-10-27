@@ -1080,8 +1080,8 @@ class utils:
                 os.mkdir(path)
             except:
                 raise OSError('Can\'t create directory %s' % path)
-        tempfile.tempdir = path
-        tmpfile = tempfile.mktemp(".temp")
+        fd, tmpfile = tempfile.mkstemp(".temp", dir=path)
+        os.close(fd)
         zf = ZipFile(tmpfile, "w")
         sz = 0
         for o in objects:

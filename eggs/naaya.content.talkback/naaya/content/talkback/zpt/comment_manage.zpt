@@ -4,11 +4,11 @@
 <table border="0" cellspacing="2" cellpadding="2" width="100%">
 	<tr>
 		<td class="form-label">Reviewer name</td>
-		<td><span tal:replace="here/contributor_name" /></td>
+		<td><span tal:replace="python:here.get_contributor_info()['display_name']" /></td>
 	</tr>
 	<tr>
 		<td class="form-label">User name</td>
-		<td><span tal:replace="here/contributor" /></td>
+		<td><span tal:replace="python:here.get_contributor_info()['name']" /></td>
 	</tr>
 	<tr>
 		<td class="form-label">Comment:</td>

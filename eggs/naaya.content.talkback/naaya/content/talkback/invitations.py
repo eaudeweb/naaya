@@ -18,7 +18,7 @@
 # Alex Morega, Eau de Web
 
 from base64 import urlsafe_b64encode
-from random import randrange
+from random import SystemRandom
 from datetime import date
 import json
 from StringIO import StringIO
@@ -173,6 +173,9 @@ class InvitationsContainer(SimpleItem):
         return self._create_email_html(formdata=formdata,
                                        formerrors=formerrors)
 
+    security.declareProtected(PERMISSION_INVITE_TO_TALKBACKCONSULTATION,
+                              'bulk_create')
+
     def bulk_create(self, REQUEST):
         """ Same as `create`, but input is an xls file """
         keys = ('name', 'email', 'organization', 'notes', 'message')
@@ -198,6 +201,14 @@ class InvitationsContainer(SimpleItem):
 
                 # on behalf situation
                 on_behalf_uid = REQUEST.form.get('on_behalf', '')
+                is_manager = 'Manager' in REQUEST.AUTHENTICATED_USER.getRoles()
+                if on_behalf_uid != '' and not is_manager:
+                    self.setSessionErrorsTrans(
+                        'Only managers can invite on behalf of another user')
+                    return self._create_html(formdata=dict((key, '') for
+                                             key in keys),
+                                             formerrors={},
+                                             previews=previews)
                 if on_behalf_uid != '':
                     auth_tool = self.getAuthenticationTool()
                     on_behalf_name = auth_tool.name_from_userid(on_behalf_uid)
@@ -632,4 +643,6 @@ InitializeClass(InvitationUsersTool)
 
 def random_key():
     """ generate a 120-bit random key, expressed as 20 base64 characters """
-    return urlsafe_b64encode(''.join(chr(randrange(256)) for i in xrange(15)))
+    rand = SystemRandom()
+    return urlsafe_b64encode(''.join(chr(rand.randrange(256))
+                                     for i in xrange(15)))

@@ -478,8 +478,10 @@ function map_marker_clicked(point) {
     var resolution = map_engine.get_resolution();
     var point_id_list = [];
     if (point.id == '') {
-        if(point.point_ids.length < 5 ||
-           resolution > MAP_CLUSTER_ZOOM_RESOLUTION_THRESHOLD) {
+        // the server sends point_ids only for co-located points
+        if (point.point_ids.length > 0 &&
+           (point.num_records < 5 ||
+            resolution > MAP_CLUSTER_ZOOM_RESOLUTION_THRESHOLD)) {
             point_id_list = point.point_ids;
         } else {
             map_engine.set_center_and_zoom_in(point.lat, point.lon);

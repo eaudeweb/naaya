@@ -1,5 +1,139 @@
-5.0.21 (unreleased)
+5.0.39 (unreleased)
 -------------------
+
+5.0.38 (2026-10-27)
+-------------------
+* add plone.keyring and five.localsitemanager to install_requires, as
+  naaya.updater imports them [dumitval]
+* add repoze.sendmail, zope.app.component, zope.app.i18n,
+  zope.app.interface, zope.globalrequest and zope.processlifetime to
+  install_requires, as Naaya and contentratings import them [dumitval]
+* fix the error notification email failing with "Not in a transaction" with
+  repoze.sendmail 4.2 or newer: send it in its own transaction [dumitval]
+* ignore an __ac cookie that does not decode to name:password, instead of
+  failing with "Invalid authentication token" [dumitval]
+
+5.0.37 (2026-10-20)
+-------------------
+* map clusters: check the latitude and longitude range on the index values
+  of the records matching the other filters, instead of the range over the
+  coordinate indexes, which loaded one persistent set per distinct
+  coordinate (destinet Green Travel Maps: 76,000 to 10,600 objects loaded
+  per map request) [dumitval]
+
+5.0.36 (2026-10-20)
+-------------------
+* search_geo_objects returns the objects lazily and sorts by title,
+  latitude and longitude from catalog data, so paged lists load only the
+  shown objects (destinet admin_maplocations_html: 8.6 s to 1.9 s)
+  [dumitval]
+* getDuplicateLocations compares catalog data first and loads objects only
+  for the address of candidate duplicates (destinet: 9.7 s to 2.8 s)
+  [dumitval]
+* xrjs_getGeoClusters sends the point ids only for clusters whose points
+  share one location, the only ones zooming cannot split (world map
+  response 843 KB to 77 KB); geomaptool.js zooms in on the other clusters
+  [dumitval]
+* export_geo_rss: build the entries without minidom and escape the feed
+  title [dumitval]
+* Excel export: read the selection list of SelectMultipleWidget once per
+  export and try strptime only on dd/mm/yyyy values (destinet contacts:
+  39 s to 19 s) [dumitval]
+* notifications: walk only folders and sites when listing a user's
+  subscriptions, and compute them once per request (destinet
+  my_subscriptions_html: 10 s to 1.1 s) [dumitval]
+* rstk json_dumps: escape <, > and & so the result can be written inside
+  <script> [dumitval]
+* getMaintainersEmails and EmailTool.sendEmail: split the addresses on
+  commas, semicolons and whitespace (naaya.core.utils.split_emails); a ";"
+  in administrator_email gave an invalid To [dumitval]
+* admin_resetrole_html: use the Naaya skel roles on sites whose skel has no
+  security section (EnviroWindows) [dumitval]
+* geopoint ZMI add and edit pages: use the geo_location latitude and
+  longitude; the edit page failed with AttributeError: latitude. Geo values
+  can now be read in page templates [dumitval]
+
+5.0.35 (2026-10-15)
+-------------------
+* utGenerateZip: create the temporary zip file in the client home with
+  mkstemp instead of setting tempfile.tempdir, which changed the temporary
+  directory of the whole Zope process after the first zip download
+  [dumitval]
+* PlugBase.removeUser: call revokeUserRoles(user, location) for each
+  location; it was called with a list of 'user||location' strings, so
+  relinquishing a membership never removed the roles of source (LDAP) users
+  [dumitval]
+* AkismetError.__str__: use self.response; self.value does not exist
+  [dumitval]
+* geocode: leave out the key parameter when no API key is set, instead of
+  sending key=None to Google [dumitval]
+* do_import: set header when the Excel file cannot be read, so the error
+  message is shown instead of a NameError [dumitval]
+
+5.0.34 (2026-10-07)
+-------------------
+* Skip the balloon handling in the OpenLayers map engine when a cluster click zooms in [dumitval]
+
+5.0.33 (2026-10-07)
+-------------------
+* Zoom the OpenLayers map only on ctrl/cmd + mouse wheel and show a hint on plain wheel [dumitval]
+
+5.0.32 (2026-10-07)
+-------------------
+* Use https OSM tiles and Nominatim geocoding in the OpenLayers map engine [dumitval]
+
+5.0.31 (2025-09-09)
+-------------------
+* Add support for skipping or updating existing objects on import [dumitval]
+
+5.0.30 (2023-12-12)
+-------------------
+* Add News to the do_export procedure [dumitval]
+
+5.0.29 (2023-09-21)
+-------------------
+* fix file count
+  [valipod refs #257967]
+
+5.0.28 (2023-09-21)
+-------------------
+* add file count (from portal catalog) to zip_export file
+  [valipod refs #257967]
+
+5.0.27 (2023-06-21)
+-------------------
+* allow GeoTypeWidget to receive symbol.id in convert_from_user_string
+  [dumitval]
+
+5.0.26 (2023-05-26)
+-------------------
+* allow tinymce to load custom config from the portal_editor instance
+  [valipod]
+
+5.0.25 (2023-05-02)
+-------------------
+* add non_empty_property method [valipod]
+
+5.0.24 (2023-02-07)
+-------------------
+* use id instead of title on zip exports, to avoid name collisions
+  [valipod]
+
+5.0.23 (2023-01-09)
+-------------------
+* Fix issue in geomap with 180.0 longitude values
+  [valipod]
+
+5.0.22 (2022-05-16)
+-------------------
+* update is_valid_email with longer TLDs
+  [valipod #149839]
+
+5.0.21 (2022-04-26)
+-------------------
+* remove invalid control 0081 character from objects' addresses
+  before sending that to the Google Geolocation api
+  [valipod]
 
 5.0.20 (2022-02-02)
 -------------------

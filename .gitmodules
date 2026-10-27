@@ -17,11 +17,11 @@
 [submodule "buildout/enisa-privacy-forum"]
 	path = buildout/enisa-privacy-forum
 	url = git@github.com:eaudeweb/naaya.buildout.enisa-privacy-forum.git
-	branch = master
+	branch = pip-py2
 [submodule "buildout/groupware"]
 	path = buildout/groupware
 	url = git@github.com:eaudeweb/naaya.buildout.groupware.git
-	branch = master
+	branch = pip-py2
 [submodule "bundles/NaayaBundles-CHMBE-cop10"]
 	branch = master
 	path = bundles/NaayaBundles-CHMBE-cop10
@@ -34,10 +34,6 @@
 	path = bundles/NaayaBundles-CHMBE
 	url = git@github.com:eaudeweb/naaya.bundles.NaayaBundles-CHMBE.git
 	branch = master
-[submodule "bundles/NaayaBundles-CHMEU"]
-	path = bundles/NaayaBundles-CHMEU
-	url = git@github.com:eaudeweb/naaya.bundles.NaayaBundles-CHMEU.git
-	branch = master
 [submodule "bundles/NaayaBundles-DESTINET"]
 	path = bundles/NaayaBundles-DESTINET
 	url = git@github.com:eaudeweb/naaya.bundles.NaayaBundles-DESTINET.git
@@ -45,10 +41,6 @@
 [submodule "bundles/NaayaBundles-Forum"]
 	path = bundles/NaayaBundles-Forum
 	url = git@github.com:eaudeweb/naaya.bundles.NaayaBundles-Forum.git
-	branch = master
-[submodule "bundles/NaayaBundles-PBE"]
-	path = bundles/NaayaBundles-PBE
-	url = git@github.com:eaudeweb/naaya.bundles.NaayaBundles-PBE.git
 	branch = master
 [submodule "bundles/NaayaBundles-SINAnet"]
 	path = bundles/NaayaBundles-SINAnet
@@ -61,6 +53,11 @@
 [submodule "buildout/circa-be"]
 	path = buildout/circa-be
 	url = git@github.com:eaudeweb/naaya.buildout.circabe.git
+	branch = pip-py2
 [submodule "buildout/ispraforum"]
 	path = buildout/ispraforum
 	url = git@github.com:eaudeweb/naaya.buildout.ispraforum.git
+[submodule "buildout/naaya.buildout.naaya"]
+	path = buildout/naaya.buildout.naaya
+	url = git@github.com:eaudeweb/naaya.buildout.naaya.git
+	branch = pip-py2

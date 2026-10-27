@@ -4,6 +4,9 @@ import simplejson as json
 class Geo(tuple):
     """ Immutable type representing individual geographical points """
 
+    # lat, lon and address are read in page templates (geopoint ZMI pages)
+    __allow_access_to_unprotected_subobjects__ = True
+
     def __new__(cls, lat=None, lon=None, address=''):
         if lat is lon is None:
             pass

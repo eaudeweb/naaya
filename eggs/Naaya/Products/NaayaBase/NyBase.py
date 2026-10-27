@@ -188,6 +188,21 @@ class NyBase(NyDublinCore):
                 return lang_title
         return self.title_or_id()
 
+    security.declarePrivate('non_empty_property')
+    def non_empty_property(self, prop, lang):
+        val = self.getLocalProperty(prop, lang)
+        if val:
+            return val
+        d_val = self.getLocalProperty(prop, self.gl_get_default_language())
+        if d_val:
+            return d_val
+        for lang in self.gl_get_languages():
+            lang_val = self.getLocalProperty(prop, lang)
+            if lang_val:
+                return lang_val
+        # This only happens when the property has no value in any of the languages
+        return ""
+
     security.declarePrivate('syndicateThisCommon')
     def syndicateThisCommon(self, lang):
         """

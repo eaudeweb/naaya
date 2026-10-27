@@ -1,5 +1,10 @@
-1.1.10 (unreleased)
-------------------
+1.1.11 (unreleased)
+-------------------
+
+1.1.10 (2026-10-20)
+-------------------
+* remove the Checkout link from the publication index; publications have
+  no versioning and startVersion failed with TypeError [dumitval]
 
 1.1.9 (2015-03-12)
 ------------------

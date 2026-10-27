@@ -2,7 +2,7 @@
 from setuptools import setup, find_packages
 
 setup(name='Naaya',
-      version='5.0.21',
+      version='5.0.39.dev0',
       author='Eau de Web',
       author_email='office@eaudeweb.ro',
       url='http://naaya.eaudeweb.ro',
@@ -49,6 +49,14 @@ setup(name='Naaya',
           'zope.deprecation',
           'contentratings',
           'Products.TextIndexNG3 >= 3.2.11',
+          'plone.keyring',
+          'five.localsitemanager',
+          'repoze.sendmail',
+          'zope.app.component',
+          'zope.app.i18n',
+          'zope.app.interface',
+          'zope.globalrequest',
+          'zope.processlifetime',
 
           # Customized 3rd party
           'edw-pycaptcha >= 0.3.1',

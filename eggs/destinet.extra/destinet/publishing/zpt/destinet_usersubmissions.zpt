@@ -1,5 +1,11 @@
 <h2>My submissions</h2>
 <tal:block define="destinet_user python: 'who-who/destinet-users' in request.ACTUAL_URL">
+  <div class="userinfo_item" id="folders_objects">
+    <h3 class="open">My Folders
+      <span class="ob_counter"></span>
+    </h3>
+    <div class="items"><img src="misc_/Naaya/ajax-loader.gif" /></div>
+  </div>
   <div class="userinfo_item" id="news_objects">
     <h3 class="open">My News
       <span class="ob_counter"></span>

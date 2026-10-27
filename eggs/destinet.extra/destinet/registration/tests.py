@@ -93,6 +93,25 @@ class RegistrationTestCase(DestinetTestCase):
         user = acl.getUser('doejohn')
         self.assertTrue(user.email, 'jdoe@eea.europa.eu')
 
+    def test_existing_username_gets_no_role(self):
+        self.portal.getAuthenticationTool().manage_addUser(
+            name='doejohn', password='other', confirm='other', roles=[],
+            domains=[], firstname='Other', lastname='User',
+            email='other@example.com', strict=0)
+        self.portal.REQUEST.form.update(self.initial_data)
+        with mock.patch.object(self.portal, 'admin_addroles') as addroles:
+            process_create_account(self.context, self.portal.REQUEST)
+        self.assertFalse(addroles.called)
+
+    def test_failed_signup_gets_no_role(self):
+        self.portal.manage_permission('Naaya - Create user', [], acquire=0)
+        self.portal.REQUEST.form.update(self.initial_data)
+        with mock.patch.object(self.portal, 'admin_addroles') as addroles:
+            process_create_account(self.context, self.portal.REQUEST)
+        self.assertFalse(addroles.called)
+        self.assertTrue(
+            self.portal.getAuthenticationTool().getUser('doejohn') is None)
+
     def test_contact_created(self):
         self.portal.REQUEST.form.update(self.initial_data)
         process_create_account(self.context, self.portal.REQUEST)

@@ -202,8 +202,8 @@ def meeting_on_install(site):
     if portal_map is not None:
         if NETWORK_NAME.lower() == 'eionet':
             new_map_symbols = [('conference.png', 'Conference', 10),
-                               ('nrc_meeting.png', 'NRC meeting', 20),
-                               ('nrc_webinar.png', 'NRC webinar', 30),
+                               ('nrc_meeting.png', 'Eionet meeting', 20),
+                               ('nrc_webinar.png', 'Eionet webinar', 30),
                                ('nfp_meeting.png', 'NFP meeting', 40),
                                ('nfp_webinar.png', 'NFP webinar', 50),
                                ('workshop.png', 'Workshop', 60)]
@@ -989,7 +989,7 @@ def _create_eionet_survey(container):
     for widget in eionet_survey.objectValues():
         widget.locked = True
         widget._p_changed = True
-    if meeting_type == 'NRC meeting':
+    if meeting_type == 'Eionet meeting':
         # Create validation_html and validation_onsubmit for custom validation
         validation_onsubmit = os.path.join(
             os.path.dirname(__file__), 'eionet_survey',

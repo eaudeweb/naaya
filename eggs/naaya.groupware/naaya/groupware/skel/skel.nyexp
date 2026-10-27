@@ -89,6 +89,210 @@
 				</p>]]>
 			</body>
 		</ob>
+		<ob meta_type="Naaya Document" param="0" id="privacy" sortorder="0" contributor="" approved="1" approved_by="" releasedate="" discussion="1" validation_status="0" validation_date="" validation_by="" validation_comment="">
+			<title lang="en"><![CDATA[Bescherming van persoonsgegevens]]></title>
+			<description lang="en"><![CDATA[]]></description>
+			<coverage lang="en"><![CDATA[]]></coverage>
+			<keywords lang="en"><![CDATA[]]></keywords>
+			<body lang="en"><![CDATA[
+                <p>Deze informatie handelt over de bescherming van uw persoonsgegevens. Dit zijn de gegevens waarmee u rechtstreeks of onrechtstreeks ge&iuml;dentificeerd kunt worden: uw voornaam, familienaam, e-mailadres en IP-adres&hellip;</p>
+                <p>Het secretariaat van het Co&ouml;rdinatiecomit&eacute; Internationaal Milieubeleid (CCIM) verzameld uw persoonsgegevens in de onderstaande gevallen :</p>
+                <ul>
+                    <li>Bij het cre&euml;ren van een profiel worden enkele persoonsgegevens gevraagd (Voornaam, naam, email, telefoonnummer). Deze gegevens zijn enkel beschikbaar voor zolang dat uw profiel actief is.</li>
+                    <li>Een oplijsting van de roles waar u deel van uitmaakt worden bewaard zolang uw profiel actief is op de site.</li>
+                    <li>Wanneer een link u naar een andere portaalsite, een website, een online toepassing of een sociaal netwerk brengt, dan gelden de voorwaarden voor de verwerking van persoonsgegevens van die diensten.</li>
+                    <li>De persoonsgegevens van een gebruiker kunnen alleen gezien worden door de gemachtigde gebruikers en de helpdesk van Envcoord.health. Externe gebruikers hebben geen toegang tot deze gegevens.</li>
+                    <li>Profielen worden door het CCIM secretariaat gedeactiveerd wanneer het secretariaat op de hoogte wordt gebracht door de gebruiker of zijn organisatie dat het account geschrapt mag worden. Alle persoonsgegevens kunnen worden gewist indien een persoon dit verzoekt in het kader van het recht om te worden vergeten. Voor archiveringsdoeleinden, zonder verzoek tot verwijdering, worden alleen de voor- en achternaam, het professionele e-mailadres, en de User-ID die aan uw account is gekoppeld, bewaard.<br />Persoonsgegevens worden niet aan derden doorgegeven voor marketingdoeleinden.</li>
+                    <li>Elke gebruiker heeft toegang om zijn persoonlijke gegevens te wijzigen. Er kan eveneens contact genomen worden met het CCIM secretariaat met een verzoek tot wijziging van gegevens. Het intrekken van uw toestemming heeft geen invloed op de rechtmatigheid van de verwerking op basis van de toestemming v&oacute;&oacute;r de intrekking daarvan.</li>
+                </ul>
+                <p>U bent beschermd &nbsp;op basis van:</p>
+                <ul>
+                    <li>De Europese verordening 2016/679 van het Europees Parlement en de Raad van 27 april 2016 (in werking getreden op 25 mei 2018) betreffende de bescherming van natuurlijke personen in verband met de verwerking van persoonsgegevens en betreffende het vrije verkeer van die gegevens (AVG).</li>
+                    <li>De wet van 30 juli 2018 betreffende de bescherming van natuurlijke personen met betrekking tot de verwerking van persoonsgegevens.</li>
+                </ul>
+                <h2>Rechtsgrond en doeleinden van de verwerkingen</h2>
+                <ul>
+                    <li>23 MEI 2001 &ndash; Koninklijk Besluit houdende oprichting van de Federale Overheidsdienst Volksgezondheid, Veiligheid van de Voedselketen en Leefmilieu.</li>
+                    <li>5 APRIL 1995 &ndash; Samenwerkingsakkoord tussen de federale Staat, het Vlaamse Gewest, het Waalse Gewest en het Brussels Hoofdstedelijk Gewest met betrekking tot het internationaal milieubeleid.</li>
+                </ul>
+                <p>We verzamelen en verwerken persoonsgegevens om:</p>
+                <ul>
+                    <li>De door de verschillenden betrokken entiteiten voorgestelde contactpersonen in te schrijven in de CCIM verzendlijsten die deze contactpersonen wensen op te volgen.</li>
+                    <li>De ingeschreven leden in te lichten over bijvoorbeeld lopende onderhandelingsprocessen of de samenstelling van de groep(en) waarvan men deel uitmaakt.</li>
+                    <li>Vragen van de ingeschreven leden te kunnen beantwoorden.</li>
+                    <li>De leden van het CCIM Bureau en de Plenaire CCIM in te lichten over de samenstelling van de verschillende CCIM groepen.</li>
+                </ul>
+                <p>Als uw vraag naar informatie of dienstverlening voor een andere administratie bedoeld is, dan geven we u de gegevens van die administratie. U bent vrij ze te contacteren.</p>
+                <h2>Verwerkte gegevens</h2>
+                <p>De tabel hieronder vermeldt de situaties waarin persoonsgegevens automatisch worden verzameld en verwerkt.</p>
+                <div style="width: 60%;">
+                    <table class="datatable">
+                        <tbody>
+                            <tr>
+                                <td><strong>Situaties</strong></td>
+                                <td><strong>Verzamelde en verwerkte gegevens</strong></td>
+                            </tr>
+                            <tr>
+                                <td>U raadpleegt een of meerdere pagina&rsquo;s op de site van Envcoord.health.</td>
+                                <td>IP adressen worden niet bijgehouden.</td>
+                            </tr>
+                            <tr>
+                                <td>U neemt via e-mail contact op met het CCIM secretariaat.</td>
+                                <td>Naam, voornaam en e-mailadres dat u ingeeft</td>
+                            </tr>
+                            <tr>
+                                <td>U verzoekt om te worden ingeschreven in het systeem van Envcoord.health.</td>
+                                <td>
+                                    <ul>
+                                        <li>U wordt door het secretariaat verzocht om minstens de onderstaande persoonsgegevens te delen om uw inschrijving te voltooien.
+                                            <ul>
+                                                <li>Voornaam</li>
+                                                <li>Naam</li>
+                                                <li>E-mail werk</li>
+                                                <li>Organisatie</li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>U verzoekt om deel uit te maken van een specifieke verzendlijst.</td>
+                                <td>Uw Naam, voornaam, e-mailadres en organisatie zullen worden opgelijst in de overzichtslijsten die het CCIM secretariaat opstelt voor de leden van het CCIM.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <h2>Gebruik van cookies</h2>
+                <p>Deze website maakt gebruik van cookies met het exclusieve doel haar diensten mogelijk te maken en de gebruikerservaring op de site te verbeteren. Voorbeelden hiervan zijn:</p>
+                <ul>
+                    <li>Het opslaan van gebruikersauthenticatie</li>
+                    <li>Instellen van taalvoorkeuren</li>
+                    <li>Het opslaan van site-voorkeuren (zoals de full-screen toggle)<br />Het goed functioneren van applicaties (waarbij gebruikers een procedure moeten volgen die uit meerdere stappen bestaat, en waarbij tussen de stappen voorkeuren moeten worden opgeslagen)</li>
+                </ul>
+                <p>De gebruikte cookies bevatten geen persoonlijk identificeerbare informatie noch wordt er gebruik gemaakt van marketing- of andere niet-essenti&euml;le cookies.</p>
+                <h2>Bewaringsduur</h2>
+                <p>Er wordt geen IP-adres geregistreerd bij toegang tot het portaal <a title="EnvCo Portal">https://envcoord.health.fgov.be</a>.</p>
+                <p>DDe e-maillogs worden vijf weken bewaard.</p>
+                <h2>Veiligheid</h2>
+                <p>Envcoord.health &nbsp;waarborgt de veiligheid (integriteit en vertrouwelijkheid) van uw persoonsgegevens. Ze worden onder meer beschermd tegen ongeoorloofde toegang, onrechtmatig gebruik, verlies en ongeoorloofde wijzigingen.</p>
+                <p>Daarvoor gebruiken we beveiligingstechnieken en -procedures die we hier om veiligheidsredenen niet uitvoerig beschrijven.</p>
+                <p>Op fysiek, technisch en organisatorisch vlak worden gepaste maatregelen genomen om een veiligheidsniveau te garanderen dat aangepast is aan de risico&rsquo;s.</p>
+                <h2>Recht op inzage, rechtzetting, bezwaar en wissen</h2>
+                <p>U heeft bepaalde rechten voor de persoonsgegevens die we gebruiken: het recht van inzage, het recht op rechtzetting, het recht om bezwaar aan te tekenen en het recht om gegevens te laten wissen.</p>
+                <p>We behandelen uw aanvraag binnen 30 kalenderdagen. Als uw aanvraag complex is of onze diensten het hoofd moeten bieden aan tal van aanvragen, dan wordt de termijn verlengd met 60 dagen.</p>
+                <p>Stuur om uw rechten uit te oefenen een e-mail of een brief naar onze Functionaris voor gegevensbescherming, samen met een scan of een kopie van uw identiteitsbewijs, met daarop uw handtekening, en met bij voorkeur vermelding van 'ENVCO':</p>
+                <p><a href="mailto:DPO@health.fgov.be?subject=">DPO@health.fgov.be</a></p>
+                <p><em><strong>Federale overheidsdienst Volksgezondheid, Veiligheid van de Voedselketen en Leefmilieu.</strong></em><br /> <em>Galileelaan 5/2</em><br /><em> 1210 Brussel</em></p>
+                <h2>Klachten</h2>
+                <p>Als u vindt dat Envcoord.health uw persoonsgegevens niet heeft verwerkt in overeenstemming met de geldende regelgeving, dan heeft u het recht een klacht in te dienen bij de Gegevensbeschermingsautoriteit:</p>
+                <p><strong>Gegevensbeschermingsautoriteit</strong><br />Drukpersstraat 35<br />1000 Brussel<br />E-mail: <a href="mailto:contact@apd-gba.be?subject=">contact@apd-gba.be</a></p>
+                <h2><strong>Contact</strong></h2>
+                <p>Voor informatie over ons gegevensbeschermingsbeleid kunt u contact opnemen met onze Functionaris voor gegevensbescherming: <a href="mailto:DPO@health.fgov.be?subject=">DPO@health.fgov.be</a></p>
+				]]>
+			</body>
+		</ob>
+		<ob meta_type="Naaya Document" param="0" id="privacy_fr" sortorder="0" contributor="" approved="1" approved_by="" releasedate="" discussion="1" validation_status="0" validation_date="" validation_by="" validation_comment="">
+			<title lang="en"><![CDATA[Protection des données à caractère personnel]]></title>
+			<description lang="en"><![CDATA[]]></description>
+			<coverage lang="en"><![CDATA[]]></coverage>
+			<keywords lang="en"><![CDATA[]]></keywords>
+            <body lang="en"><![CDATA[
+                <p>Les informations qui suivent concernent la protection de vos donn&eacute;es &agrave; caract&egrave;re personnel. Il s'agit des donn&eacute;es qui permettent de vous identifier directement ou indirectement : votre pr&eacute;nom, votre nom de famille, votre adresse mail, l'adresse IP...</p>
+                <p>Le secr&eacute;tariat du Comit&eacute; de coordination de la politique internationale de l'environnement (CCPIE) collecte vos donn&eacute;es &agrave; caract&egrave;re personnel dans les cas suivants:</p>
+                <ul>
+                    <li>Lors de la cr&eacute;ation d'un profil, quelques donn&eacute;es &agrave; caract&egrave;re personnel sont demand&eacute;es (pr&eacute;nom, nom, e-mail, num&eacute;ro de t&eacute;l&eacute;phone). Ces donn&eacute;es sont uniquement disponibles tant que votre profil est actif.</li>
+                    <li>Une liste des r&ocirc;les auxquels vous participez sera conserv&eacute;e aussi longtemps que votre profil est actif sur le site.</li>
+                    <li>Lorsqu'un lien vous dirige vers un autre site portail, un site web, une application en ligne ou un r&eacute;seau social, les conditions de traitement des donn&eacute;es &agrave; caract&egrave;re personnel de ces services s'appliquent.</li>
+                    <li>Les donn&eacute;es &agrave; caract&egrave;re personnel d'un utilisateur ne peuvent &ecirc;tre consult&eacute;es que par les utilisateurs autoris&eacute;s et le helpdesk de Envcoord.health. Les utilisateurs externes n'ont pas acc&egrave;s &agrave; ces donn&eacute;es.</li>
+                    <li>Les profils sont d&eacute;sactiv&eacute;s par le secr&eacute;tariat du CCPIE lorsque ce dernier est inform&eacute; par l'utilisateur ou son organisation que le compte peut &ecirc;tre supprim&eacute;. Toutes les donn&eacute;es &agrave; caract&egrave;re personnel peuvent &ecirc;tre supprim&eacute;es si une personne en fait la demande en vertu du droit &agrave; l'oubli. &Agrave; des fins d'archivage, sans demande de suppression, seules les donn&eacute;es relatives au pr&eacute;nom et nom, &agrave; l'adresse mail professionnelle et &agrave; l'identifiant (user-ID) associ&eacute; &agrave; votre compte seront conserv&eacute;es. Les donn&eacute;es &agrave; caract&egrave;re personnel ne sont pas transmises &agrave; des tiers &agrave; des fins de marketing.</li>
+                    <li>Chaque utilisateur dispose d'un acc&egrave;s pour modifier ses propres donn&eacute;es &agrave; caract&egrave;re personnel. Il est &eacute;galement possible de contacter le secr&eacute;tariat du CCPIE afin de demander la modification de donn&eacute;es. Le retrait de votre consentement n'a aucune incidence sur la lic&eacute;it&eacute; du traitement bas&eacute; sur le consentement donn&eacute; avant son retrait.</li>
+                </ul>
+                <p>Vos donn&eacute;es &agrave; caract&egrave;re personnel sont prot&eacute;g&eacute;es conform&eacute;ment:</p>
+                <ul>
+                    <li>Au r&egrave;glement europ&eacute;en 2016/679 du Parlement europ&eacute;en et du Conseil du 27 avril 2016 (entr&eacute; en vigueur le 25 mai 2018) relatif &agrave; la protection des personnes physiques &agrave; l'&eacute;gard du traitement des donn&eacute;es &agrave; caract&egrave;re personnel et &agrave; la libre circulation de ces donn&eacute;es (RGPD).</li>
+                    <li>A la loi du 30 juillet 2018 relative &agrave; la protection des personnes physiques &agrave; l'&eacute;gard des traitements de donn&eacute;es &agrave; caract&egrave;re personnel.</li>
+                </ul>
+                <h2>Bases juridiques et finalit&eacute;s des traitements</h2>
+                <ul>
+                    <li>23 MAI 2001 - Arr&ecirc;t&eacute; royal portant cr&eacute;ation du Service public f&eacute;d&eacute;ral Sant&eacute; publique, S&eacute;curit&eacute; de la Cha&icirc;ne alimentaire et Environnement.</li>
+                    <li>5 AVRIL 1995 - Accord de coop&eacute;ration entre l'&Eacute;tat f&eacute;d&eacute;ral, la R&eacute;gion flamande, la R&eacute;gion wallonne et la R&eacute;gion de Bruxelles-Capitale relatif &agrave; la politique internationale de l'environnement.</li>
+                </ul>
+                <p>Nous collectons et traitons des donn&eacute;es &agrave; caract&egrave;re personnel aux fins suivantes:</p>
+                <ul>
+                    <li>Inscrire les personnes de contact propos&eacute;es par les diff&eacute;rentes entit&eacute;s concern&eacute;es dans les listes d'envoi du CCPIE que ces personnes de contact souhaitent suivre.</li>
+                    <li>Informer les membres inscrits des processus de n&eacute;gociation en cours par exemple ou de la composition du (des) groupe(s) dont ils font partie.</li>
+                    <li>Pouvoir r&eacute;pondre aux questions des membres inscrits.</li>
+                    <li>Informer les membres du Bureau et de la pl&eacute;ni&egrave;re du CCPIE de la composition des diff&eacute;rents groupes du CCPIE.</li>
+                </ul>
+                <p>Si votre demande d'information ou de prestation de services est destin&eacute;e &agrave; une autre administration, nous vous communiquons les coordonn&eacute;es de cette administration. Vous &ecirc;tes libre de la contacter.</p>
+                <h2>Donn&eacute;es trait&eacute;es</h2>
+                <p>Le tableau ci-dessous pr&eacute;sente les situations dans lesquelles des donn&eacute;es &agrave; caract&egrave;re personnel sont automatiquement collect&eacute;es et trait&eacute;es.</p>
+                <div style="width: 60%;">
+                    <table class="datatable">
+                        <tbody>
+                            <tr>
+                                <td><strong>Situations</strong></td>
+                                <td><strong>Donn&eacute;es collect&eacute;es et trait&eacute;es</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Vous consultez une ou plusieurs pages du site Envcoord.health.</td>
+                                <td>Les adresses IP ne sont pas conserv&eacute;es.</td>
+                            </tr>
+                            <tr>
+                                <td>Vous contactez par mail le secr&eacute;tariat du CCPIE.</td>
+                                <td>Nom, pr&eacute;nom et adresse mail que vous saisissez</td>
+                            </tr>
+                            <tr>
+                                <td>Vous demandez &agrave; &ecirc;tre inscrit(e) dans le syst&egrave;me de Envcoord.health.</td>
+                                <td>
+                                    <ul>
+                                        <li>Le secr&eacute;tariat vous demande de partager au moins les donn&eacute;es &agrave; caract&egrave;re personnel suivantes afin d'achever votre inscription:
+                                            <ul>
+                                                <li>Pr&eacute;nom</li>
+                                                <li>Nom</li>
+                                                <li>e-mail professionnel</li>
+                                                <li>Organisation</li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Vous demandez &agrave; faire partie d'une liste d'envoi sp&eacute;cifique.</td>
+                                <td>Votre nom, pr&eacute;nom, adresse mail et organisation seront repris dans les listes r&eacute;capitulatives que le secr&eacute;tariat du CCPIE &eacute;labore pour les membres du CCPIE.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <h2>Utilisation de cookies</h2>
+                <p>Ce site web utilise des cookies dans le but exclusif de faire fonctionner ses services et d'am&eacute;liorer l'exp&eacute;rience utilisateur sur le site. En voici quelques exemples:</p>
+                <ul>
+                    <li>Stockage de l'authentification de l'utilisateur;</li>
+                    <li>Param&eacute;trage des pr&eacute;f&eacute;rences linguistiques;</li>
+                    <li>Sauvegarde des pr&eacute;f&eacute;rences concernant le site (comme le basculement en mode plein-&eacute;cran);<br />Bon fonctionnement des applications (o&ugrave; les utilisateurs doivent suivre une proc&eacute;dure en plusieurs &eacute;tapes et o&ugrave; leurs pr&eacute;f&eacute;rences doivent &ecirc;tre enregistr&eacute;es entre les &eacute;tapes).</li>
+                </ul>
+                <p>Les cookies utilis&eacute;s ne contiennent pas d'informations permettant l'identification d'une personne et il n'est fait usage d'aucun cookie de marketing ni d'autres cookies non essentiels.</p>
+                <h2>Dur&eacute;e de conservation</h2>
+                <p>Aucune adresse IP n'est enregistr&eacute;e lors de l'acc&egrave;s au portail <a title="EnvCo Portal">https://envcoord.health.fgov.be</a>.</p>
+                <p>Les logs d'e-mail sont conserv&eacute;s pendant cinq semaines.</p>
+                <h2>S&eacute;curit&eacute;</h2>
+                <p>Envcoord.health garantit la s&eacute;curit&eacute; (int&eacute;grit&eacute; et confidentialit&eacute;) de vos donn&eacute;es &agrave; caract&egrave;re personnel. Celles-ci sont prot&eacute;g&eacute;es notamment contre l'acc&egrave;s non autoris&eacute;, l'utilisation ill&eacute;gitime, la perte et les modifications non autoris&eacute;es.</p>
+                <p>&Agrave; cette fin, nous utilisons des techniques et des proc&eacute;dures de s&eacute;curit&eacute; que nous ne d&eacute;taillerons pas ici pour des raisons de s&eacute;curit&eacute;.</p>
+                <p>Des mesures appropri&eacute;es sont prises sur les plans physique, technique et organisationnel pour assurer un niveau de s&eacute;curit&eacute; adapt&eacute; aux risques.</p>
+                <h2>Droit d'acc&egrave;s, de rectification, d'opposition et d'effacement</h2>
+                <p>Vous avez des droits en ce qui concerne les donn&eacute;es &agrave; caract&egrave;re personnel que nous utilisons : le droit d'acc&egrave;s, le droit de rectification, le droit de contestation et le droit de suppression des donn&eacute;es.</p>
+                <p>Votre demande sera trait&eacute;e dans les 30 jours calendrier. Si celle-ci est complexe ou si nos services doivent faire face &agrave; un grand nombre de demandes, ce d&eacute;lai sera prolong&eacute; de 60 jours.</p>
+                <p>Pour exercer vos droits, envoyez un e-mail ou un courrier &agrave; notre d&eacute;l&eacute;gu&eacute; &agrave; la protection des donn&eacute;es, accompagn&eacute; d'un scan ou d'une copie de votre document d'identit&eacute;, en y apposant votre signature et en indiquant de pr&eacute;f&eacute;rence &laquo; ENVCO &raquo;:</p>
+                <p><a href="mailto:DPO@health.fgov.be?subject=">DPO@health.fgov.be</a></p>
+                <p><em><strong>Service public f&eacute;d&eacute;ral Sant&eacute; publique, S&eacute;curit&eacute; de la Cha&icirc;ne alimentaire et Environnement.</strong></em><br /> <em>Avenue Galil&eacute;e 5/2</em><br /><em> 1210 Bruxelles</em></p>
+                <h2>Plaintes</h2>
+                <p>Si vous estimez que Envcoord.health n'a pas trait&eacute; vos donn&eacute;es &agrave; caract&egrave;re personnel conform&eacute;ment &agrave; la r&eacute;glementation en vigueur, vous avez alors le droit d'introduire une plainte aupr&egrave;s de l'Autorit&eacute; de protection des donn&eacute;es:</p>
+                <p><strong>Autorit&eacute; de protection des donn&eacute;es</strong><br />Rue de la Presse 35<br />1000 Bruxelles<br />E-mail: <a href="mailto:contact@apd-gba.be?subject=">contact@apd-gba.be</a></p>
+                <h2><strong>Contact</strong></h2>
+                <p>Pour de plus amples informations sur notre politique de protection des donn&eacute;es, veuillez prendre contact avec notre d&eacute;l&eacute;gu&eacute; &agrave; la protection des donn&eacute;es: <a href="mailto:DPO@health.fgov.be?subject=">DPO@health.fgov.be</a></p>
+				]]>
+			</body>
+		</ob>
 		<ob meta_type="Naaya Document" param="0" id="disclaimer_html" sortorder="0" contributor="" approved="1" approved_by="" releasedate="" discussion="1" validation_status="0" validation_date="" validation_by="" validation_comment="">
 			<title lang="en"><![CDATA[DISCLAIMER]]></title>
 			<description lang="en"><![CDATA[]]></description>
