@@ -1,4 +1,7 @@
-5.0.38 (unreleased)
+5.0.39 (unreleased)
+-------------------
+
+5.0.38 (2026-10-27)
 -------------------
 * add plone.keyring and five.localsitemanager to install_requires, as
   naaya.updater imports them [dumitval]
