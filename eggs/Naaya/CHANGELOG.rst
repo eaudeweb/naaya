@@ -1,4 +1,7 @@
-5.0.39 (unreleased)
+5.0.40 (unreleased)
+-------------------
+
+5.0.39 (2026-10-27)
 -------------------
 * fix zip_export failing with "not enough arguments for format string":
   the news count was missing from the index.txt counts [dumitval]
