@@ -5,6 +5,10 @@
 * add repoze.sendmail, zope.app.component, zope.app.i18n,
   zope.app.interface, zope.globalrequest and zope.processlifetime to
   install_requires, as Naaya and contentratings import them [dumitval]
+* fix the error notification email failing with "Not in a transaction" with
+  repoze.sendmail 4.2 or newer: send it in its own transaction [dumitval]
+* ignore an __ac cookie that does not decode to name:password, instead of
+  failing with "Invalid authentication token" [dumitval]
 
 5.0.37 (2026-10-20)
 -------------------

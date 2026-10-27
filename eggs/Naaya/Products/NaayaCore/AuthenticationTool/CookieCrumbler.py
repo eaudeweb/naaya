@@ -143,7 +143,10 @@ class CookieCrumbler:
                 ac = unquote(req[self.auth_cookie])
                 if ac and ac != 'deleted':
                     try:
-                        decodestring(ac)
+                        # name:password; another application on the same
+                        # host may set an __ac cookie of a different format
+                        if ':' not in decodestring(ac):
+                            raise ValueError(ac)
                     except:
                         # Not a valid auth header.
                         pass

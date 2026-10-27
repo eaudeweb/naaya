@@ -655,20 +655,22 @@ def delivery_for_site(site=None):
 
 class _ImmediateDelivery(object):
     """
-    Hack a queued message delivery to send the message immediately, and not
-    wait for transaction finish; useful when sending error messages.
+    Send a queued message immediately, in its own transaction, and not
+    wait for the request transaction to finish; useful when sending error
+    messages.
     """
     def __init__(self, delivery):
         self._d = delivery
 
     def send(self, fromaddr, toaddrs, message):
+        import transaction
+
         try:
             message_id = self._d.newMessageId()
         except AttributeError:      # repose.sendmail compatibility
             message_id = make_msgid('repoze.sendmail')
         email_message = create_plain_message(message)
         email_message['Message-Id'] = '<%s>' % message_id
-        # make data_manager think it's being called by a transaction
         try:
             data_manager = self._d.createDataManager(fromaddr, toaddrs,
                                                      email_message)
@@ -677,7 +679,14 @@ class _ImmediateDelivery(object):
             message_bytes = 'Message-Id: <%s>\n%s' % (message_id, message)
             data_manager = self._d.createDataManager(fromaddr, toaddrs,
                                                      message_bytes)
-        data_manager.tpc_finish(None)
+        join_transaction = getattr(data_manager, 'join_transaction', None)
+        if join_transaction is None:
+            # zope.sendmail and repoze.sendmail < 4.2 accept no transaction
+            data_manager.tpc_finish(None)
+            return
+        txn = transaction.TransactionManager().begin()
+        join_transaction(txn)
+        txn.commit()
 
 
 def configure_mail_queue():
