@@ -1,5 +1,8 @@
-0.0.10 (unreleased)
-------------------
+0.0.11 (unreleased)
+-------------------
+
+0.0.10 (2026-10-29)
+-------------------
 * Fix the good practice page failing on GSTC criteria missing from the list
   [dumitval]
 
