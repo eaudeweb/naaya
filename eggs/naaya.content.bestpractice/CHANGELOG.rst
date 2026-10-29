@@ -1,4 +1,7 @@
-0.0.11 (unreleased)
+0.0.12 (unreleased)
+-------------------
+
+0.0.11 (2026-10-29)
 -------------------
 * Fix the good practice page failing on a landscape type stored as a list
   [dumitval]
