@@ -1,5 +1,6 @@
 """Naaya Good Practice Destination"""
 import os
+import re
 import sys
 import transaction
 from copy import deepcopy
@@ -284,6 +285,15 @@ class NyBestPractice(NyBFile):
         self.notify_access_event(REQUEST)
         return self.getFormsTool().getContent(template_vars,
                                               'bestpractice_index')
+
+    security.declareProtected(view, 'landscape_type_ids')
+
+    def landscape_type_ids(self):
+        """ Landscape type ids; some objects store a list as its repr text """
+        value = getattr(self, 'landscape_type', None) or []
+        if isinstance(value, basestring):
+            value = re.findall(r"'([^']*)'", value) or [value]
+        return list(value)
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
 

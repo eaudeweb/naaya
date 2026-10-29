@@ -110,11 +110,12 @@
 <tal:block condition="here/twitter|nothing"
            content="structure python: here.prop_display_tr('twitter')" />
 <tal:block content="structure python: here.prop_display_tr('releasedate')" />
-<tr tal:define="sel_list python:here.portal_schemas.NyBestPractice['landscape_type-property'].get_selection_list()" tal:condition="here/landscape_type|nothing">
+<tr tal:define="sel_list python:here.portal_schemas.NyBestPractice['landscape_type-property'].get_selection_list();
+                ids here/landscape_type_ids;
+                titles python:[x.title for x in sel_list if x.id in ids]"
+    tal:condition="titles">
   <th i18n:translate="">Landscape type</th>
-    <td i18n:translate=""
-      tal:content="python:[x.title for x in sel_list if x.id == here.landscape_type][0]"
-      tal:on-error="python:', '.join([x.title for x in sel_list if x.id in here.landscape_type.replace('[u\'', '').replace('[\'', '').replace('\', u\'', ',').replace('\', \'', ',').replace('\']', '').split(',')])" />
+    <td i18n:translate="" tal:content="python:', '.join(titles)" />
 </tr>
 
 <tr tal:define="sel_list python:here.portal_schemas.NyBestPractice['topics-property'].get_selection_list()">
