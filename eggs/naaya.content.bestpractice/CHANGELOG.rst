@@ -1,5 +1,7 @@
 0.0.10 (unreleased)
 ------------------
+* Fix the good practice page failing on GSTC criteria missing from the list
+  [dumitval]
 
 0.0.9 (2022-01-21)
 ------------------

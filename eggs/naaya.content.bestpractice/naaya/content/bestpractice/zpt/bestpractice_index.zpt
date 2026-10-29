@@ -121,8 +121,8 @@
     <th i18n:translate="">Topics</th>
     <td>
       <ul>
-        <li tal:repeat="topic here/topics" i18n:translate=""
-         tal:content="python:[x.title for x in sel_list if x.id == topic][0]" />
+        <li tal:repeat="title python:[x.title for x in sel_list if x.id in (here.topics or ())]"
+            i18n:translate="" tal:content="title" />
       </ul>
     </td>
 </tr>
@@ -132,8 +132,8 @@
     <th i18n:translate="">GSTC Criteria for Destinations</th>
     <td>
       <ul>
-        <li tal:repeat="criteria here/gstc_criteria" i18n:translate=""
-          tal:content="python:[x.title for x in sel_list if x.id == criteria][0]" />
+        <li tal:repeat="title python:[x.title for x in sel_list if x.id in (here.gstc_criteria or ())]"
+            i18n:translate="" tal:content="title" />
       </ul>
     </td>
 </tr>
