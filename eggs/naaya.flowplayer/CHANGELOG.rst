@@ -1,5 +1,6 @@
 1.1.8 (unreleased)
 ------------------
+* Fix the naaya namespace breaking in installs from source [dumitval]
 
 1.1.7 (2015-10-15)
 ------------------
