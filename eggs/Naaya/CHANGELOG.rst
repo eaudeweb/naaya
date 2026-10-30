@@ -1,5 +1,7 @@
 5.0.40 (unreleased)
 -------------------
+* No session for anonymous visitors in messages_box (sessions created on
+  every page view broke the session storage) [dumitval]
 
 5.0.39 (2026-10-27)
 -------------------
