@@ -1,4 +1,7 @@
-1.1.11 (unreleased)
+1.1.12 (unreleased)
+-------------------
+
+1.1.11 (2026-11-02)
 -------------------
 * Fix the publication page failing when its file is missing [dumitval]
 
