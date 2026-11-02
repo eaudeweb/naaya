@@ -1,4 +1,7 @@
-1.3.19 (unreleased)
+1.3.20 (unreleased)
+-------------------
+
+1.3.19 (2026-11-02)
 -------------------
 * Fix the PDF export of a report failing for visitors without cookies
   [dumitval]
