@@ -1,4 +1,7 @@
-1.3.59 - (unreleased)
+1.3.60 - (unreleased)
+=====================
+
+1.3.59 - (2026-11-02)
 =====================
 * Fix the account form failing when it is submitted empty [dumitval]
 * remove the zmi folders (copies of portal_map/geomaptool.js,
