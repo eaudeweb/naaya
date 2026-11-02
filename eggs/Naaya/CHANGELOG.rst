@@ -1,4 +1,7 @@
-5.0.41 (unreleased)
+5.0.42 (unreleased)
+-------------------
+
+5.0.41 (2026-11-02)
 -------------------
 * Fix the map failing on an unknown map engine name [dumitval]
 * Fix the edit form failing when a rejected numeric field is shown again
