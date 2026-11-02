@@ -20,7 +20,7 @@
 #Python import
 
 #Zope imports
-from Acquisition import Implicit
+from Acquisition import Implicit, aq_base
 from OFS.Image import cookId
 
 #Product imports
@@ -56,6 +56,11 @@ class publication_item(Implicit, NyContentData, NyFSFile):
         try: del self.title
         except: pass
         self._p_changed = 1
+
+    def has_file(self):
+        """Returns True if the uploaded file is still stored"""
+        base = aq_base(self)
+        return hasattr(base, '_bfile') or hasattr(base, '_ext_file')
 
     def getContentType(self):
         """Returns file content-type"""

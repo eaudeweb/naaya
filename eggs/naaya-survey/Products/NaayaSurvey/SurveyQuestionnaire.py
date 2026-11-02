@@ -677,7 +677,8 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item,
     def generate_pdf(self, report_id):
         url = '%s/questionnaire_view_report_html?report_id=%s' % (
             self.absolute_url(), report_id)
-        http_cookies = self.REQUEST.environ['HTTP_COOKIE']
+        # visitors (and crawlers) without any cookie send no Cookie header
+        http_cookies = self.REQUEST.environ.get('HTTP_COOKIE', '')
         for cookie in http_cookies.split('; '):
             if cookie.startswith('__ac'):
                 __ac = cookie.replace('__ac="', '')[:-1]

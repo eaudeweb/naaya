@@ -1,5 +1,6 @@
 1.3.59 - (unreleased)
 =====================
+* Fix the account form failing when it is submitted empty [dumitval]
 * remove the zmi folders (copies of portal_map/geomaptool.js,
   portal_map/custom_filter and gsearch_html); the copies of the ZMI objects
   are kept in NaayaBundles-DESTINET [dumitval]

@@ -476,8 +476,11 @@ class NyContentData(NyProperties):
                 prop_type = widget.getDataType()
                 if prop_type is None:
                     return val or None
-                else:
+                try:
                     return prop_type(val)
+                except (TypeError, ValueError):
+                    # a rejected form value, shown again as it was typed
+                    return val
 
             if prop_name in local_properties:
                 return self.getLocalProperty(prop_name, lang)

@@ -1,5 +1,6 @@
 1.1.11 (unreleased)
 -------------------
+* Fix the publication page failing when its file is missing [dumitval]
 
 1.1.10 (2026-10-20)
 -------------------

@@ -186,7 +186,11 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     def get_map_engine(self, engine_name=None):
         if engine_name is None:
             engine_name = self.current_engine
-        return self['engine_%s' % engine_name]
+        engine = self._getOb('engine_%s' % engine_name, None)
+        if engine is None:
+            # the name can come from a request parameter
+            engine = self['engine_%s' % self.current_engine]
+        return engine
 
     def can_filter_by_first_letter(self):
         catalog_tool = self.getCatalogTool()

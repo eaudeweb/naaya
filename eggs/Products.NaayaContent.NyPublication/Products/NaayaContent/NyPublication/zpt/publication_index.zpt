@@ -71,7 +71,7 @@
 <tal:block content="structure python: here.prop_display_tr('languages')" />
 <tal:block content="structure python: here.prop_display_tr('locator', as_href=True)" />
 
-<tr tal:condition="python:here.size>0">
+<tr tal:condition="python:here.size > 0 and here.has_file()">
 	<th i18n:translate="">Download</th>
 	<td tal:define="download_url here/getDownloadUrl">
 		<a tal:define="size python:here.utShowSizeKb(here.size);

@@ -1,7 +1,6 @@
 """ User interface methods (views) regarding registration in Destinet """
 
 import transaction
-from zExceptions import BadRequest
 
 from Products.NaayaCore.AuthenticationTool.CookieCrumbler import CookieCrumbler
 from Products.NaayaCore.AuthenticationTool.AuthenticationTool import \
@@ -41,7 +40,10 @@ def create_destinet_account_html(context, request):
 def process_create_account(context, request):
     """ """
     if request.form == {}:
-        raise BadRequest('Empty request form')
+        # opened directly, mostly by crawlers: show the form instead of an error
+        request.RESPONSE.redirect(
+            context.getSite().absolute_url() + '/create_destinet_account_html')
+        return
     referer = request.HTTP_REFERER
     site = context.getSite()
     register_schema = context.getSite().getSchemaTool()['registration']
