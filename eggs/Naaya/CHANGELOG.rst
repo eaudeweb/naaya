@@ -1,4 +1,7 @@
-5.0.42 (unreleased)
+5.0.43 (unreleased)
+-------------------
+
+5.0.42 (2026-11-06)
 -------------------
 * Fix the glossary suggestions failing for text with parentheses [dumitval]
 
