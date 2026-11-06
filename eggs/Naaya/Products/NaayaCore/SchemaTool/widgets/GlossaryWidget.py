@@ -1,3 +1,4 @@
+import re
 import simplejson as json
 
 from Globals import InitializeClass
@@ -115,6 +116,8 @@ class GlossaryWidget(StringWidget):
 
         """
 
+        # TextIndexNG reads these characters as query syntax
+        q = re.sub(r'[()\[\]{}"*?]', ' ', q).strip()
         glossary = self.get_glossary()
         if glossary is None:
             results = []

@@ -1,5 +1,6 @@
 5.0.42 (unreleased)
 -------------------
+* Fix the glossary suggestions failing for text with parentheses [dumitval]
 
 5.0.41 (2026-11-02)
 -------------------
