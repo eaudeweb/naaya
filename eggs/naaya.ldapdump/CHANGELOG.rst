@@ -1,4 +1,7 @@
-1.1.1 (unreleased)
+1.1.2 (unreleased)
+------------------
+
+1.1.1 (2026-11-10)
 ------------------
 * Fix readers seeing a missing or empty table while the dump runs [dumitval]
 
