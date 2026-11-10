@@ -183,19 +183,25 @@ def reset_dump_timestamp(cursor):
 
 def save_results(config, results_list):
     db_path = get_db_path(config)
-
-    db_conn = sqlite3.connect(db_path)
-    cursor = db_conn.cursor()
+    # write a new file and rename it, so readers never see a partial dump
+    tmp_path = db_path + '.tmp'
+    if os.path.exists(tmp_path):
+        os.remove(tmp_path)
+    db_conn = sqlite3.connect(tmp_path)
     try:
-        write_values(cursor, results_list)
-        reset_dump_timestamp(cursor)
-    except:
-        log.exception("Error saving ldap results")
-        raise
-    else:
-        db_conn.commit()
-        log.info("Successfully dumped ldap data")
-    cursor.close()
+        cursor = db_conn.cursor()
+        try:
+            write_values(cursor, results_list)
+            reset_dump_timestamp(cursor)
+        except:
+            log.exception("Error saving ldap results")
+            raise
+        else:
+            db_conn.commit()
+    finally:
+        db_conn.close()
+    os.rename(tmp_path, db_path)
+    log.info("Successfully dumped ldap data")
 
 
 def setup_log_handler(config):

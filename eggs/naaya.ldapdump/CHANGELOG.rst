@@ -1,5 +1,6 @@
 1.1.1 (unreleased)
 ------------------
+* Fix readers seeing a missing or empty table while the dump runs [dumitval]
 
 1.1.0 (2019-12-11)
 ------------------
