@@ -20,3 +20,22 @@ USER_GROUPS = {
     'european-ecotourism-network':
         'who-who/civil-society-ngos/european-ecotourism-network/new-applicants',
 }
+
+# name of a hidden registration form field that only bots fill in
+HONEYPOT_FIELD = 'homepage_url'
+
+# disposable email services refused at registration
+BLOCKED_EMAIL_DOMAINS = frozenset([
+    '10minutemail.com',
+    'chuwel.com',
+    'dispostable.com',
+    'getnada.com',
+    'guerrillamail.com',
+    'hidingpost.com',
+    'mailinator.com',
+    'maildrop.cc',
+    'sharklasers.com',
+    'temp-mail.org',
+    'trashmail.com',
+    'yopmail.com',
+])

@@ -6,7 +6,9 @@ from Products.NaayaCore.AuthenticationTool.CookieCrumbler import CookieCrumbler
 from Products.NaayaCore.AuthenticationTool.AuthenticationTool import \
     check_username
 from Products.NaayaBase.NyContentType import SchemaFormHelper
+from destinet.registration.constants import BLOCKED_EMAIL_DOMAINS
 from destinet.registration.constants import EW_REGISTER_FIELD_NAMES
+from destinet.registration.constants import HONEYPOT_FIELD
 from destinet.registration.constants import WIDGET_NAMES
 from destinet.registration.core import prepare_error_response
 from destinet.registration.core import validate_widgets
@@ -46,11 +48,22 @@ def process_create_account(context, request):
         return
     referer = request.HTTP_REFERER
     site = context.getSite()
+    if request.form.get(HONEYPOT_FIELD):
+        # hidden field, only filled in by bots
+        request.RESPONSE.redirect(
+            site.absolute_url() + '/create_destinet_account_html')
+        return
     register_schema = context.getSite().getSchemaTool()['registration']
     form_data, form_errors = validate_widgets(register_schema, request.form)
     email = request.form.get('email')
     if not (email and is_valid_email(email)):
         form_errors['email'] = ['Invalid email address']
+    elif email.rsplit('@', 1)[-1].strip().lower() in BLOCKED_EMAIL_DOMAINS:
+        form_errors['email'] = ['Please use a permanent email address']
+    if (not context.checkPermissionSkipCaptcha() and
+            site.recaptcha_is_present() and
+            not site.is_valid_recaptcha(site, request)):
+        form_errors['captcha'] = ['Wrong value for captcha']
     username = request.form.get('username')
     if not (check_username(username)):
         form_errors['username'] = [
@@ -81,8 +94,15 @@ def process_create_account(context, request):
                                    form_errors, request.form)
             request.RESPONSE.redirect(referer)
             return
+        site.admin_addroles([username], ['Contributor'], '', send_mail=True)
+        password = request.form.get('password')
+        # CookieCrumbler base64-encodes these and fails on non-ASCII unicode
+        if isinstance(username, unicode):
+            username = username.encode('utf-8')
+        if isinstance(password, unicode):
+            password = password.encode('utf-8')
         request.form[context.name_cookie] = username
-        request.form[context.pw_cookie] = request.form.get('password')
+        request.form[context.pw_cookie] = password
         request.SESSION.set(
             'title', '%s %s' %
             (request.form.get('firstname'), request.form.get('lastname')))
@@ -93,4 +113,3 @@ def process_create_account(context, request):
             request.RESPONSE.redirect(came_from)
         else:
             request.RESPONSE.redirect(context.absolute_url() + '/login_html')
-        site.admin_addroles([username], ['Contributor'], '', send_mail=True)

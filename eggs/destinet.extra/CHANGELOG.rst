@@ -1,5 +1,8 @@
 1.3.60 - (unreleased)
 =====================
+* Check the captcha, refuse disposable email addresses and add a hidden
+  field against bots in the registration form [dumitval]
+* Fix registration failing for passwords with non-ASCII characters [dumitval]
 
 1.3.59 - (2026-11-02)
 =====================
