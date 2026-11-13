@@ -1,4 +1,7 @@
-5.0.43 (unreleased)
+5.0.44 (unreleased)
+-------------------
+
+5.0.43 (2026-11-13)
 -------------------
 * Fix login failing for passwords with non-ASCII characters [dumitval]
 
