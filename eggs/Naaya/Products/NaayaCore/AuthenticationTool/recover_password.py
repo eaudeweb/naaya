@@ -14,6 +14,7 @@ from Products.NaayaCore.EmailTool.EmailPageTemplate import \
      EmailPageTemplateFile
 from naaya.core.exceptions import i18n_exception
 from naaya.core.zope2util import physical_path
+from Products.NaayaCore.AuthenticationTool.User import utf8_password
 
 log = logging.getLogger('naaya.core.auth.recover_password')
 
@@ -84,7 +85,7 @@ class RecoverPassword(SimpleItem):
         assert user is not None
         log.info("changing password in site %r for user %r",
                  physical_path(self.getSite()), user_id)
-        user.__ = new_password
+        user.__ = utf8_password(new_password)
 
 
     security.declarePublic('index_html')

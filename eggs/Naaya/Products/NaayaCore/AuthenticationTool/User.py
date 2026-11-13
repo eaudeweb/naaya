@@ -15,6 +15,13 @@ from zope.event import notify
 
 from Products.NaayaBase.events import NyAddUserRoleEvent, NySetUserRoleEvent, NyDelUserRoleEvent
 
+def utf8_password(password):
+    """Return a unicode password as UTF-8 bytes, as the login form sends it."""
+    if isinstance(password, unicode):
+        return password.encode('utf-8')
+    return password
+
+
 class User(SimpleUser, Persistent):
     """ """
 
@@ -38,7 +45,8 @@ class User(SimpleUser, Persistent):
 
     def _getPassword(self):
         """Return the password of the user."""
-        return self.__
+        # older accounts may hold a unicode password
+        return utf8_password(self.__)
 
     def getDomains(self):
         """Return the list of domain restrictions for a user"""

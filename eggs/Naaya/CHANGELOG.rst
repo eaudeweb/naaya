@@ -1,5 +1,6 @@
 5.0.43 (unreleased)
 -------------------
+* Fix login failing for passwords with non-ASCII characters [dumitval]
 
 5.0.42 (2026-11-06)
 -------------------

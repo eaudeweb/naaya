@@ -33,7 +33,7 @@ from Products.NaayaCore.managers.utils import string2object, object2string
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Role import Role
 from StringIO import StringIO
-from User import User
+from User import User, utf8_password
 from copy import copy
 from naaya.core.exceptions import ValidationError, i18n_exception
 from naaya.core.utils import force_to_unicode
@@ -230,6 +230,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
            original input password, unencrypted. This
            method is responsible for performing any needed encryption."""
 
+        password = utf8_password(password)
         if password is not None and self.encrypt_passwords:
             password = self._encryptPassword(password)
         self.data[name] = User(name, password, roles, domains, firstname,
@@ -248,6 +249,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
         user = self.data[name]
         if password is not None:
+            password = utf8_password(password)
             if (self.encrypt_passwords and
                     not self._isPasswordEncrypted(password)):
                 password = self._encryptPassword(password)
