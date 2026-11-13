@@ -1,4 +1,7 @@
-1.3.60 - (unreleased)
+1.3.61 - (unreleased)
+=====================
+
+1.3.60 - (2026-11-13)
 =====================
 * Check the captcha, refuse disposable email addresses and add a hidden
   field against bots in the registration form [dumitval]
