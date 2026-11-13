@@ -1,5 +1,6 @@
 5.0.44 (unreleased)
 -------------------
+* Fix heartbeat errors not reaching Sentry when run from cron [dumitval]
 
 5.0.43 (2026-11-13)
 -------------------

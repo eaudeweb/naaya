@@ -1,4 +1,5 @@
 import logging
+from StringIO import StringIO
 import Zope2
 from zope.globalrequest import setRequest
 from Testing.ZopeTestCase import utils
@@ -193,6 +194,8 @@ def heartbeat():
     utils._Z2HOST = hostname
     app = utils.makerequest(app)
     request = app.REQUEST
+    # cron stdin is a pipe; raven calls tell() on it when logging errors
+    request.stdin = StringIO()
     for portal in app.objectValues([
             'Groupware site', 'EnviroWindows Site', 'CHM Site', 'Naaya Site']):
         portal_id = portal.getId()
