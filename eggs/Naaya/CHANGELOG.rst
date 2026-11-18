@@ -1,6 +1,7 @@
 5.0.44 (unreleased)
 -------------------
 * Fix heartbeat errors not reaching Sentry when run from cron [dumitval]
+* Fix map address search failing when Nominatim does not respond [dumitval]
 
 5.0.43 (2026-11-13)
 -------------------

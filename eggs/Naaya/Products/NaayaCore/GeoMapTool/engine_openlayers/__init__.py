@@ -1,3 +1,4 @@
+import socket
 import urllib
 import urllib2
 import simplejson as json
@@ -156,7 +157,8 @@ class OpenLayersMapEngine(SimpleItem):
 
         query = {'q': address, 'format': 'json'}
 
-        f = opener.open(NOMINATIM_URL + urllib.urlencode(query.items()))
+        f = opener.open(NOMINATIM_URL + urllib.urlencode(query.items()),
+                        timeout=10)
 
         try:
             return f.read()
@@ -170,7 +172,11 @@ class OpenLayersMapEngine(SimpleItem):
 
         address = REQUEST.form['address']
 
-        data = self._geocode_nominatim_request(address)
+        try:
+            data = self._geocode_nominatim_request(address)
+        except (urllib2.URLError, socket.timeout), e:
+            log.info("Nominatim geocoding of %r failed: %s", address, e)
+            data = '[]'
 
         REQUEST.RESPONSE.setHeader('Content-type', 'application/json')
         return data
