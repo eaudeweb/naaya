@@ -1,4 +1,7 @@
-5.0.45 (unreleased)
+5.0.46 (unreleased)
+-------------------
+
+5.0.45 (2026-11-19)
 -------------------
 * Fix map address search failing on a Nominatim read timeout [dumitval]
 
