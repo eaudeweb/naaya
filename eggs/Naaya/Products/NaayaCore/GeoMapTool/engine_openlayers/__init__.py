@@ -174,7 +174,7 @@ class OpenLayersMapEngine(SimpleItem):
 
         try:
             data = self._geocode_nominatim_request(address)
-        except (urllib2.URLError, socket.timeout), e:
+        except (urllib2.URLError, socket.error), e:
             log.info("Nominatim geocoding of %r failed: %s", address, e)
             data = '[]'
 

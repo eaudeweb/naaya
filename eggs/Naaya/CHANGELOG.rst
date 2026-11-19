@@ -1,5 +1,6 @@
 5.0.45 (unreleased)
 -------------------
+* Fix map address search failing on a Nominatim read timeout [dumitval]
 
 5.0.44 (2026-11-18)
 -------------------
