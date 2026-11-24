@@ -282,15 +282,8 @@
         <tal:address condition="address">
           <tal:block define="dummy python:map_override.setdefault('initial_address', address)" />
         </tal:address>
-        <tal:bounds define="lat_min python:request.get('lat_min', None);
-                            lat_max python:request.get('lat_max', None);
-                            lon_min python:request.get('lon_min', None);
-                            lon_max python:request.get('lon_max', None)"
-                    condition="python:lat_min and lat_max and lon_min and lon_max">
-          <tal:block define="dummy python:map_override.update({
-            'lat_center': str((float(lat_min) + float(lat_max)) / 2),
-            'lon_center': str((float(lon_min) + float(lon_max)) / 2),
-          })" />
+        <tal:bounds define="center here/map_center" condition="center">
+          <tal:block define="dummy python:map_override.update(center)" />
         </tal:bounds>
         <tal:block content="structure python:portal_map.setup_map_engine_html(request, **map_override)" />
         <script tal:content="structure python:'var category = %s;' % here.rstk['json_dumps'](category)"></script>

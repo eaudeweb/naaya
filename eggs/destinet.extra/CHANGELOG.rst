@@ -1,5 +1,6 @@
 1.3.61 - (unreleased)
 =====================
+* Fix the map listings failing on non-numeric map bounds [dumitval]
 
 1.3.60 - (2026-11-13)
 =====================

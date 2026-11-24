@@ -17,6 +17,12 @@
 
     <naaya:simpleView
         for="*"
+        name="map_center"
+        handler=".listing.map_center"
+        permission="zope.Public" />
+
+    <naaya:simpleView
+        for="*"
         name="get_object_types"
         handler=".listing.get_object_types"
         permission="zope.Public" />

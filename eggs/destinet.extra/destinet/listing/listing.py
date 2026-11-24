@@ -54,6 +54,18 @@ RESOURCE_FRIENDLY_NAMES = {
 }
 
 
+def map_center(context, request):
+    """ Map center from the lat/lon bounds in the request, or None """
+    try:
+        lat_min, lat_max, lon_min, lon_max = [
+            float(request.get(key))
+            for key in ('lat_min', 'lat_max', 'lon_min', 'lon_max')]
+    except (TypeError, ValueError):
+        return None
+    return {'lat_center': str((lat_min + lat_max) / 2),
+            'lon_center': str((lon_min + lon_max) / 2)}
+
+
 def get_object_types(context, request):
     """ """
     return RESOURCE_FRIENDLY_NAMES.keys()
