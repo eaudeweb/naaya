@@ -1,4 +1,7 @@
-1.3.61 - (unreleased)
+1.3.62 - (unreleased)
+=====================
+
+1.3.61 - (2026-11-24)
 =====================
 * Fix the map listings failing on non-numeric map bounds [dumitval]
 
